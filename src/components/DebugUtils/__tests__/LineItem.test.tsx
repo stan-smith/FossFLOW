@@ -10,7 +10,9 @@ describe('LineItem', () => {
   });
 
   it('matches snapshot', () => {
-    const { asFragment } = render(<LineItem title="Snapshot Title" value="Snapshot Value" />);
+    const { asFragment } = render(
+      <LineItem title="Snapshot Title" value="Snapshot Value" />
+    );
     expect(asFragment()).toMatchSnapshot();
   });
-}); 
+});

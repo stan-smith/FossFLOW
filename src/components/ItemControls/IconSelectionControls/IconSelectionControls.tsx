@@ -7,9 +7,9 @@ import { Section } from 'src/components/ItemControls/components/Section';
 import { Searchbox } from 'src/components/ItemControls/IconSelectionControls/Searchbox';
 import { useIconFiltering } from 'src/hooks/useIconFiltering';
 import { useIconCategories } from 'src/hooks/useIconCategories';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { Icons } from './Icons';
 import { IconGrid } from './IconGrid';
-import { Close as CloseIcon } from '@mui/icons-material';
 
 export const IconSelectionControls = () => {
   const uiStateActions = useUiStateStore((state) => {
@@ -37,18 +37,28 @@ export const IconSelectionControls = () => {
   return (
     <ControlsContainer
       header={
-        <Section sx={{ top: 0, pt: 6, pb: 3, position: 'relative', paddingTop: '32px' }}>
+        <Section
+          sx={{
+            top: 0,
+            pt: 6,
+            pb: 3,
+            position: 'relative',
+            paddingTop: '32px'
+          }}
+        >
           {/* Close button */}
           <MUIIconButton
             aria-label="Close"
-            onClick={() => uiStateActions.setItemControls(null)}
+            onClick={() => {
+              return uiStateActions.setItemControls(null);
+            }}
             sx={{
               position: 'absolute',
               top: 12,
               right: 12,
               zIndex: 2,
               padding: 0,
-              background: 'none',
+              background: 'none'
             }}
             size="small"
           >

@@ -50,7 +50,7 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
               if (model.icons.length > 0) {
                 const modelItemId = generateId();
                 const firstIcon = model.icons[0];
-                
+
                 scene.placeIcon({
                   modelItem: {
                     id: modelItemId,

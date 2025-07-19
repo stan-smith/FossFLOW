@@ -1,14 +1,21 @@
 import React from 'react';
 import { Connector, connectorStyleOptions } from 'src/types';
-import { Box, Slider, Select, MenuItem, TextField, IconButton as MUIIconButton } from '@mui/material';
+import {
+  Box,
+  Slider,
+  Select,
+  MenuItem,
+  TextField,
+  IconButton as MUIIconButton
+} from '@mui/material';
 import { useConnector } from 'src/hooks/useConnector';
 import { ColorSelector } from 'src/components/ColorSelector/ColorSelector';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useScene } from 'src/hooks/useScene';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { ControlsContainer } from '../components/ControlsContainer';
 import { Section } from '../components/Section';
 import { DeleteButton } from '../components/DeleteButton';
-import { Close as CloseIcon } from '@mui/icons-material';
 
 interface Props {
   id: string;
@@ -32,12 +39,14 @@ export const ConnectorControls = ({ id }: Props) => {
         {/* Close button */}
         <MUIIconButton
           aria-label="Close"
-          onClick={() => uiStateActions.setItemControls(null)}
+          onClick={() => {
+            return uiStateActions.setItemControls(null);
+          }}
           sx={{
             position: 'absolute',
             top: 16,
             right: 16,
-            zIndex: 2,
+            zIndex: 2
           }}
           size="small"
         >

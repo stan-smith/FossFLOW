@@ -10,7 +10,11 @@ describe('anchorSchema', () => {
     const result = anchorSchema.safeParse(invalid);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues.some((issue: any) => issue.path.includes('id'))).toBe(true);
+      expect(
+        result.error.issues.some((issue: any) => {
+          return issue.path.includes('id');
+        })
+      ).toBe(true);
     }
   });
 });
@@ -25,7 +29,11 @@ describe('connectorSchema', () => {
     const result = connectorSchema.safeParse(invalid);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues.some((issue: any) => issue.path.includes('anchors'))).toBe(true);
+      expect(
+        result.error.issues.some((issue: any) => {
+          return issue.path.includes('anchors');
+        })
+      ).toBe(true);
     }
   });
-}); 
+});

@@ -8,7 +8,10 @@ import {
   Slider,
   IconButton as MUIIconButton
 } from '@mui/material';
-import { TextRotationNone as TextRotationNoneIcon, Close as CloseIcon } from '@mui/icons-material';
+import {
+  TextRotationNone as TextRotationNoneIcon,
+  Close as CloseIcon
+} from '@mui/icons-material';
 import { useTextBox } from 'src/hooks/useTextBox';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { getIsoProjectionCss } from 'src/utils';
@@ -39,12 +42,14 @@ export const TextBoxControls = ({ id }: Props) => {
         {/* Close button */}
         <MUIIconButton
           aria-label="Close"
-          onClick={() => uiStateActions.setItemControls(null)}
+          onClick={() => {
+            return uiStateActions.setItemControls(null);
+          }}
           sx={{
             position: 'absolute',
             top: 16,
             right: 16,
-            zIndex: 2,
+            zIndex: 2
           }}
           size="small"
         >

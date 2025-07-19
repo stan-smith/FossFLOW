@@ -66,7 +66,9 @@ export const ZoomControls = () => {
         <IconButton
           name="Help (F1)"
           Icon={<HelpIcon />}
-          onClick={() => uiStateStoreActions.setDialog(DialogTypeEnum.HELP)}
+          onClick={() => {
+            return uiStateStoreActions.setDialog(DialogTypeEnum.HELP);
+          }}
         />
       </UiElement>
     </Stack>

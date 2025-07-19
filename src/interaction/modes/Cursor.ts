@@ -92,8 +92,6 @@ const mousedown: ModeActionsAction = ({
         draft.mousedownItem = itemAtTile;
       })
     );
-
-
   } else {
     uiState.actions.setMode(
       produce(uiState.mode, (draft) => {
@@ -102,7 +100,7 @@ const mousedown: ModeActionsAction = ({
     );
 
     uiState.actions.setItemControls(null);
-    
+
     // Show context menu for empty space on left click
     uiState.actions.setContextMenu({
       type: 'EMPTY',
@@ -158,7 +156,7 @@ export const Cursor: ModeActions = {
     if (uiState.mode.type !== 'CURSOR' || !isRendererInteraction) return;
 
     const hasMoved = uiState.mouse.mousedown && hasMovedTile(uiState.mouse);
-    
+
     if (uiState.mode.mousedownItem && !hasMoved) {
       if (uiState.mode.mousedownItem.type === 'ITEM') {
         uiState.actions.setItemControls({

@@ -10,7 +10,11 @@ describe('rectangleSchema', () => {
     const result = rectangleSchema.safeParse(invalid);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues.some((issue: any) => issue.path.includes('from'))).toBe(true);
+      expect(
+        result.error.issues.some((issue: any) => {
+          return issue.path.includes('from');
+        })
+      ).toBe(true);
     }
   });
-}); 
+});

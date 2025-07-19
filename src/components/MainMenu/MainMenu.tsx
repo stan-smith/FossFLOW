@@ -14,12 +14,17 @@ import {
 import { UiElement } from 'src/components/UiElement/UiElement';
 import { IconButton } from 'src/components/IconButton/IconButton';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { exportAsJSON, modelFromModelStore } from 'src/utils';
+import {
+  exportAsJSON,
+  exportAsCompactJSON,
+  transformFromCompactFormat
+} from 'src/utils/exportOptions';
+import { modelFromModelStore } from 'src/utils';
 import { useInitialDataManager } from 'src/hooks/useInitialDataManager';
 import { useModelStore } from 'src/stores/modelStore';
 import { useHistory } from 'src/hooks/useHistory';
-import { MenuItem } from './MenuItem';
 import { DialogTypeEnum } from 'src/types/ui';
+import { MenuItem } from './MenuItem';
 
 export const MainMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -67,7 +72,14 @@ export const MainMenu = () => {
       const fileReader = new FileReader();
 
       fileReader.onload = async (e) => {
-        const modelData = JSON.parse(e.target?.result as string);
+        const rawData = JSON.parse(e.target?.result as string);
+        let modelData = rawData;
+
+        // Check format and transform if needed
+        if (rawData._?.f === 'compact') {
+          modelData = transformFromCompactFormat(rawData);
+        }
+
         load(modelData);
         clearHistory(); // Clear history when loading new model
       };
@@ -82,6 +94,11 @@ export const MainMenu = () => {
 
   const onExportAsJSON = useCallback(async () => {
     exportAsJSON(model);
+    uiStateActions.setIsMainMenuOpen(false);
+  }, [model, uiStateActions]);
+
+  const onExportAsCompactJSON = useCallback(async () => {
+    exportAsCompactJSON(model);
     uiStateActions.setIsMainMenuOpen(false);
   }, [model, uiStateActions]);
 
@@ -130,7 +147,12 @@ export const MainMenu = () => {
 
   return (
     <UiElement>
-      <IconButton Icon={<MenuIcon />} name="Main menu" onClick={onToggleMenu} isActive={isMainMenuOpen} />
+      <IconButton
+        Icon={<MenuIcon />}
+        name="Main menu"
+        onClick={onToggleMenu}
+        isActive={isMainMenuOpen}
+      />
 
       <Menu
         anchorEl={anchorEl}
@@ -179,6 +201,12 @@ export const MainMenu = () => {
           {mainMenuOptions.includes('EXPORT.JSON') && (
             <MenuItem onClick={onExportAsJSON} Icon={<ExportJsonIcon />}>
               Export as JSON
+            </MenuItem>
+          )}
+
+          {mainMenuOptions.includes('EXPORT.JSON') && (
+            <MenuItem onClick={onExportAsCompactJSON} Icon={<ExportJsonIcon />}>
+              Export as Compact JSON
             </MenuItem>
           )}
 

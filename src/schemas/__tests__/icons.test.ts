@@ -10,7 +10,11 @@ describe('iconSchema', () => {
     const result = iconSchema.safeParse(invalid);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues.some((issue: any) => issue.path.includes('id'))).toBe(true);
+      expect(
+        result.error.issues.some((issue: any) => {
+          return issue.path.includes('id');
+        })
+      ).toBe(true);
     }
   });
 });
@@ -31,7 +35,11 @@ describe('iconsSchema', () => {
     const result = iconsSchema.safeParse(invalid);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues.some((issue: any) => issue.path.includes('id'))).toBe(true);
+      expect(
+        result.error.issues.some((issue: any) => {
+          return issue.path.includes('id');
+        })
+      ).toBe(true);
     }
   });
-}); 
+});

@@ -103,8 +103,12 @@ const mouseInteractions: ShortcutItem[] = [
 ];
 
 export const HelpDialog = () => {
-  const dialog = useUiStateStore((state) => state.dialog);
-  const setDialog = useUiStateStore((state) => state.actions.setDialog);
+  const dialog = useUiStateStore((state) => {
+    return state.dialog;
+  });
+  const setDialog = useUiStateStore((state) => {
+    return state.actions.setDialog;
+  });
 
   const isOpen = dialog === DialogTypeEnum.HELP;
 
@@ -131,7 +135,15 @@ export const HelpDialog = () => {
           </Typography>
           <Button
             onClick={handleClose}
-            sx={{ minWidth: 'auto', p: 1, bgcolor: 'transparent', boxShadow: 'none', '&:hover': { bgcolor: 'transparent' }, '&:focus': { bgcolor: 'transparent' }, '&:active': { bgcolor: 'transparent' } }}
+            sx={{
+              minWidth: 'auto',
+              p: 1,
+              bgcolor: 'transparent',
+              boxShadow: 'none',
+              '&:hover': { bgcolor: 'transparent' },
+              '&:focus': { bgcolor: 'transparent' },
+              '&:active': { bgcolor: 'transparent' }
+            }}
           >
             <CloseIcon />
           </Button>
@@ -153,22 +165,26 @@ export const HelpDialog = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {keyboardShortcuts.map((shortcut, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{shortcut.action}</TableCell>
-                    <TableCell>
-                      <code style={{ 
-                        backgroundColor: '#f5f5f5', 
-                        padding: '2px 6px', 
-                        borderRadius: '4px',
-                        fontFamily: 'monospace'
-                      }}>
-                        {shortcut.shortcut}
-                      </code>
-                    </TableCell>
-                    <TableCell>{shortcut.description}</TableCell>
-                  </TableRow>
-                ))}
+                {keyboardShortcuts.map((shortcut, index) => {
+                  return (
+                    <TableRow key={index}>
+                      <TableCell>{shortcut.action}</TableCell>
+                      <TableCell>
+                        <code
+                          style={{
+                            backgroundColor: '#f5f5f5',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            fontFamily: 'monospace'
+                          }}
+                        >
+                          {shortcut.shortcut}
+                        </code>
+                      </TableCell>
+                      <TableCell>{shortcut.description}</TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
@@ -190,22 +206,26 @@ export const HelpDialog = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {mouseInteractions.map((interaction, index) => (
-                  <TableRow key={index}>
-                    <TableCell>{interaction.action}</TableCell>
-                    <TableCell>
-                      <code style={{ 
-                        backgroundColor: '#f5f5f5', 
-                        padding: '2px 6px', 
-                        borderRadius: '4px',
-                        fontFamily: 'monospace'
-                      }}>
-                        {interaction.shortcut}
-                      </code>
-                    </TableCell>
-                    <TableCell>{interaction.description}</TableCell>
-                  </TableRow>
-                ))}
+                {mouseInteractions.map((interaction, index) => {
+                  return (
+                    <TableRow key={index}>
+                      <TableCell>{interaction.action}</TableCell>
+                      <TableCell>
+                        <code
+                          style={{
+                            backgroundColor: '#f5f5f5',
+                            padding: '2px 6px',
+                            borderRadius: '4px',
+                            fontFamily: 'monospace'
+                          }}
+                        >
+                          {interaction.shortcut}
+                        </code>
+                      </TableCell>
+                      <TableCell>{interaction.description}</TableCell>
+                    </TableRow>
+                  );
+                })}
               </TableBody>
             </Table>
           </TableContainer>
@@ -213,8 +233,9 @@ export const HelpDialog = () => {
 
         <Box sx={{ mt: 3, p: 2, bgcolor: 'info.light', borderRadius: 1 }}>
           <Typography variant="body2" color="info.contrastText">
-            <strong>Note:</strong> Keyboard shortcuts are disabled when typing in input fields, 
-            text areas, or content-editable elements to prevent conflicts.
+            <strong>Note:</strong> Keyboard shortcuts are disabled when typing
+            in input fields, text areas, or content-editable elements to prevent
+            conflicts.
           </Typography>
         </Box>
       </DialogContent>
@@ -226,4 +247,4 @@ export const HelpDialog = () => {
       </DialogActions>
     </Dialog>
   );
-}; 
+};

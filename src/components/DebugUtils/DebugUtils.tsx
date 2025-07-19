@@ -58,7 +58,10 @@ export const DebugUtils = () => {
         value={`${scene.items.length} items in scene`}
       />
       <LineItem title="Mode" value={uiState.mode.type} />
-      <LineItem title="Mode data" value={JSON.stringify(uiState.mode, null, 2)} />
+      <LineItem
+        title="Mode data"
+        value={JSON.stringify(uiState.mode, null, 2)}
+      />
     </Box>
   );
 };

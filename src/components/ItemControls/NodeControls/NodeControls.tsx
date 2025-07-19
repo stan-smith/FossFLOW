@@ -51,19 +51,23 @@ export const NodeControls = ({ id }: Props) => {
     <ControlsContainer>
       <Box
         sx={{
-          bgcolor: (theme) => theme.customVars.customPalette.diagramBg,
-          position: 'relative',
+          bgcolor: (theme) => {
+            return theme.customVars.customPalette.diagramBg;
+          },
+          position: 'relative'
         }}
       >
         {/* Close button */}
         <MUIIconButton
           aria-label="Close"
-          onClick={() => uiStateActions.setItemControls(null)}
+          onClick={() => {
+            return uiStateActions.setItemControls(null);
+          }}
           sx={{
             position: 'absolute',
             top: 8,
             right: 8,
-            zIndex: 2,
+            zIndex: 2
           }}
           size="small"
         >
@@ -134,4 +138,3 @@ export const NodeControls = ({ id }: Props) => {
     </ControlsContainer>
   );
 };
-

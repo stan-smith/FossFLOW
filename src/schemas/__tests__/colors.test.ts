@@ -10,7 +10,11 @@ describe('colorSchema', () => {
     const result = colorSchema.safeParse(invalid);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues.some((issue: any) => issue.path.includes('value'))).toBe(true);
+      expect(
+        result.error.issues.some((issue: any) => {
+          return issue.path.includes('value');
+        })
+      ).toBe(true);
     }
   });
 });
@@ -31,7 +35,11 @@ describe('colorsSchema', () => {
     const result = colorsSchema.safeParse(invalid);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues.some((issue: any) => issue.path.includes('value'))).toBe(true);
+      expect(
+        result.error.issues.some((issue: any) => {
+          return issue.path.includes('value');
+        })
+      ).toBe(true);
     }
   });
-}); 
+});

@@ -23,11 +23,11 @@ export const Connector = ({ connector: _connector, isSelected }: Props) => {
   const color = useColor(_connector.color);
   const { currentView } = useScene();
   const connector = useConnector(_connector.id);
-  
+
   if (!connector || !color) {
     return null;
   }
-  
+
   const { css, pxSize } = useIsoProjection({
     ...connector.path.rectangle
   });

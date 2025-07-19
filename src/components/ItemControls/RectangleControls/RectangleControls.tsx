@@ -4,10 +4,10 @@ import { useRectangle } from 'src/hooks/useRectangle';
 import { ColorSelector } from 'src/components/ColorSelector/ColorSelector';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useScene } from 'src/hooks/useScene';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { ControlsContainer } from '../components/ControlsContainer';
 import { Section } from '../components/Section';
 import { DeleteButton } from '../components/DeleteButton';
-import { Close as CloseIcon } from '@mui/icons-material';
 
 interface Props {
   id: string;
@@ -31,12 +31,14 @@ export const RectangleControls = ({ id }: Props) => {
         {/* Close button */}
         <MUIIconButton
           aria-label="Close"
-          onClick={() => uiStateActions.setItemControls(null)}
+          onClick={() => {
+            return uiStateActions.setItemControls(null);
+          }}
           sx={{
             position: 'absolute',
             top: 8,
             right: 8,
-            zIndex: 2,
+            zIndex: 2
           }}
           size="small"
         >

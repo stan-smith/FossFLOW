@@ -12,4 +12,4 @@ describe('Value', () => {
     const { asFragment } = render(<Value value="Snapshot Value" />);
     expect(asFragment()).toMatchSnapshot();
   });
-}); 
+});
