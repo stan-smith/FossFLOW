@@ -10,7 +10,8 @@
     "jsx": "react-jsx",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "declaration": true,
+    "declaration": false,
+    "declarationMap": false,
     "strict": true,
     "module": "es6",
     "moduleResolution": "node",
@@ -22,5 +23,5 @@
     "**/*.ts",
     "**/*.tsx",
     "src/global.d.ts"
-  ],
+  ]
 }

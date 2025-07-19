@@ -7,12 +7,13 @@ module.exports = {
   target: 'web',
   entry: {
     'index': './src/index.ts',
-    '/standaloneExports': './src/standaloneExports.ts',
+    'standaloneExports': './src/standaloneExports.ts',
   },
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].js',
-    libraryTarget: 'commonjs2'
+    libraryTarget: 'commonjs2',
+    clean: true
   },
   externals: {
     react: {
@@ -36,7 +37,16 @@ module.exports = {
     rules: [
       {
         test: /\.(ts|tsx)$/,
-        use: 'ts-loader',
+        use: {
+          loader: 'ts-loader',
+          options: {
+            transpileOnly: true,
+            compilerOptions: {
+              declaration: false,
+              emitDeclarationOnly: false
+            }
+          }
+        },
         exclude: /node_modules/
       },
       {
