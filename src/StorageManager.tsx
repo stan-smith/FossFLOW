@@ -61,21 +61,38 @@ export const StorageManager: React.FC<{ onClose: () => void }> = ({ onClose }) =
       }
       keysToRemove.forEach(key => localStorage.removeItem(key));
       calculateStorage();
-      alert('All diagrams cleared. Please reload the page.');
-      window.location.reload();
+      alert('All FossFLOW diagrams cleared. Please note that other browser data might still be present.');
+      // Do not force reload, let user decide
+      // window.location.reload();
     }
   };
 
   const exportAllDiagrams = () => {
-    const diagrams = localStorage.getItem('fossflow-diagrams');
-    if (diagrams) {
-      const blob = new Blob([diagrams], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `fossflow-backup-${Date.now()}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
+    const diagramsJson = localStorage.getItem('fossflow-diagrams');
+    if (diagramsJson) {
+      try {
+        const diagrams = JSON.parse(diagramsJson);
+        // Re-add icons to each diagram for export
+        const diagramsWithIcons = diagrams.map((d: any) => ({
+          ...d,
+          data: {
+            ...d.data,
+            icons: JSON.parse(localStorage.getItem('fossflow-last-opened-data') || '{}').icons || [] // Assuming last opened data has icons
+          }
+        }));
+        const blob = new Blob([JSON.stringify(diagramsWithIcons, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `fossflow-backup-${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        console.error('Failed to parse diagrams for export:', e);
+        alert('Error exporting diagrams. Please try again.');
+      }
+    } else {
+      alert('No diagrams to export.');
     }
   };
 

@@ -251,7 +251,7 @@ function App() {
         // Override with any new data from the model update
         ...model,
         // Ensure we always have required fields
-        title: model.title || prevModel?.title || diagramData.title || diagramName || 'Untitled',
+        title: model.title || prevModel?.title || diagramData.title || 'Untitled',
         // Keep icons in the data structure for FossFLOW to work
         icons: icons, // Always use full icon set
         colors: model.colors || prevModel?.colors || diagramData.colors || [],
@@ -382,7 +382,7 @@ function App() {
     }, 5000); // Auto-save after 5 seconds of changes
     
     return () => clearTimeout(autoSaveTimer);
-  }, [currentModel, hasUnsavedChanges, currentDiagram, diagramName, icons]);
+  }, [currentModel, hasUnsavedChanges, currentDiagram, diagramName]);
   
   // Warn before closing if there are unsaved changes
   useEffect(() => {
