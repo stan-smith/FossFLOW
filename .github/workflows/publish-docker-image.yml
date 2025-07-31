@@ -1,0 +1,104 @@
+name: Build and Publish Docker Image
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ '**' ]
+    tags: [ 'v*.*.*' ]
+    paths:
+      - 'src/**/*'
+      - 'public/**/*'
+      - 'Dockerfile'
+      - '*.json'
+      - '*.ts'
+      - '.github/workflows/publish-docker-image.yml'
+  pull_request:
+    branches: [ "master" ]
+    types: [ closed ]
+    paths:
+      - 'src/**/*'
+      - 'public/**/*'
+      - 'Dockerfile'
+      - '*.json'
+      - '*.ts'
+      - '.github/workflows/publish-docker-image.yml'
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write      # Needed for creating releases
+      packages: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=raw,value=latest,enable={{is_default_branch}}
+            type=sha
+
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            🚀 Automated release for Docker image `${{ github.ref_name }}`
+            Built from commit `${{ github.sha }}`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Discord notification
+      #   env:
+      #     DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      #   uses: rjstone/discord-webhook-notify@v1
+      #   with:
+      #     severity: info
+      #     username: Github
+      #     color: '#ff00aa'
+      #     avatarUrl: https://github.githubassets.com/images/modules/logos_page/Octocat.png
+      #     description: A new ${{ github.event.repository.name }} image ${{ steps.meta.outputs.tags }} has been published
+      #     details: Based on ${{ github.event.head_commit.url }}
+      #     webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
