@@ -28,6 +28,12 @@ on:
       - '*.ts'
       - '.github/workflows/publish-docker-image.yml'
 
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+
 env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: ghcr.io
