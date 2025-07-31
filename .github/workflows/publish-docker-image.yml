@@ -11,18 +11,22 @@ on:
     branches: [ '**' ]
     tags: [ 'v*.*.*' ]
     paths:
-      - 'app/**/*'
+      - 'src/**/*'
+      - 'public/**/*'
       - 'Dockerfile'
-      - 'requirements.txt'
-      - '.github/workflows/docker-publish.yml'
+      - '*.json'
+      - '*.ts'
+      - '.github/workflows/publish-docker-image.yml'
   pull_request:
     branches: [ "master" ]
     types: [ closed ]
     paths:
-      - 'app/**/*'
+      - 'src/**/*'
+      - 'public/**/*'
       - 'Dockerfile'
-      - 'requirements.txt'
-      - '.github/workflows/docker-publish.yml'
+      - '*.json'
+      - '*.ts'
+      - '.github/workflows/publish-docker-image.yml'
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -83,7 +87,6 @@ jobs:
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
         with:
           context: .
-          target: production
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
