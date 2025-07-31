@@ -5,6 +5,21 @@ on:
   # Runs on pushes targeting the default branch
   push:
     branches: ["master"]
+    paths:
+      - 'src/**/*'
+      - 'public/**/*'
+      - '*.json'
+      - '*.ts'
+      - '.github/workflows/pages.yml'
+  pull_request:
+    branches: [ "master" ]
+    types: [ closed ]
+    paths:
+      - 'src/**/*'
+      - 'public/**/*'
+      - '*.json'
+      - '*.ts'
+      - '.github/workflows/pages.yml'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
