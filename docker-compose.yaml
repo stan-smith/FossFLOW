@@ -1,0 +1,10 @@
+services:
+  fossflow:
+    build:
+      context: https://github.com/stan-smith/FossFLOW.git
+      dockerfile: Dockerfile
+    container_name: fossflow
+    ports:
+      - "3000:3000"
+    environment:
+      - PUBLIC_URL=/
