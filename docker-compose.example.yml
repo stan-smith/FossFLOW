@@ -1,0 +1,8 @@
+services:
+  fossflow:
+    image: ghcr.io/stan-smith/fossflow:latest
+    restart: unless-stopped
+    environment:
+      - PUBLIC_URL=/
+    ports:
+      - 3000:3000
