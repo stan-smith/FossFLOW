@@ -1,0 +1,16 @@
+services:
+  fossflow:
+    build:
+      context: https://github.com/stan-smith/FossFLOW.git
+      dockerfile: Dockerfile
+    container_name: fossflow
+    ports:
+      - "3000:3000"
+    environment:
+      - PUBLIC_URL=/
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://127.0.0.1:3000 || exit 1"]
+      interval: 1m
+      timeout: 10s
+      retries: 3
+      start_period: 30s
