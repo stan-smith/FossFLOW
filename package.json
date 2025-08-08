@@ -12,7 +12,10 @@
   "scripts": {
     "start": "rsbuild dev",
     "build": "rsbuild build",
-    "preview": "rsbuild preview"
+    "preview": "rsbuild preview",
+    "bump:patch": "npm version patch -m \"chore(release): %s\" && git push && git push --tags",
+    "bump:minor": "npm version minor -m \"chore(release): %s\" && git push && git push --tags",
+    "bump:major": "npm version major -m \"chore(release): %s\" && git push && git push --tags"
   },
   "eslintConfig": {
     "extends": [
