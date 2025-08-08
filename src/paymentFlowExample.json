@@ -2,296 +2,911 @@
   "title": "E-Commerce Payment Processing Flow",
   "icons": [],
   "colors": [
-    { "id": "blue", "value": "#0066cc" },
-    { "id": "green", "value": "#00aa00" },
-    { "id": "red", "value": "#cc0000" },
-    { "id": "orange", "value": "#ff9900" },
-    { "id": "purple", "value": "#9900cc" }
+    {
+      "id": "blue",
+      "value": "#0066cc"
+    },
+    {
+      "id": "green",
+      "value": "#00aa00"
+    },
+    {
+      "id": "red",
+      "value": "#cc0000"
+    },
+    {
+      "id": "orange",
+      "value": "#ff9900"
+    },
+    {
+      "id": "purple",
+      "value": "#9900cc"
+    },
+    {
+      "id": "black",
+      "value": "#000000"
+    },
+    {
+      "id": "gray",
+      "value": "#666666"
+    }
   ],
   "items": [
     {
-      "id": "customer",
-      "type": "isoflow__person",
-      "position": { "x": 50, "y": 200 },
+      "id": "87ce3249-5bd8-4228-a0b9-7f8d69d85317",
       "name": "Customer",
-      "description": "Online shopper making a purchase"
+      "icon": "user"
     },
     {
-      "id": "web-app",
-      "type": "isoflow__web_app",
-      "position": { "x": 200, "y": 200 },
+      "id": "ece59134-e806-4a4d-b091-f56c5fbed75e",
       "name": "E-Commerce Site",
-      "description": "React-based shopping platform"
+      "icon": "desktop"
     },
     {
-      "id": "api-gateway",
-      "type": "isoflow__api",
-      "position": { "x": 350, "y": 200 },
+      "id": "97ab629e-5017-4a13-9e6e-18cceefb5d6c",
       "name": "API Gateway",
-      "description": "Routes payment requests"
+      "icon": "azure-network-interfaces"
     },
     {
-      "id": "load-balancer",
-      "type": "isoflow__load_balancer",
-      "position": { "x": 500, "y": 200 },
+      "id": "9a9e1ff4-e98e-4eac-924b-2e58dfc2652e",
       "name": "Load Balancer",
-      "description": "Distributes traffic across payment services"
+      "icon": "loadbalancer"
     },
     {
-      "id": "payment-service-1",
-      "type": "isoflow__microservice",
-      "position": { "x": 650, "y": 150 },
+      "id": "f2a406dc-9e01-4ced-ab75-33a43aad3388",
       "name": "Payment Service A",
-      "description": "Primary payment processor"
+      "icon": "server"
     },
     {
-      "id": "payment-service-2",
-      "type": "isoflow__microservice",
-      "position": { "x": 650, "y": 250 },
+      "id": "722ae0c9-1195-439e-aca4-050695cbc29b",
       "name": "Payment Service B",
-      "description": "Backup payment processor"
+      "icon": "server"
     },
     {
-      "id": "redis-cache",
-      "type": "isoflow__redis",
-      "position": { "x": 800, "y": 100 },
+      "id": "94231381-039c-492a-bbfa-a9ca9128b7ff",
       "name": "Redis Cache",
-      "description": "Session & cart data"
+      "icon": "azure-cache-redis"
     },
     {
-      "id": "auth-service",
-      "type": "isoflow__authentication",
-      "position": { "x": 350, "y": 350 },
+      "id": "189c2dc2-a1bd-4bef-91fb-dfd26fa8877b",
       "name": "Auth Service",
-      "description": "OAuth 2.0 / JWT tokens"
+      "icon": "azure-app-service-certificates"
     },
     {
-      "id": "fraud-detection",
-      "type": "isoflow__shield",
-      "position": { "x": 500, "y": 350 },
+      "id": "980e9d83-cf13-4eb0-a1d9-d798db193e53",
       "name": "Fraud Detection",
-      "description": "ML-based fraud analysis"
+      "icon": "aws-shield"
     },
     {
-      "id": "payment-gateway",
-      "type": "isoflow__gateway",
-      "position": { "x": 800, "y": 200 },
+      "id": "e4a33ec7-5cf5-4373-bfd7-5b9f6904332b",
       "name": "Payment Gateway",
-      "description": "Stripe/PayPal integration"
+      "icon": "gcp-cloud-api-gateway"
     },
     {
-      "id": "bank-api",
-      "type": "isoflow__bank",
-      "position": { "x": 950, "y": 200 },
+      "id": "57e9bd2f-b1dd-4fd8-83b6-b3e54e22bfe6",
       "name": "Banking API",
-      "description": "Direct bank integration"
+      "icon": "diamond"
     },
     {
-      "id": "database",
-      "type": "isoflow__database",
-      "position": { "x": 650, "y": 350 },
+      "id": "73893055-4f87-435b-9505-b96da6ff854d",
       "name": "PostgreSQL",
-      "description": "Transaction history"
+      "icon": "azure-database-postgresql-server"
     },
     {
-      "id": "notification",
-      "type": "isoflow__notification",
-      "position": { "x": 800, "y": 350 },
+      "id": "f14adbb4-e026-4599-805b-b193e22288b0",
       "name": "Notification Service",
-      "description": "Email/SMS confirmations"
+      "icon": "azure-windows-notification-services"
     },
     {
-      "id": "monitoring",
-      "type": "isoflow__monitoring",
-      "position": { "x": 950, "y": 350 },
+      "id": "fefac06f-4103-47c1-b257-fdfeafdef9a6",
       "name": "Monitoring",
-      "description": "DataDog integration"
+      "icon": "gcp-cloud-monitoring"
     },
     {
-      "id": "cdn",
-      "type": "isoflow__cdn",
-      "position": { "x": 200, "y": 50 },
+      "id": "739962a1-c750-4a6a-9591-5f86d3a5c788",
       "name": "CloudFlare CDN",
-      "description": "Static assets & DDoS protection"
+      "icon": "azure-cdn-profiles"
     },
     {
-      "id": "mobile-app",
-      "type": "isoflow__mobile",
-      "position": { "x": 50, "y": 50 },
+      "id": "4ee4033b-776c-4d7d-850a-7888507c3850",
       "name": "Mobile App",
-      "description": "iOS/Android app"
+      "icon": "mobiledevice"
     },
     {
-      "id": "backup",
-      "type": "isoflow__backup",
-      "position": { "x": 650, "y": 450 },
+      "id": "1ccac8b3-54b3-4dc6-932d-b5142e55c47b",
       "name": "Backup Service",
-      "description": "Automated daily backups"
+      "icon": "azure-backup-center"
     },
     {
-      "id": "analytics",
-      "type": "isoflow__analytics",
-      "position": { "x": 350, "y": 50 },
+      "id": "15290043-55d2-408a-ae3c-9f36c555d73e",
       "name": "Analytics",
-      "description": "Google Analytics & Mixpanel"
+      "icon": "aws-analytics"
     },
     {
-      "id": "queue",
-      "type": "isoflow__queue",
-      "position": { "x": 500, "y": 450 },
+      "id": "3dc4ed4b-b3a9-44e2-b9aa-aaaa33dda71a",
       "name": "Message Queue",
-      "description": "RabbitMQ for async processing"
+      "icon": "queue"
     },
     {
-      "id": "logs",
-      "type": "isoflow__logs",
-      "position": { "x": 800, "y": 450 },
+      "id": "17524731-8a51-4d22-ba2c-5e6da59d4289",
       "name": "Log Aggregation",
-      "description": "ELK Stack"
+      "icon": "gcp-cloud-audit-logs"
     }
   ],
-  "connectors": [
+  "views": [
     {
-      "id": "c1",
-      "from": "customer",
-      "to": "web-app",
-      "name": "1. Browse & checkout",
-      "color": "blue"
-    },
-    {
-      "id": "c2",
-      "from": "mobile-app",
-      "to": "web-app",
-      "name": "Mobile API",
-      "color": "blue"
-    },
-    {
-      "id": "c3",
-      "from": "web-app",
-      "to": "cdn",
-      "name": "Static assets",
-      "color": "orange"
-    },
-    {
-      "id": "c4",
-      "from": "web-app",
-      "to": "api-gateway",
-      "name": "2. Payment request",
-      "color": "green"
-    },
-    {
-      "id": "c5",
-      "from": "api-gateway",
-      "to": "auth-service",
-      "name": "3. Verify auth",
-      "color": "purple"
-    },
-    {
-      "id": "c6",
-      "from": "api-gateway",
-      "to": "load-balancer",
-      "name": "4. Route payment",
-      "color": "green"
-    },
-    {
-      "id": "c7",
-      "from": "load-balancer",
-      "to": "payment-service-1",
-      "name": "5a. Process (primary)",
-      "color": "green"
-    },
-    {
-      "id": "c8",
-      "from": "load-balancer",
-      "to": "payment-service-2",
-      "name": "5b. Process (backup)",
-      "color": "orange"
-    },
-    {
-      "id": "c9",
-      "from": "payment-service-1",
-      "to": "redis-cache",
-      "name": "Cache session",
-      "color": "blue"
-    },
-    {
-      "id": "c10",
-      "from": "payment-service-1",
-      "to": "fraud-detection",
-      "name": "6. Check fraud",
-      "color": "red"
-    },
-    {
-      "id": "c11",
-      "from": "payment-service-1",
-      "to": "payment-gateway",
-      "name": "7. Process payment",
-      "color": "green"
-    },
-    {
-      "id": "c12",
-      "from": "payment-gateway",
-      "to": "bank-api",
-      "name": "8. Bank transfer",
-      "color": "green"
-    },
-    {
-      "id": "c13",
-      "from": "payment-service-1",
-      "to": "database",
-      "name": "9. Store transaction",
-      "color": "blue"
-    },
-    {
-      "id": "c14",
-      "from": "payment-service-1",
-      "to": "notification",
-      "name": "10. Send confirmation",
-      "color": "purple"
-    },
-    {
-      "id": "c15",
-      "from": "payment-service-1",
-      "to": "monitoring",
-      "name": "Metrics",
-      "color": "orange"
-    },
-    {
-      "id": "c16",
-      "from": "web-app",
-      "to": "analytics",
-      "name": "Track events",
-      "color": "purple"
-    },
-    {
-      "id": "c17",
-      "from": "database",
-      "to": "backup",
-      "name": "Daily backup",
-      "color": "orange"
-    },
-    {
-      "id": "c18",
-      "from": "payment-service-1",
-      "to": "queue",
-      "name": "Async tasks",
-      "color": "blue"
-    },
-    {
-      "id": "c19",
-      "from": "payment-service-1",
-      "to": "logs",
-      "name": "Audit logs",
-      "color": "purple"
-    },
-    {
-      "id": "c20",
-      "from": "notification",
-      "to": "customer",
-      "name": "11. Email/SMS receipt",
-      "color": "green"
+      "id": "a43a13d0-2f10-4c81-bad2-430716f95c43",
+      "name": "E-Commerce Payment Flow",
+      "items": [
+        {
+          "id": "87ce3249-5bd8-4228-a0b9-7f8d69d85317",
+          "tile": {
+            "x": -9,
+            "y": -1
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "ece59134-e806-4a4d-b091-f56c5fbed75e",
+          "tile": {
+            "x": -6,
+            "y": -1
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "97ab629e-5017-4a13-9e6e-18cceefb5d6c",
+          "tile": {
+            "x": -3,
+            "y": -1
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "9a9e1ff4-e98e-4eac-924b-2e58dfc2652e",
+          "tile": {
+            "x": 0,
+            "y": -1
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "f2a406dc-9e01-4ced-ab75-33a43aad3388",
+          "tile": {
+            "x": 3,
+            "y": -2
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "722ae0c9-1195-439e-aca4-050695cbc29b",
+          "tile": {
+            "x": 0,
+            "y": 3
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "94231381-039c-492a-bbfa-a9ca9128b7ff",
+          "tile": {
+            "x": 7,
+            "y": -3
+          },
+          "labelHeight": 60
+        },
+        {
+          "id": "189c2dc2-a1bd-4bef-91fb-dfd26fa8877b",
+          "tile": {
+            "x": -3,
+            "y": 3
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "980e9d83-cf13-4eb0-a1d9-d798db193e53",
+          "tile": {
+            "x": 2,
+            "y": -6
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "e4a33ec7-5cf5-4373-bfd7-5b9f6904332b",
+          "tile": {
+            "x": 8,
+            "y": -1
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "57e9bd2f-b1dd-4fd8-83b6-b3e54e22bfe6",
+          "tile": {
+            "x": 8,
+            "y": 1
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "73893055-4f87-435b-9505-b96da6ff854d",
+          "tile": {
+            "x": 3,
+            "y": 1
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "f14adbb4-e026-4599-805b-b193e22288b0",
+          "tile": {
+            "x": -3,
+            "y": -6
+          },
+          "labelHeight": 60
+        },
+        {
+          "id": "fefac06f-4103-47c1-b257-fdfeafdef9a6",
+          "tile": {
+            "x": 8,
+            "y": 3
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "739962a1-c750-4a6a-9591-5f86d3a5c788",
+          "tile": {
+            "x": -6,
+            "y": -4
+          },
+          "labelHeight": 60
+        },
+        {
+          "id": "4ee4033b-776c-4d7d-850a-7888507c3850",
+          "tile": {
+            "x": -9,
+            "y": -4
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "1ccac8b3-54b3-4dc6-932d-b5142e55c47b",
+          "tile": {
+            "x": 3,
+            "y": 3
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "15290043-55d2-408a-ae3c-9f36c555d73e",
+          "tile": {
+            "x": -3,
+            "y": -4
+          },
+          "labelHeight": 60
+        },
+        {
+          "id": "3dc4ed4b-b3a9-44e2-b9aa-aaaa33dda71a",
+          "tile": {
+            "x": 4,
+            "y": -6
+          },
+          "labelHeight": 80
+        },
+        {
+          "id": "17524731-8a51-4d22-ba2c-5e6da59d4289",
+          "tile": {
+            "x": 6,
+            "y": 3
+          },
+          "labelHeight": 80
+        }
+      ],
+      "connectors": [
+        {
+          "id": "324bd3aa-16dd-4f4c-8a57-527895302402",
+          "color": "blue",
+          "description": "1. Browse & checkout",
+          "anchors": [
+            {
+              "id": "11098ca7-f30a-4493-a5dd-2463fad4c915",
+              "ref": {
+                "item": "87ce3249-5bd8-4228-a0b9-7f8d69d85317"
+              }
+            },
+            {
+              "id": "cba62534-0a39-4acf-8462-dcae3dc0c3f1",
+              "ref": {
+                "item": "ece59134-e806-4a4d-b091-f56c5fbed75e"
+              }
+            }
+          ]
+        },
+        {
+          "id": "291ff72b-57e0-4d4d-9aa7-843092f531cd",
+          "color": "blue",
+          "description": "Mobile API",
+          "anchors": [
+            {
+              "id": "4e18dd48-53e1-4b44-a09d-b81d044665a6",
+              "ref": {
+                "item": "4ee4033b-776c-4d7d-850a-7888507c3850"
+              }
+            },
+            {
+              "id": "46875217-681f-424d-8e01-caf2bcb7a893",
+              "ref": {
+                "item": "ece59134-e806-4a4d-b091-f56c5fbed75e"
+              }
+            }
+          ]
+        },
+        {
+          "id": "8446b992-f592-4862-8626-ac7898e75213",
+          "color": "orange",
+          "description": "Static assets",
+          "anchors": [
+            {
+              "id": "b626862a-a773-443c-acc5-8144c88aed74",
+              "ref": {
+                "item": "ece59134-e806-4a4d-b091-f56c5fbed75e"
+              }
+            },
+            {
+              "id": "5e4deb11-beca-4b3e-995b-f60a8012bfab",
+              "ref": {
+                "item": "739962a1-c750-4a6a-9591-5f86d3a5c788"
+              }
+            }
+          ]
+        },
+        {
+          "id": "2f45df63-79b2-4c84-899b-fff7b26d3dfa",
+          "color": "green",
+          "description": "2. Payment request",
+          "anchors": [
+            {
+              "id": "1d215865-8cbc-46b6-8cc2-cee241842901",
+              "ref": {
+                "item": "ece59134-e806-4a4d-b091-f56c5fbed75e"
+              }
+            },
+            {
+              "id": "7709db85-4188-42fa-9835-a20beede089b",
+              "ref": {
+                "item": "97ab629e-5017-4a13-9e6e-18cceefb5d6c"
+              }
+            }
+          ]
+        },
+        {
+          "id": "84973ca3-fc85-4302-b6e0-20f93cb48d19",
+          "color": "purple",
+          "description": "3. Verify auth",
+          "anchors": [
+            {
+              "id": "7f2854ad-d255-474f-885c-51d6927c7ee1",
+              "ref": {
+                "item": "97ab629e-5017-4a13-9e6e-18cceefb5d6c"
+              }
+            },
+            {
+              "id": "ed32540d-de39-4b85-a9cd-6cfd1d39ce8b",
+              "ref": {
+                "item": "189c2dc2-a1bd-4bef-91fb-dfd26fa8877b"
+              }
+            }
+          ]
+        },
+        {
+          "id": "f175cd97-3318-4510-8e10-5e5ff6e54f23",
+          "color": "green",
+          "description": "4. Route payment",
+          "anchors": [
+            {
+              "id": "94dba682-23cc-4761-ae5f-14919bff1fde",
+              "ref": {
+                "item": "97ab629e-5017-4a13-9e6e-18cceefb5d6c"
+              }
+            },
+            {
+              "id": "e5d43603-6c8e-485a-9efd-8019b6b30e5b",
+              "ref": {
+                "item": "9a9e1ff4-e98e-4eac-924b-2e58dfc2652e"
+              }
+            }
+          ]
+        },
+        {
+          "id": "5d8df8ec-6729-455c-a45e-523a04dcec7f",
+          "color": "green",
+          "description": "5a. Process (primary)",
+          "anchors": [
+            {
+              "id": "9c9b9f97-af23-42f3-a1c5-5b0a2b1618fb",
+              "ref": {
+                "item": "9a9e1ff4-e98e-4eac-924b-2e58dfc2652e"
+              }
+            },
+            {
+              "id": "b1373fd5-ea26-4cd8-9e42-f0b3675e741a",
+              "ref": {
+                "item": "f2a406dc-9e01-4ced-ab75-33a43aad3388"
+              }
+            }
+          ]
+        },
+        {
+          "id": "4cdf223e-0e56-4e5a-abac-f8952ab838e1",
+          "color": "orange",
+          "description": "5b. Process (backup)",
+          "anchors": [
+            {
+              "id": "321c650f-2dc7-4cae-a409-7149485f5c6d",
+              "ref": {
+                "item": "9a9e1ff4-e98e-4eac-924b-2e58dfc2652e"
+              }
+            },
+            {
+              "id": "5114c4a6-7ceb-4c85-8304-8d09ca4bee41",
+              "ref": {
+                "item": "722ae0c9-1195-439e-aca4-050695cbc29b"
+              }
+            }
+          ]
+        },
+        {
+          "id": "83a6a422-fefb-4a27-824d-2a24650068a1",
+          "color": "blue",
+          "description": "Cache session",
+          "anchors": [
+            {
+              "id": "35f35127-4d25-488e-97bd-7d9bfaae7fb1",
+              "ref": {
+                "item": "f2a406dc-9e01-4ced-ab75-33a43aad3388"
+              }
+            },
+            {
+              "id": "5016903c-383a-4856-8cfd-68e89496d945",
+              "ref": {
+                "item": "94231381-039c-492a-bbfa-a9ca9128b7ff"
+              }
+            }
+          ]
+        },
+        {
+          "id": "e26ca1ae-3878-4ce7-a3ac-bc16d74f2af6",
+          "color": "red",
+          "description": "6. Check fraud",
+          "anchors": [
+            {
+              "id": "1f780189-740d-47c8-96e4-6f4bd8c0a6f6",
+              "ref": {
+                "item": "f2a406dc-9e01-4ced-ab75-33a43aad3388"
+              }
+            },
+            {
+              "id": "e6bc0f8f-c468-4194-8e83-8767538387fe",
+              "ref": {
+                "item": "980e9d83-cf13-4eb0-a1d9-d798db193e53"
+              }
+            }
+          ]
+        },
+        {
+          "id": "9bb791b4-eb4b-4413-a59a-e4ea54cc72f3",
+          "color": "green",
+          "description": "7. Process payment",
+          "anchors": [
+            {
+              "id": "a725a3f0-c6b5-46dd-bd30-fd51e0222107",
+              "ref": {
+                "item": "f2a406dc-9e01-4ced-ab75-33a43aad3388"
+              }
+            },
+            {
+              "id": "3a0dbd0c-0e66-46d0-9a98-26689cd34b54",
+              "ref": {
+                "item": "e4a33ec7-5cf5-4373-bfd7-5b9f6904332b"
+              }
+            }
+          ]
+        },
+        {
+          "id": "ceacc7f4-5ab4-4b2d-8ddd-b30b4f1068ee",
+          "color": "green",
+          "description": "8. Bank transfer",
+          "anchors": [
+            {
+              "id": "b6888f54-0c64-40e8-8210-b394cc3284e8",
+              "ref": {
+                "item": "e4a33ec7-5cf5-4373-bfd7-5b9f6904332b"
+              }
+            },
+            {
+              "id": "dd78228d-c4bb-47af-9299-1b56cc85bf30",
+              "ref": {
+                "item": "57e9bd2f-b1dd-4fd8-83b6-b3e54e22bfe6"
+              }
+            }
+          ]
+        },
+        {
+          "id": "2d641c67-6901-4067-9164-7f5a1a569f65",
+          "color": "blue",
+          "description": "9. Store transaction",
+          "anchors": [
+            {
+              "id": "7d3aed61-d6e3-46dd-b2f1-e07f225c4074",
+              "ref": {
+                "item": "f2a406dc-9e01-4ced-ab75-33a43aad3388"
+              }
+            },
+            {
+              "id": "a6529b42-d622-4dc9-82ec-152cde4f5bc4",
+              "ref": {
+                "item": "73893055-4f87-435b-9505-b96da6ff854d"
+              }
+            }
+          ]
+        },
+        {
+          "id": "3cb6c3d3-6477-474c-a7d7-a670b6df3e11",
+          "color": "purple",
+          "description": "10. Send confirmation",
+          "anchors": [
+            {
+              "id": "8de1e8a0-37a1-4ca7-b283-1b03b078fb01",
+              "ref": {
+                "item": "f2a406dc-9e01-4ced-ab75-33a43aad3388"
+              },
+              "ordering": 0
+            },
+            {
+              "id": "92488d43-6e2e-4a28-aeda-6fd12ab404b2",
+              "ref": {
+                "tile": {
+                  "x": 2,
+                  "y": -3
+                }
+              },
+              "ordering": 1
+            },
+            {
+              "id": "8b7bdf22-149d-4d77-9f43-47413b9e1365",
+              "ref": {
+                "item": "f14adbb4-e026-4599-805b-b193e22288b0"
+              },
+              "ordering": 6
+            }
+          ],
+          "width": 10,
+          "style": "SOLID",
+          "path": {
+            "tiles": [
+              {
+                "x": 1,
+                "y": 1
+              },
+              {
+                "x": 2,
+                "y": 2
+              },
+              {
+                "x": 3,
+                "y": 2
+              },
+              {
+                "x": 3,
+                "y": 2
+              },
+              {
+                "x": 4,
+                "y": 3
+              },
+              {
+                "x": 4,
+                "y": 4
+              }
+            ],
+            "rectangle": {
+              "from": {
+                "x": 4,
+                "y": -1
+              },
+              "to": {
+                "x": -1,
+                "y": -6
+              }
+            }
+          }
+        },
+        {
+          "id": "904d24ae-a49c-40db-9c33-70a8393c887b",
+          "color": "orange",
+          "description": "Metrics",
+          "anchors": [
+            {
+              "id": "30bc1282-f913-4d36-91d9-97d97f748312",
+              "ref": {
+                "item": "f2a406dc-9e01-4ced-ab75-33a43aad3388"
+              }
+            },
+            {
+              "id": "0b5b162d-c8b3-4607-8a8c-ce50aa3bb10d",
+              "ref": {
+                "item": "fefac06f-4103-47c1-b257-fdfeafdef9a6"
+              }
+            }
+          ]
+        },
+        {
+          "id": "68143e0b-0e4a-4da6-9f6d-a131bdc774f8",
+          "color": "purple",
+          "description": "Track events",
+          "anchors": [
+            {
+              "id": "0d2ec3bb-eaf9-4b6a-9b57-a24d47a24f5e",
+              "ref": {
+                "item": "ece59134-e806-4a4d-b091-f56c5fbed75e"
+              }
+            },
+            {
+              "id": "89f349d6-9f1d-4c61-b9ef-b08ed8da64aa",
+              "ref": {
+                "item": "15290043-55d2-408a-ae3c-9f36c555d73e"
+              }
+            }
+          ]
+        },
+        {
+          "id": "1aa73a24-f32f-4035-8b1f-164ff7c0de84",
+          "color": "orange",
+          "description": "Daily backup",
+          "anchors": [
+            {
+              "id": "83524099-7272-4d9f-8abd-ec4af0568688",
+              "ref": {
+                "item": "73893055-4f87-435b-9505-b96da6ff854d"
+              }
+            },
+            {
+              "id": "bc9630c2-7ae8-4570-aa09-ea28fb23f5f0",
+              "ref": {
+                "item": "1ccac8b3-54b3-4dc6-932d-b5142e55c47b"
+              }
+            }
+          ]
+        },
+        {
+          "id": "c1307376-bc3d-4474-8bbd-62958b3b16f8",
+          "color": "blue",
+          "description": "Async tasks",
+          "anchors": [
+            {
+              "id": "ce25462d-0af2-42f1-884c-fb1a3bfcca65",
+              "ref": {
+                "item": "f2a406dc-9e01-4ced-ab75-33a43aad3388"
+              }
+            },
+            {
+              "id": "26c519e4-be29-45c1-be28-8e8698994109",
+              "ref": {
+                "item": "3dc4ed4b-b3a9-44e2-b9aa-aaaa33dda71a"
+              }
+            }
+          ]
+        },
+        {
+          "id": "e5815e4c-2429-425c-9595-8110c438551a",
+          "color": "purple",
+          "description": "Audit logs",
+          "anchors": [
+            {
+              "id": "8b7ffb6d-f100-4c28-89ab-72de2b684f78",
+              "ref": {
+                "item": "f2a406dc-9e01-4ced-ab75-33a43aad3388"
+              },
+              "ordering": 0
+            },
+            {
+              "id": "84d59b20-7a19-43d4-8541-d8eefdc652e1",
+              "ref": {
+                "tile": {
+                  "x": 4,
+                  "y": 1
+                }
+              },
+              "ordering": 4
+            },
+            {
+              "id": "9ca70483-3d6c-4f7f-b058-70d451cfa14b",
+              "ref": {
+                "item": "17524731-8a51-4d22-ba2c-5e6da59d4289"
+              },
+              "ordering": 5
+            }
+          ],
+          "width": 10,
+          "style": "SOLID",
+          "path": {
+            "tiles": [
+              {
+                "x": 4,
+                "y": 6
+              },
+              {
+                "x": 3,
+                "y": 5
+              },
+              {
+                "x": 2,
+                "y": 4
+              },
+              {
+                "x": 2,
+                "y": 3
+              },
+              {
+                "x": 2,
+                "y": 3
+              },
+              {
+                "x": 1,
+                "y": 2
+              },
+              {
+                "x": 1,
+                "y": 1
+              }
+            ],
+            "rectangle": {
+              "from": {
+                "x": 7,
+                "y": 4
+              },
+              "to": {
+                "x": 2,
+                "y": -3
+              }
+            }
+          }
+        },
+        {
+          "id": "e18d1739-228b-4f38-a731-f1bef0717df9",
+          "color": "green",
+          "description": "11. Email/SMS receipt",
+          "anchors": [
+            {
+              "id": "051d47d3-6f15-4df5-b0fa-9078891f45bc",
+              "ref": {
+                "item": "f14adbb4-e026-4599-805b-b193e22288b0"
+              },
+              "ordering": 0
+            },
+            {
+              "id": "1ad12cfc-ae5f-404b-864f-3911f5a9d7a1",
+              "ref": {
+                "tile": {
+                  "x": -10,
+                  "y": -6
+                }
+              },
+              "ordering": 11
+            },
+            {
+              "id": "ff9f038f-cf64-4a45-acd7-90a9d4803954",
+              "ref": {
+                "tile": {
+                  "x": -11,
+                  "y": -3
+                }
+              },
+              "ordering": 14
+            },
+            {
+              "id": "2a07db12-3f07-48dd-b9e3-abf5d1f0bfd0",
+              "ref": {
+                "item": "87ce3249-5bd8-4228-a0b9-7f8d69d85317"
+              },
+              "ordering": 16
+            }
+          ],
+          "width": 10,
+          "style": "SOLID",
+          "path": {
+            "tiles": [
+              {
+                "x": 1,
+                "y": 5
+              },
+              {
+                "x": 2,
+                "y": 6
+              },
+              {
+                "x": 3,
+                "y": 6
+              },
+              {
+                "x": 4,
+                "y": 6
+              },
+              {
+                "x": 5,
+                "y": 6
+              },
+              {
+                "x": 6,
+                "y": 6
+              },
+              {
+                "x": 7,
+                "y": 6
+              },
+              {
+                "x": 8,
+                "y": 6
+              },
+              {
+                "x": 9,
+                "y": 6
+              },
+              {
+                "x": 10,
+                "y": 6
+              },
+              {
+                "x": 11,
+                "y": 6
+              },
+              {
+                "x": 12,
+                "y": 6
+              },
+              {
+                "x": 12,
+                "y": 6
+              },
+              {
+                "x": 12,
+                "y": 5
+              },
+              {
+                "x": 12,
+                "y": 4
+              },
+              {
+                "x": 12,
+                "y": 3
+              },
+              {
+                "x": 12,
+                "y": 3
+              },
+              {
+                "x": 11,
+                "y": 2
+              },
+              {
+                "x": 10,
+                "y": 1
+              }
+            ],
+            "rectangle": {
+              "from": {
+                "x": 1,
+                "y": 0
+              },
+              "to": {
+                "x": -12,
+                "y": -7
+              }
+            }
+          }
+        }
+      ],
+      "rectangles": [],
+      "textBoxes": [],
+      "lastUpdated": "2025-08-08T10:32:16.993Z"
     }
   ],
-  "views": [],
   "fitToScreen": true
 }
