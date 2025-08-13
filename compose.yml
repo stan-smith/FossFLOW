@@ -1,0 +1,10 @@
+services:
+  fossflow:
+    pull_policy: build
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    environment:
+      - NODE_ENV=production

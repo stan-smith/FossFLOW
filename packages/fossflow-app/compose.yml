@@ -1,7 +1,0 @@
-services:
-  openflow:
-    pull_policy: build
-    build:
-      context: ./
-    ports:
-      - 3000:3000
