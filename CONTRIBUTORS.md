@@ -1,6 +1,6 @@
-# Contributing to Isoflow
+# Contributing to FossFLOW
 
-Thank you for your interest in contributing to Isoflow! This guide will help you get started with contributing to the project.
+Thank you for your interest in contributing to FossFLOW! This guide will help you get started with contributing to the project.
 
 ## Table of Contents
 
@@ -28,29 +28,33 @@ By participating in this project, you agree to abide by our Code of Conduct:
 
 ### Prerequisites
 
-- Node.js (v16 or higher)
-- npm or yarn
+- Node.js (v18 or higher)
+- npm (v9 or higher)
 - Git
 - A code editor (VS Code recommended)
+- Docker (optional, for containerized deployment)
 
 ### Quick Start
 
 1. Fork the repository on GitHub
 2. Clone your fork:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/isoflow.git
-   cd isoflow
+   git clone https://github.com/YOUR_USERNAME/FossFLOW.git
+   cd FossFLOW
    ```
 3. Install dependencies:
    ```bash
-   cd isoflow
    npm install
    ```
-4. Start the development server:
+4. Build the library:
    ```bash
-   npm start
+   npm run build:lib
    ```
-5. Open http://localhost:3000 in your browser
+5. Start the development server:
+   ```bash
+   npm run dev
+   ```
+6. Open http://localhost:3000 in your browser
 
 ## Development Setup
 
@@ -70,36 +74,59 @@ Recommended extensions:
 
 2. **Available scripts**:
    ```bash
-   npm start          # Start development server
-   npm run dev        # Watch mode for library development
-   npm run build      # Production build
-   npm test           # Run tests
-   npm run lint       # Check for linting errors
-   npm run lint:fix   # Auto-fix linting errors
+   npm run dev          # Start app development server
+   npm run dev:lib      # Watch mode for library development
+   npm run build        # Build both library and app
+   npm run build:lib    # Build library only
+   npm run build:app    # Build app only
+   npm test             # Run tests
+   npm run lint         # Check for linting errors
+   npm run publish:lib  # Publish library to npm
    ```
 
 ## Project Structure
 
-For detailed project structure, see [ISOFLOW_ENCYCLOPEDIA.md](./ISOFLOW_ENCYCLOPEDIA.md). Key directories:
+This is a monorepo containing two packages:
 
 ```
-isoflow/
-├── src/
-│   ├── components/     # React components
-│   ├── stores/        # State management (Zustand)
-│   ├── hooks/         # Custom React hooks
-│   ├── interaction/   # User interaction handling
-│   ├── types/         # TypeScript types
-│   └── utils/         # Utility functions
-├── docs/              # Documentation site
-└── webpack/           # Build configurations
+FossFLOW/
+├── packages/
+│   ├── fossflow-lib/     # React component library
+│   │   ├── src/
+│   │   │   ├── components/     # React components
+│   │   │   ├── stores/        # State management (Zustand)
+│   │   │   ├── hooks/         # Custom React hooks
+│   │   │   ├── interaction/   # User interaction handling
+│   │   │   ├── types/         # TypeScript types
+│   │   │   └── utils/         # Utility functions
+│   │   ├── webpack.config.js  # Library build config
+│   │   └── package.json
+│   │
+│   └── fossflow-app/      # PWA application
+│       ├── src/
+│       │   ├── App.tsx         # Main app component
+│       │   ├── diagramUtils.ts # Diagram utilities
+│       │   └── index.tsx       # App entry point
+│       ├── public/            # Static assets
+│       ├── rsbuild.config.ts  # App build config
+│       └── package.json
+│
+├── Dockerfile             # Docker configuration
+├── compose.yml           # Docker Compose config
+├── package.json          # Root workspace config
+└── tsconfig.base.json    # Shared TypeScript config
 ```
+
+### Key Differences:
+- **fossflow-lib**: The core library, built with Webpack
+- **fossflow-app**: The PWA application, built with RSBuild
+- Both packages are managed as npm workspaces
 
 ## How to Contribute
 
 ### Finding Issues to Work On
 
-1. Check the [Issues](https://github.com/stan-smith/isoflow/issues) page
+1. Check the [Issues](https://github.com/stan-smith/FossFLOW/issues) page
 2. Look for issues labeled:
    - `good first issue` - Great for newcomers
    - `help wanted` - Community help needed
@@ -116,10 +143,35 @@ We welcome all types of contributions:
 - **Features**: Implement new functionality
 - **Documentation**: Improve docs, add examples
 - **Tests**: Increase test coverage
-- **UI/UX improvements**: Make Isoflow better to use
+- **UI/UX improvements**: Make FossFLOW better to use
 - **Performance**: Optimize code for better performance
 
 ## Development Workflow
+
+### Working with the Monorepo
+
+#### Library Development (fossflow-lib)
+```bash
+# Start library in watch mode
+npm run dev:lib
+
+# Build library
+npm run build:lib
+
+# Run library tests
+cd packages/fossflow-lib && npm test
+```
+
+#### App Development (fossflow-app)
+```bash
+# Start app dev server
+npm run dev
+
+# Build app for production
+npm run build:app
+
+# The app automatically uses the local library
+```
 
 ### 1. Create a Branch
 
@@ -143,18 +195,22 @@ Branch naming conventions:
 - Add comments for complex logic
 - Update tests if needed
 - Update documentation if needed
+- Test changes in both library and app if applicable
 
 ### 3. Test Your Changes
 
 ```bash
-# Run tests
+# Run all tests
 npm test
 
 # Run linting
 npm run lint
 
-# Test in development
-npm start
+# Test library changes
+npm run build:lib
+
+# Test app with library changes
+npm run dev
 ```
 
 ### 4. Commit Your Changes
@@ -255,7 +311,7 @@ describe('useIsoProjection', () => {
 
 1. **Update your fork**:
    ```bash
-   git remote add upstream https://github.com/markmanx/isoflow.git
+   git remote add upstream https://github.com/stan-smith/FossFLOW.git
    git fetch upstream
    git checkout main
    git merge upstream/main
@@ -309,6 +365,21 @@ Add screenshots or GIFs here
 - Make requested changes promptly
 - Ask questions if something is unclear
 
+## Docker Development
+
+### Building and Running with Docker
+
+```bash
+# Build multi-architecture image
+docker buildx build --platform linux/amd64,linux/arm64 -t fossflow:local .
+
+# Run with Docker Compose
+docker compose up
+
+# Or pull from Docker Hub
+docker run -p 80:80 stnsmith/fossflow:latest
+```
+
 ## Community
 
 ### Getting Help
@@ -334,10 +405,10 @@ Contributors will be recognized in:
 
 ## License
 
-By contributing to Isoflow, you agree that your contributions will be licensed under the Unlicense License.
+By contributing to FossFLOW, you agree that your contributions will be licensed under the project's license.
 
 ---
 
-Thank you for contributing to OpenFLOW! Your efforts help make this project better for everyone. If you have any questions, don't hesitate to ask in the issues or discussions.
+Thank you for contributing to FossFLOW! Your efforts help make this project better for everyone. If you have any questions, don't hesitate to ask in the issues or discussions.
 
 -S
