@@ -1,0 +1,297 @@
+{
+  "title": "E-Commerce Payment Processing Flow",
+  "icons": [],
+  "colors": [
+    { "id": "blue", "value": "#0066cc" },
+    { "id": "green", "value": "#00aa00" },
+    { "id": "red", "value": "#cc0000" },
+    { "id": "orange", "value": "#ff9900" },
+    { "id": "purple", "value": "#9900cc" }
+  ],
+  "items": [
+    {
+      "id": "customer",
+      "type": "isoflow__person",
+      "position": { "x": 50, "y": 200 },
+      "name": "Customer",
+      "description": "Online shopper making a purchase"
+    },
+    {
+      "id": "web-app",
+      "type": "isoflow__web_app",
+      "position": { "x": 200, "y": 200 },
+      "name": "E-Commerce Site",
+      "description": "React-based shopping platform"
+    },
+    {
+      "id": "api-gateway",
+      "type": "isoflow__api",
+      "position": { "x": 350, "y": 200 },
+      "name": "API Gateway",
+      "description": "Routes payment requests"
+    },
+    {
+      "id": "load-balancer",
+      "type": "isoflow__load_balancer",
+      "position": { "x": 500, "y": 200 },
+      "name": "Load Balancer",
+      "description": "Distributes traffic across payment services"
+    },
+    {
+      "id": "payment-service-1",
+      "type": "isoflow__microservice",
+      "position": { "x": 650, "y": 150 },
+      "name": "Payment Service A",
+      "description": "Primary payment processor"
+    },
+    {
+      "id": "payment-service-2",
+      "type": "isoflow__microservice",
+      "position": { "x": 650, "y": 250 },
+      "name": "Payment Service B",
+      "description": "Backup payment processor"
+    },
+    {
+      "id": "redis-cache",
+      "type": "isoflow__redis",
+      "position": { "x": 800, "y": 100 },
+      "name": "Redis Cache",
+      "description": "Session & cart data"
+    },
+    {
+      "id": "auth-service",
+      "type": "isoflow__authentication",
+      "position": { "x": 350, "y": 350 },
+      "name": "Auth Service",
+      "description": "OAuth 2.0 / JWT tokens"
+    },
+    {
+      "id": "fraud-detection",
+      "type": "isoflow__shield",
+      "position": { "x": 500, "y": 350 },
+      "name": "Fraud Detection",
+      "description": "ML-based fraud analysis"
+    },
+    {
+      "id": "payment-gateway",
+      "type": "isoflow__gateway",
+      "position": { "x": 800, "y": 200 },
+      "name": "Payment Gateway",
+      "description": "Stripe/PayPal integration"
+    },
+    {
+      "id": "bank-api",
+      "type": "isoflow__bank",
+      "position": { "x": 950, "y": 200 },
+      "name": "Banking API",
+      "description": "Direct bank integration"
+    },
+    {
+      "id": "database",
+      "type": "isoflow__database",
+      "position": { "x": 650, "y": 350 },
+      "name": "PostgreSQL",
+      "description": "Transaction history"
+    },
+    {
+      "id": "notification",
+      "type": "isoflow__notification",
+      "position": { "x": 800, "y": 350 },
+      "name": "Notification Service",
+      "description": "Email/SMS confirmations"
+    },
+    {
+      "id": "monitoring",
+      "type": "isoflow__monitoring",
+      "position": { "x": 950, "y": 350 },
+      "name": "Monitoring",
+      "description": "DataDog integration"
+    },
+    {
+      "id": "cdn",
+      "type": "isoflow__cdn",
+      "position": { "x": 200, "y": 50 },
+      "name": "CloudFlare CDN",
+      "description": "Static assets & DDoS protection"
+    },
+    {
+      "id": "mobile-app",
+      "type": "isoflow__mobile",
+      "position": { "x": 50, "y": 50 },
+      "name": "Mobile App",
+      "description": "iOS/Android app"
+    },
+    {
+      "id": "backup",
+      "type": "isoflow__backup",
+      "position": { "x": 650, "y": 450 },
+      "name": "Backup Service",
+      "description": "Automated daily backups"
+    },
+    {
+      "id": "analytics",
+      "type": "isoflow__analytics",
+      "position": { "x": 350, "y": 50 },
+      "name": "Analytics",
+      "description": "Google Analytics & Mixpanel"
+    },
+    {
+      "id": "queue",
+      "type": "isoflow__queue",
+      "position": { "x": 500, "y": 450 },
+      "name": "Message Queue",
+      "description": "RabbitMQ for async processing"
+    },
+    {
+      "id": "logs",
+      "type": "isoflow__logs",
+      "position": { "x": 800, "y": 450 },
+      "name": "Log Aggregation",
+      "description": "ELK Stack"
+    }
+  ],
+  "connectors": [
+    {
+      "id": "c1",
+      "from": "customer",
+      "to": "web-app",
+      "name": "1. Browse & checkout",
+      "color": "blue"
+    },
+    {
+      "id": "c2",
+      "from": "mobile-app",
+      "to": "web-app",
+      "name": "Mobile API",
+      "color": "blue"
+    },
+    {
+      "id": "c3",
+      "from": "web-app",
+      "to": "cdn",
+      "name": "Static assets",
+      "color": "orange"
+    },
+    {
+      "id": "c4",
+      "from": "web-app",
+      "to": "api-gateway",
+      "name": "2. Payment request",
+      "color": "green"
+    },
+    {
+      "id": "c5",
+      "from": "api-gateway",
+      "to": "auth-service",
+      "name": "3. Verify auth",
+      "color": "purple"
+    },
+    {
+      "id": "c6",
+      "from": "api-gateway",
+      "to": "load-balancer",
+      "name": "4. Route payment",
+      "color": "green"
+    },
+    {
+      "id": "c7",
+      "from": "load-balancer",
+      "to": "payment-service-1",
+      "name": "5a. Process (primary)",
+      "color": "green"
+    },
+    {
+      "id": "c8",
+      "from": "load-balancer",
+      "to": "payment-service-2",
+      "name": "5b. Process (backup)",
+      "color": "orange"
+    },
+    {
+      "id": "c9",
+      "from": "payment-service-1",
+      "to": "redis-cache",
+      "name": "Cache session",
+      "color": "blue"
+    },
+    {
+      "id": "c10",
+      "from": "payment-service-1",
+      "to": "fraud-detection",
+      "name": "6. Check fraud",
+      "color": "red"
+    },
+    {
+      "id": "c11",
+      "from": "payment-service-1",
+      "to": "payment-gateway",
+      "name": "7. Process payment",
+      "color": "green"
+    },
+    {
+      "id": "c12",
+      "from": "payment-gateway",
+      "to": "bank-api",
+      "name": "8. Bank transfer",
+      "color": "green"
+    },
+    {
+      "id": "c13",
+      "from": "payment-service-1",
+      "to": "database",
+      "name": "9. Store transaction",
+      "color": "blue"
+    },
+    {
+      "id": "c14",
+      "from": "payment-service-1",
+      "to": "notification",
+      "name": "10. Send confirmation",
+      "color": "purple"
+    },
+    {
+      "id": "c15",
+      "from": "payment-service-1",
+      "to": "monitoring",
+      "name": "Metrics",
+      "color": "orange"
+    },
+    {
+      "id": "c16",
+      "from": "web-app",
+      "to": "analytics",
+      "name": "Track events",
+      "color": "purple"
+    },
+    {
+      "id": "c17",
+      "from": "database",
+      "to": "backup",
+      "name": "Daily backup",
+      "color": "orange"
+    },
+    {
+      "id": "c18",
+      "from": "payment-service-1",
+      "to": "queue",
+      "name": "Async tasks",
+      "color": "blue"
+    },
+    {
+      "id": "c19",
+      "from": "payment-service-1",
+      "to": "logs",
+      "name": "Audit logs",
+      "color": "purple"
+    },
+    {
+      "id": "c20",
+      "from": "notification",
+      "to": "customer",
+      "name": "11. Email/SMS receipt",
+      "color": "green"
+    }
+  ],
+  "views": [],
+  "fitToScreen": true
+}

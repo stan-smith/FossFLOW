@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test FossFLOW App</title>
+</head>
+<body>
+    <h1>Testing FossFLOW App</h1>
+    <iframe src="http://localhost:3000" width="100%" height="600px" style="border: 1px solid #ccc;"></iframe>
+    <script>
+        // Listen for console messages from the iframe
+        window.addEventListener('message', function(e) {
+            console.log('Message from app:', e.data);
+        });
+        
+        // Check if app loads successfully
+        setTimeout(() => {
+            const iframe = document.querySelector('iframe');
+            try {
+                console.log('App loaded successfully');
+            } catch(e) {
+                console.error('Error accessing app:', e);
+            }
+        }, 2000);
+    </script>
+</body>
+</html>

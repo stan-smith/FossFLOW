@@ -1,0 +1,171 @@
+.App {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.toolbar {
+  background-color: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.toolbar button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.toolbar button:hover {
+  background-color: #0056b3;
+}
+
+.current-diagram {
+  margin-left: auto;
+  font-size: 14px;
+  color: #666;
+}
+
+.fossflow-container {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  /* Remove background color to let Isoflow's grid show through */
+  /* background-color: #f9f9f9; */
+}
+
+/* Ensure Isoflow takes full height */
+.fossflow-container > div {
+  height: 100%;
+}
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  min-width: 400px;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.dialog h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.dialog input[type="text"] {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.dialog-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.dialog-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dialog-buttons button:first-child {
+  background-color: #007bff;
+  color: white;
+}
+
+.dialog-buttons button:first-child:hover {
+  background-color: #0056b3;
+}
+
+.dialog-buttons button:last-child {
+  background-color: #6c757d;
+  color: white;
+}
+
+.dialog-buttons button:last-child:hover {
+  background-color: #5a6268;
+}
+
+.diagram-list {
+  margin-bottom: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.diagram-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.diagram-item:hover {
+  background-color: #f8f9fa;
+}
+
+.diagram-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.diagram-actions button {
+  padding: 4px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.diagram-actions button:first-child {
+  background-color: #28a745;
+  color: white;
+}
+
+.diagram-actions button:first-child:hover {
+  background-color: #218838;
+}
+
+.diagram-actions button:last-child {
+  background-color: #dc3545;
+  color: white;
+}
+
+.diagram-actions button:last-child:hover {
+  background-color: #c82333;
+}
