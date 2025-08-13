@@ -1,9 +1,7 @@
 services:
   fossflow:
-    pull_policy: build
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: stnsmith/fossflow:latest
+    pull_policy: always
     ports:
       - 80:80
     environment:
