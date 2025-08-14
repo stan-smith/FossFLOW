@@ -14,6 +14,8 @@ Thank you for your interest in contributing to FossFLOW! This guide will help yo
 - [Testing](#testing)
 - [Submitting Changes](#submitting-changes)
 - [Community](#community)
+- [Recognition](#recognition)
+- [License](#license)
 
 ## Code of Conduct
 
@@ -93,7 +95,7 @@ FossFLOW/
 ├── packages/
 │   ├── fossflow-lib/     # React component library
 │   │   ├── src/
-│   │   │   ├── components/     # React components
+│   │   │   ├── components/    # React components
 │   │   │   ├── stores/        # State management (Zustand)
 │   │   │   ├── hooks/         # Custom React hooks
 │   │   │   ├── interaction/   # User interaction handling
