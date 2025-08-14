@@ -1,50 +1,71 @@
-# Isoflow Codebase Encyclopedia
+# FossFLOW Codebase Encyclopedia
 
 ## Overview
 
-Isoflow is an open-source React component for drawing isometric network diagrams. This encyclopedia provides a comprehensive guide to navigating and understanding the codebase structure, making it easy to locate specific functionality and understand the architecture.
+FossFLOW is a monorepo containing both a React component library for drawing isometric network diagrams (fossflow-lib) and a Progressive Web App that uses this library (fossflow-app). This encyclopedia provides a comprehensive guide to navigating and understanding the codebase structure, making it easy to locate specific functionality and understand the architecture.
 
 ## Table of Contents
 
-1. [Project Structure](#project-structure)
-2. [Core Architecture](#core-architecture)
-3. [State Management](#state-management)
-4. [Component Organization](#component-organization)
-5. [Key Technologies](#key-technologies)
-6. [Build System](#build-system)
-7. [Testing Structure](#testing-structure)
-8. [Development Workflow](#development-workflow)
+1. [Monorepo Structure](#monorepo-structure)
+2. [Library Architecture (fossflow-lib)](#library-architecture-fossflow-lib)
+3. [Application Architecture (fossflow-app)](#application-architecture-fossflow-app)
+4. [State Management](#state-management)
+5. [Component Organization](#component-organization)
+6. [Key Technologies](#key-technologies)
+7. [Build System](#build-system)
+8. [Testing Structure](#testing-structure)
+9. [Development Workflow](#development-workflow)
 
-## Project Structure
+## Monorepo Structure
 
 ```
-isoflow/
-├── src/                      # Source code
-│   ├── Isoflow.tsx          # Main component entry point
-│   ├── index.tsx            # Development entry point
-│   ├── config.ts            # Configuration constants
-│   ├── components/          # React components
-│   ├── stores/              # State management (Zustand)
-│   ├── hooks/               # Custom React hooks
-│   ├── types/               # TypeScript type definitions
-│   ├── schemas/             # Zod validation schemas
-│   ├── interaction/         # Interaction handling
-│   ├── utils/               # Utility functions
-│   ├── assets/              # Static assets
-│   └── styles/              # Styling (theme, global styles)
-├── docs/                    # Documentation website (Nextra)
-├── webpack/                 # Webpack configurations
-├── package.json            # Dependencies and scripts
-└── tsconfig.json           # TypeScript configuration
+fossflow-monorepo/
+├── packages/
+│   ├── fossflow-lib/            # React component library
+│   │   ├── src/                 # Library source code
+│   │   │   ├── Isoflow.tsx    # Main component entry
+│   │   │   ├── index.tsx       # Development entry
+│   │   │   ├── config.ts       # Configuration
+│   │   │   ├── components/     # React components
+│   │   │   ├── stores/         # State management (Zustand)
+│   │   │   ├── hooks/          # Custom React hooks
+│   │   │   ├── types/          # TypeScript types
+│   │   │   ├── schemas/        # Zod validation
+│   │   │   ├── interaction/    # Interaction handling
+│   │   │   ├── utils/          # Utility functions
+│   │   │   ├── assets/         # Static assets
+│   │   │   └── styles/         # Styling
+│   │   ├── webpack.config.js   # Webpack configuration
+│   │   ├── package.json        # Library dependencies
+│   │   └── tsconfig.json       # TypeScript config
+│   │
+│   └── fossflow-app/            # Progressive Web App
+│       ├── src/                 # App source code
+│       │   ├── index.tsx       # App entry point
+│       │   ├── App.tsx         # Main app component
+│       │   ├── components/     # App-specific components
+│       │   ├── serviceWorkerRegistration.ts
+│       │   └── setupTests.ts
+│       ├── public/             # Static assets
+│       ├── rsbuild.config.ts   # RSBuild configuration
+│       ├── package.json        # App dependencies
+│       └── tsconfig.json       # TypeScript config
+│
+├── package.json                 # Root workspace configuration
+├── Dockerfile                   # Multi-stage Docker build
+├── compose.yml                  # Docker Compose config
+├── README.md                    # Project documentation
+├── CONTRIBUTORS.md              # Contributing guidelines
+└── ISOFLOW_TODO.md             # Issues and roadmap
 ```
 
-## Core Architecture
+## Library Architecture (fossflow-lib)
 
 ### Entry Points
 
-- **`src/index.tsx`**: Development mode entry with examples
-- **`src/Isoflow.tsx`**: Main component for library usage
-- **`src/index-docker.tsx`**: Docker-specific entry point
+- **`packages/fossflow-lib/src/index.tsx`**: Development mode entry with examples
+- **`packages/fossflow-lib/src/Isoflow.tsx`**: Main component exported for library usage
+- **`packages/fossflow-lib/src/index-docker.tsx`**: Docker-specific entry point
 
 ### Provider Hierarchy
 
@@ -81,8 +102,8 @@ isoflow/
 - `icons`: Available icon library
 - `colors`: Color palette
 
-**Location**: `/src/stores/modelStore.tsx`
-**Types**: `/src/types/model.ts`
+**Location**: `/packages/fossflow-lib/src/stores/modelStore.tsx`
+**Types**: `/packages/fossflow-lib/src/types/model.ts`
 
 ### 2. SceneStore (`src/stores/sceneStore.tsx`)
 
@@ -92,8 +113,8 @@ isoflow/
 - `connectors`: Path and position data
 - `textBoxes`: Size information
 
-**Location**: `/src/stores/sceneStore.tsx`
-**Types**: `/src/types/scene.ts`
+**Location**: `/packages/fossflow-lib/src/stores/sceneStore.tsx`
+**Types**: `/packages/fossflow-lib/src/types/scene.ts`
 
 ### 3. UiStateStore (`src/stores/uiStateStore.tsx`)
 
@@ -105,14 +126,47 @@ isoflow/
 - `mode`: Interaction mode
 - `editorMode`: Edit/readonly state
 
-**Location**: `/src/stores/uiStateStore.tsx`
-**Types**: `/src/types/ui.ts`
+**Location**: `/packages/fossflow-lib/src/stores/uiStateStore.tsx`
+**Types**: `/packages/fossflow-lib/src/types/ui.ts`
+
+## Application Architecture (fossflow-app)
+
+### Overview
+
+The FossFLOW application is a Progressive Web App (PWA) built with RSBuild that provides a complete diagram editor interface using the fossflow-lib library.
+
+### Key Components
+
+#### App Entry (`packages/fossflow-app/src/index.tsx`)
+- Initializes the React app
+- Registers service worker for PWA functionality
+- Sets up Quill editor styles
+
+#### Main App (`packages/fossflow-app/src/App.tsx`)
+- Contains the Isoflow component from fossflow-lib
+- Manages auto-save functionality
+- Handles import/export operations
+- Provides UI for session management
+
+#### Service Worker
+- **Location**: `packages/fossflow-app/src/serviceWorkerRegistration.ts`
+- Enables offline functionality
+- Caches app resources
+- Provides PWA installation capability
+
+### App Features
+
+- **Auto-Save**: Saves diagram to session storage every 5 seconds
+- **Import/Export**: JSON file format for diagram sharing
+- **PWA Support**: Installable on desktop and mobile
+- **Offline Mode**: Full functionality without internet
+- **Session Storage**: Quick save without file dialogs
 
 ## Component Organization
 
-### Core Components
+### Core Components (Library)
 
-#### Renderer (`src/components/Renderer/`)
+#### Renderer (`packages/fossflow-lib/src/components/Renderer/`)
 - **Purpose**: Main canvas rendering
 - **Key Files**:
   - `Renderer.tsx`: Container component
@@ -129,7 +183,7 @@ isoflow/
 - **Key Files**:
   - `SceneLayer.tsx`: Transform container
 
-### Scene Layers (`src/components/SceneLayers/`)
+### Scene Layers (`packages/fossflow-lib/src/components/SceneLayers/`)
 
 #### Nodes (`/Nodes/`)
 - **Purpose**: Render diagram nodes/icons
@@ -158,17 +212,17 @@ isoflow/
   - `TextBox.tsx`: Individual text box
   - `TextBoxes.tsx`: Text box collection
 
-### UI Components
+### UI Components (Library)
 
-#### MainMenu (`src/components/MainMenu/`)
+#### MainMenu (`packages/fossflow-lib/src/components/MainMenu/`)
 - **Purpose**: Application menu
 - **Features**: Open, Export, Clear
 
-#### ToolMenu (`src/components/ToolMenu/`)
+#### ToolMenu (`packages/fossflow-lib/src/components/ToolMenu/`)
 - **Purpose**: Drawing tools palette
 - **Tools**: Select, Pan, Add Icon, Draw Rectangle, Add Text
 
-#### ItemControls (`src/components/ItemControls/`)
+#### ItemControls (`packages/fossflow-lib/src/components/ItemControls/`)
 - **Purpose**: Property panels for selected items
 - **Subdirectories**:
   - `/NodeControls/`: Node properties
@@ -177,7 +231,7 @@ isoflow/
   - `/TextBoxControls/`: Text properties
   - `/IconSelectionControls/`: Icon picker
 
-#### TransformControlsManager (`src/components/TransformControlsManager/`)
+#### TransformControlsManager (`packages/fossflow-lib/src/components/TransformControlsManager/`)
 - **Purpose**: Selection and manipulation handles
 - **Key Files**:
   - `TransformAnchor.tsx`: Resize handles
@@ -219,46 +273,105 @@ isoflow/
 
 ## Build System
 
-### Webpack Configurations
+### Monorepo Build Architecture
 
-- **Development**: `/webpack/dev.config.js`
-  - Hot reload enabled
-  - Source maps
-  - Development server
+The project uses NPM workspaces to manage both packages:
+- **fossflow-lib**: Built with Webpack (CommonJS2 format)
+- **fossflow-app**: Built with RSBuild (modern bundler)
 
-- **Production**: `/webpack/prod.config.js`
-  - Minification
-  - Optimizations
-  - Library output
+### Build Configurations
 
-- **Docker**: `/webpack/docker.config.js`
-  - Docker-specific build
+#### Library (Webpack)
+- **Config**: `/packages/fossflow-lib/webpack.config.js`
+- **Output**: CommonJS2 module for npm publishing
+- **Externals**: React, React-DOM
 
-### NPM Scripts
+#### Application (RSBuild)
+- **Config**: `/packages/fossflow-app/rsbuild.config.ts`
+- **Features**: Hot reload, PWA support, optimized production builds
+- **Output**: Static files in `build/` directory
+
+### NPM Scripts (Root Level)
 
 ```bash
-npm start          # Development server
-npm run dev        # Watch mode
-npm run build      # Production build
-npm test           # Run tests
-npm run lint       # TypeScript + ESLint
-npm run lint:fix   # Auto-fix issues
+# Development
+npm run dev          # Start app development server
+npm run dev:lib      # Watch mode for library development
+
+# Building
+npm run build        # Build both library and app
+npm run build:lib    # Build library only
+npm run build:app    # Build app only
+
+# Testing & Quality
+npm test             # Run tests in all workspaces
+npm run lint         # Lint all workspaces
+
+# Publishing
+npm run publish:lib  # Build and publish library to npm
+
+# Clean
+npm run clean        # Clean all build artifacts
+```
+
+### Docker Build
+
+```dockerfile
+# Multi-stage build
+FROM node:22 AS build
+WORKDIR /app
+# Install dependencies for monorepo
+RUN npm install
+# Build library first, then app
+RUN npm run build:lib && npm run build:app
+
+# Production stage
+FROM nginx:alpine
+COPY --from=build /app/packages/fossflow-app/build /usr/share/nginx/html
 ```
 
 ## Testing Structure
 
 ### Test Files Location
-- Unit tests: `__tests__` directories
-- Test utilities: `/src/fixtures/`
+- Library tests: `packages/fossflow-lib/src/**/__tests__/`
+- App tests: `packages/fossflow-app/src/**/*.test.tsx`
+- Test utilities: `packages/fossflow-lib/src/fixtures/`
 
 ### Key Test Areas
-- `/src/schemas/__tests__/`: Schema validation
-- `/src/stores/reducers/__tests__/`: State logic
-- `/src/utils/__tests__/`: Utility functions
+- `/packages/fossflow-lib/src/schemas/__tests__/`: Schema validation
+- `/packages/fossflow-lib/src/stores/reducers/__tests__/`: State logic
+- `/packages/fossflow-lib/src/utils/__tests__/`: Utility functions
 
 ## Development Workflow
 
-### 1. Configuration (`src/config.ts`)
+### Monorepo Development Setup
+
+1. **Clone and Install**:
+```bash
+git clone https://github.com/stan-smith/FossFLOW
+cd FossFLOW
+npm install  # Installs dependencies for all workspaces
+```
+
+2. **Development Mode**:
+```bash
+# First build the library (required for initial setup)
+npm run build:lib
+
+# Start app development (includes library in dev mode)
+npm run dev
+```
+
+3. **Making Library Changes**:
+- Edit files in `packages/fossflow-lib/src/`
+- Changes are immediately available in the app
+- No need to rebuild or republish during development
+
+4. **Making App Changes**:
+- Edit files in `packages/fossflow-app/src/`
+- Hot reload updates the browser automatically
+
+### 1. Configuration (`packages/fossflow-lib/src/config.ts`)
 
 **Key Constants**:
 - `TILE_SIZE`: Base tile dimensions
@@ -266,7 +379,7 @@ npm run lint:fix   # Auto-fix issues
 - `DEFAULT_FONT_SIZE`: Text defaults
 - `INITIAL_DATA`: Default model state
 
-### 2. Hooks Directory (`src/hooks/`)
+### 2. Hooks Directory (`packages/fossflow-lib/src/hooks/`)
 
 **Common Hooks**:
 - `useScene.ts`: Merged scene data
@@ -282,7 +395,7 @@ npm run lint:fix   # Auto-fix issues
 
 **Important**: All item access hooks now return `null` instead of throwing when items don't exist, preventing React unmount errors.
 
-### 3. Interaction System (`src/interaction/`)
+### 3. Interaction System (`packages/fossflow-lib/src/interaction/`)
 
 **Main File**: `useInteractionManager.ts`
 
@@ -295,7 +408,7 @@ npm run lint:fix   # Auto-fix issues
 - `Rectangle/`: Rectangle tools
 - `TextBox.ts`: Text editing
 
-### 4. Utilities (`src/utils/`)
+### 4. Utilities (`packages/fossflow-lib/src/utils/`)
 
 **Key Utilities**:
 - `CoordsUtils.ts`: Coordinate calculations
@@ -304,7 +417,7 @@ npm run lint:fix   # Auto-fix issues
 - `model.ts`: Model manipulation
 - `pathfinder.ts`: Connector routing
 
-### 5. Type System (`src/types/`)
+### 5. Type System (`packages/fossflow-lib/src/types/`)
 
 **Core Types**:
 - `model.ts`: Business data types
@@ -313,7 +426,7 @@ npm run lint:fix   # Auto-fix issues
 - `common.ts`: Shared types
 - `interactions.ts`: Interaction types
 
-### 6. Schema Validation (`src/schemas/`)
+### 6. Schema Validation (`packages/fossflow-lib/src/schemas/`)
 
 **Validation Schemas**:
 - `model.ts`: Model validation
