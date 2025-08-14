@@ -2,6 +2,7 @@ import { Coords, EditorModeEnum, MainMenuOptions } from './common';
 import { Icon } from './model';
 import { ItemReference } from './scene';
 import { HotkeyProfile } from 'src/config/hotkeys';
+import { PanSettings } from 'src/config/panSettings';
 
 interface AddItemControls {
   type: 'ADD_ITEM';
@@ -151,6 +152,7 @@ export interface UiState {
   rendererEl: HTMLDivElement | null;
   enableDebugTools: boolean;
   hotkeyProfile: HotkeyProfile;
+  panSettings: PanSettings;
 }
 
 export interface UiStateActions {
@@ -172,6 +174,7 @@ export interface UiStateActions {
   setRendererEl: (el: HTMLDivElement) => void;
   setEnableDebugTools: (enabled: boolean) => void;
   setHotkeyProfile: (profile: HotkeyProfile) => void;
+  setPanSettings: (settings: PanSettings) => void;
 }
 
 export type UiStateStore = UiState & {

@@ -7,20 +7,24 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 - **📝 [FOSSFLOW_TODO.md](https://github.com/stan-smith/FossFLOW/blob/main/ISOFLOW_TODO.md)** - Current issues and roadmap with codebase mappings, most gripes are with the isoflow library itself.
 - **🤝 [CONTRIBUTORS.md](https://github.com/stan-smith/FossFLOW/blob/main/CONTRIBUTORS.md)** - How to contribute to the project.
 
-## ✨ Recent Updates (August 2025)
+## Recent Updates (August 2025)
+
+### Enhanced Interaction Features
+- **Configurable Hotkeys** - Three profiles (QWERTY, SMNRCT, None) for tool selection with visual indicators
+- **Advanced Pan Controls** - Multiple pan methods including empty area drag, middle/right click, modifier keys (Ctrl/Alt), and keyboard navigation (Arrow/WASD/IJKL)
+- **Toggle Connector Arrows** - Option to show/hide arrows on individual connectors
+- **Persistent Tool Selection** - Connector tool remains active after creating connections
+- **Settings Dialog** - Centralized configuration for hotkeys and pan controls
+
+### Docker & CI/CD Improvements
+- **Automated Docker Builds** - GitHub Actions workflow for automatic Docker Hub deployment on commits
+- **Multi-architecture Support** - Docker images for both `linux/amd64` and `linux/arm64`
+- **Pre-built Images** - Available at `stnsmith/fossflow:latest`
 
 ### Monorepo Architecture
-We've successfully migrated from separate repositories to a unified monorepo structure, making development and contribution significantly easier:
-- **Single repository** for both the library (`fossflow-lib`) and application (`fossflow-app`)
+- **Single repository** for both library and application
 - **NPM Workspaces** for streamlined dependency management
-- **Instant library updates** available in the app during development
 - **Unified build process** with `npm run build` at the root
-
-### 🐳 Docker & Deployment Improvements
-- **Multi-architecture Docker support** - Images now support both `linux/amd64` and `linux/arm64`
-- **Docker Hub integration** - Pre-built images available at `stnsmith/fossflow:latest`
-- **Simple deployment** - Just run `docker compose up` to deploy
-- **Production-ready** - Nginx-based serving with optimized builds
 
 ### UI Fixes
 - Fixed Quill editor toolbar icons display issue

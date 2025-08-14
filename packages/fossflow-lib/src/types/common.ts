@@ -22,7 +22,7 @@ export type BoundingBox = [Coords, Coords, Coords, Coords];
 
 export type SlimMouseEvent = Pick<
   MouseEvent,
-  'clientX' | 'clientY' | 'target' | 'type' | 'preventDefault'
+  'clientX' | 'clientY' | 'target' | 'type' | 'preventDefault' | 'button' | 'ctrlKey' | 'altKey' | 'shiftKey' | 'metaKey'
 >;
 
 export const EditorModeEnum = {

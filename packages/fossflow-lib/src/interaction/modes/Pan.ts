@@ -28,12 +28,8 @@ export const Pan: ModeActions = {
     setWindowCursor('grabbing');
   },
   mouseup: ({ uiState }) => {
+    if (uiState.mode.type !== 'PAN') return;
     setWindowCursor('grab');
-    // Always revert to CURSOR mode after panning
-    uiState.actions.setMode({
-      type: 'CURSOR',
-      showCursor: true,
-      mousedownItem: null
-    });
+    // Note: Mode switching is now handled by usePanHandlers
   }
 };

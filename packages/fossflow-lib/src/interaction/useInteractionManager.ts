@@ -17,6 +17,7 @@ import { Connector } from './modes/Connector';
 import { Pan } from './modes/Pan';
 import { PlaceIcon } from './modes/PlaceIcon';
 import { TextBox } from './modes/TextBox';
+import { usePanHandlers } from './usePanHandlers';
 
 const modes: { [k in string]: ModeActions } = {
   CURSOR: Cursor,
@@ -55,6 +56,7 @@ export const useInteractionManager = () => {
   const { size: rendererSize } = useResizeObserver(uiState.rendererEl);
   const { undo, redo, canUndo, canRedo } = useHistory();
   const { createTextBox } = scene;
+  const { handleMouseDown: handlePanMouseDown, handleMouseUp: handlePanMouseUp } = usePanHandlers();
 
   // Keyboard shortcuts for undo/redo
   useEffect(() => {
@@ -165,6 +167,14 @@ export const useInteractionManager = () => {
     (e: SlimMouseEvent) => {
       if (!rendererRef.current) return;
 
+      // Check pan handlers first
+      if (e.type === 'mousedown' && handlePanMouseDown(e)) {
+        return;
+      }
+      if (e.type === 'mouseup' && handlePanMouseUp(e)) {
+        return;
+      }
+
       const mode = modes[uiState.mode.type];
       const modeFunction = getModeFunction(mode, e);
 
@@ -207,12 +217,17 @@ export const useInteractionManager = () => {
       modeFunction(baseState);
       reducerTypeRef.current = uiState.mode.type;
     },
-    [model, scene, uiState, rendererSize]
+    [model, scene, uiState, rendererSize, handlePanMouseDown, handlePanMouseUp]
   );
 
   const onContextMenu = useCallback(
     (e: SlimMouseEvent) => {
       e.preventDefault();
+
+      // Don't show context menu if right-click pan is enabled
+      if (uiState.panSettings.rightClickPan) {
+        return;
+      }
 
       const itemAtTile = getItemAtTile({
         tile: uiState.mouse.position.tile,
@@ -232,7 +247,7 @@ export const useInteractionManager = () => {
         });
       }
     },
-    [uiState.mouse, scene, uiState.actions]
+    [uiState.mouse, scene, uiState.actions, uiState.panSettings]
   );
 
   useEffect(() => {
@@ -245,7 +260,8 @@ export const useInteractionManager = () => {
         ...e,
         clientX: Math.floor(e.touches[0].clientX),
         clientY: Math.floor(e.touches[0].clientY),
-        type: 'mousedown'
+        type: 'mousedown',
+        button: 0
       });
     };
 
@@ -254,7 +270,8 @@ export const useInteractionManager = () => {
         ...e,
         clientX: Math.floor(e.touches[0].clientX),
         clientY: Math.floor(e.touches[0].clientY),
-        type: 'mousemove'
+        type: 'mousemove',
+        button: 0
       });
     };
 
@@ -263,7 +280,8 @@ export const useInteractionManager = () => {
         ...e,
         clientX: 0,
         clientY: 0,
-        type: 'mouseup'
+        type: 'mouseup',
+        button: 0
       });
     };
 

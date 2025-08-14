@@ -9,6 +9,7 @@ import {
 import { UiStateStore } from 'src/types';
 import { INITIAL_UI_STATE } from 'src/config';
 import { DEFAULT_HOTKEY_PROFILE } from 'src/config/hotkeys';
+import { DEFAULT_PAN_SETTINGS } from 'src/config/panSettings';
 
 const initialState = () => {
   return createStore<UiStateStore>((set, get) => {
@@ -32,6 +33,7 @@ const initialState = () => {
       itemControls: null,
       enableDebugTools: false,
       hotkeyProfile: DEFAULT_HOTKEY_PROFILE,
+      panSettings: DEFAULT_PAN_SETTINGS,
       actions: {
         setView: (view) => {
           set({ view });
@@ -96,6 +98,9 @@ const initialState = () => {
         },
         setHotkeyProfile: (hotkeyProfile) => {
           set({ hotkeyProfile });
+        },
+        setPanSettings: (panSettings) => {
+          set({ panSettings });
         }
       }
     };

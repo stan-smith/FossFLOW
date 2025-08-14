@@ -1,19 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Button,
-  IconButton
+  IconButton,
+  Tabs,
+  Tab,
+  Box
 } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { HotkeySettings } from '../HotkeySettings/HotkeySettings';
+import { PanSettings } from '../PanSettings/PanSettings';
 
 export const SettingsDialog = () => {
   const dialog = useUiStateStore((state) => state.dialog);
   const setDialog = useUiStateStore((state) => state.actions.setDialog);
+  const [tabValue, setTabValue] = useState(0);
 
   const isOpen = dialog === 'SETTINGS';
 
@@ -21,11 +26,15 @@ export const SettingsDialog = () => {
     setDialog(null);
   };
 
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue);
+  };
+
   return (
     <Dialog
       open={isOpen}
       onClose={handleClose}
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
     >
       <DialogTitle>
@@ -44,7 +53,15 @@ export const SettingsDialog = () => {
         </IconButton>
       </DialogTitle>
       <DialogContent dividers>
-        <HotkeySettings />
+        <Tabs value={tabValue} onChange={handleTabChange} sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tab label="Hotkeys" />
+          <Tab label="Pan Controls" />
+        </Tabs>
+        
+        <Box sx={{ mt: 2 }}>
+          {tabValue === 0 && <HotkeySettings />}
+          {tabValue === 1 && <PanSettings />}
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose}>Close</Button>
