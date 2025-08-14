@@ -6,7 +6,9 @@ import {
   Select,
   MenuItem,
   TextField,
-  IconButton as MUIIconButton
+  IconButton as MUIIconButton,
+  FormControlLabel,
+  Switch
 } from '@mui/material';
 import { useConnector } from 'src/hooks/useConnector';
 import { ColorSelector } from 'src/components/ColorSelector/ColorSelector';
@@ -96,6 +98,21 @@ export const ConnectorControls = ({ id }: Props) => {
               return <MenuItem value={style}>{style}</MenuItem>;
             })}
           </Select>
+        </Section>
+        <Section>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={connector.showArrow !== false}
+                onChange={(e) => {
+                  updateConnector(connector.id, {
+                    showArrow: e.target.checked
+                  });
+                }}
+              />
+            }
+            label="Show Arrow"
+          />
         </Section>
         <Section>
           <Box>

@@ -144,7 +144,7 @@ export const Connector = ({ connector: _connector, isSelected }: Props) => {
           );
         })}
 
-        {directionIcon && (
+        {directionIcon && connector.showArrow !== false && (
           <g transform={`translate(${directionIcon.x}, ${directionIcon.y})`}>
             <g transform={`rotate(${directionIcon.rotation})`}>
               <polygon

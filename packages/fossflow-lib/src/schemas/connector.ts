@@ -20,5 +20,6 @@ export const connectorSchema = z.object({
   color: id.optional(),
   width: z.number().optional(),
   style: z.enum(connectorStyleOptions).optional(),
+  showArrow: z.boolean().optional(),
   anchors: z.array(anchorSchema)
 });
