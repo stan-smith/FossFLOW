@@ -8,6 +8,8 @@ import azureIsopack from '@isoflow/isopacks/dist/azure';
 import kubernetesIsopack from '@isoflow/isopacks/dist/kubernetes';
 import { DiagramData, mergeDiagramData, extractSavableData } from './diagramUtils';
 import { StorageManager } from './StorageManager';
+import { DiagramManager } from './components/DiagramManager';
+import { storageManager } from './services/storageService';
 import './App.css';
 
 const icons = flattenCollections([
@@ -42,6 +44,8 @@ function App() {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastAutoSave, setLastAutoSave] = useState<Date | null>(null);
   const [showStorageManager, setShowStorageManager] = useState(false);
+  const [showDiagramManager, setShowDiagramManager] = useState(false);
+  const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
   
   // Initialize with empty diagram data
   // Create default colors for connectors
@@ -64,6 +68,13 @@ function App() {
     views: [],
     fitToScreen: true
   });
+
+  // Check for server storage availability
+  useEffect(() => {
+    storageManager.initialize().then(() => {
+      setServerStorageAvailable(storageManager.isServerStorage());
+    }).catch(console.error);
+  }, []);
 
   // Load diagrams from localStorage on component mount
   useEffect(() => {
@@ -128,6 +139,20 @@ function App() {
       return;
     }
 
+    // Check if a diagram with this name already exists (excluding current)
+    const existingDiagram = diagrams.find(d => 
+      d.name === diagramName.trim() && d.id !== currentDiagram?.id
+    );
+    
+    if (existingDiagram) {
+      const confirmOverwrite = window.confirm(
+        `A diagram named "${diagramName}" already exists in this session. This will overwrite it. Are you sure you want to continue?`
+      );
+      if (!confirmOverwrite) {
+        return;
+      }
+    }
+
     // Construct save data WITHOUT icons (they're loaded separately)
     const savedData = {
       title: diagramName,
@@ -150,6 +175,11 @@ function App() {
     if (currentDiagram) {
       // Update existing diagram
       setDiagrams(diagrams.map(d => d.id === currentDiagram.id ? newDiagram : d));
+    } else if (existingDiagram) {
+      // Replace existing diagram with same name
+      setDiagrams(diagrams.map(d => d.id === existingDiagram.id ? { ...newDiagram, id: existingDiagram.id, createdAt: existingDiagram.createdAt } : d));
+      newDiagram.id = existingDiagram.id;
+      newDiagram.createdAt = existingDiagram.createdAt;
     } else {
       // Add new diagram
       setDiagrams([...diagrams, newDiagram]);
@@ -342,6 +372,30 @@ function App() {
     // Trigger file input click
     fileInputRef.current?.click();
   };
+
+  const handleDiagramManagerLoad = (id: string, data: any) => {
+    // Load diagram from server storage
+    const mergedData: DiagramData = {
+      ...data,
+      title: data.title || data.name || 'Loaded Diagram',
+      icons: icons, // Always use app icons
+      colors: data.colors?.length ? data.colors : defaultColors,
+      fitToScreen: data.fitToScreen !== false
+    };
+    
+    setDiagramData(mergedData);
+    setDiagramName(data.name || 'Loaded Diagram');
+    setCurrentModel(mergedData);
+    setCurrentDiagram({
+      id,
+      name: data.name || 'Loaded Diagram',
+      data: mergedData,
+      createdAt: data.created || new Date().toISOString(),
+      updatedAt: data.lastModified || new Date().toISOString()
+    });
+    setFossflowKey(prev => prev + 1); // Force re-render
+    setHasUnsavedChanges(false);
+  };
   
   // Auto-save functionality
   useEffect(() => {
@@ -402,6 +456,14 @@ function App() {
     <div className="App">
       <div className="toolbar">
         <button onClick={newDiagram}>New Diagram</button>
+        {serverStorageAvailable && (
+          <button 
+            onClick={() => setShowDiagramManager(true)}
+            style={{ backgroundColor: '#2196F3', color: 'white' }}
+          >
+            🌐 Server Storage
+          </button>
+        )}
         <button onClick={() => setShowSaveDialog(true)}>Save (Session Only)</button>
         <button onClick={() => setShowLoadDialog(true)}>Load (Session Only)</button>
         <button 
@@ -600,6 +662,16 @@ function App() {
       {/* Storage Manager */}
       {showStorageManager && (
         <StorageManager onClose={() => setShowStorageManager(false)} />
+      )}
+
+      {/* Diagram Manager */}
+      {showDiagramManager && (
+        <DiagramManager
+          onLoadDiagram={handleDiagramManagerLoad}
+          currentDiagramId={currentDiagram?.id}
+          currentDiagramData={currentModel || diagramData}
+          onClose={() => setShowDiagramManager(false)}
+        />
       )}
     </div>
   );

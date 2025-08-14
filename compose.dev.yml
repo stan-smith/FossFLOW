@@ -1,0 +1,13 @@
+services:
+  fossflow:
+    build: .
+    ports:
+      - "3000:80"
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - ENABLE_SERVER_STORAGE=true
+      - STORAGE_PATH=/data/diagrams
+      - ENABLE_GIT_BACKUP=false
+    volumes:
+      - ./diagrams:/data/diagrams

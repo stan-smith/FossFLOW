@@ -21,14 +21,35 @@ COPY . .
 # Build the library first, then the app
 RUN npm run build:lib && npm run build:app
 
-# Use Nginx as the production server
-FROM nginx:alpine
+# Use Node with nginx for production
+FROM node:22-alpine
+
+# Install nginx
+RUN apk add --no-cache nginx
+
+# Copy backend code
+COPY --from=build /app/packages/fossflow-backend /app/packages/fossflow-backend
 
 # Copy the built React app to Nginx's web server directory
 COPY --from=build /app/packages/fossflow-app/build /usr/share/nginx/html
 
-# Expose port 80 for the Nginx server
-EXPOSE 80
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/http.d/default.conf
 
-# Start Nginx when the container runs
-CMD ["nginx", "-g", "daemon off;"]
+# Copy and set up entrypoint script
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# Create data directory for persistent storage
+RUN mkdir -p /data/diagrams
+
+# Expose ports
+EXPOSE 80 3001
+
+# Environment variables with defaults
+ENV ENABLE_SERVER_STORAGE=true
+ENV STORAGE_PATH=/data/diagrams
+ENV BACKEND_PORT=3001
+
+# Start services
+ENTRYPOINT ["/docker-entrypoint.sh"]

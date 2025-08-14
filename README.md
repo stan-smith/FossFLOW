@@ -9,6 +9,13 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 
 ## Recent Updates (August 2025)
 
+### Server Storage Support
+- **Persistent Storage** - Diagrams saved to server filesystem, persist across browser sessions
+- **Multi-device Access** - Access your diagrams from any device when using Docker deployment
+- **Automatic Detection** - UI automatically shows server storage when available
+- **Overwrite Protection** - Confirmation dialog when saving with duplicate names
+- **Docker Integration** - Server storage enabled by default in Docker deployments
+
 ### Enhanced Interaction Features
 - **Configurable Hotkeys** - Three profiles (QWERTY, SMNRCT, None) for tool selection with visual indicators
 - **Advanced Pan Controls** - Multiple pan methods including empty area drag, middle/right click, modifier keys (Ctrl/Alt), and keyboard navigation (Arrow/WASD/IJKL)
@@ -40,6 +47,7 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 - 📤 **Import/Export** - Share diagrams as JSON files
 - 🎯 **Session Storage** - Quick save without dialogs
 - 🌐 **Offline Support** - Work without internet connection
+- 🗄️ **Server Storage** - Optional persistent storage when using Docker (enabled by default)
 
 ## Try it online
 
@@ -48,11 +56,18 @@ Go to https://stan-smith.github.io/FossFLOW/
 ## 🐳 Quick Deploy with Docker
 
 ```bash
-# Using Docker Compose (recommended)
+# Using Docker Compose (recommended - includes persistent storage)
 docker compose up
 
-# Or run directly from Docker Hub
-docker run -p 80:80 stnsmith/fossflow:latest
+# Or run directly from Docker Hub with persistent storage
+docker run -p 80:80 -v ./diagrams:/data/diagrams stnsmith/fossflow:latest
+```
+
+Server storage is enabled by default in Docker. Your diagrams will be saved to `./diagrams` on the host.
+
+To disable server storage, set `ENABLE_SERVER_STORAGE=false`:
+```bash
+docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false stnsmith/fossflow:latest
 ```
 
 ## Quick Start (Local Development)

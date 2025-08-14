@@ -9,13 +9,16 @@
   "scripts": {
     "dev": "npm run start --workspace=packages/fossflow-app",
     "dev:lib": "npm run dev --workspace=packages/fossflow-lib",
+    "dev:backend": "npm run dev --workspace=packages/fossflow-backend",
     "build": "npm run build:lib && npm run build:app",
     "build:lib": "npm run build --workspace=packages/fossflow-lib",
     "build:app": "npm run build --workspace=packages/fossflow-app",
     "test": "npm run test --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "clean": "npm run clean --workspaces --if-present && rm -rf node_modules",
-    "publish:lib": "npm run build:lib && npm publish --workspace=packages/fossflow-lib"
+    "publish:lib": "npm run build:lib && npm publish --workspace=packages/fossflow-lib",
+    "docker:build": "docker build -t fossflow:local .",
+    "docker:run": "docker compose -f compose.dev.yml up"
   },
   "devDependencies": {
     "@types/node": "^18.19.0",
