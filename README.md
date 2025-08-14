@@ -60,7 +60,7 @@ Go to https://stan-smith.github.io/FossFLOW/
 docker compose up
 
 # Or run directly from Docker Hub with persistent storage
-docker run -p 80:80 -v ./diagrams:/data/diagrams stnsmith/fossflow:latest
+docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams stnsmith/fossflow:latest
 ```
 
 Server storage is enabled by default in Docker. Your diagrams will be saved to `./diagrams` on the host.
