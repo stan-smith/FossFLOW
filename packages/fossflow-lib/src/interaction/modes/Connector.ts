@@ -100,9 +100,9 @@ export const Connector: ModeActions = {
     }
 
     uiState.actions.setMode({
-      type: 'CURSOR',
+      type: 'CONNECTOR',
       showCursor: true,
-      mousedownItem: null
+      id: null
     });
   }
 };
