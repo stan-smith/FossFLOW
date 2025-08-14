@@ -9,7 +9,8 @@ import {
   FolderOpen as FolderOpenIcon,
   DeleteOutline as DeleteOutlineIcon,
   Undo as UndoIcon,
-  Redo as RedoIcon
+  Redo as RedoIcon,
+  Settings as SettingsIcon
 } from '@mui/icons-material';
 import { UiElement } from 'src/components/UiElement/UiElement';
 import { IconButton } from 'src/components/IconButton/IconButton';
@@ -125,6 +126,11 @@ export const MainMenu = () => {
     uiStateActions.setIsMainMenuOpen(false);
   }, [redo, uiStateActions]);
 
+  const onOpenSettings = useCallback(() => {
+    uiStateActions.setIsMainMenuOpen(false);
+    uiStateActions.setDialog(DialogTypeEnum.SETTINGS);
+  }, [uiStateActions]);
+
   const sectionVisibility = useMemo(() => {
     return {
       actions: Boolean(
@@ -221,6 +227,12 @@ export const MainMenu = () => {
               Clear the canvas
             </MenuItem>
           )}
+
+          <Divider />
+
+          <MenuItem onClick={onOpenSettings} Icon={<SettingsIcon />}>
+            Settings
+          </MenuItem>
 
           {sectionVisibility.links && (
             <>

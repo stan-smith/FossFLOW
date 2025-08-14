@@ -18,6 +18,7 @@ import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
 import { TEXTBOX_DEFAULTS } from 'src/config';
 import { generateId } from 'src/utils';
+import { HOTKEY_PROFILES } from 'src/config/hotkeys';
 
 export const ToolMenu = () => {
   const { createTextBox } = useScene();
@@ -31,6 +32,11 @@ export const ToolMenu = () => {
   const mousePosition = useUiStateStore((state) => {
     return state.mouse.position.tile;
   });
+  const hotkeyProfile = useUiStateStore((state) => {
+    return state.hotkeyProfile;
+  });
+
+  const hotkeys = HOTKEY_PROFILES[hotkeyProfile];
 
   const handleUndo = useCallback(() => {
     undo();
@@ -75,7 +81,7 @@ export const ToolMenu = () => {
 
         {/* Main Tools */}
         <IconButton
-          name="Select"
+          name={`Select${hotkeys.select ? ` (${hotkeys.select.toUpperCase()})` : ''}`}
           Icon={<NearMeIcon />}
           onClick={() => {
             uiStateStoreActions.setMode({
@@ -87,7 +93,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'CURSOR' || mode.type === 'DRAG_ITEMS'}
         />
         <IconButton
-          name="Pan"
+          name={`Pan${hotkeys.pan ? ` (${hotkeys.pan.toUpperCase()})` : ''}`}
           Icon={<PanToolIcon />}
           onClick={() => {
             uiStateStoreActions.setMode({
@@ -100,7 +106,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'PAN'}
         />
         <IconButton
-          name="Add item"
+          name={`Add item${hotkeys.addItem ? ` (${hotkeys.addItem.toUpperCase()})` : ''}`}
           Icon={<AddIcon />}
           onClick={() => {
             uiStateStoreActions.setItemControls({
@@ -115,7 +121,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'PLACE_ICON'}
         />
         <IconButton
-          name="Rectangle"
+          name={`Rectangle${hotkeys.rectangle ? ` (${hotkeys.rectangle.toUpperCase()})` : ''}`}
           Icon={<CropSquareIcon />}
           onClick={() => {
             uiStateStoreActions.setMode({
@@ -127,7 +133,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'RECTANGLE.DRAW'}
         />
         <IconButton
-          name="Connector"
+          name={`Connector${hotkeys.connector ? ` (${hotkeys.connector.toUpperCase()})` : ''}`}
           Icon={<ConnectorIcon />}
           onClick={() => {
             uiStateStoreActions.setMode({
@@ -139,7 +145,7 @@ export const ToolMenu = () => {
           isActive={mode.type === 'CONNECTOR'}
         />
         <IconButton
-          name="Text"
+          name={`Text${hotkeys.text ? ` (${hotkeys.text.toUpperCase()})` : ''}`}
           Icon={<TitleIcon />}
           onClick={createTextBoxProxy}
           isActive={mode.type === 'TEXTBOX'}

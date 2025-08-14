@@ -3,10 +3,12 @@ import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { ModeActions, State, SlimMouseEvent } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
-import { getMouse, getItemAtTile } from 'src/utils';
+import { getMouse, getItemAtTile, generateId } from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
+import { HOTKEY_PROFILES } from 'src/config/hotkeys';
+import { TEXTBOX_DEFAULTS } from 'src/config';
 import { Cursor } from './modes/Cursor';
 import { DragItems } from './modes/DragItems';
 import { DrawRectangle } from './modes/Rectangle/DrawRectangle';
@@ -52,6 +54,7 @@ export const useInteractionManager = () => {
   const scene = useScene();
   const { size: rendererSize } = useResizeObserver(uiState.rendererEl);
   const { undo, redo, canUndo, canRedo } = useHistory();
+  const { createTextBox } = scene;
 
   // Keyboard shortcuts for undo/redo
   useEffect(() => {
@@ -92,13 +95,71 @@ export const useInteractionManager = () => {
         e.preventDefault();
         uiState.actions.setDialog(DialogTypeEnum.HELP);
       }
+
+      // Tool hotkeys
+      const hotkeyMapping = HOTKEY_PROFILES[uiState.hotkeyProfile];
+      const key = e.key.toLowerCase();
+
+      // Check if key matches any hotkey
+      if (hotkeyMapping.select && key === hotkeyMapping.select) {
+        e.preventDefault();
+        uiState.actions.setMode({
+          type: 'CURSOR',
+          showCursor: true,
+          mousedownItem: null
+        });
+      } else if (hotkeyMapping.pan && key === hotkeyMapping.pan) {
+        e.preventDefault();
+        uiState.actions.setMode({
+          type: 'PAN',
+          showCursor: false
+        });
+        uiState.actions.setItemControls(null);
+      } else if (hotkeyMapping.addItem && key === hotkeyMapping.addItem) {
+        e.preventDefault();
+        uiState.actions.setItemControls({
+          type: 'ADD_ITEM'
+        });
+        uiState.actions.setMode({
+          type: 'PLACE_ICON',
+          showCursor: true,
+          id: null
+        });
+      } else if (hotkeyMapping.rectangle && key === hotkeyMapping.rectangle) {
+        e.preventDefault();
+        uiState.actions.setMode({
+          type: 'RECTANGLE.DRAW',
+          showCursor: true,
+          id: null
+        });
+      } else if (hotkeyMapping.connector && key === hotkeyMapping.connector) {
+        e.preventDefault();
+        uiState.actions.setMode({
+          type: 'CONNECTOR',
+          id: null,
+          showCursor: true
+        });
+      } else if (hotkeyMapping.text && key === hotkeyMapping.text) {
+        e.preventDefault();
+        const textBoxId = generateId();
+        createTextBox({
+          ...TEXTBOX_DEFAULTS,
+          id: textBoxId,
+          tile: uiState.mouse.position.tile
+        });
+        uiState.actions.setMode({
+          type: 'TEXTBOX',
+          showCursor: false,
+          id: textBoxId
+        });
+      }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       return window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [undo, redo, canUndo, canRedo]);
+  }, [undo, redo, canUndo, canRedo, uiState.hotkeyProfile, uiState.actions, createTextBox, uiState.mouse.position.tile]);
 
   const onMouseEvent = useCallback(
     (e: SlimMouseEvent) => {

@@ -1,6 +1,7 @@
 import { Coords, EditorModeEnum, MainMenuOptions } from './common';
 import { Icon } from './model';
 import { ItemReference } from './scene';
+import { HotkeyProfile } from 'src/config/hotkeys';
 
 interface AddItemControls {
   type: 'ADD_ITEM';
@@ -115,7 +116,8 @@ export type IconCollectionStateWithIcons = IconCollectionState & {
 
 export const DialogTypeEnum = {
   EXPORT_IMAGE: 'EXPORT_IMAGE',
-  HELP: 'HELP'
+  HELP: 'HELP',
+  SETTINGS: 'SETTINGS'
 } as const;
 
 export interface ContextMenu {
@@ -148,6 +150,7 @@ export interface UiState {
   mouse: Mouse;
   rendererEl: HTMLDivElement | null;
   enableDebugTools: boolean;
+  hotkeyProfile: HotkeyProfile;
 }
 
 export interface UiStateActions {
@@ -168,6 +171,7 @@ export interface UiStateActions {
   setMouse: (mouse: Mouse) => void;
   setRendererEl: (el: HTMLDivElement) => void;
   setEnableDebugTools: (enabled: boolean) => void;
+  setHotkeyProfile: (profile: HotkeyProfile) => void;
 }
 
 export type UiStateStore = UiState & {

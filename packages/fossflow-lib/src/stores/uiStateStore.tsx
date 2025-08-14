@@ -8,6 +8,7 @@ import {
 } from 'src/utils';
 import { UiStateStore } from 'src/types';
 import { INITIAL_UI_STATE } from 'src/config';
+import { DEFAULT_HOTKEY_PROFILE } from 'src/config/hotkeys';
 
 const initialState = () => {
   return createStore<UiStateStore>((set, get) => {
@@ -30,6 +31,7 @@ const initialState = () => {
       },
       itemControls: null,
       enableDebugTools: false,
+      hotkeyProfile: DEFAULT_HOTKEY_PROFILE,
       actions: {
         setView: (view) => {
           set({ view });
@@ -91,6 +93,9 @@ const initialState = () => {
         },
         setRendererEl: (el) => {
           set({ rendererEl: el });
+        },
+        setHotkeyProfile: (hotkeyProfile) => {
+          set({ hotkeyProfile });
         }
       }
     };
