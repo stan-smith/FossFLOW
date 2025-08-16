@@ -6,13 +6,17 @@ import 'react-quill/dist/quill.snow.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import { ErrorBoundary } from 'react-error-boundary';
+import ErrorBoundaryFallbackUI from './components/ErrorBoundary';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <ErrorBoundary FallbackComponent={ErrorBoundaryFallbackUI}>
+      <App />
+    </ErrorBoundary>
   </React.StrictMode>
 );
 
