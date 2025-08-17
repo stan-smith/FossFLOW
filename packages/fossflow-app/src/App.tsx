@@ -60,13 +60,34 @@ function App() {
   ];
   
   
-  const [diagramData, setDiagramData] = useState<DiagramData>({
-    title: 'Untitled Diagram',
-    icons: icons, // Keep full icon set for FossFLOW
-    colors: defaultColors,
-    items: [],
-    views: [],
-    fitToScreen: true
+  const [diagramData, setDiagramData] = useState<DiagramData>(() => {
+    // Initialize with last opened data if available
+    const lastOpenedData = localStorage.getItem('fossflow-last-opened-data');
+    if (lastOpenedData) {
+      try {
+        const data = JSON.parse(lastOpenedData);
+        const importedIcons = (data.icons || []).filter((icon: any) => icon.collection === 'imported');
+        const mergedIcons = [...icons, ...importedIcons];
+        return {
+          ...data,
+          icons: mergedIcons,
+          colors: data.colors?.length ? data.colors : defaultColors,
+          fitToScreen: data.fitToScreen !== false
+        };
+      } catch (e) {
+        console.error('Failed to load last opened data:', e);
+      }
+    }
+    
+    // Default state if no saved data
+    return {
+      title: 'Untitled Diagram',
+      icons: icons,
+      colors: defaultColors,
+      items: [],
+      views: [],
+      fitToScreen: true
+    };
   });
 
   // Check for server storage availability
@@ -83,35 +104,24 @@ function App() {
       setDiagrams(JSON.parse(savedDiagrams));
     }
     
-    // Load last opened diagram
+    // Load last opened diagram metadata (data is already loaded in state initialization)
     const lastOpenedId = localStorage.getItem('fossflow-last-opened');
-    const lastOpenedData = localStorage.getItem('fossflow-last-opened-data');
     
-    if (lastOpenedId && lastOpenedData) {
+    if (lastOpenedId && savedDiagrams) {
       try {
-        const data = JSON.parse(lastOpenedData);
-        // Always include full icon set
-        const dataWithIcons = {
-          ...data,
-          icons: icons // Replace with full icon set
-        };
-        setDiagramData(dataWithIcons);
-        setCurrentModel(dataWithIcons);
-        
-        // Find and set the diagram metadata
-        if (savedDiagrams) {
-          const allDiagrams = JSON.parse(savedDiagrams);
-          const lastDiagram = allDiagrams.find((d: SavedDiagram) => d.id === lastOpenedId);
-          if (lastDiagram) {
-            setCurrentDiagram(lastDiagram);
-            setDiagramName(lastDiagram.name);
-          }
+        const allDiagrams = JSON.parse(savedDiagrams);
+        const lastDiagram = allDiagrams.find((d: SavedDiagram) => d.id === lastOpenedId);
+        if (lastDiagram) {
+          setCurrentDiagram(lastDiagram);
+          setDiagramName(lastDiagram.name);
+          // Also set currentModel to match diagramData
+          setCurrentModel(diagramData);
         }
       } catch (e) {
-        console.error('Failed to restore last diagram:', e);
+        console.error('Failed to restore last diagram metadata:', e);
       }
     }
-  }, []);
+  }, [diagramData]);
 
     // Save diagrams to localStorage whenever they change
   useEffect(() => {
@@ -153,10 +163,13 @@ function App() {
       }
     }
 
-    // Construct save data WITHOUT icons (they're loaded separately)
+    // Construct save data - include only imported icons
+    const importedIcons = (currentModel?.icons || diagramData.icons || [])
+      .filter(icon => icon.collection === 'imported');
+    
     const savedData = {
       title: diagramName,
-      icons: [], // Don't save icons with diagram
+      icons: importedIcons, // Save only imported icons with diagram
       colors: currentModel?.colors || diagramData.colors || [],
       items: currentModel?.items || diagramData.items || [],
       views: currentModel?.views || diagramData.views || [],
@@ -208,10 +221,12 @@ function App() {
       return;
     }
     
-    // Always ensure icons are present when loading
+    // Merge imported icons with default icon set
+    const importedIcons = (diagram.data.icons || []).filter((icon: any) => icon.collection === 'imported');
+    const mergedIcons = [...icons, ...importedIcons];
     const dataWithIcons = {
       ...diagram.data,
-      icons: icons // Replace with full icon set
+      icons: mergedIcons
     };
     
     setCurrentDiagram(diagram);
@@ -270,39 +285,57 @@ function App() {
 
   const handleModelUpdated = (model: any) => {
     // Store the current model state whenever it updates
-    // Model update received
+    // The model from Isoflow contains the COMPLETE state including all icons
     
-    // Deep merge the model update with our current state
-    // This handles both complete and partial updates
-    setCurrentModel((prevModel: DiagramData | null) => {
-      const merged = {
-        // Start with previous model or diagram data
-        ...(prevModel || diagramData),
-        // Override with any new data from the model update
-        ...model,
-        // Ensure we always have required fields
-        title: model.title || prevModel?.title || diagramData.title || diagramName || 'Untitled',
-        // Keep icons in the data structure for FossFLOW to work
-        icons: icons, // Always use full icon set
-        colors: model.colors || prevModel?.colors || diagramData.colors || [],
-        // These fields likely come from the model update
-        items: model.items !== undefined ? model.items : (prevModel?.items || diagramData.items || []),
-        views: model.views !== undefined ? model.views : (prevModel?.views || diagramData.views || []),
-        fitToScreen: true
-      };
-      setHasUnsavedChanges(true);
-      return merged;
-    });
+    // Simply store the complete model as-is since it has everything
+    const updatedModel = {
+      title: model.title || diagramName || 'Untitled',
+      icons: model.icons || [], // This already includes ALL icons (default + imported)
+      colors: model.colors || defaultColors,
+      items: model.items || [],
+      views: model.views || [],
+      fitToScreen: true
+    };
+    
+    setCurrentModel(updatedModel);
+    setDiagramData(updatedModel);
+    setHasUnsavedChanges(true);
   };
 
   const exportDiagram = () => {
-    // For export, DO include icons so the file is self-contained
+    // Use the most recent model data - prefer currentModel as it gets updated by handleModelUpdated
+    const modelToExport = currentModel || diagramData;
+    
+    // Get ALL icons from the current model (which includes both default and imported)
+    const allModelIcons = modelToExport.icons || [];
+    
+    // For safety, also check diagramData for any imported icons not in currentModel
+    const diagramImportedIcons = (diagramData.icons || []).filter(icon => icon.collection === 'imported');
+    
+    // Create a map to deduplicate icons by ID, preferring the ones from currentModel
+    const iconMap = new Map();
+    
+    // First add all icons from the model (includes defaults + imported)
+    allModelIcons.forEach(icon => {
+      iconMap.set(icon.id, icon);
+    });
+    
+    // Then add any imported icons from diagramData that might be missing
+    diagramImportedIcons.forEach(icon => {
+      if (!iconMap.has(icon.id)) {
+        iconMap.set(icon.id, icon);
+      }
+    });
+    
+    // Get all unique icons
+    const allIcons = Array.from(iconMap.values());
+    
     const exportData = {
-      title: diagramName || currentModel?.title || diagramData.title || 'Exported Diagram',
-      icons: icons, // Include ALL icons for portability
-      colors: currentModel?.colors || diagramData.colors || [],
-      items: currentModel?.items || diagramData.items || [],
-      views: currentModel?.views || diagramData.views || [],
+      title: diagramName || modelToExport.title || 'Exported Diagram',
+      icons: allIcons, // Include ALL icons (default + imported) for portability
+      colors: modelToExport.colors || [],
+      items: modelToExport.items || [],
+      views: modelToExport.views || [],
       fitToScreen: true
     };
     
@@ -331,11 +364,13 @@ function App() {
         const content = e.target?.result as string;
         const parsedData = JSON.parse(content);
         
-        // Merge imported data with our icons
+        // Merge imported icons with default icon set
+        const importedIcons = (parsedData.icons || []).filter((icon: any) => icon.collection === 'imported');
+        const mergedIcons = [...icons, ...importedIcons];
         const mergedData: DiagramData = {
           ...parsedData,
           title: parsedData.title || 'Imported Diagram',
-          icons: icons, // Always use app icons
+          icons: mergedIcons, // Merge default and imported icons
           colors: parsedData.colors?.length ? parsedData.colors : defaultColors,
           fitToScreen: parsedData.fitToScreen !== false
         };
@@ -375,10 +410,30 @@ function App() {
 
   const handleDiagramManagerLoad = (id: string, data: any) => {
     // Load diagram from server storage
+    // Server storage contains ALL icons (including imported), so use them directly
+    const loadedIcons = data.icons || [];
+    
+    // Check if we have all default icons in the loaded data
+    const hasAllDefaults = icons.every(defaultIcon => 
+      loadedIcons.some((loadedIcon: any) => loadedIcon.id === defaultIcon.id)
+    );
+    
+    // If the saved data has all icons, use it as-is
+    // Otherwise, merge imported icons with defaults (for backward compatibility)
+    let finalIcons;
+    if (hasAllDefaults) {
+      // Server saved all icons, use them directly
+      finalIcons = loadedIcons;
+    } else {
+      // Old format or session storage - merge imported with defaults
+      const importedIcons = loadedIcons.filter((icon: any) => icon.collection === 'imported');
+      finalIcons = [...icons, ...importedIcons];
+    }
+    
     const mergedData: DiagramData = {
       ...data,
       title: data.title || data.name || 'Loaded Diagram',
-      icons: icons, // Always use app icons
+      icons: finalIcons,
       colors: data.colors?.length ? data.colors : defaultColors,
       fitToScreen: data.fitToScreen !== false
     };
@@ -402,9 +457,13 @@ function App() {
     if (!currentModel || !hasUnsavedChanges || !currentDiagram) return;
     
     const autoSaveTimer = setTimeout(() => {
+      // Include imported icons in auto-save
+      const importedIcons = (currentModel?.icons || diagramData.icons || [])
+        .filter(icon => icon.collection === 'imported');
+      
       const savedData = {
         title: diagramName || currentDiagram.name,
-        icons: [], // Don't save icons in auto-save
+        icons: importedIcons, // Save imported icons in auto-save
         colors: currentModel.colors || [],
         items: currentModel.items || [],
         views: currentModel.views || [],
