@@ -9,6 +9,15 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 
 ## Recent Updates (August 2025)
 
+### Custom Icon Import
+- **Import Your Own Icons** - Upload custom icons (PNG, JPG, SVG) to use in your diagrams
+- **Automatic Scaling** - Icons are automatically scaled to consistent sizes for professional appearance
+- **Isometric/Flat Toggle** - Choose whether imported icons appear as 3D isometric or flat 2D
+- **Smart Persistence** - Custom icons are saved with diagrams and work across all storage methods
+- **Icon Resources** - Find free icons at:
+  - [Iconify Icon Sets](https://icon-sets.iconify.design/) - Thousands of free SVG icons
+  - [Flaticon Isometric Icons](https://www.flaticon.com/free-icons/isometric) - High-quality isometric icon packs
+
 ### Server Storage Support
 - **Persistent Storage** - Diagrams saved to server filesystem, persist across browser sessions
 - **Multi-device Access** - Access your diagrams from any device when using Docker deployment
