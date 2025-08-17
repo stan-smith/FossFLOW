@@ -10,14 +10,16 @@ interface Props {
   icon: IconI;
   onClick?: () => void;
   onMouseDown?: () => void;
+  onDoubleClick?: () => void;
 }
 
-export const Icon = ({ icon, onClick, onMouseDown }: Props) => {
+export const Icon = ({ icon, onClick, onMouseDown, onDoubleClick }: Props) => {
   return (
     <Button
       variant="text"
       onClick={onClick}
       onMouseDown={onMouseDown}
+      onDoubleClick={onDoubleClick}
       sx={{
         userSelect: 'none'
       }}
