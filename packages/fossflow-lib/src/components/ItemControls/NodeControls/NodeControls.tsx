@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Box, Stack, Button, IconButton as MUIIconButton } from '@mui/material';
 import {
   ChevronRight as ChevronRightIcon,
@@ -15,6 +15,7 @@ import { ControlsContainer } from '../components/ControlsContainer';
 import { Icons } from '../IconSelectionControls/Icons';
 import { NodeSettings } from './NodeSettings/NodeSettings';
 import { Section } from '../components/Section';
+import { QuickIconSelector } from './QuickIconSelector';
 
 interface Props {
   id: string;
@@ -40,6 +41,18 @@ export const NodeControls = ({ id }: Props) => {
 
   const onSwitchMode = useCallback((newMode: Mode) => {
     setMode(newMode);
+  }, []);
+
+  // Listen for quick icon change event (triggered by 'i' hotkey)
+  useEffect(() => {
+    const handleQuickIconChange = () => {
+      setMode('CHANGE_ICON');
+    };
+
+    window.addEventListener('quickIconChange', handleQuickIconChange);
+    return () => {
+      window.removeEventListener('quickIconChange', handleQuickIconChange);
+    };
   }, []);
 
   // If items don't exist, return null (component will unmount)
@@ -127,11 +140,13 @@ export const NodeControls = ({ id }: Props) => {
         />
       )}
       {mode === 'CHANGE_ICON' && (
-        <Icons
-          key={viewItem.id}
-          iconCategories={iconCategories}
-          onClick={(_icon) => {
+        <QuickIconSelector
+          currentIconId={modelItem.icon}
+          onIconSelected={(_icon) => {
             updateModelItem(viewItem.id, { icon: _icon.id });
+          }}
+          onClose={() => {
+            onSwitchMode('SETTINGS');
           }}
         />
       )}
