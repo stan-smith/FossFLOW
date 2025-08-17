@@ -51,17 +51,17 @@ export const usePanHandlers = () => {
   const handleMouseDown = useCallback((e: SlimMouseEvent): boolean => {
     const panSettings = uiState.panSettings;
     
-    // Middle click pan
-    if (panSettings.middleClickPan && e.button === 1) {
-      e.preventDefault();
-      startPan('middle');
-      return true;
-    }
-    
-    // Right click pan
+    // Right click pan (button 2)
     if (panSettings.rightClickPan && e.button === 2) {
       e.preventDefault();
       startPan('right');
+      return true;
+    }
+    
+    // Middle click pan (button 1)
+    if (panSettings.middleClickPan && e.button === 1) {
+      e.preventDefault();
+      startPan('middle');
       return true;
     }
     
