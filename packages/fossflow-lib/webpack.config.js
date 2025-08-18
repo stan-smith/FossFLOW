@@ -62,6 +62,7 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       PACKAGE_VERSION: JSON.stringify(packageJson.version),
+      REPOSITORY_URL: JSON.stringify(packageJson.repository.url),
     }),
   ],
   externals: {
