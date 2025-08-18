@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { Box, Stack, Typography, Divider, TextField, InputAdornment } from '@mui/material';
+import { Box, Stack, Typography, Divider, TextField, InputAdornment, Alert } from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { Icon } from 'src/types';
 import { useModelStore } from 'src/stores/modelStore';
+import { useIconCategories } from 'src/hooks/useIconCategories';
 import { IconGrid } from '../IconSelectionControls/IconGrid';
+import { Icons } from '../IconSelectionControls/Icons';
 import { Section } from '../components/Section';
 
 interface Props {
@@ -33,14 +35,18 @@ const addToRecentIcons = (iconId: string) => {
   localStorage.setItem(RECENT_ICONS_KEY, JSON.stringify(updated));
 };
 
+// Escape special regex characters
+const escapeRegex = (str: string): string => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
 export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  const gridRef = useRef<HTMLDivElement>(null);
   
   const icons = useModelStore((state) => state.icons);
-  const items = useModelStore((state) => state.items);
+  const { iconCategories } = useIconCategories();
 
   // Get recently used icons
   const recentIconIds = useMemo(() => getRecentIcons(), []);
@@ -50,45 +56,21 @@ export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Pr
       .filter(Boolean) as Icon[];
   }, [recentIconIds, icons]);
 
-  // Get most commonly used icons in current diagram
-  const commonIcons = useMemo(() => {
-    const iconUsage = new Map<string, number>();
-    
-    // Count icon usage
-    items.forEach(item => {
-      if (item.icon) {
-        iconUsage.set(item.icon, (iconUsage.get(item.icon) || 0) + 1);
-      }
-    });
-
-    // Sort by usage and get top icons
-    const sorted = Array.from(iconUsage.entries())
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 8)
-      .map(([iconId]) => icons.find(icon => icon.id === iconId))
-      .filter(Boolean) as Icon[];
-
-    return sorted;
-  }, [items, icons]);
-
   // Filter icons based on search
   const filteredIcons = useMemo(() => {
-    if (!searchTerm) {
-      // Show recent icons when no search
-      if (recentIcons.length > 0) {
-        return recentIcons;
-      }
-      // Show common icons if no recent
-      if (commonIcons.length > 0) {
-        return commonIcons;
-      }
-      // Show first 20 icons as fallback
-      return icons.slice(0, 20);
+    if (!searchTerm) return null;
+    
+    try {
+      // Escape special regex characters to prevent errors
+      const escapedSearch = escapeRegex(searchTerm);
+      const regex = new RegExp(escapedSearch, 'gi');
+      return icons.filter(icon => regex.test(icon.name));
+    } catch (e) {
+      // If regex still fails somehow, fall back to simple includes
+      const lowerSearch = searchTerm.toLowerCase();
+      return icons.filter(icon => icon.name.toLowerCase().includes(lowerSearch));
     }
-
-    const regex = new RegExp(searchTerm, 'gi');
-    return icons.filter(icon => regex.test(icon.name));
-  }, [searchTerm, icons, recentIcons, commonIcons]);
+  }, [searchTerm, icons]);
 
   // Focus search input on mount
   useEffect(() => {
@@ -98,6 +80,9 @@ export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Pr
   // Handle keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // Only handle navigation if we're showing search results
+      if (!filteredIcons || filteredIcons.length === 0) return;
+      
       const itemsPerRow = 4; // Adjust based on your grid layout
       const totalItems = filteredIcons.length;
 
@@ -178,42 +163,70 @@ export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Pr
             autoFocus
           />
 
-          {/* Section Headers */}
+          {/* Recently Used Icons - Show when no search */}
           {!searchTerm && recentIcons.length > 0 && (
-            <Typography variant="caption" color="text.secondary">
-              RECENTLY USED
-            </Typography>
-          )}
-          {!searchTerm && recentIcons.length === 0 && commonIcons.length > 0 && (
-            <Typography variant="caption" color="text.secondary">
-              COMMONLY USED IN THIS DIAGRAM
-            </Typography>
-          )}
-          {searchTerm && (
-            <Typography variant="caption" color="text.secondary">
-              SEARCH RESULTS ({filteredIcons.length} icons)
-            </Typography>
+            <>
+              <Typography variant="caption" color="text.secondary">
+                RECENTLY USED
+              </Typography>
+              <IconGrid
+                icons={recentIcons}
+                onClick={handleIconSelect}
+                onDoubleClick={handleIconDoubleClick}
+              />
+              <Divider />
+            </>
           )}
         </Stack>
       </Section>
 
-      <Divider />
+      {/* Search Results */}
+      {searchTerm && filteredIcons && (
+        <>
+          <Section sx={{ py: 1 }}>
+            <Typography variant="caption" color="text.secondary">
+              SEARCH RESULTS ({filteredIcons.length} icons)
+            </Typography>
+          </Section>
+          <Divider />
+          <Box sx={{ maxHeight: 400, overflowY: 'auto' }}>
+            {filteredIcons.length > 0 ? (
+              <Section>
+                <IconGrid
+                  icons={filteredIcons}
+                  onClick={handleIconSelect}
+                  onDoubleClick={handleIconDoubleClick}
+                  hoveredIndex={hoveredIndex}
+                  onHover={setHoveredIndex}
+                />
+              </Section>
+            ) : (
+              <Section>
+                <Alert severity="info">No icons found matching "{searchTerm}"</Alert>
+              </Section>
+            )}
+          </Box>
+        </>
+      )}
 
-      {/* Icon Grid */}
-      <Box ref={gridRef} sx={{ maxHeight: 400, overflowY: 'auto' }}>
-        <IconGrid
-          icons={filteredIcons}
-          onClick={handleIconSelect}
-          onDoubleClick={handleIconDoubleClick}
-          hoveredIndex={hoveredIndex}
-          onHover={setHoveredIndex}
-        />
-      </Box>
+      {/* Original Icon Libraries - Show when no search */}
+      {!searchTerm && (
+        <Box sx={{ maxHeight: 400, overflowY: 'auto' }}>
+          <Icons
+            iconCategories={iconCategories}
+            onClick={handleIconSelect}
+            onMouseDown={() => {}} // Not needed for selection
+          />
+        </Box>
+      )}
 
       {/* Help Text */}
       <Section sx={{ py: 1 }}>
         <Typography variant="caption" color="text.secondary">
-          Use arrow keys to navigate • Enter to select • Double-click to select and close
+          {searchTerm 
+            ? 'Use arrow keys to navigate • Enter to select • Double-click to select and close'
+            : 'Type to search • Click category to expand • Double-click to select and close'
+          }
         </Typography>
       </Section>
     </Box>
