@@ -18,6 +18,7 @@ import { useModelStore } from 'src/stores/modelStore';
 import { ExportImageDialog } from '../ExportImageDialog/ExportImageDialog';
 import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
+import { ConnectorHintTooltip } from '../ConnectorHintTooltip/ConnectorHintTooltip';
 
 const ToolsEnum = {
   MAIN_MENU: 'MAIN_MENU',
@@ -52,6 +53,7 @@ const getEditorModeMapping = (editorMode: keyof typeof EditorModeEnum) => {
 export const UiOverlay = () => {
   const theme = useTheme();
   const contextMenuAnchorRef = useRef();
+  const toolMenuRef = useRef<HTMLDivElement>(null);
   const { appPadding } = theme.customVars;
   const spacing = useCallback(
     (multiplier: number) => {
@@ -125,6 +127,7 @@ export const UiOverlay = () => {
 
         {availableTools.includes('TOOL_MENU') && (
           <Box
+            ref={toolMenuRef}
             sx={{
               position: 'absolute',
               transform: 'translateX(-100%)'
@@ -239,6 +242,9 @@ export const UiOverlay = () => {
       {dialog === DialogTypeEnum.HELP && <HelpDialog />}
 
       {dialog === DialogTypeEnum.SETTINGS && <SettingsDialog />}
+
+      {/* Show connector hint tooltip only in editable mode */}
+      {editorMode === EditorModeEnum.EDITABLE && <ConnectorHintTooltip toolMenuRef={toolMenuRef} />}
 
       <SceneLayer>
         <Box ref={contextMenuAnchorRef} />
