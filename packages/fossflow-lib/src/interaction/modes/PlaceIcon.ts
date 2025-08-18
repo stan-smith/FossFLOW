@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import { ModeActions } from 'src/types';
-import { generateId, getItemAtTile } from 'src/utils';
+import { generateId, getItemAtTile, findNearestUnoccupiedTile } from 'src/utils';
 import { VIEW_ITEM_DEFAULTS } from 'src/config';
 
 export const PlaceIcon: ModeActions = {
@@ -27,20 +27,29 @@ export const PlaceIcon: ModeActions = {
     if (uiState.mode.type !== 'PLACE_ICON') return;
 
     if (uiState.mode.id !== null) {
-      const modelItemId = generateId();
+      // Find the nearest unoccupied tile to the target position
+      const targetTile = findNearestUnoccupiedTile(
+        uiState.mouse.position.tile,
+        scene
+      );
 
-      scene.placeIcon({
-        modelItem: {
-          id: modelItemId,
-          name: 'Untitled',
-          icon: uiState.mode.id
-        },
-        viewItem: {
-          ...VIEW_ITEM_DEFAULTS,
-          id: modelItemId,
-          tile: uiState.mouse.position.tile
-        }
-      });
+      // Place the icon on the nearest unoccupied tile
+      if (targetTile) {
+        const modelItemId = generateId();
+
+        scene.placeIcon({
+          modelItem: {
+            id: modelItemId,
+            name: 'Untitled',
+            icon: uiState.mode.id
+          },
+          viewItem: {
+            ...VIEW_ITEM_DEFAULTS,
+            id: modelItemId,
+            tile: targetTile
+          }
+        });
+      }
     }
 
     uiState.actions.setMode(

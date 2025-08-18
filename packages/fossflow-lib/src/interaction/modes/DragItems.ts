@@ -6,7 +6,8 @@ import {
   CoordsUtils,
   hasMovedTile,
   getAnchorParent,
-  getItemAtTile
+  getItemAtTile,
+  findNearestUnoccupiedTilesForGroup
 } from 'src/utils';
 
 const dragItems = (
@@ -15,14 +16,40 @@ const dragItems = (
   delta: Coords,
   scene: ReturnType<typeof useScene>
 ) => {
-  items.forEach((item) => {
-    if (item.type === 'ITEM') {
+  // Separate items from other draggable elements
+  const itemRefs = items.filter(item => item.type === 'ITEM');
+  const otherRefs = items.filter(item => item.type !== 'ITEM');
+  
+  // If there are items being dragged, find nearest unoccupied tiles for them
+  if (itemRefs.length > 0) {
+    const itemsWithTargets = itemRefs.map(item => {
       const node = getItemByIdOrThrow(scene.items, item.id).value;
-
-      scene.updateViewItem(item.id, {
-        tile: CoordsUtils.add(node.tile, delta)
+      return {
+        id: item.id,
+        targetTile: CoordsUtils.add(node.tile, delta)
+      };
+    });
+    
+    // Find nearest unoccupied tiles for all items
+    const newTiles = findNearestUnoccupiedTilesForGroup(
+      itemsWithTargets,
+      scene,
+      itemRefs.map(item => item.id) // Exclude the items being dragged
+    );
+    
+    // If we found valid positions for all items, move them
+    if (newTiles) {
+      itemRefs.forEach((item, index) => {
+        scene.updateViewItem(item.id, {
+          tile: newTiles[index]
+        });
       });
-    } else if (item.type === 'RECTANGLE') {
+    }
+  }
+  
+  // Handle non-item references (rectangles, textboxes, connector anchors)
+  otherRefs.forEach((item) => {
+    if (item.type === 'RECTANGLE') {
       const rectangle = getItemByIdOrThrow(scene.rectangles, item.id).value;
       const newFrom = CoordsUtils.add(rectangle.from, delta);
       const newTo = CoordsUtils.add(rectangle.to, delta);
