@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/stan-smith/fossflow-lib.git"
+    "url": "https://github.com/stan-smith/FossFLOW.git"
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -3,7 +3,6 @@ import { Menu, Typography, Divider, Card } from '@mui/material';
 import {
   Menu as MenuIcon,
   GitHub as GitHubIcon,
-  QuestionAnswer as QuestionAnswerIcon,
   DataObject as ExportJsonIcon,
   ImageOutlined as ExportImageIcon,
   FolderOpen as FolderOpenIcon,
@@ -248,17 +247,6 @@ export const MainMenu = () => {
                   GitHub
                 </MenuItem>
               )}
-
-              {mainMenuOptions.includes('LINK.DISCORD') && (
-                <MenuItem
-                  onClick={() => {
-                    return gotoUrl('https://discord.gg/QYPkvZth7D');
-                  }}
-                  Icon={<QuestionAnswerIcon />}
-                >
-                  Discord
-                </MenuItem>
-              )}
             </>
           )}
 
@@ -269,7 +257,7 @@ export const MainMenu = () => {
               {mainMenuOptions.includes('VERSION') && (
                 <MenuItem>
                   <Typography variant="body2" color="text.secondary">
-                    Isoflow v{PACKAGE_VERSION}
+                    FossFLOW v{PACKAGE_VERSION}
                   </Typography>
                 </MenuItem>
               )}
