@@ -51,38 +51,44 @@ export const usePanHandlers = () => {
   const handleMouseDown = useCallback((e: SlimMouseEvent): boolean => {
     const panSettings = uiState.panSettings;
     
-    // Right click pan (button 2)
-    if (panSettings.rightClickPan && e.button === 2) {
-      e.preventDefault();
-      startPan('right');
-      return true;
-    }
+    // Check for the specific button that was pressed and only handle that one
+    // This fixes the issue where enabling both middle and right click causes neither to work
     
     // Middle click pan (button 1)
-    if (panSettings.middleClickPan && e.button === 1) {
+    if (e.button === 1 && panSettings.middleClickPan) {
       e.preventDefault();
       startPan('middle');
       return true;
     }
     
-    // Ctrl + click pan
-    if (panSettings.ctrlClickPan && e.ctrlKey && e.button === 0) {
+    // Right click pan (button 2)
+    if (e.button === 2 && panSettings.rightClickPan) {
       e.preventDefault();
-      startPan('ctrl');
+      startPan('right');
       return true;
     }
     
-    // Alt + click pan
-    if (panSettings.altClickPan && e.altKey && e.button === 0) {
-      e.preventDefault();
-      startPan('alt');
-      return true;
-    }
-    
-    // Empty area click pan
-    if (panSettings.emptyAreaClickPan && e.button === 0 && isEmptyArea(e)) {
-      startPan('empty');
-      return true;
+    // Left button (0) with modifiers or empty area
+    if (e.button === 0) {
+      // Ctrl + click pan
+      if (panSettings.ctrlClickPan && e.ctrlKey) {
+        e.preventDefault();
+        startPan('ctrl');
+        return true;
+      }
+      
+      // Alt + click pan
+      if (panSettings.altClickPan && e.altKey) {
+        e.preventDefault();
+        startPan('alt');
+        return true;
+      }
+      
+      // Empty area click pan
+      if (panSettings.emptyAreaClickPan && isEmptyArea(e)) {
+        startPan('empty');
+        return true;
+      }
     }
     
     return false;
