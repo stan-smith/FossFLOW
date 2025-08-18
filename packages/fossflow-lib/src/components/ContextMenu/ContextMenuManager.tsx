@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { getTilePosition, CoordsUtils, generateId } from 'src/utils';
+import { getTilePosition, CoordsUtils, generateId, findNearestUnoccupiedTile } from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
 import { useModelStore } from 'src/stores/modelStore';
 import { VIEW_ITEM_DEFAULTS } from 'src/config';
@@ -50,6 +50,9 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
               if (model.icons.length > 0) {
                 const modelItemId = generateId();
                 const firstIcon = model.icons[0];
+                
+                // Find nearest unoccupied tile (should return the same tile since context menu is for empty tiles)
+                const targetTile = findNearestUnoccupiedTile(contextMenu.tile, scene) || contextMenu.tile;
 
                 scene.placeIcon({
                   modelItem: {
@@ -60,7 +63,7 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
                   viewItem: {
                     ...VIEW_ITEM_DEFAULTS,
                     id: modelItemId,
-                    tile: contextMenu.tile
+                    tile: targetTile
                   }
                 });
               }
