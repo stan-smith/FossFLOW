@@ -40,7 +40,7 @@ interface Props {
 
 export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
   const containerRef = useRef<HTMLDivElement>();
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const isExporting = useRef<boolean>(false);
   const currentView = useUiStateStore((state) => {
     return state.view;
   });
@@ -65,32 +65,24 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     });
   }, [uiStateActions]);
 
-  const exportImage = useCallback(async () => {
-    if (!containerRef.current) return;
+  const exportImage = useCallback(() => {
+    if (!containerRef.current || isExporting.current) {
+      return;
+    }
 
-    clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => {
-      exportAsImage(containerRef.current as HTMLDivElement)
-        .then((data) => {
-          return setImageData(data);
-        })
-        .catch((err) => {
-          console.log(err);
-          setExportError(true);
-        });
-    }, 2000);
+    isExporting.current = true;
+    exportAsImage(containerRef.current as HTMLDivElement)
+      .then((data) => {
+        console.log('Exported image data:', data);
+        setImageData(data);
+        isExporting.current = false;
+      })
+      .catch((err) => {
+        console.error(err);
+        setExportError(true);
+        isExporting.current = false;
+      });
   }, []);
-
-  const downloadFile = useCallback(() => {
-    if (!imageData) return;
-
-    const data = base64ToBlob(
-      imageData.replace('data:image/png;base64,', ''),
-      'image/png;charset=utf-8'
-    );
-
-    downloadFileUtil(data, generateGenericFilename('png'));
-  }, [imageData]);
 
   const [showGrid, setShowGrid] = useState(false);
   const handleShowGridChange = (checked: boolean) => {
@@ -104,9 +96,36 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     setBackgroundColor(color);
   };
 
+  // Reset image data when options change and trigger export
   useEffect(() => {
     setImageData(undefined);
-  }, [showGrid, backgroundColor]);
+    setExportError(false);
+    isExporting.current = false;
+    const timer = setTimeout(() => {
+      exportImage();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [showGrid, backgroundColor, exportImage]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      exportImage();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [exportImage]);
+
+  const downloadFile = useCallback(() => {
+    if (!imageData) return;
+
+    const data = base64ToBlob(
+      imageData.replace('data:image/png;base64,', ''),
+      'image/png;charset=utf-8'
+    );
+
+    downloadFileUtil(data, generateGenericFilename('png'));
+  }, [imageData]);
 
   return (
     <Dialog open onClose={onClose}>
@@ -146,7 +165,6 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                 >
                   <Isoflow
                     editorMode="NON_INTERACTIVE"
-                    onModelUpdated={exportImage}
                     initialData={{
                       ...model,
                       fitToView: true,
