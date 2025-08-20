@@ -105,7 +105,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     }, 100);
 
     return () => clearTimeout(timer);
-  }, [showGrid, backgroundColor, exportImage]);
+  }, [showGrid, backgroundColor]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
