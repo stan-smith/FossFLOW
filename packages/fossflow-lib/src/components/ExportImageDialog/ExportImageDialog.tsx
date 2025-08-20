@@ -73,7 +73,6 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     isExporting.current = true;
     exportAsImage(containerRef.current as HTMLDivElement)
       .then((data) => {
-        console.log('Exported image data:', data);
         setImageData(data);
         isExporting.current = false;
       })
