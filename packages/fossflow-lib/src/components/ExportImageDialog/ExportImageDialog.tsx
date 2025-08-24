@@ -235,10 +235,8 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     exportImage();
   }, [showGrid, backgroundColor, exportImage]);
 
-  useEffect(() => {
-    if (quality <= 0) {
-      // Multiplication with 0 breaks the sizing.
-      throw new Error('Invalid quality: value must be greater than 0');
+      console.error('Invalid quality: value must be greater than 0');
+      setExportState(() => 'error');
     }
 
     // Cleanup debounce timer on unmount
