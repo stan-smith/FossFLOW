@@ -70,9 +70,9 @@ export const TransformControls = ({ from, to, onAnchorMouseDown }: Props) => {
         </g>
       </Svg>
 
-      {anchors.map(({ position, onMouseDown }, index) => {
+      {anchors.map(({ position, onMouseDown }) => {
         return (
-          <TransformAnchor key={index} position={position} onMouseDown={onMouseDown} />
+          <TransformAnchor position={position} onMouseDown={onMouseDown} />
         );
       })}
     </>

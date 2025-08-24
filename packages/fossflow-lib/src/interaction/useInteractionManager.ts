@@ -308,7 +308,7 @@ export const useInteractionManager = () => {
     el.addEventListener('touchstart', onTouchStart);
     el.addEventListener('touchmove', onTouchMove);
     el.addEventListener('touchend', onTouchEnd);
-    uiState.rendererEl?.addEventListener('wheel', onScroll, { passive: true });
+    uiState.rendererEl?.addEventListener('wheel', onScroll);
 
     return () => {
       el.removeEventListener('mousemove', onMouseEvent);
