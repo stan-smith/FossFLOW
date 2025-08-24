@@ -167,9 +167,6 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
 
   const exportImage = useCallback(async () => {
     if (!containerRef.current) {
-      // Defer to next tick, because container is still null.
-      // In the next iteration, the container has a reference in any case.
-      setTimeout(exportImage, 0);
       return;
     }
 
@@ -233,10 +230,12 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     setImageData(() => undefined);
     setExportState(() => 'idle');
     exportImage();
-  }, [showGrid, backgroundColor, exportImage]);
+  }, [showGrid, backgroundColor, exportImage, containerRef.current]);
 
+  useEffect(() => {
+    if (quality <= 0) {
+      // Multiplication with 0 breaks the sizing.
       console.error('Invalid quality: value must be greater than 0');
-      setExportState(() => 'error');
     }
 
     // Cleanup debounce timer on unmount
