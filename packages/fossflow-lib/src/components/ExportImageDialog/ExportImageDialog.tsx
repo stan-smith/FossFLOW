@@ -138,7 +138,7 @@ type ExportState = 'idle' | 'exporting' | 'success' | 'error';
 
 export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const debounceTimer = useRef<NodeJS.Timeout>(null); // Color picker needs debouncing
+  const debounceTimer = useRef<NodeJS.Timeout>(); // Color picker needs debouncing
   const exportRequestId = useRef(0);
   const currentView = useUiStateStore((state) => state.view);
   const [imageData, setImageData] = useState<string>();
