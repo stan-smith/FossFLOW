@@ -174,7 +174,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     }
 
     const currentRequestId = ++exportRequestId.current;
-    setExportState('exporting');
+    setExportState(() => 'exporting');
 
     try {
       // Wait for the container to stabilize
@@ -192,19 +192,19 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       const data = await exportAsImage(containerRef.current);
 
       if (exportRequestId.current === currentRequestId) {
-        setImageData(data);
-        setExportState('success');
+        setImageData(() => data);
+        setExportState(() => 'success');
       }
     } catch (err) {
       if (exportRequestId.current === currentRequestId) {
         console.error('Export error:', err);
-        setExportState('error');
+        setExportState(() => 'error');
       }
     }
   }, [containerRef]);
 
   const handleShowGridChange = useCallback((checked: boolean) => {
-    setShowGrid(checked);
+    setShowGrid(() => checked);
   }, []);
 
   const handleBackgroundColorChange = useCallback((color: string) => {
@@ -212,7 +212,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       clearTimeout(debounceTimer.current);
     }
     debounceTimer.current = setTimeout(() => {
-      setBackgroundColor(color);
+      setBackgroundColor(() => color);
     }, CONFIG.DEBOUNCE_DELAY);
   }, []);
 
@@ -225,13 +225,13 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       downloadFileUtil(blob, generateGenericFilename('png'));
     } catch (error) {
       console.error('Download error:', error);
-      setExportState('error');
+      setExportState(() => 'error');
     }
   }, [imageData]);
 
   useEffect(() => {
-    setImageData(undefined);
-    setExportState('idle');
+    setImageData(() => undefined);
+    setExportState(() => 'idle');
     exportImage();
   }, [showGrid, backgroundColor, exportImage]);
 
