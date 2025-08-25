@@ -34,6 +34,7 @@ const initialState = () => {
       enableDebugTools: false,
       hotkeyProfile: DEFAULT_HOTKEY_PROFILE,
       panSettings: DEFAULT_PAN_SETTINGS,
+      connectorInteractionMode: 'click', // Default to click mode
       actions: {
         setView: (view) => {
           set({ view });
@@ -101,6 +102,9 @@ const initialState = () => {
         },
         setPanSettings: (panSettings) => {
           set({ panSettings });
+        },
+        setConnectorInteractionMode: (connectorInteractionMode) => {
+          set({ connectorInteractionMode });
         }
       }
     };

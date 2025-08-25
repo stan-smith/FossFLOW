@@ -14,6 +14,7 @@ import { Close as CloseIcon } from '@mui/icons-material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { HotkeySettings } from '../HotkeySettings/HotkeySettings';
 import { PanSettings } from '../PanSettings/PanSettings';
+import { ConnectorSettings } from '../ConnectorSettings/ConnectorSettings';
 
 export const SettingsDialog = () => {
   const dialog = useUiStateStore((state) => state.dialog);
@@ -56,11 +57,13 @@ export const SettingsDialog = () => {
         <Tabs value={tabValue} onChange={handleTabChange} sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tab label="Hotkeys" />
           <Tab label="Pan Controls" />
+          <Tab label="Connectors" />
         </Tabs>
         
         <Box sx={{ mt: 2 }}>
           {tabValue === 0 && <HotkeySettings />}
           {tabValue === 1 && <PanSettings />}
+          {tabValue === 2 && <ConnectorSettings />}
         </Box>
       </DialogContent>
       <DialogActions>
