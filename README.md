@@ -9,6 +9,12 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 
 ## Recent Updates (August 2025)
 
+### Improved Connector Tool
+- **Click-based Creation** - New default mode: click first node, then second node to connect
+- **Drag Mode Option** - Original drag-and-drop still available via settings
+- **Mode Selection** - Switch between click and drag modes in Settings → Connectors tab
+- **Better Reliability** - Click mode provides more predictable connection creation
+
 ### Custom Icon Import
 - **Import Your Own Icons** - Upload custom icons (PNG, JPG, SVG) to use in your diagrams
 - **Automatic Scaling** - Icons are automatically scaled to consistent sizes for professional appearance
@@ -134,7 +140,11 @@ npm run publish:lib  # Publish library to npm
    - Drag and drop components from the library onto the canvas
    - Or right-click on the grid and select "Add node"
 
-2. **Connect Items**: Use connectors to show relationships
+2. **Connect Items**: 
+   - Select the Connector tool (press 'C' or click connector icon)
+   - **Click mode** (default): Click first node, then click second node
+   - **Drag mode** (optional): Click and drag from first to second node
+   - Switch modes in Settings → Connectors tab
 
 3. **Save Your Work**:
    - **Quick Save** - Saves to browser session
