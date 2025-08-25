@@ -105,6 +105,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     }, 100);
 
     return () => clearTimeout(timer);
+
   }, [showGrid, backgroundColor]);
 
   const downloadFile = useCallback(() => {
@@ -117,7 +118,6 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
 
     downloadFileUtil(data, generateGenericFilename('png'));
   }, [imageData]);
->>>>>>> 10145c9 (fix: eliminate re-render loop causing export failures)
 
   useEffect(() => {
     const timer = setTimeout(() => {
