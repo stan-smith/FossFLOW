@@ -106,26 +106,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
 
     return () => clearTimeout(timer);
 
-  }, [showGrid, backgroundColor]);
-
-  const downloadFile = useCallback(() => {
-    if (!imageData) return;
-
-    const data = base64ToBlob(
-      imageData.replace('data:image/png;base64,', ''),
-      'image/png;charset=utf-8'
-    );
-
-    downloadFileUtil(data, generateGenericFilename('png'));
-  }, [imageData]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      exportImage();
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, []);
+  }, [showGrid, backgroundColor, exportImage]);
 
   const downloadFile = useCallback(() => {
     if (!imageData) return;
