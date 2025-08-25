@@ -59,6 +59,12 @@ export interface ConnectorMode {
   type: 'CONNECTOR';
   showCursor: boolean;
   id: string | null;
+  // For click-based connection mode
+  startAnchor?: {
+    tile?: Coords;
+    itemId?: string;
+  };
+  isConnecting?: boolean;
 }
 
 export interface DrawRectangleMode {
@@ -136,6 +142,8 @@ export const LayerOrderingActionOptions = {
 
 export type LayerOrderingAction = keyof typeof LayerOrderingActionOptions;
 
+export type ConnectorInteractionMode = 'click' | 'drag';
+
 export interface UiState {
   view: string;
   mainMenuOptions: MainMenuOptions;
@@ -153,6 +161,7 @@ export interface UiState {
   enableDebugTools: boolean;
   hotkeyProfile: HotkeyProfile;
   panSettings: PanSettings;
+  connectorInteractionMode: ConnectorInteractionMode;
 }
 
 export interface UiStateActions {
@@ -175,6 +184,7 @@ export interface UiStateActions {
   setEnableDebugTools: (enabled: boolean) => void;
   setHotkeyProfile: (profile: HotkeyProfile) => void;
   setPanSettings: (settings: PanSettings) => void;
+  setConnectorInteractionMode: (mode: ConnectorInteractionMode) => void;
 }
 
 export type UiStateStore = UiState & {
