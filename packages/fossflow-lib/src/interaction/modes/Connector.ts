@@ -23,12 +23,20 @@ export const Connector: ModeActions = {
     )
       return;
 
+    // TypeScript type guard - we know mode is CONNECTOR type here
+    const connectorMode = uiState.mode;
+    
     // Only update connector position in drag mode or when connecting in click mode
-    if (uiState.connectorInteractionMode === 'drag' || uiState.mode.isConnecting) {
-      const connector = getItemByIdOrThrow(
-        scene.currentView.connectors ?? [],
-        uiState.mode.id
+    if (uiState.connectorInteractionMode === 'drag' || connectorMode.isConnecting) {
+      // Try to find the connector - it might not exist yet
+      const connectorItem = (scene.currentView.connectors ?? []).find(
+        c => c.id === connectorMode.id
       );
+      
+      // If connector doesn't exist yet, return early
+      if (!connectorItem) {
+        return;
+      }
 
       const itemAtTile = getItemAtTile({
         tile: uiState.mouse.position.tile,
@@ -36,20 +44,20 @@ export const Connector: ModeActions = {
       });
 
       if (itemAtTile?.type === 'ITEM') {
-        const newConnector = produce(connector.value, (draft) => {
+        const newConnector = produce(connectorItem, (draft) => {
           draft.anchors[1] = { id: generateId(), ref: { item: itemAtTile.id } };
         });
 
-        scene.updateConnector(uiState.mode.id, newConnector);
+        scene.updateConnector(connectorMode.id!, newConnector);
       } else {
-        const newConnector = produce(connector.value, (draft) => {
+        const newConnector = produce(connectorItem, (draft) => {
           draft.anchors[1] = {
             id: generateId(),
             ref: { tile: uiState.mouse.position.tile }
           };
         });
 
-        scene.updateConnector(uiState.mode.id, newConnector);
+        scene.updateConnector(connectorMode.id!, newConnector);
       }
     }
   },
@@ -99,11 +107,28 @@ export const Connector: ModeActions = {
         });
       } else {
         // Second click: complete the connection
-        if (uiState.mode.id) {
-          const connector = getItemByIdOrThrow(scene.connectors, uiState.mode.id);
+        // We already checked mode.type === 'CONNECTOR' above
+        const currentMode = uiState.mode;
+        if (currentMode.id) {
+          // Try to find the connector - it might not exist
+          const connector = (scene.currentView.connectors ?? []).find(
+            c => c.id === currentMode.id
+          );
+          
+          // If connector doesn't exist, reset mode and return
+          if (!connector) {
+            uiState.actions.setMode({
+              type: 'CONNECTOR',
+              showCursor: true,
+              id: null,
+              startAnchor: undefined,
+              isConnecting: false
+            });
+            return;
+          }
           
           // Update the second anchor to the click position
-          const newConnector = produce(connector.value, (draft) => {
+          const newConnector = produce(connector, (draft) => {
             if (itemAtTile?.type === 'ITEM') {
               draft.anchors[1] = { id: generateId(), ref: { item: itemAtTile.id } };
             } else {
@@ -114,18 +139,10 @@ export const Connector: ModeActions = {
             }
           });
 
-          scene.updateConnector(uiState.mode.id, newConnector);
+          scene.updateConnector(currentMode.id, newConnector);
 
-          // Validate the connection
-          const firstAnchor = newConnector.anchors[0];
-          const lastAnchor = newConnector.anchors[newConnector.anchors.length - 1];
-
-          if (
-            connector.value.path.tiles.length < 2 ||
-            !(firstAnchor.ref.item && lastAnchor.ref.item)
-          ) {
-            scene.deleteConnector(uiState.mode.id);
-          }
+          // Don't delete connectors to empty space - they're valid
+          // Only validate minimum path length will be handled by the update
 
           // Reset for next connection
           uiState.actions.setMode({
@@ -171,17 +188,8 @@ export const Connector: ModeActions = {
 
     // Only handle mouseup for drag mode
     if (uiState.connectorInteractionMode === 'drag') {
-      const connector = getItemByIdOrThrow(scene.connectors, uiState.mode.id);
-      const firstAnchor = connector.value.anchors[0];
-      const lastAnchor =
-        connector.value.anchors[connector.value.anchors.length - 1];
-
-      if (
-        connector.value.path.tiles.length < 2 ||
-        !(firstAnchor.ref.item && lastAnchor.ref.item)
-      ) {
-        scene.deleteConnector(uiState.mode.id);
-      }
+      // Don't delete connectors to empty space - they're valid
+      // Validation is handled in the reducer layer
 
       uiState.actions.setMode({
         type: 'CONNECTOR',
