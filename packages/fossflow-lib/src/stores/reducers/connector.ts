@@ -1,7 +1,6 @@
 import { Connector } from 'src/types';
 import { produce } from 'immer';
-import { getItemByIdOrThrow, getConnectorPath, getAllAnchors } from 'src/utils';
-import { validateConnector } from 'src/schemas/validation';
+import { getItemByIdOrThrow, getConnectorPath } from 'src/utils';
 import { State, ViewReducerContext } from './types';
 
 export const deleteConnector = (
@@ -26,25 +25,26 @@ export const syncConnector = (
   const newState = produce(state, (draft) => {
     const view = getItemByIdOrThrow(draft.model.views, viewId);
     const connector = getItemByIdOrThrow(view.value.connectors ?? [], id);
-    const allAnchors = getAllAnchors(view.value.connectors ?? []);
-    const issues = validateConnector(connector.value, {
-      view: view.value,
-      model: state.model,
-      allAnchors
-    });
-
-    if (issues.length > 0) {
-      const stateAfterDelete = deleteConnector(id, { viewId, state: draft });
-
-      draft.scene = stateAfterDelete.scene;
-      draft.model = stateAfterDelete.model;
-    } else {
+    
+    // Skip validation - allow all connectors regardless of position
+    try {
       const path = getConnectorPath({
         anchors: connector.value.anchors,
         view: view.value
       });
 
       draft.scene.connectors[connector.value.id] = { path };
+    } catch (error) {
+      // Even if we can't get the path, keep the connector with an empty path
+      draft.scene.connectors[connector.value.id] = { 
+        path: { 
+          tiles: [], 
+          rectangle: { 
+            from: { x: 0, y: 0 }, 
+            to: { x: 0, y: 0 } 
+          } 
+        } 
+      };
     }
   });
 
