@@ -32,6 +32,19 @@ export const useInitialDataManager = () => {
     (_initialData: InitialData) => {
       if (!_initialData || prevInitialData.current === _initialData) return;
 
+      // Deep comparison to prevent unnecessary reloads when data hasn't actually changed
+      if (prevInitialData.current) {
+        const prevConnectors = JSON.stringify(prevInitialData.current.views?.[0]?.connectors || []);
+        const newConnectors = JSON.stringify(_initialData.views?.[0]?.connectors || []);
+        const prevItems = JSON.stringify(prevInitialData.current.items || []);
+        const newItems = JSON.stringify(_initialData.items || []);
+        
+        if (prevConnectors === newConnectors && prevItems === newItems) {
+          // Data hasn't actually changed, skip reload
+          return;
+        }
+      }
+
       setIsReady(false);
 
       const validationResult = modelSchema.safeParse(_initialData);
