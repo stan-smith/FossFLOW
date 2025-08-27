@@ -1,13 +1,38 @@
-# FossFLOW - Isometric Diagramming Tool
+# FossFLOW - Isometric Diagramming Tool <img width="30" height="30" alt="fossflow" src="https://github.com/user-attachments/assets/56d78887-601c-4336-ab87-76f8ee4cde96" />
 
+<p align="center">
+ <a href="README.md">English</a> | <a href="docs/README.cn.md">简体中文</a>
+</p>
+
+<b>Hey!</b> Stan here, if you've used FossFLOW and it's helped you, <b>I'd really appreciate if you could donate something small :)</b> I work full time, and finding the time to work on this project is challenging enough.
+If you've had a feature that I've implemented for you, or fixed a bug it'd be great if you could :) if not, that's not a problem, this software will always remain free!
+
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P61KBXA3)
+
+<img width="30" height="30" alt="image" src="https://github.com/user-attachments/assets/dc6ec9ca-48d7-4047-94cf-5c4f7ed63b84" /> <b> https://buymeacoffee.com/stan.smith </b>
+
+
+Thanks,
+
+-Stan
+
+
+------------------------------------------------------------------------------------------------------------------------------
 FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beautiful isometric diagrams. Built with React and the Isoflow (Now forked and published to NPM as fossflow) library, it runs entirely in your browser with offline support.
 
 ![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)
 
-- **📝 [FOSSFLOW_TODO.md](https://github.com/stan-smith/FossFLOW/blob/main/ISOFLOW_TODO.md)** - Current issues and roadmap with codebase mappings, most gripes are with the isoflow library itself.
-- **🤝 [CONTRIBUTORS.md](https://github.com/stan-smith/FossFLOW/blob/main/CONTRIBUTORS.md)** - How to contribute to the project.
+- **📝 [FOSSFLOW_TODO.md](https://github.com/stan-smith/FossFLOW/blob/master/ISOFLOW_TODO.md)** - Current issues and roadmap with codebase mappings, most gripes are with the isoflow library itself.
+- **🤝 [CONTRIBUTORS.md](https://github.com/stan-smith/FossFLOW/blob/master/CONTRIBUTORS.md)** - How to contribute to the project.
 
 ## Recent Updates (August 2025)
+
+### Improved Connector Tool
+- **Click-based Creation** - New default mode: click first node, then second node to connect
+- **Drag Mode Option** - Original drag-and-drop still available via settings
+- **Mode Selection** - Switch between click and drag modes in Settings → Connectors tab
+- **Better Reliability** - Click mode provides more predictable connection creation
 
 ### Custom Icon Import
 - **Import Your Own Icons** - Upload custom icons (PNG, JPG, SVG) to use in your diagrams
@@ -134,7 +159,11 @@ npm run publish:lib  # Publish library to npm
    - Drag and drop components from the library onto the canvas
    - Or right-click on the grid and select "Add node"
 
-2. **Connect Items**: Use connectors to show relationships
+2. **Connect Items**: 
+   - Select the Connector tool (press 'C' or click connector icon)
+   - **Click mode** (default): Click first node, then click second node
+   - **Drag mode** (optional): Click and drag from first to second node
+   - Switch modes in Settings → Connectors tab
 
 3. **Save Your Work**:
    - **Quick Save** - Saves to browser session

@@ -89,48 +89,8 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
     );
   }
 
-  if (contextMenu.type === 'ITEM' && contextMenu.item) {
-    return (
-      <ContextMenu
-        anchorEl={anchorEl}
-        onClose={onClose}
-        position={CoordsUtils.multiply(
-          getTilePosition({ tile: contextMenu.tile }),
-          zoom
-        )}
-        menuItems={[
-          {
-            label: 'Send backward',
-            onClick: () => {
-              scene.changeLayerOrder('SEND_BACKWARD', contextMenu.item!);
-              onClose();
-            }
-          },
-          {
-            label: 'Bring forward',
-            onClick: () => {
-              scene.changeLayerOrder('BRING_FORWARD', contextMenu.item!);
-              onClose();
-            }
-          },
-          {
-            label: 'Send to back',
-            onClick: () => {
-              scene.changeLayerOrder('SEND_TO_BACK', contextMenu.item!);
-              onClose();
-            }
-          },
-          {
-            label: 'Bring to front',
-            onClick: () => {
-              scene.changeLayerOrder('BRING_TO_FRONT', contextMenu.item!);
-              onClose();
-            }
-          }
-        ]}
-      />
-    );
-  }
+  // Remove ITEM context menu since layer ordering only works for rectangles
+  // and provides no value for regular diagram items
 
   return null;
 };

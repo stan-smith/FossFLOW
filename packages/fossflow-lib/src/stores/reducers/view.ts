@@ -9,7 +9,6 @@ import * as viewItemReducers from './viewItem';
 import * as connectorReducers from './connector';
 import * as textBoxReducers from './textBox';
 import * as rectangleReducers from './rectangle';
-import * as layerOrderingReducers from './layerOrdering';
 
 export const updateViewTimestamp = (ctx: ViewReducerContext): State => {
   const now = new Date().toISOString();
@@ -137,9 +136,6 @@ export const view = ({ action, payload, ctx }: ViewReducerParams) => {
       break;
     case 'DELETE_RECTANGLE':
       newState = rectangleReducers.deleteRectangle(payload, ctx);
-      break;
-    case 'CHANGE_LAYER_ORDER':
-      newState = layerOrderingReducers.changeLayerOrder(payload, ctx);
       break;
     default:
       throw new Error('Invalid action.');

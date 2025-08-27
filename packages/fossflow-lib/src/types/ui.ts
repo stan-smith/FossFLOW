@@ -59,6 +59,12 @@ export interface ConnectorMode {
   type: 'CONNECTOR';
   showCursor: boolean;
   id: string | null;
+  // For click-based connection mode
+  startAnchor?: {
+    tile?: Coords;
+    itemId?: string;
+  };
+  isConnecting?: boolean;
 }
 
 export interface DrawRectangleMode {
@@ -127,14 +133,8 @@ export interface ContextMenu {
   tile: Coords;
 }
 
-export const LayerOrderingActionOptions = {
-  BRING_TO_FRONT: 'BRING_TO_FRONT',
-  SEND_TO_BACK: 'SEND_TO_BACK',
-  BRING_FORWARD: 'BRING_FORWARD',
-  SEND_BACKWARD: 'SEND_BACKWARD'
-} as const;
 
-export type LayerOrderingAction = keyof typeof LayerOrderingActionOptions;
+export type ConnectorInteractionMode = 'click' | 'drag';
 
 export interface UiState {
   view: string;
@@ -153,6 +153,7 @@ export interface UiState {
   enableDebugTools: boolean;
   hotkeyProfile: HotkeyProfile;
   panSettings: PanSettings;
+  connectorInteractionMode: ConnectorInteractionMode;
 }
 
 export interface UiStateActions {
@@ -175,6 +176,7 @@ export interface UiStateActions {
   setEnableDebugTools: (enabled: boolean) => void;
   setHotkeyProfile: (profile: HotkeyProfile) => void;
   setPanSettings: (settings: PanSettings) => void;
+  setConnectorInteractionMode: (mode: ConnectorInteractionMode) => void;
 }
 
 export type UiStateStore = UiState & {

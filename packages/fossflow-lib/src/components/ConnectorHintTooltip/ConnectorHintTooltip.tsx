@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, IconButton, Paper, Typography, useTheme } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
+import { useUiStateStore } from 'src/stores/uiStateStore';
 
 const STORAGE_KEY = 'fossflow_connector_hint_dismissed';
 
@@ -10,6 +11,8 @@ interface Props {
 
 export const ConnectorHintTooltip = ({ toolMenuRef }: Props) => {
   const theme = useTheme();
+  const connectorInteractionMode = useUiStateStore((state) => state.connectorInteractionMode);
+  const mode = useUiStateStore((state) => state.mode);
   const [isDismissed, setIsDismissed] = useState(true);
   const [position, setPosition] = useState({ top: 16, right: 16 });
 
@@ -82,11 +85,29 @@ export const ConnectorHintTooltip = ({ toolMenuRef }: Props) => {
         </IconButton>
         
         <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
-          Tip: Rerouting Connectors
+          {connectorInteractionMode === 'click' ? 'Tip: Creating Connectors' : 'Tip: Connector Tools'}
+        </Typography>
+        
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+          {connectorInteractionMode === 'click' ? (
+            <>
+              <strong>Click</strong> on the first node or point, then <strong>click</strong> on 
+              the second node or point to create a connection.
+              {mode.type === 'CONNECTOR' && mode.isConnecting && (
+                <Box component="span" sx={{ display: 'block', mt: 1, color: 'primary.main' }}>
+                  Now click on the target to complete the connection.
+                </Box>
+              )}
+            </>
+          ) : (
+            <>
+              <strong>Drag</strong> from the first node to the second node to create a connection.
+            </>
+          )}
         </Typography>
         
         <Typography variant="body2" color="text.secondary">
-          To reroute a connector track, <strong>right-click</strong> on any point 
+          To reroute a connector, <strong>left-click</strong> on any point 
           along the connector line and drag to create or move anchor points.
         </Typography>
       </Paper>
