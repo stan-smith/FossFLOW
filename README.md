@@ -8,10 +8,10 @@
 If you've had a feature that I've implemented for you, or fixed a bug it'd be great if you could :) if not, that's not a problem, this software will always remain free!
 
 
-<img width="30" height="30" alt="image" src="https://github.com/user-attachments/assets/bc95d64f-4b1d-4281-a6cb-86389b32c0da" /> <b> https://ko-fi.com/st_nsmith </b>
-
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P61KBXA3)
 
 <img width="30" height="30" alt="image" src="https://github.com/user-attachments/assets/dc6ec9ca-48d7-4047-94cf-5c4f7ed63b84" /> <b> https://buymeacoffee.com/stan.smith </b>
+
 
 Thanks,
 
