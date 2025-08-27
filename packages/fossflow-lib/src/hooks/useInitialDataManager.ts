@@ -26,6 +26,9 @@ export const useInitialDataManager = () => {
   const rendererEl = useUiStateStore((state) => {
     return state.rendererEl;
   });
+  const editorMode = useUiStateStore((state) => {
+    return state.editorMode;
+  });
   const { changeView } = useView();
 
   const load = useCallback(
@@ -33,7 +36,8 @@ export const useInitialDataManager = () => {
       if (!_initialData || prevInitialData.current === _initialData) return;
 
       // Deep comparison to prevent unnecessary reloads when data hasn't actually changed
-      if (prevInitialData.current) {
+      // Skip this check for NON_INTERACTIVE mode (used by export) to ensure proper initialization
+      if (prevInitialData.current && editorMode !== 'NON_INTERACTIVE') {
         const prevConnectors = JSON.stringify(prevInitialData.current.views?.[0]?.connectors || []);
         const newConnectors = JSON.stringify(_initialData.views?.[0]?.connectors || []);
         const prevItems = JSON.stringify(prevInitialData.current.items || []);
@@ -111,7 +115,7 @@ export const useInitialDataManager = () => {
 
       setIsReady(true);
     },
-    [changeView, model.actions, rendererEl, uiStateActions]
+    [changeView, model.actions, rendererEl, uiStateActions, editorMode]
   );
 
   const clear = useCallback(() => {
