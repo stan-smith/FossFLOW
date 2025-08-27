@@ -4,9 +4,7 @@ import {
   ViewItem,
   Connector,
   TextBox,
-  Rectangle,
-  ItemReference,
-  LayerOrderingAction
+  Rectangle
 } from 'src/types';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useModelStore } from 'src/stores/modelStore';
@@ -468,28 +466,6 @@ export const useScene = () => {
     ]
   );
 
-  const changeLayerOrder = useCallback(
-    (action: LayerOrderingAction, item: ItemReference) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
-
-      saveToHistoryBeforeChange();
-      const newState = reducers.view({
-        action: 'CHANGE_LAYER_ORDER',
-        payload: { action, item },
-        ctx: { viewId: currentViewId, state: getState() }
-      });
-      setState(newState);
-    },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
-  );
-
   const transaction = useCallback(
     (operations: () => void) => {
       if (!model?.actions || !scene?.actions) return;
@@ -571,7 +547,6 @@ export const useScene = () => {
     createRectangle,
     updateRectangle,
     deleteRectangle,
-    changeLayerOrder,
     transaction,
     placeIcon
   };

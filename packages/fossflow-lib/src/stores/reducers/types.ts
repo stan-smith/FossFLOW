@@ -4,7 +4,6 @@ import type * as viewItemReducers from './viewItem';
 import type * as connectorReducers from './connector';
 import type * as textBoxReducers from './textBox';
 import type * as rectangleReducers from './rectangle';
-import type * as layerOrderingReducers from './layerOrdering';
 
 export interface State {
   model: Model;
@@ -84,10 +83,6 @@ type ViewReducerAction =
   | {
       action: 'DELETE_RECTANGLE';
       payload: Parameters<typeof rectangleReducers.deleteRectangle>[0];
-    }
-  | {
-      action: 'CHANGE_LAYER_ORDER';
-      payload: Parameters<typeof layerOrderingReducers.changeLayerOrder>[0];
     };
 
 export type ViewReducerParams = ViewReducerAction & { ctx: ViewReducerContext };
