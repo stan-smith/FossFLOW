@@ -1,4 +1,4 @@
-import domtoimage from 'dom-to-image';
+import domtoimage from 'dom-to-image-more';
 import FileSaver from 'file-saver';
 import { Model, Size } from '../types';
 import { icons as availableIcons } from '../examples/initialData';
@@ -176,10 +176,23 @@ export const exportAsCompactJSON = (model: Model) => {
 };
 
 export const exportAsImage = async (el: HTMLDivElement, size?: Size) => {
-  const imageData = await domtoimage.toPng(el, {
+  // dom-to-image-more is a better maintained fork
+  const options = {
     ...size,
-    cacheBust: true
-  });
+    cacheBust: true,
+    bgcolor: '#ffffff',
+    quality: 1.0
+  };
 
-  return imageData;
+  try {
+    const imageData = await domtoimage.toPng(el, options);
+    return imageData;
+  } catch (error) {
+    console.error('Export failed, trying fallback method:', error);
+    // Fallback: try with minimal options
+    return await domtoimage.toPng(el, {
+      cacheBust: true,
+      bgcolor: '#ffffff'
+    });
+  }
 };

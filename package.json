@@ -29,5 +29,8 @@
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=9.0.0"
+  },
+  "dependencies": {
+    "dom-to-image-more": "^3.7.1"
   }
 }

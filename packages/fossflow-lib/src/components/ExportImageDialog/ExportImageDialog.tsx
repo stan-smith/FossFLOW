@@ -133,11 +133,11 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
         <Stack spacing={2}>
           <Alert severity="info">
             <strong>
-              Certain browsers may not support exporting images properly.
-            </strong>{' '}
+              Browser Compatibility Notice
+            </strong>
             <br />
-            For best results, please use the latest version of either Chrome or
-            Firefox.
+            For best results, please use Chrome or Edge. Firefox currently has 
+            compatibility issues with the export feature.
           </Alert>
 
           {!imageData && (
