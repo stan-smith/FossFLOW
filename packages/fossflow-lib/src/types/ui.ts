@@ -133,14 +133,6 @@ export interface ContextMenu {
   tile: Coords;
 }
 
-export const LayerOrderingActionOptions = {
-  BRING_TO_FRONT: 'BRING_TO_FRONT',
-  SEND_TO_BACK: 'SEND_TO_BACK',
-  BRING_FORWARD: 'BRING_FORWARD',
-  SEND_BACKWARD: 'SEND_BACKWARD'
-} as const;
-
-export type LayerOrderingAction = keyof typeof LayerOrderingActionOptions;
 
 export type ConnectorInteractionMode = 'click' | 'drag';
 
