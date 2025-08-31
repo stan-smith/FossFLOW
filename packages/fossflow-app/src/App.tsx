@@ -12,6 +12,7 @@ import { StorageManager } from './StorageManager';
 import { DiagramManager } from './components/DiagramManager';
 import { storageManager } from './services/storageService';
 import ChangeLanguage from './components/ChangeLanguage';
+import { allLocales } from 'fossflow';
 import './App.css';
 
 const icons = flattenCollections([
@@ -457,7 +458,6 @@ function App() {
   // i18n
   const [canI18n, setCanI18n] = useState(false);
   const { t, i18n } = useTranslation('app');
-  console.log('i18n', i18n);
   useEffect(() => {
     // http://localhost:3000/?canI18n=1
     const params = new URLSearchParams(window.location.search);
@@ -582,6 +582,7 @@ function App() {
           initialData={diagramData}
           onModelUpdated={handleModelUpdated}
           editorMode="EDITABLE"
+          locale={allLocales[i18n.language as keyof typeof allLocales]}
         />
       </div>
 
