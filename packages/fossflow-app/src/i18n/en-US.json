@@ -1,0 +1,11 @@
+{
+  "nav": {
+    "newDiagram": "New Diagram",
+    "saveSessionOnly": "Save (Session Only)",
+    "loadSessionOnly": "Load (Session Only)",
+    "importFile": "Import File",
+    "exportFile": "Export File",
+    "quickSaveSession": "Quick Save(Session)",
+    "serverStorage": "Server Storage"
+  }
+}

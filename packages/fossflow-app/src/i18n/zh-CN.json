@@ -1,0 +1,11 @@
+{
+  "nav": {
+    "newDiagram": "新建图表",
+    "saveSessionOnly": "保存（仅会话）",
+    "loadSessionOnly": "加载（仅会话）",
+    "importFile": "导入文件",
+    "exportFile": "导出文件",
+    "quickSaveSession": "快速保存（会话）",
+    "serverStorage": "服务端存储"
+  }
+}

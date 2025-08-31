@@ -6,10 +6,12 @@ import awsIsopack from '@isoflow/isopacks/dist/aws';
 import gcpIsopack from '@isoflow/isopacks/dist/gcp';
 import azureIsopack from '@isoflow/isopacks/dist/azure';
 import kubernetesIsopack from '@isoflow/isopacks/dist/kubernetes';
+import { useTranslation } from 'react-i18next';
 import { DiagramData, mergeDiagramData, extractSavableData } from './diagramUtils';
 import { StorageManager } from './StorageManager';
 import { DiagramManager } from './components/DiagramManager';
 import { storageManager } from './services/storageService';
+import ChangeLanguage from './components/ChangeLanguage';
 import './App.css';
 
 const icons = flattenCollections([
@@ -451,6 +453,17 @@ function App() {
     setFossflowKey(prev => prev + 1); // Force re-render
     setHasUnsavedChanges(false);
   };
+
+  // i18n
+  const [canI18n, setCanI18n] = useState(false);
+  const { t, i18n } = useTranslation('app');
+  console.log('i18n', i18n);
+  useEffect(() => {
+    // http://localhost:3000/?canI18n=1
+    const params = new URLSearchParams(window.location.search);
+    // show demo
+    setCanI18n(params.get('canI18n') === '1');
+  }, [window.location.search]);
   
   // Auto-save functionality
   useEffect(() => {
@@ -514,28 +527,29 @@ function App() {
   return (
     <div className="App">
       <div className="toolbar">
-        <button onClick={newDiagram}>New Diagram</button>
+        {canI18n && <ChangeLanguage />}
+        <button onClick={newDiagram}>{t('nav.newDiagram')}</button>
         {serverStorageAvailable && (
           <button 
             onClick={() => setShowDiagramManager(true)}
             style={{ backgroundColor: '#2196F3', color: 'white' }}
           >
-            🌐 Server Storage
+            🌐 {t('nav.serverStorage')}
           </button>
         )}
-        <button onClick={() => setShowSaveDialog(true)}>Save (Session Only)</button>
-        <button onClick={() => setShowLoadDialog(true)}>Load (Session Only)</button>
+        <button onClick={() => setShowSaveDialog(true)}>{t('nav.saveSessionOnly')}</button>
+        <button onClick={() => setShowLoadDialog(true)}>{t('nav.loadSessionOnly')}</button>
         <button 
           onClick={() => setShowImportDialog(true)}
           style={{ backgroundColor: '#28a745' }}
         >
-          📂 Import File
+          📂 {t('nav.importFile')}
         </button>
         <button 
           onClick={() => setShowExportDialog(true)}
           style={{ backgroundColor: '#007bff' }}
         >
-          💾 Export File
+          💾 {t('nav.exportFile')}
         </button>
         <button 
           onClick={() => {
@@ -551,7 +565,7 @@ function App() {
           }}
           title="Save to current session only"
         >
-          Quick Save (Session)
+          {t('nav.quickSaveSession')}
         </button>
         <span className="current-diagram">
           {currentDiagram ? `Current: ${currentDiagram.name}` : diagramName || 'Untitled Diagram'}
