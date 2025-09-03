@@ -7,6 +7,11 @@ export type InitialData = Model & {
   view?: string;
 };
 
+export interface LocaleProps {
+  exampleText: string;
+  // other locale keys
+}
+
 export interface IsoflowProps {
   initialData?: InitialData;
   mainMenuOptions?: MainMenuOptions;
@@ -16,4 +21,5 @@ export interface IsoflowProps {
   enableDebugTools?: boolean;
   editorMode?: keyof typeof EditorModeEnum;
   renderer?: RendererProps;
+  locale?: LocaleProps;
 }

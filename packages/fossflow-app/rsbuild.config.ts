@@ -13,5 +13,11 @@ export default defineConfig({
         // https://rsbuild.rs/guide/advanced/browser-compatibility
         polyfill: 'usage',
         assetPrefix: process.env.PUBLIC_URL || '/',
+        copy: [
+            {
+                from: './src/i18n',
+                to: 'i18n/app',
+            },
+        ]
     }
 });

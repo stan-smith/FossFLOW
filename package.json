@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "dev": "npm run start --workspace=packages/fossflow-app",
+    "dev": "NODE_ENV=development npm run start --workspace=packages/fossflow-app",
     "dev:lib": "npm run dev --workspace=packages/fossflow-lib",
     "dev:backend": "npm run dev --workspace=packages/fossflow-backend",
     "build": "npm run build:lib && npm run build:app",

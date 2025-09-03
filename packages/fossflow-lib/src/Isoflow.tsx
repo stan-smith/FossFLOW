@@ -12,6 +12,7 @@ import { UiOverlay } from 'src/components/UiOverlay/UiOverlay';
 import { UiStateProvider, useUiStateStore } from 'src/stores/uiStateStore';
 import { INITIAL_DATA, MAIN_MENU_OPTIONS } from 'src/config';
 import { useInitialDataManager } from 'src/hooks/useInitialDataManager';
+import enUS from 'src/i18n/en-US';
 
 const App = ({
   initialData,
@@ -21,7 +22,8 @@ const App = ({
   onModelUpdated,
   enableDebugTools = false,
   editorMode = 'EDITABLE',
-  renderer
+  renderer,
+  locale = enUS,
 }: IsoflowProps) => {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
