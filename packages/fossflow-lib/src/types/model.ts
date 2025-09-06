@@ -13,11 +13,12 @@ import {
   anchorSchema,
   textBoxSchema,
   rectangleSchema,
-  connectorStyleOptions
+  connectorStyleOptions,
+  connectorLineTypeOptions
 } from 'src/schemas';
 import { StoreApi } from 'zustand';
 
-export { connectorStyleOptions } from 'src/schemas';
+export { connectorStyleOptions, connectorLineTypeOptions } from 'src/schemas';
 export type Model = z.infer<typeof modelSchema>;
 export type ModelItems = z.infer<typeof modelItemsSchema>;
 export type Icon = z.infer<typeof iconSchema>;
@@ -28,6 +29,7 @@ export type Views = z.infer<typeof viewsSchema>;
 export type View = z.infer<typeof viewSchema>;
 export type ViewItem = z.infer<typeof viewItemSchema>;
 export type ConnectorStyle = keyof typeof connectorStyleOptions;
+export type ConnectorLineType = keyof typeof connectorLineTypeOptions;
 export type ConnectorAnchor = z.infer<typeof anchorSchema>;
 export type Connector = z.infer<typeof connectorSchema>;
 export type TextBox = z.infer<typeof textBoxSchema>;

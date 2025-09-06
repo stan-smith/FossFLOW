@@ -20,11 +20,20 @@ interface Props {
 
 export const Connector = ({ connector: _connector, isSelected }: Props) => {
   const theme = useTheme();
-  const color = useColor(_connector.color);
+  const predefinedColor = useColor(_connector.color);
   const { currentView } = useScene();
   const connector = useConnector(_connector.id);
 
-  if (!connector || !color) {
+  if (!connector) {
+    return null;
+  }
+
+  // Use custom color if provided, otherwise use predefined color
+  const color = connector.customColor 
+    ? { value: connector.customColor }
+    : predefinedColor;
+    
+  if (!color) {
     return null;
   }
 
@@ -39,6 +48,10 @@ export const Connector = ({ connector: _connector, isSelected }: Props) => {
     };
   }, []);
 
+  const connectorWidthPx = useMemo(() => {
+    return (UNPROJECTED_TILE_SIZE / 100) * connector.width;
+  }, [connector.width]);
+
   const pathString = useMemo(() => {
     return connector.path.tiles.reduce((acc, tile) => {
       return `${acc} ${tile.x * UNPROJECTED_TILE_SIZE + drawOffset.x},${
@@ -46,6 +59,69 @@ export const Connector = ({ connector: _connector, isSelected }: Props) => {
       }`;
     }, '');
   }, [connector.path.tiles, drawOffset]);
+
+  // Create offset paths for double lines
+  const offsetPaths = useMemo(() => {
+    if (!connector.lineType || connector.lineType === 'SINGLE') return null;
+    
+    const tiles = connector.path.tiles;
+    if (tiles.length < 2) return null;
+    
+    const offset = connectorWidthPx * 3; // Larger spacing between double lines for visibility
+    const path1Points: string[] = [];
+    const path2Points: string[] = [];
+    
+    for (let i = 0; i < tiles.length; i++) {
+      const curr = tiles[i];
+      let dx = 0, dy = 0;
+      
+      // Calculate perpendicular offset based on line direction
+      if (i > 0 && i < tiles.length - 1) {
+        const prev = tiles[i - 1];
+        const next = tiles[i + 1];
+        const dx1 = curr.x - prev.x;
+        const dy1 = curr.y - prev.y;
+        const dx2 = next.x - curr.x;
+        const dy2 = next.y - curr.y;
+        
+        // Average direction for smooth corners
+        const avgDx = (dx1 + dx2) / 2;
+        const avgDy = (dy1 + dy2) / 2;
+        const len = Math.sqrt(avgDx * avgDx + avgDy * avgDy) || 1;
+        
+        // Perpendicular vector
+        dx = -avgDy / len;
+        dy = avgDx / len;
+      } else if (i === 0 && tiles.length > 1) {
+        // Start point
+        const next = tiles[1];
+        const dirX = next.x - curr.x;
+        const dirY = next.y - curr.y;
+        const len = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
+        dx = -dirY / len;
+        dy = dirX / len;
+      } else if (i === tiles.length - 1 && tiles.length > 1) {
+        // End point
+        const prev = tiles[i - 1];
+        const dirX = curr.x - prev.x;
+        const dirY = curr.y - prev.y;
+        const len = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
+        dx = -dirY / len;
+        dy = dirX / len;
+      }
+      
+      const x = curr.x * UNPROJECTED_TILE_SIZE + drawOffset.x;
+      const y = curr.y * UNPROJECTED_TILE_SIZE + drawOffset.y;
+      
+      path1Points.push(`${x + dx * offset},${y + dy * offset}`);
+      path2Points.push(`${x - dx * offset},${y - dy * offset}`);
+    }
+    
+    return {
+      path1: path1Points.join(' '),
+      path2: path2Points.join(' ')
+    };
+  }, [connector.path.tiles, connector.lineType, connectorWidthPx, drawOffset]);
 
   const anchorPositions = useMemo(() => {
     if (!isSelected) return [];
@@ -77,10 +153,6 @@ export const Connector = ({ connector: _connector, isSelected }: Props) => {
     return getConnectorDirectionIcon(connector.path.tiles);
   }, [connector.path.tiles]);
 
-  const connectorWidthPx = useMemo(() => {
-    return (UNPROJECTED_TILE_SIZE / 100) * connector.width;
-  }, [connector.width]);
-
   const strokeDashArray = useMemo(() => {
     switch (connector.style) {
       case 'DASHED':
@@ -93,6 +165,8 @@ export const Connector = ({ connector: _connector, isSelected }: Props) => {
     }
   }, [connector.style, connectorWidthPx]);
 
+  const lineType = connector.lineType || 'SINGLE';
+
   return (
     <Box style={css}>
       <Svg
@@ -104,25 +178,118 @@ export const Connector = ({ connector: _connector, isSelected }: Props) => {
         }}
         viewboxSize={pxSize}
       >
-        <polyline
-          points={pathString}
-          stroke={theme.palette.common.white}
-          strokeWidth={connectorWidthPx * 1.4}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeOpacity={0.7}
-          strokeDasharray={strokeDashArray}
-          fill="none"
-        />
-        <polyline
-          points={pathString}
-          stroke={getColorVariant(color.value, 'dark', { grade: 1 })}
-          strokeWidth={connectorWidthPx}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeDasharray={strokeDashArray}
-          fill="none"
-        />
+        {lineType === 'SINGLE' ? (
+          <>
+            <polyline
+              points={pathString}
+              stroke={theme.palette.common.white}
+              strokeWidth={connectorWidthPx * 1.4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeOpacity={0.7}
+              strokeDasharray={strokeDashArray}
+              fill="none"
+            />
+            <polyline
+              points={pathString}
+              stroke={getColorVariant(color.value, 'dark', { grade: 1 })}
+              strokeWidth={connectorWidthPx}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeDasharray={strokeDashArray}
+              fill="none"
+            />
+          </>
+        ) : offsetPaths ? (
+          <>
+            {/* First line of double */}
+            <polyline
+              points={offsetPaths.path1}
+              stroke={theme.palette.common.white}
+              strokeWidth={connectorWidthPx * 1.4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeOpacity={0.7}
+              strokeDasharray={strokeDashArray}
+              fill="none"
+            />
+            <polyline
+              points={offsetPaths.path1}
+              stroke={getColorVariant(color.value, 'dark', { grade: 1 })}
+              strokeWidth={connectorWidthPx}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeDasharray={strokeDashArray}
+              fill="none"
+            />
+            {/* Second line of double */}
+            <polyline
+              points={offsetPaths.path2}
+              stroke={theme.palette.common.white}
+              strokeWidth={connectorWidthPx * 1.4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeOpacity={0.7}
+              strokeDasharray={strokeDashArray}
+              fill="none"
+            />
+            <polyline
+              points={offsetPaths.path2}
+              stroke={getColorVariant(color.value, 'dark', { grade: 1 })}
+              strokeWidth={connectorWidthPx}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeDasharray={strokeDashArray}
+              fill="none"
+            />
+          </>
+        ) : null}
+
+        {/* Circle for port-channel representation */}
+        {lineType === 'DOUBLE_WITH_CIRCLE' && connector.path.tiles.length >= 2 && (() => {
+          const midIndex = Math.floor(connector.path.tiles.length / 2);
+          const midTile = connector.path.tiles[midIndex];
+          const x = midTile.x * UNPROJECTED_TILE_SIZE + drawOffset.x;
+          const y = midTile.y * UNPROJECTED_TILE_SIZE + drawOffset.y;
+          
+          // Calculate rotation based on line direction at middle point
+          let rotation = 0;
+          if (midIndex > 0 && midIndex < connector.path.tiles.length - 1) {
+            const prevTile = connector.path.tiles[midIndex - 1];
+            const nextTile = connector.path.tiles[midIndex + 1];
+            const dx = nextTile.x - prevTile.x;
+            const dy = nextTile.y - prevTile.y;
+            rotation = Math.atan2(dy, dx) * (180 / Math.PI);
+          }
+          
+          // Increased size to encompass both lines with the spacing
+          const circleRadiusX = connectorWidthPx * 5; // Wider to cover both lines
+          const circleRadiusY = connectorWidthPx * 4; // Height to encompass both lines
+          
+          return (
+            <g transform={`translate(${x}, ${y}) rotate(${rotation})`}>
+              <ellipse
+                cx={0}
+                cy={0}
+                rx={circleRadiusX}
+                ry={circleRadiusY}
+                fill="none"
+                stroke={getColorVariant(color.value, 'dark', { grade: 1 })}
+                strokeWidth={connectorWidthPx * 0.8}
+              />
+              <ellipse
+                cx={0}
+                cy={0}
+                rx={circleRadiusX}
+                ry={circleRadiusY}
+                fill="none"
+                stroke={theme.palette.common.white}
+                strokeWidth={connectorWidthPx * 1.2}
+                strokeOpacity={0.5}
+              />
+            </g>
+          );
+        })()}
 
         {anchorPositions.map((anchor) => {
           return (

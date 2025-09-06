@@ -48,8 +48,15 @@ export const VIEW_ITEM_DEFAULTS: Required<Omit<ViewItem, 'id' | 'tile'>> = {
 export const CONNECTOR_DEFAULTS: Required<Omit<Connector, 'id' | 'color'>> = {
   width: 10,
   description: '',
+  startLabel: '',
+  endLabel: '',
+  startLabelHeight: 0,
+  centerLabelHeight: 0,
+  endLabelHeight: 0,
+  customColor: '',
   anchors: [],
   style: 'SOLID',
+  lineType: 'SINGLE',
   showArrow: true
 };
 
@@ -68,7 +75,9 @@ export const TEXTBOX_FONT_WEIGHT = 'bold';
 
 export const RECTANGLE_DEFAULTS: Required<
   Omit<Rectangle, 'id' | 'from' | 'to' | 'color'>
-> = {};
+> = {
+  customColor: ''
+};
 
 export const ZOOM_INCREMENT = 0.2;
 export const MIN_ZOOM = 0.2;

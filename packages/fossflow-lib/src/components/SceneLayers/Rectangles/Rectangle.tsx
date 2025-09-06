@@ -6,8 +6,13 @@ import { useColor } from 'src/hooks/useColor';
 
 type Props = ReturnType<typeof useScene>['rectangles'][0];
 
-export const Rectangle = ({ from, to, color: colorId }: Props) => {
-  const color = useColor(colorId);
+export const Rectangle = ({ from, to, color: colorId, customColor }: Props) => {
+  const predefinedColor = useColor(colorId);
+  
+  // Use custom color if provided, otherwise use predefined color
+  const color = customColor 
+    ? { value: customColor }
+    : predefinedColor;
 
   if (!color) {
     return null;
