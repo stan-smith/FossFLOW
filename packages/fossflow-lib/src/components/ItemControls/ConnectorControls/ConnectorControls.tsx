@@ -1,5 +1,5 @@
-import React from 'react';
-import { Connector, connectorStyleOptions } from 'src/types';
+import React, { useState } from 'react';
+import { Connector, connectorStyleOptions, connectorLineTypeOptions } from 'src/types';
 import {
   Box,
   Slider,
@@ -8,10 +8,12 @@ import {
   TextField,
   IconButton as MUIIconButton,
   FormControlLabel,
-  Switch
+  Switch,
+  Typography
 } from '@mui/material';
 import { useConnector } from 'src/hooks/useConnector';
 import { ColorSelector } from 'src/components/ColorSelector/ColorSelector';
+import { ColorPicker } from 'src/components/ColorSelector/ColorPicker';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useScene } from 'src/hooks/useScene';
 import { Close as CloseIcon } from '@mui/icons-material';
@@ -29,6 +31,7 @@ export const ConnectorControls = ({ id }: Props) => {
   });
   const connector = useConnector(id);
   const { updateConnector, deleteConnector } = useScene();
+  const [useCustomColor, setUseCustomColor] = useState(!!connector?.customColor);
 
   // If connector doesn't exist, return null
   if (!connector) {
@@ -37,7 +40,7 @@ export const ConnectorControls = ({ id }: Props) => {
 
   return (
     <ControlsContainer>
-      <Box sx={{ position: 'relative', paddingTop: '24px' }}>
+      <Box sx={{ position: 'relative', paddingTop: '24px', paddingBottom: '24px' }}>
         {/* Close button */}
         <MUIIconButton
           aria-label="Close"
@@ -56,22 +59,115 @@ export const ConnectorControls = ({ id }: Props) => {
         </MUIIconButton>
         <Section>
           <TextField
-            label="Description"
+            label="Center Label (Description)"
             value={connector.description}
             onChange={(e) => {
               updateConnector(connector.id, {
                 description: e.target.value as string
               });
             }}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="Start Label"
+            value={connector.startLabel || ''}
+            onChange={(e) => {
+              updateConnector(connector.id, {
+                startLabel: e.target.value as string
+              });
+            }}
+            fullWidth
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            label="End Label"
+            value={connector.endLabel || ''}
+            onChange={(e) => {
+              updateConnector(connector.id, {
+                endLabel: e.target.value as string
+              });
+            }}
+            fullWidth
           />
         </Section>
-        <Section>
-          <ColorSelector
-            onChange={(color) => {
-              return updateConnector(connector.id, { color });
-            }}
-            activeColor={connector.color}
+        <Section title="Label Heights">
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="caption" color="text.secondary">Start Label Height</Typography>
+            <Slider
+              marks
+              step={10}
+              min={-100}
+              max={100}
+              value={connector.startLabelHeight || 0}
+              onChange={(e, value) => {
+                updateConnector(connector.id, { startLabelHeight: value as number });
+              }}
+            />
+          </Box>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="caption" color="text.secondary">Center Label Height</Typography>
+            <Slider
+              marks
+              step={10}
+              min={-100}
+              max={100}
+              value={connector.centerLabelHeight || 0}
+              onChange={(e, value) => {
+                updateConnector(connector.id, { centerLabelHeight: value as number });
+              }}
+            />
+          </Box>
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="caption" color="text.secondary">End Label Height</Typography>
+            <Slider
+              marks
+              step={10}
+              min={-100}
+              max={100}
+              value={connector.endLabelHeight || 0}
+              onChange={(e, value) => {
+                updateConnector(connector.id, { endLabelHeight: value as number });
+              }}
+            />
+          </Box>
+        </Section>
+        <Section title="Color">
+          <FormControlLabel
+            control={
+              <Switch
+                checked={useCustomColor}
+                onChange={(e) => {
+                  setUseCustomColor(e.target.checked);
+                  if (!e.target.checked) {
+                    updateConnector(connector.id, { customColor: '' });
+                  }
+                }}
+              />
+            }
+            label="Use Custom Color"
+            sx={{ mb: 2 }}
           />
+          {useCustomColor ? (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <ColorPicker
+                value={connector.customColor || '#000000'}
+                onChange={(color) => {
+                  updateConnector(connector.id, { customColor: color });
+                }}
+              />
+              <Typography variant="body2" color="text.secondary">
+                {connector.customColor || '#000000'}
+              </Typography>
+            </Box>
+          ) : (
+            <ColorSelector
+              onChange={(color) => {
+                return updateConnector(connector.id, { color, customColor: '' });
+              }}
+              activeColor={connector.color}
+            />
+          )}
         </Section>
         <Section title="Width">
           <Slider
@@ -85,17 +181,37 @@ export const ConnectorControls = ({ id }: Props) => {
             }}
           />
         </Section>
-        <Section title="Style">
+        <Section title="Line Style">
           <Select
-            value={connector.style}
+            value={connector.style || 'SOLID'}
             onChange={(e) => {
               updateConnector(connector.id, {
                 style: e.target.value as Connector['style']
               });
             }}
+            fullWidth
+            sx={{ mb: 2 }}
           >
             {Object.values(connectorStyleOptions).map((style) => {
-              return <MenuItem value={style}>{style}</MenuItem>;
+              return <MenuItem key={style} value={style}>{style}</MenuItem>;
+            })}
+          </Select>
+        </Section>
+        <Section title="Line Type">
+          <Select
+            value={connector.lineType || 'SINGLE'}
+            onChange={(e) => {
+              updateConnector(connector.id, {
+                lineType: e.target.value as Connector['lineType']
+              });
+            }}
+            fullWidth
+          >
+            {Object.values(connectorLineTypeOptions).map((type) => {
+              const displayName = type === 'SINGLE' ? 'Single Line' : 
+                                type === 'DOUBLE' ? 'Double Line' : 
+                                'Double Line with Circle';
+              return <MenuItem key={type} value={type}>{displayName}</MenuItem>;
             })}
           </Select>
         </Section>
