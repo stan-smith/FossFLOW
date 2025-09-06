@@ -15,7 +15,7 @@ i18n
         },
         ns: ['app'],
         backend: {
-            loadPath: '/i18n/{{ns}}/{{lng}}.json'
+            loadPath: './i18n/{{ns}}/{{lng}}.json'
         },
         detection: {
             // configure detection options
