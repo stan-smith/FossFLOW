@@ -20,6 +20,7 @@ import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import { ConnectorHintTooltip } from '../ConnectorHintTooltip/ConnectorHintTooltip';
 import { ConnectorEmptySpaceTooltip } from '../ConnectorEmptySpaceTooltip/ConnectorEmptySpaceTooltip';
+import { ImportHintTooltip } from '../ImportHintTooltip/ImportHintTooltip';
 
 const ToolsEnum = {
   MAIN_MENU: 'MAIN_MENU',
@@ -247,6 +248,7 @@ export const UiOverlay = () => {
       {/* Show connector hint tooltip only in editable mode */}
       {editorMode === EditorModeEnum.EDITABLE && <ConnectorHintTooltip toolMenuRef={toolMenuRef} />}
       {editorMode === EditorModeEnum.EDITABLE && <ConnectorEmptySpaceTooltip />}
+      {editorMode === EditorModeEnum.EDITABLE && <ImportHintTooltip />}
 
       <SceneLayer>
         <Box ref={contextMenuAnchorRef} />

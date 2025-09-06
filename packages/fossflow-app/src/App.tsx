@@ -38,10 +38,7 @@ function App() {
   const [diagramName, setDiagramName] = useState('');
   const [showSaveDialog, setShowSaveDialog] = useState(false);
   const [showLoadDialog, setShowLoadDialog] = useState(false);
-  const [showImportDialog, setShowImportDialog] = useState(false);
   const [showExportDialog, setShowExportDialog] = useState(false);
-  const [importJson, setImportJson] = useState('');
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [fossflowKey, setFossflowKey] = useState(0); // Key to force re-render of FossFLOW
   const [currentModel, setCurrentModel] = useState<DiagramData | null>(null); // Store current model state
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
@@ -357,59 +354,6 @@ function App() {
     setHasUnsavedChanges(false); // Mark as saved after export
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const content = e.target?.result as string;
-        const parsedData = JSON.parse(content);
-        
-        // Merge imported icons with default icon set
-        const importedIcons = (parsedData.icons || []).filter((icon: any) => icon.collection === 'imported');
-        const mergedIcons = [...icons, ...importedIcons];
-        const mergedData: DiagramData = {
-          ...parsedData,
-          title: parsedData.title || 'Imported Diagram',
-          icons: mergedIcons, // Merge default and imported icons
-          colors: parsedData.colors?.length ? parsedData.colors : defaultColors,
-          fitToScreen: parsedData.fitToScreen !== false
-        };
-        
-        setDiagramData(mergedData);
-        setDiagramName(parsedData.title || 'Imported Diagram');
-        setCurrentModel(mergedData);
-        setFossflowKey(prev => prev + 1); // Force re-render
-        setShowImportDialog(false);
-        setHasUnsavedChanges(true);
-        
-        // Clear the file input
-        if (fileInputRef.current) {
-          fileInputRef.current.value = '';
-        }
-        
-        // Success message
-        setTimeout(() => {
-          alert(`Diagram "${parsedData.title || 'Untitled'}" imported successfully!`);
-        }, 100);
-      } catch (error) {
-        alert('Invalid JSON file. Please check the file format.');
-      }
-    };
-    
-    reader.onerror = () => {
-      alert('Error reading file. Please try again.');
-    };
-    
-    reader.readAsText(file);
-  };
-  
-  const importDiagram = () => {
-    // Trigger file input click
-    fileInputRef.current?.click();
-  };
 
   const handleDiagramManagerLoad = (id: string, data: any) => {
     // Load diagram from server storage
@@ -540,12 +484,6 @@ function App() {
         <button onClick={() => setShowSaveDialog(true)}>{t('nav.saveSessionOnly')}</button>
         <button onClick={() => setShowLoadDialog(true)}>{t('nav.loadSessionOnly')}</button>
         <button 
-          onClick={() => setShowImportDialog(true)}
-          style={{ backgroundColor: '#28a745' }}
-        >
-          📂 {t('nav.importFile')}
-        </button>
-        <button 
           onClick={() => setShowExportDialog(true)}
           style={{ backgroundColor: '#007bff' }}
         >
@@ -658,53 +596,6 @@ function App() {
         </div>
       )}
 
-      {/* Hidden file input for import */}
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept=".json"
-        onChange={handleFileSelect}
-        style={{ display: 'none' }}
-      />
-      
-      {/* Import Dialog */}
-      {showImportDialog && (
-        <div className="dialog-overlay">
-          <div className="dialog">
-            <h2>Import Diagram</h2>
-            <div style={{
-              border: '2px dashed #ccc',
-              borderRadius: '8px',
-              padding: '40px',
-              textAlign: 'center',
-              marginBottom: '20px',
-              backgroundColor: '#f8f9fa'
-            }}>
-              <p style={{ fontSize: '18px', marginBottom: '20px' }}>Choose a JSON file to import</p>
-              <button 
-                onClick={importDiagram}
-                style={{
-                  padding: '12px 24px',
-                  fontSize: '16px',
-                  backgroundColor: '#007bff',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
-              >
-                Select File
-              </button>
-              <p style={{ marginTop: '20px', color: '#666', fontSize: '14px' }}>
-                Supported format: .json files exported from Isoflow
-              </p>
-            </div>
-            <div className="dialog-buttons">
-              <button onClick={() => setShowImportDialog(false)}>Cancel</button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Export Dialog */}
       {showExportDialog && (
