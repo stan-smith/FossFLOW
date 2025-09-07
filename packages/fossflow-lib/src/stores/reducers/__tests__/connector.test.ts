@@ -97,10 +97,8 @@ describe('connector reducer', () => {
       // Check connector is removed from model
       expect(result.model.views[0].connectors).toHaveLength(0);
       
-      // Check connector is removed from scene
-      // NOTE: The implementation uses connector.index instead of connector.id
-      // This appears to be a bug - it should delete by ID not index
-      expect(result.scene.connectors[0]).toBeUndefined();
+      // Check connector is removed from scene by ID
+      expect(result.scene.connectors['connector1']).toBeUndefined();
     });
 
     it('should throw error when connector does not exist', () => {
@@ -144,8 +142,7 @@ describe('connector reducer', () => {
       expect(result.model.views[0].connectors).toHaveLength(1);
       expect(result.model.views[0].connectors![0].id).toBe('connector2');
       expect(result.scene.connectors['connector2']).toBeDefined();
-      // NOTE: Bug - implementation deletes by index (0) not ID
-      expect(result.scene.connectors[0]).toBeUndefined();
+      expect(result.scene.connectors['connector1']).toBeUndefined();
     });
   });
 

@@ -12,7 +12,7 @@ export const deleteConnector = (
 
   const newState = produce(state, (draft) => {
     draft.model.views[view.index].connectors?.splice(connector.index, 1);
-    delete draft.scene.connectors[connector.index];
+    delete draft.scene.connectors[id];
   });
 
   return newState;
