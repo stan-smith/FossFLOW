@@ -27,10 +27,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
-      - name: Run tests
-        run: npm test
+      - name: Run tests with coverage
+        run: npm test -- --coverage || npm test
         env:
           CI: true
+      
+      - name: Upload coverage reports
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-node-${{ matrix.node-version }}
+          path: |
+            packages/*/coverage/
+            coverage/
+          if-no-files-found: ignore
+          retention-days: 7
       
       - name: Upload test results
         if: always()
@@ -38,6 +49,7 @@ jobs:
         with:
           name: test-results-node-${{ matrix.node-version }}
           path: |
-            coverage/
+            packages/*/test-results/
             test-results/
+          if-no-files-found: ignore
           retention-days: 7

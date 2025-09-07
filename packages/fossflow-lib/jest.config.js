@@ -8,5 +8,23 @@ module.exports = {
     '/node_modules/',
     '/dist/',
     '\\.d\\.ts$'
-  ]
+  ],
+  coverageDirectory: 'coverage',
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/**/*.test.{ts,tsx}',
+    '!src/**/__tests__/**',
+    '!src/types/**',
+    '!src/index.ts'
+  ],
+  coverageThreshold: {
+    global: {
+      branches: 10,
+      functions: 10,
+      lines: 10,
+      statements: 10
+    }
+  },
+  coverageReporters: ['json', 'lcov', 'text', 'html']
 };
