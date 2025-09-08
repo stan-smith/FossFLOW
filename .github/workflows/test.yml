@@ -51,5 +51,7 @@ jobs:
           path: |
             packages/*/test-results/
             test-results/
-          if-no-files-found: ignore
           retention-days: 7
+
+      - name: Run NPM build to check there are no build errors
+        run: npm build

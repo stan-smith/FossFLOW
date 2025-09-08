@@ -65,9 +65,6 @@ describe('rectangle reducer', () => {
         grid: { enabled: true, size: 10, style: 'dots' },
         connectors: {},
         viewItems: {},
-        rectangles: {
-          'rect1': { /* scene data if any */ }
-        },
         textBoxes: {}
       }
     };
@@ -249,14 +246,13 @@ describe('rectangle reducer', () => {
   });
 
   describe('deleteRectangle', () => {
-    it('should delete a rectangle from both model and scene', () => {
+    it('should delete a rectangle from model', () => {
       const result = deleteRectangle('rect1', mockContext);
       
       // Check rectangle is removed from model
       expect(result.model.views[0].rectangles).toHaveLength(0);
       
-      // Check rectangle is removed from scene
-      expect(result.scene.rectangles['rect1']).toBeUndefined();
+      // Rectangles don't have scene data - only stored in model
     });
 
     it('should throw error when rectangle does not exist', () => {
@@ -289,16 +285,13 @@ describe('rectangle reducer', () => {
       };
       
       mockState.model.views[0].rectangles = [mockRectangle, rect2];
-      mockState.scene.rectangles['rect2'] = {};
       
       const result = deleteRectangle('rect1', mockContext);
       
       expect(result.model.views[0].rectangles).toHaveLength(1);
       expect(result.model.views[0].rectangles![0].id).toBe('rect2');
       
-      // Verify proper scene cleanup
-      expect(result.scene.rectangles['rect1']).toBeUndefined();
-      expect(result.scene.rectangles['rect2']).toBeDefined();
+      // Rectangles don't have scene data - only verify model is updated
     });
   });
 

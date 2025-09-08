@@ -53,7 +53,7 @@ export const deleteRectangle = (
 
   const newState = produce(state, (draft) => {
     draft.model.views[view.index].rectangles?.splice(rectangle.index, 1);
-    delete draft.scene.rectangles[id];
+    // Rectangles don't have scene data - they're only stored in the model
   });
 
   return newState;
