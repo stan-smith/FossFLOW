@@ -55,4 +55,4 @@ jobs:
           retention-days: 7
 
       - name: Run NPM build to check there are no build errors
-        run: npm build
+        run: npm run build
