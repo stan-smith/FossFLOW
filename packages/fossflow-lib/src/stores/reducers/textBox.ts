@@ -76,6 +76,7 @@ export const deleteTextBox = (
 
   const newState = produce(state, (draft) => {
     draft.model.views[view.index].textBoxes?.splice(textBox.index, 1);
+    delete draft.scene.textBoxes[id];
   });
 
   return newState;
