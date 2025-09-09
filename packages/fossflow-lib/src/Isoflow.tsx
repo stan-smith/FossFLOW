@@ -6,6 +6,7 @@ import { IsoflowProps } from 'src/types';
 import { setWindowCursor, modelFromModelStore } from 'src/utils';
 import { useModelStore, ModelProvider } from 'src/stores/modelStore';
 import { SceneProvider } from 'src/stores/sceneStore';
+import { LocaleProvider } from 'src/stores/localeStore';
 import { GlobalStyles } from 'src/styles/GlobalStyles';
 import { Renderer } from 'src/components/Renderer/Renderer';
 import { UiOverlay } from 'src/components/UiOverlay/UiOverlay';
@@ -84,13 +85,15 @@ const App = ({
 export const Isoflow = (props: IsoflowProps) => {
   return (
     <ThemeProvider theme={theme}>
-      <ModelProvider>
-        <SceneProvider>
-          <UiStateProvider>
-            <App {...props} />
-          </UiStateProvider>
-        </SceneProvider>
-      </ModelProvider>
+      <LocaleProvider locale={props.locale || enUS}>
+        <ModelProvider>
+          <SceneProvider>
+            <UiStateProvider>
+              <App {...props} />
+            </UiStateProvider>
+          </SceneProvider>
+        </ModelProvider>
+      </LocaleProvider>
     </ThemeProvider>
   );
 };

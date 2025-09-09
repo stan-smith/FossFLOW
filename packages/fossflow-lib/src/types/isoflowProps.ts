@@ -8,8 +8,21 @@ export type InitialData = Model & {
 };
 
 export interface LocaleProps {
-  exampleText: string;
-  // other locale keys
+  common: {
+    exampleText: string;
+  };
+  mainMenu: {
+    undo: string;
+    redo: string;
+    open: string;
+    exportJson: string;
+    exportCompactJson: string;
+    exportImage: string;
+    clearCanvas: string;
+    settings: string;
+    gitHub: string;
+  };
+  // other namespaces can be added here
 }
 
 export interface IsoflowProps {
