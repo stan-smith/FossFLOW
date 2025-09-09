@@ -4,6 +4,19 @@
  <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a>
 </p>
 
+<b>嗨！</b> 我是 Stan，如果您使用过 FossFLOW 并觉得它对您有帮助，<b>我会非常感激您能捐助一点点 :)</b> 我全职工作，抽时间来维护这个项目已经很不容易了。
+如果我为您实现了某个功能，或者修复了某个 bug，能得到您的支持将非常棒 :) 如果不能，也没关系，这个软件将永远免费！
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P61KBXA3)
+
+<img width="30" height="30" alt="image" src="https://github.com/user-attachments/assets/dc6ec9ca-48d7-4047-94cf-5c4f7ed63b84" /> <b> https://buymeacoffee.com/stan.smith </b>
+
+感谢，
+
+-Stan
+
+
+------------------------------------------------------------------------------------------------------------------------------
 FossFLOW 是一款功能强大的、开源的渐进式 Web 应用（PWA），专为创建精美的等距图表而设计。它基于 React 和 Isoflow（现已 fork 并以 fossflow 名称发布到 NPM）库构建，完全在浏览器中运行，并支持离线使用。
 
 ![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)
