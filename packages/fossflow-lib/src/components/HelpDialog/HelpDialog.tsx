@@ -19,6 +19,7 @@ import {
 import { Close as CloseIcon } from '@mui/icons-material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { DialogTypeEnum } from 'src/types/ui';
+import { useTranslation } from 'src/stores/localeStore';
 
 interface ShortcutItem {
   action: string;
@@ -26,83 +27,9 @@ interface ShortcutItem {
   description: string;
 }
 
-const keyboardShortcuts: ShortcutItem[] = [
-  {
-    action: 'Undo',
-    shortcut: 'Ctrl+Z',
-    description: 'Undo the last action'
-  },
-  {
-    action: 'Redo',
-    shortcut: 'Ctrl+Y',
-    description: 'Redo the last undone action'
-  },
-  {
-    action: 'Redo (Alternative)',
-    shortcut: 'Ctrl+Shift+Z',
-    description: 'Alternative redo shortcut'
-  },
-  {
-    action: 'Help',
-    shortcut: 'F1',
-    description: 'Open help dialog with keyboard shortcuts'
-  },
-  {
-    action: 'Zoom In',
-    shortcut: 'Mouse Wheel Up',
-    description: 'Zoom in on the canvas'
-  },
-  {
-    action: 'Zoom Out',
-    shortcut: 'Mouse Wheel Down',
-    description: 'Zoom out from the canvas'
-  },
-  {
-    action: 'Pan Canvas',
-    shortcut: 'Left-click + Drag',
-    description: 'Pan the canvas when in Pan mode'
-  },
-  {
-    action: 'Context Menu',
-    shortcut: 'Right-click',
-    description: 'Open context menu for items or empty space'
-  }
-];
-
-const mouseInteractions: ShortcutItem[] = [
-  {
-    action: 'Select Tool',
-    shortcut: 'Click Select button',
-    description: 'Switch to selection mode'
-  },
-  {
-    action: 'Pan Tool',
-    shortcut: 'Click Pan button',
-    description: 'Switch to pan mode for moving canvas'
-  },
-  {
-    action: 'Add Item',
-    shortcut: 'Click Add item button',
-    description: 'Open icon picker to add new items'
-  },
-  {
-    action: 'Draw Rectangle',
-    shortcut: 'Click Rectangle button',
-    description: 'Switch to rectangle drawing mode'
-  },
-  {
-    action: 'Create Connector',
-    shortcut: 'Click Connector button',
-    description: 'Switch to connector mode'
-  },
-  {
-    action: 'Add Text',
-    shortcut: 'Click Text button',
-    description: 'Create a new text box'
-  }
-];
-
 export const HelpDialog = () => {
+  const { t } = useTranslation('helpDialog');
+  
   const dialog = useUiStateStore((state) => {
     return state.dialog;
   });
@@ -115,6 +42,82 @@ export const HelpDialog = () => {
   const handleClose = () => {
     setDialog(null);
   };
+
+  const keyboardShortcuts = [
+    {
+      action: t('undoAction'),
+      shortcut: 'Ctrl+Z',
+      description: t('undoDescription')
+    },
+    {
+      action: t('redoAction'),
+      shortcut: 'Ctrl+Y',
+      description: t('redoDescription')
+    },
+    {
+      action: t('redoAltAction'),
+      shortcut: 'Ctrl+Shift+Z',
+      description: t('redoAltDescription')
+    },
+    {
+      action: t('helpAction'),
+      shortcut: 'F1',
+      description: t('helpDescription')
+    },
+    {
+      action: t('zoomInAction'),
+      shortcut: t('zoomInShortcut'),
+      description: t('zoomInDescription')
+    },
+    {
+      action: t('zoomOutAction'),
+      shortcut: t('zoomOutShortcut'),
+      description: t('zoomOutDescription')
+    },
+    {
+      action: t('panCanvasAction'),
+      shortcut: t('panCanvasShortcut'),
+      description: t('panCanvasDescription')
+    },
+    {
+      action: t('contextMenuAction'),
+      shortcut: t('contextMenuShortcut'),
+      description: t('contextMenuDescription')
+    }
+  ];
+
+  const mouseInteractions = [
+    {
+      action: t('selectToolAction'),
+      shortcut: t('selectToolShortcut'),
+      description: t('selectToolDescription')
+    },
+    {
+      action: t('panToolAction'),
+      shortcut: t('panToolShortcut'),
+      description: t('panToolDescription')
+    },
+    {
+      action: t('addItemAction'),
+      shortcut: t('addItemShortcut'),
+      description: t('addItemDescription')
+    },
+    {
+      action: t('drawRectangleAction'),
+      shortcut: t('drawRectangleShortcut'),
+      description: t('drawRectangleDescription')
+    },
+    {
+      action: t('createConnectorAction'),
+      shortcut: t('createConnectorShortcut'),
+      description: t('createConnectorDescription')
+    },
+    {
+      action: t('addTextAction'),
+      shortcut: t('addTextShortcut'),
+      description: t('addTextDescription')
+    }
+  ];
 
   return (
     <Dialog
@@ -131,7 +134,7 @@ export const HelpDialog = () => {
       <DialogTitle>
         <Box display="flex" alignItems="center" justifyContent="space-between">
           <Typography variant="h6" component="div">
-            Keyboard Shortcuts & Help
+            {t('title')}
           </Typography>
           <Button
             onClick={handleClose}
@@ -153,15 +156,15 @@ export const HelpDialog = () => {
       <DialogContent>
         <Box sx={{ mb: 3 }}>
           <Typography variant="h6" gutterBottom>
-            Keyboard Shortcuts
+            {t('keyboardShortcuts')}
           </Typography>
           <TableContainer component={Paper} variant="outlined">
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Action</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Shortcut</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>{t('action')}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>{t('shortcut')}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>{t('description')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -194,15 +197,15 @@ export const HelpDialog = () => {
 
         <Box>
           <Typography variant="h6" gutterBottom>
-            Mouse Interactions
+            {t('mouseInteractions')}
           </Typography>
           <TableContainer component={Paper} variant="outlined">
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Action</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Method</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>Description</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>{t('action')}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>{t('method')}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>{t('description')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -233,16 +236,14 @@ export const HelpDialog = () => {
 
         <Box sx={{ mt: 3, p: 2, bgcolor: 'info.light', borderRadius: 1 }}>
           <Typography variant="body2" color="info.contrastText">
-            <strong>Note:</strong> Keyboard shortcuts are disabled when typing
-            in input fields, text areas, or content-editable elements to prevent
-            conflicts.
+            <strong>{t('note')}</strong> {t('noteContent')}
           </Typography>
         </Box>
       </DialogContent>
 
       <DialogActions>
         <Button onClick={handleClose} variant="contained">
-          Close
+          {t('close')}
         </Button>
       </DialogActions>
     </Dialog>
