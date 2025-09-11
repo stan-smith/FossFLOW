@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Box, IconButton, Paper, Typography } from '@mui/material';
 import { Close as CloseIcon, FolderOpen as FolderOpenIcon } from '@mui/icons-material';
+import { useTranslation } from 'src/stores/localeStore';
 
 const STORAGE_KEY = 'fossflow_import_hint_dismissed';
 
 export const ImportHintTooltip = () => {
+  const { t } = useTranslation('importHintTooltip');
   const [isDismissed, setIsDismissed] = useState(true);
 
   useEffect(() => {
@@ -59,13 +61,12 @@ export const ImportHintTooltip = () => {
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <FolderOpenIcon sx={{ mr: 1, color: 'info.main' }} />
           <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-            Import Diagrams
+            {t('title')}
           </Typography>
         </Box>
         
         <Typography variant="body2" color="text.secondary">
-          To import diagrams, click the <strong>menu button</strong> (☰) in the top left corner, 
-          then select <strong>"Open"</strong> to load your diagram files.
+          {t('instructionStart')} <strong>{t('menuButton')}</strong> {t('instructionMiddle')} <strong>{t('openButton')}</strong> {t('instructionEnd')}
         </Typography>
       </Paper>
     </Box>

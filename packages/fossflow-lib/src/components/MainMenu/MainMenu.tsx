@@ -25,6 +25,7 @@ import { useModelStore } from 'src/stores/modelStore';
 import { useHistory } from 'src/hooks/useHistory';
 import { DialogTypeEnum } from 'src/types/ui';
 import { MenuItem } from './MenuItem';
+import { useTranslation } from 'src/stores/localeStore';
 
 export const MainMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -42,6 +43,8 @@ export const MainMenu = () => {
   });
   const initialDataManager = useInitialDataManager();
   const { undo, redo, canUndo, canRedo, clearHistory } = useHistory();
+
+  const { t } = useTranslation('mainMenu');
 
   const onToggleMenu = useCallback(
     (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -183,7 +186,7 @@ export const MainMenu = () => {
             Icon={<UndoIcon />}
             disabled={!canUndo}
           >
-            Undo
+            {t('undo')}
           </MenuItem>
 
           <MenuItem
@@ -191,7 +194,7 @@ export const MainMenu = () => {
             Icon={<RedoIcon />}
             disabled={!canRedo}
           >
-            Redo
+            {t('redo')}
           </MenuItem>
 
           {(canUndo || canRedo) && sectionVisibility.actions && <Divider />}
@@ -199,38 +202,38 @@ export const MainMenu = () => {
           {/* File Actions */}
           {mainMenuOptions.includes('ACTION.OPEN') && (
             <MenuItem onClick={onOpenModel} Icon={<FolderOpenIcon />}>
-              Open
+              {t('open')}
             </MenuItem>
           )}
 
           {mainMenuOptions.includes('EXPORT.JSON') && (
             <MenuItem onClick={onExportAsJSON} Icon={<ExportJsonIcon />}>
-              Export as JSON
+              {t('exportJson')}
             </MenuItem>
           )}
 
           {mainMenuOptions.includes('EXPORT.JSON') && (
             <MenuItem onClick={onExportAsCompactJSON} Icon={<ExportJsonIcon />}>
-              Export as Compact JSON
+              {t('exportCompactJson')}
             </MenuItem>
           )}
 
           {mainMenuOptions.includes('EXPORT.PNG') && (
             <MenuItem onClick={onExportAsImage} Icon={<ExportImageIcon />}>
-              Export as image
+              {t('exportImage')}
             </MenuItem>
           )}
 
           {mainMenuOptions.includes('ACTION.CLEAR_CANVAS') && (
             <MenuItem onClick={onClearCanvas} Icon={<DeleteOutlineIcon />}>
-              Clear the canvas
+              {t('clearCanvas')}
             </MenuItem>
           )}
 
           <Divider />
 
           <MenuItem onClick={onOpenSettings} Icon={<SettingsIcon />}>
-            Settings
+            {t('settings')}
           </MenuItem>
 
           {sectionVisibility.links && (
@@ -244,7 +247,7 @@ export const MainMenu = () => {
                   }}
                   Icon={<GitHubIcon />}
                 >
-                  GitHub
+                  {t('gitHub')}
                 </MenuItem>
               )}
             </>
