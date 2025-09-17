@@ -27,6 +27,11 @@ export const IconSelectionControls = () => {
   const { iconCategories } = useIconCategories();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [treatAsIsometric, setTreatAsIsometric] = useState(true);
+  const [showAlert, setShowAlert] = useState(() => {
+    // Check localStorage to see if user has dismissed the alert
+    return localStorage.getItem('fossflow-show-drag-hint') !== 'false';
+  });
+
 
   const onMouseDown = useCallback(
     (icon: Icon) => {
@@ -43,6 +48,11 @@ export const IconSelectionControls = () => {
 
   const handleImportClick = useCallback(() => {
     fileInputRef.current?.click();
+  }, []);
+
+  const dismissAlert = useCallback(() => {
+    setShowAlert(false);
+    localStorage.setItem('fossflow-show-drag-hint', 'false');
   }, []);
 
   const handleFileSelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -237,9 +247,15 @@ export const IconSelectionControls = () => {
               style={{ display: 'none' }}
               onChange={handleFileSelect}
             />
-            <Alert severity="info">
-              You can drag and drop any item below onto the canvas.
-            </Alert>
+            {showAlert && (
+              <Alert 
+                severity="info" 
+                onClose={dismissAlert}
+                sx={{ cursor: 'pointer' }}
+              >
+                You can drag and drop any item below onto the canvas.
+              </Alert>
+            )}
           </Stack>
         </Section>
       }

@@ -154,6 +154,7 @@ export interface UiState {
   hotkeyProfile: HotkeyProfile;
   panSettings: PanSettings;
   connectorInteractionMode: ConnectorInteractionMode;
+
 }
 
 export interface UiStateActions {
@@ -177,6 +178,7 @@ export interface UiStateActions {
   setHotkeyProfile: (profile: HotkeyProfile) => void;
   setPanSettings: (settings: PanSettings) => void;
   setConnectorInteractionMode: (mode: ConnectorInteractionMode) => void;
+
 }
 
 export type UiStateStore = UiState & {

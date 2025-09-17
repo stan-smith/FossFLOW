@@ -9,7 +9,8 @@ import {
   DeleteOutline as DeleteOutlineIcon,
   Undo as UndoIcon,
   Redo as RedoIcon,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
+
 } from '@mui/icons-material';
 import { UiElement } from 'src/components/UiElement/UiElement';
 import { IconButton } from 'src/components/IconButton/IconButton';
@@ -133,6 +134,9 @@ export const MainMenu = () => {
     uiStateActions.setDialog(DialogTypeEnum.SETTINGS);
   }, [uiStateActions]);
 
+
+
+
   const sectionVisibility = useMemo(() => {
     return {
       actions: Boolean(
@@ -196,6 +200,7 @@ export const MainMenu = () => {
           >
             {t('redo')}
           </MenuItem>
+
 
           {(canUndo || canRedo) && sectionVisibility.actions && <Divider />}
 

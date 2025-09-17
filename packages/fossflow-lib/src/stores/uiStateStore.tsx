@@ -35,6 +35,7 @@ const initialState = () => {
       hotkeyProfile: DEFAULT_HOTKEY_PROFILE,
       panSettings: DEFAULT_PAN_SETTINGS,
       connectorInteractionMode: 'click', // Default to click mode
+
       actions: {
         setView: (view) => {
           set({ view });
@@ -94,10 +95,10 @@ const initialState = () => {
         setEnableDebugTools: (enableDebugTools) => {
           set({ enableDebugTools });
         },
-        setRendererEl: (el) => {
+        setRendererEl: (el: HTMLDivElement) => {
           set({ rendererEl: el });
         },
-        setHotkeyProfile: (hotkeyProfile) => {
+        setHotkeyProfile: (hotkeyProfile: any) => {
           set({ hotkeyProfile });
         },
         setPanSettings: (panSettings) => {
