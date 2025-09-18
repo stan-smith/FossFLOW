@@ -75,23 +75,24 @@ export const deleteViewItem = (
 
     draft.model.views[view.index].items.splice(viewItem.index, 1);
 
-    const connectorsToUpdate = getConnectorsByViewItem(
+    // Find connectors that reference this deleted item
+    const connectorsToDelete = getConnectorsByViewItem(
       viewItem.value.id,
       view.value.connectors ?? []
     );
 
-    const updatedConnectors = connectorsToUpdate.reduce((acc, connector) => {
-      return reducers.view({
-        action: 'SYNC_CONNECTOR',
-        payload: connector.id,
-        ctx: { viewId, state: acc }
+    // Remove connectors that reference the deleted item
+    if (connectorsToDelete.length > 0 && draft.model.views[view.index].connectors) {
+      draft.model.views[view.index].connectors =
+        draft.model.views[view.index].connectors?.filter(
+          connector => !connectorsToDelete.some(c => c.id === connector.id)
+        );
+
+      // Also remove from scene
+      connectorsToDelete.forEach(connector => {
+        delete draft.scene.connectors[connector.id];
       });
-    }, draft);
-
-    draft.model.views[view.index].connectors =
-      updatedConnectors.model.views[view.index].connectors;
-
-    draft.scene.connectors = updatedConnectors.scene.connectors;
+    }
   });
 
   return newState;

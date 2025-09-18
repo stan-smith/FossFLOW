@@ -61,7 +61,30 @@ export const useInitialDataManager = () => {
         return;
       }
 
-      const initialData = _initialData;
+      // Clean up invalid connector references before loading
+      const initialData = { ..._initialData };
+      initialData.views = initialData.views.map(view => {
+        if (!view.connectors) return view;
+
+        const validConnectors = view.connectors.filter(connector => {
+          // Check if all anchors reference existing items
+          const hasValidAnchors = connector.anchors.every(anchor => {
+            if (anchor.ref.item) {
+              // Check if the referenced item exists in the view
+              return view.items.some(item => item.id === anchor.ref.item);
+            }
+            return true; // Allow anchors that reference other anchors
+          });
+
+          if (!hasValidAnchors) {
+            console.warn(`Removing connector ${connector.id} due to invalid item references`);
+          }
+
+          return hasValidAnchors;
+        });
+
+        return { ...view, connectors: validConnectors };
+      });
 
       if (initialData.views.length === 0) {
         const updates = reducers.view({
