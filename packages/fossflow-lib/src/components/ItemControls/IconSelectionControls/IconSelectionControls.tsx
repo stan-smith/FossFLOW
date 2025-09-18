@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Stack, Alert, IconButton as MUIIconButton, Box, Button, FormControlLabel, Checkbox, Typography } from '@mui/material';
+import { Stack, Alert, IconButton as MUIIconButton, Box, Button, FormControlLabel, Checkbox, Typography, Slider } from '@mui/material';
 import { ControlsContainer } from 'src/components/ItemControls/components/ControlsContainer';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useModelStore } from 'src/stores/modelStore';
@@ -27,6 +27,7 @@ export const IconSelectionControls = () => {
   const { iconCategories } = useIconCategories();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [treatAsIsometric, setTreatAsIsometric] = useState(true);
+  const [iconScale, setIconScale] = useState(100);
   const [showAlert, setShowAlert] = useState(() => {
     // Check localStorage to see if user has dismissed the alert
     return localStorage.getItem('fossflow-show-drag-hint') !== 'false';
@@ -111,10 +112,11 @@ export const IconSelectionControls = () => {
             const TARGET_SIZE = 128; // Square size for consistency
             
             // Calculate scaling to fit within square while maintaining aspect ratio
-            // Remove the upper limit (1) to allow upscaling of small images
-            const scale = Math.min(TARGET_SIZE / img.width, TARGET_SIZE / img.height);
-            const scaledWidth = img.width * scale;
-            const scaledHeight = img.height * scale;
+            const basScale = Math.min(TARGET_SIZE / img.width, TARGET_SIZE / img.height);
+            // Apply user's custom scaling
+            const finalScale = basScale * (iconScale / 100);
+            const scaledWidth = img.width * finalScale;
+            const scaledHeight = img.height * finalScale;
             
             // Set canvas to square size
             canvas.width = TARGET_SIZE;
@@ -170,7 +172,7 @@ export const IconSelectionControls = () => {
 
     // Reset input
     event.target.value = '';
-  }, [currentIcons, modelActions, iconCategoriesState, uiStateActions, treatAsIsometric]);
+  }, [currentIcons, modelActions, iconCategoriesState, uiStateActions, treatAsIsometric, iconScale]);
 
   return (
     <ControlsContainer

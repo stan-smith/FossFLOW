@@ -24,7 +24,7 @@ export const NonIsometricIcon = ({ icon }: Props) => {
           component="img"
           src={icon.url}
           alt={`icon-${icon.id}`}
-          sx={{ width: PROJECTED_TILE_SIZE.width * 0.7 }}
+          sx={{ width: PROJECTED_TILE_SIZE.width * 0.7 * (icon.scale || 1) }}
         />
       </Box>
     </Box>
