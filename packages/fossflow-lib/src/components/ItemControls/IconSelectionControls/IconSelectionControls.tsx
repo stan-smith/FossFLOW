@@ -27,6 +27,11 @@ export const IconSelectionControls = () => {
   const { iconCategories } = useIconCategories();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [treatAsIsometric, setTreatAsIsometric] = useState(true);
+  const [showAlert, setShowAlert] = useState(() => {
+    // Check localStorage to see if user has dismissed the alert
+    return localStorage.getItem('fossflow-show-drag-hint') !== 'false';
+  });
+
 
   const onMouseDown = useCallback(
     (icon: Icon) => {
@@ -43,6 +48,11 @@ export const IconSelectionControls = () => {
 
   const handleImportClick = useCallback(() => {
     fileInputRef.current?.click();
+  }, []);
+
+  const dismissAlert = useCallback(() => {
+    setShowAlert(false);
+    localStorage.setItem('fossflow-show-drag-hint', 'false');
   }, []);
 
   const handleFileSelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -196,50 +206,6 @@ export const IconSelectionControls = () => {
             <Box sx={{ marginTop: '8px' }}>
               <Searchbox value={filter} onChange={setFilter} />
             </Box>
-            <Box sx={{ 
-              border: '1px solid #e0e0e0', 
-              borderRadius: 1, 
-              p: 1.5,
-              backgroundColor: '#f5f5f5'
-            }}>
-              <Button
-                variant="outlined"
-                startIcon={<FileUploadIcon />}
-                onClick={handleImportClick}
-                fullWidth
-              >
-                Import Icons
-              </Button>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={treatAsIsometric}
-                    onChange={(e) => setTreatAsIsometric(e.target.checked)}
-                    size="small"
-                  />
-                }
-                label={
-                  <Typography variant="body2">
-                    Treat as isometric (3D view)
-                  </Typography>
-                }
-                sx={{ mt: 1, ml: 0 }}
-              />
-              <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
-                Uncheck for flat icons (logos, UI elements)
-              </Typography>
-            </Box>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              multiple
-              style={{ display: 'none' }}
-              onChange={handleFileSelect}
-            />
-            <Alert severity="info">
-              You can drag and drop any item below onto the canvas.
-            </Alert>
           </Stack>
         </Section>
       }
@@ -252,6 +218,61 @@ export const IconSelectionControls = () => {
       {!filteredIcons && (
         <Icons iconCategories={iconCategories} onMouseDown={onMouseDown} />
       )}
+      
+      <Section>
+        <Box sx={{ 
+          border: '1px solid #e0e0e0', 
+          borderRadius: 1, 
+          p: 1.5,
+          backgroundColor: '#f5f5f5'
+        }}>
+          <Button
+            variant="outlined"
+            startIcon={<FileUploadIcon />}
+            onClick={handleImportClick}
+            fullWidth
+          >
+            Import Icons
+          </Button>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={treatAsIsometric}
+                onChange={(e) => setTreatAsIsometric(e.target.checked)}
+                size="small"
+              />
+            }
+            label={
+              <Typography variant="body2">
+                Treat as isometric (3D view)
+              </Typography>
+            }
+            sx={{ mt: 1, ml: 0 }}
+          />
+          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+            Uncheck for flat icons (logos, UI elements)
+          </Typography>
+        </Box>
+        
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          style={{ display: 'none' }}
+          onChange={handleFileSelect}
+        />
+        
+        {showAlert && (
+          <Alert 
+            severity="info" 
+            onClose={dismissAlert}
+            sx={{ cursor: 'pointer', mt: 1 }}
+          >
+            You can drag and drop any item below onto the canvas.
+          </Alert>
+        )}
+      </Section>
     </ControlsContainer>
   );
 };
