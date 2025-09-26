@@ -3,6 +3,7 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { Size, Coords } from 'src/types';
 import {
   getUnprojectedBounds as getUnprojectedBoundsUtil,
+  getVisualBounds as getVisualBoundsUtil,
   getFitToViewParams as getFitToViewParamsUtil,
   CoordsUtils
 } from 'src/utils';
@@ -21,6 +22,10 @@ export const useDiagramUtils = () => {
 
   const getUnprojectedBounds = useCallback((): Size & Coords => {
     return getUnprojectedBoundsUtil(scene.currentView);
+  }, [scene.currentView]);
+
+  const getVisualBounds = useCallback((): Size & Coords => {
+    return getVisualBoundsUtil(scene.currentView);
   }, [scene.currentView]);
 
   const getFitToViewParams = useCallback(
@@ -42,6 +47,7 @@ export const useDiagramUtils = () => {
 
   return {
     getUnprojectedBounds,
+    getVisualBounds,
     fitToView,
     getFitToViewParams
   };

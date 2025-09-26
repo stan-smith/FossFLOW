@@ -46,7 +46,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
   });
   const [imageData, setImageData] = React.useState<string>();
   const [exportError, setExportError] = useState(false);
-  const { getUnprojectedBounds } = useDiagramUtils();
+  const { getVisualBounds } = useDiagramUtils();
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
@@ -54,9 +54,9 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     return modelFromModelStore(state);
   });
 
-  const unprojectedBounds = useMemo(() => {
-    return getUnprojectedBounds();
-  }, [getUnprojectedBounds]);
+  const visualBounds = useMemo(() => {
+    return getVisualBounds();
+  }, [getVisualBounds]);
 
   useEffect(() => {
     uiStateActions.setMode({
@@ -71,7 +71,13 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     }
 
     isExporting.current = true;
-    exportAsImage(containerRef.current as HTMLDivElement)
+    
+    const containerSize = {
+      width: visualBounds.width * quality,
+      height: visualBounds.height * quality
+    };
+    
+    exportAsImage(containerRef.current as HTMLDivElement, containerSize)
       .then((data) => {
         setImageData(data);
         isExporting.current = false;
@@ -81,7 +87,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
         setExportError(true);
         isExporting.current = false;
       });
-  }, []);
+  }, [visualBounds, quality]);
 
   const [showGrid, setShowGrid] = useState(false);
   const handleShowGridChange = (checked: boolean) => {
@@ -95,6 +101,8 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     setBackgroundColor(color);
   };
 
+
+
   // Reset image data when options change and trigger export
   useEffect(() => {
     setImageData(undefined);
@@ -102,7 +110,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     isExporting.current = false;
     const timer = setTimeout(() => {
       exportImage();
-    }, 100);
+    }, 200);
 
     return () => clearTimeout(timer);
   }, [showGrid, backgroundColor]);
@@ -110,7 +118,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       exportImage();
-    }, 100);
+    }, 200);
 
     return () => clearTimeout(timer);
   }, []);
@@ -158,8 +166,8 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     left: 0
                   }}
                   style={{
-                    width: unprojectedBounds.width * quality,
-                    height: unprojectedBounds.height * quality
+                    width: visualBounds.width * quality,
+                    height: visualBounds.height * quality
                   }}
                 >
                   <Isoflow
@@ -195,10 +203,9 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
               <Box
                 component="img"
                 sx={{
-                  maxWidth: '100%'
-                }}
-                style={{
-                  width: unprojectedBounds.width
+                  maxWidth: '100%',
+                  maxHeight: '300px',
+                  objectFit: 'contain'
                 }}
                 src={imageData}
                 alt="preview"
