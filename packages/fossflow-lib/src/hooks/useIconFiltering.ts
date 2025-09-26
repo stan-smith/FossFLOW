@@ -12,7 +12,9 @@ export const useIconFiltering = () => {
   const filteredIcons = useMemo(() => {
     if (filter === '') return null;
 
-    const regex = new RegExp(filter, 'gi');
+    // Escape special regex characters to treat filter as literal string
+    const escapedFilter = filter.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(escapedFilter, 'gi');
 
     return icons.filter((icon: Icon) => {
       if (!filter) {
