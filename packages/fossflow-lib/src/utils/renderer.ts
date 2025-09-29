@@ -717,6 +717,66 @@ export const getProjectBounds = (
   return corners;
 };
 
+export const getVisualBounds = (view: View, padding = 50) => {
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  
+  // Collect actual content positions and find extremes
+  view.items.forEach((item) => {
+    const pos = getTilePosition({ tile: item.tile });
+    const itemSize = 50;
+    minX = Math.min(minX, pos.x - itemSize/2);
+    maxX = Math.max(maxX, pos.x + itemSize/2);
+    minY = Math.min(minY, pos.y - itemSize/2);
+    maxY = Math.max(maxY, pos.y + itemSize/2);
+  });
+  
+  const connectors = view.connectors ?? [];
+  connectors.forEach((connector) => {
+    const path = getConnectorPath({ anchors: connector.anchors, view });
+    path.tiles.forEach((tile) => {
+      const globalTile = connectorPathTileToGlobal(tile, path.rectangle.from);
+      const pos = getTilePosition({ tile: globalTile });
+      minX = Math.min(minX, pos.x);
+      maxX = Math.max(maxX, pos.x);
+      minY = Math.min(minY, pos.y);
+      maxY = Math.max(maxY, pos.y);
+    });
+  });
+  
+  const textBoxes = view.textBoxes ?? [];
+  textBoxes.forEach((textBox) => {
+    const pos = getTilePosition({ tile: textBox.tile });
+    const size = getTextBoxDimensions(textBox);
+    const endPos = getTilePosition({ tile: getTextBoxEndTile(textBox, size) });
+    minX = Math.min(minX, pos.x, endPos.x);
+    maxX = Math.max(maxX, pos.x, endPos.x);
+    minY = Math.min(minY, pos.y, endPos.y);
+    maxY = Math.max(maxY, pos.y, endPos.y);
+  });
+  
+  const rectangles = view.rectangles ?? [];
+  rectangles.forEach((rectangle) => {
+    const fromPos = getTilePosition({ tile: rectangle.from });
+    const toPos = getTilePosition({ tile: rectangle.to });
+    minX = Math.min(minX, fromPos.x, toPos.x);
+    maxX = Math.max(maxX, fromPos.x, toPos.x);
+    minY = Math.min(minY, fromPos.y, toPos.y);
+    maxY = Math.max(maxY, fromPos.y, toPos.y);
+  });
+  
+  if (minX === Infinity) {
+    return { x: 0, y: 0, width: 200, height: 200 };
+  }
+  
+  // Create tight bounds around actual content extremes
+  return {
+    x: minX - padding,
+    y: minY - padding,
+    width: (maxX - minX) + (padding * 2),
+    height: (maxY - minY) + (padding * 2)
+  };
+};
+
 export const getUnprojectedBounds = (view: View) => {
   const projectBounds = getProjectBounds(view);
 
