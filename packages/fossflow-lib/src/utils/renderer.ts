@@ -778,7 +778,23 @@ export const getVisualBounds = (view: View, padding = 50) => {
 };
 
 export const getUnprojectedBounds = (view: View) => {
-  return getVisualBounds(view, 0);
+  const projectBounds = getProjectBounds(view);
+
+  const cornerPositions = projectBounds.map((corner) => {
+    return getTilePosition({
+      tile: corner
+    });
+  });
+  const sortedCorners = sortByPosition(cornerPositions);
+  const topLeft = { x: sortedCorners.lowX, y: sortedCorners.lowY };
+  const size = getBoundingBoxSize(cornerPositions);
+
+  return {
+    width: size.width,
+    height: size.height,
+    x: topLeft.x,
+    y: topLeft.y
+  };
 };
 
 export const getFitToViewParams = (view: View, viewportSize: Size) => {
