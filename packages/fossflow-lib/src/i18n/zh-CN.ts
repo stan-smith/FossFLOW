@@ -80,6 +80,19 @@ const locale: LocaleProps = {
     rerouteMiddle: "左键点击",
     rerouteEnd: "连接器线上的任何点并拖拽以创建或移动锚点。"
   },
+  lassoHintTooltip: {
+    tipLasso: "提示：套索选择",
+    tipFreehandLasso: "提示：自由套索选择",
+    lassoDragStart: "点击并拖拽",
+    lassoDragEnd: "以绘制矩形选择框来选中您想选择的项目。",
+    freehandDragStart: "点击并拖拽",
+    freehandDragMiddle: "以绘制",
+    freehandDragEnd: "自由形状",
+    freehandComplete: "围绕项目。释放以选择形状内的所有项目。",
+    moveStart: "选择后，",
+    moveMiddle: "在选择区域内点击",
+    moveEnd: "并拖拽以一起移动所有选中的项目。"
+  },
   importHintTooltip: {
     title: "导入图表",
     instructionStart: "要导入图表，请点击左上角的",

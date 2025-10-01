@@ -21,6 +21,7 @@ import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import { ConnectorHintTooltip } from '../ConnectorHintTooltip/ConnectorHintTooltip';
 import { ConnectorEmptySpaceTooltip } from '../ConnectorEmptySpaceTooltip/ConnectorEmptySpaceTooltip';
 import { ImportHintTooltip } from '../ImportHintTooltip/ImportHintTooltip';
+import { LassoHintTooltip } from '../LassoHintTooltip/LassoHintTooltip';
 
 const ToolsEnum = {
   MAIN_MENU: 'MAIN_MENU',
@@ -245,10 +246,11 @@ export const UiOverlay = () => {
 
       {dialog === DialogTypeEnum.SETTINGS && <SettingsDialog />}
 
-      {/* Show connector hint tooltip only in editable mode */}
+      {/* Show hint tooltips only in editable mode */}
       {editorMode === EditorModeEnum.EDITABLE && <ConnectorHintTooltip toolMenuRef={toolMenuRef} />}
       {editorMode === EditorModeEnum.EDITABLE && <ConnectorEmptySpaceTooltip />}
       {editorMode === EditorModeEnum.EDITABLE && <ImportHintTooltip />}
+      {editorMode === EditorModeEnum.EDITABLE && <LassoHintTooltip toolMenuRef={toolMenuRef} />}
 
       <SceneLayer>
         <Box ref={contextMenuAnchorRef} />

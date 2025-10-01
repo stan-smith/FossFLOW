@@ -87,6 +87,19 @@ export interface LocaleProps {
     rerouteMiddle: string;
     rerouteEnd: string;
   };
+  lassoHintTooltip: {
+    tipLasso: string;
+    tipFreehandLasso: string;
+    lassoDragStart: string;
+    lassoDragEnd: string;
+    freehandDragStart: string;
+    freehandDragMiddle: string;
+    freehandDragEnd: string;
+    freehandComplete: string;
+    moveStart: string;
+    moveMiddle: string;
+    moveEnd: string;
+  };
   importHintTooltip: {
     title: string;
     instructionStart: string;

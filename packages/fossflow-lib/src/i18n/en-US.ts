@@ -80,6 +80,19 @@ const locale: LocaleProps = {
     rerouteMiddle: "left-click",
     rerouteEnd: "on any point along the connector line and drag to create or move anchor points."
   },
+  lassoHintTooltip: {
+    tipLasso: "Tip: Lasso Selection",
+    tipFreehandLasso: "Tip: Freehand Lasso Selection",
+    lassoDragStart: "Click and drag",
+    lassoDragEnd: "to draw a rectangular selection box around items you want to select.",
+    freehandDragStart: "Click and drag",
+    freehandDragMiddle: "to draw a",
+    freehandDragEnd: "freeform shape",
+    freehandComplete: "around items. Release to select all items inside the shape.",
+    moveStart: "Once selected,",
+    moveMiddle: "click inside the selection",
+    moveEnd: "and drag to move all selected items together."
+  },
   importHintTooltip: {
     title: "Import Diagrams",
     instructionStart: "To import diagrams, click the",
