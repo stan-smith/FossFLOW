@@ -17,13 +17,21 @@ const getItemsInBounds = (
     }
   });
 
-  // Check all rectangles
+  // Check all rectangles - they must be FULLY enclosed (all 4 corners inside)
   scene.rectangles.forEach((rectangle: any) => {
-    // Check if rectangle's center or any corner is within bounds
-    if (
-      isWithinBounds(rectangle.from, [startTile, endTile]) ||
-      isWithinBounds(rectangle.to, [startTile, endTile])
-    ) {
+    const corners = [
+      rectangle.from,
+      { x: rectangle.to.x, y: rectangle.from.y },
+      rectangle.to,
+      { x: rectangle.from.x, y: rectangle.to.y }
+    ];
+
+    // Rectangle is only selected if ALL corners are inside the bounds
+    const allCornersInside = corners.every(corner =>
+      isWithinBounds(corner, [startTile, endTile])
+    );
+
+    if (allCornersInside) {
       items.push({ type: 'RECTANGLE', id: rectangle.id });
     }
   });

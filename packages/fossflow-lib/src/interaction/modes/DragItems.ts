@@ -52,10 +52,15 @@ const dragItems = (
       });
     }
   }
-  
+
   // Handle non-item references (rectangles, textboxes, connector anchors)
   otherRefs.forEach((item) => {
     if (item.type === 'RECTANGLE') {
+      // Skip rectangles if regular items are also being dragged
+      // This is because items use snap-to-grid logic, while rectangles move freely
+      // Moving them together would cause desynchronization
+      if (itemRefs.length > 0) return;
+
       const rectangle = getItemByIdOrThrow(scene.rectangles, item.id).value;
       const newFrom = CoordsUtils.add(rectangle.from, delta);
       const newTo = CoordsUtils.add(rectangle.to, delta);

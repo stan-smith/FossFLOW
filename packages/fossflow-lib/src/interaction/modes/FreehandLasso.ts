@@ -18,13 +18,19 @@ const getItemsInFreehandBounds = (
     }
   });
 
-  // Check all rectangles (check center point)
+  // Check all rectangles - they must be FULLY enclosed (all 4 corners inside)
   scene.rectangles.forEach((rectangle: any) => {
-    const centerX = (rectangle.from.x + rectangle.to.x) / 2;
-    const centerY = (rectangle.from.y + rectangle.to.y) / 2;
-    const center = { x: centerX, y: centerY };
+    const corners = [
+      rectangle.from,
+      { x: rectangle.to.x, y: rectangle.from.y },
+      rectangle.to,
+      { x: rectangle.from.x, y: rectangle.to.y }
+    ];
 
-    if (isPointInPolygon(center, pathTiles)) {
+    // Rectangle is only selected if ALL corners are inside the polygon
+    const allCornersInside = corners.every(corner => isPointInPolygon(corner, pathTiles));
+
+    if (allCornersInside) {
       items.push({ type: 'RECTANGLE', id: rectangle.id });
     }
   });
