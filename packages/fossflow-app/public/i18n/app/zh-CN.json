@@ -1,11 +1,58 @@
 {
-  "nav": {
-    "newDiagram": "新建图表",
-    "saveSessionOnly": "保存（仅会话）",
-    "loadSessionOnly": "加载（仅会话）",
-    "importFile": "导入文件",
-    "exportFile": "导出文件",
-    "quickSaveSession": "快速保存（会话）",
-    "serverStorage": "服务端存储"
-  }
+    "nav": {
+        "newDiagram": "新建图表",
+        "saveSessionOnly": "保存（仅会话）",
+        "loadSessionOnly": "加载（仅会话）",
+        "importFile": "导入文件",
+        "exportFile": "导出文件",
+        "quickSaveSession": "快速保存（会话）",
+        "serverStorage": "服务端存储"
+    },
+    "status": {
+        "current": "当前",
+        "untitled": "未命名图表",
+        "modified": "已修改",
+        "sessionStorageNote": "仅会话存储 - 导出以永久保存"
+    },
+    "dialog": {
+        "save": {
+            "title": "保存图表（仅当前会话）",
+            "warningTitle": "重要提示",
+            "warningMessage": "此保存是临时的，关闭浏览器后将丢失。",
+            "warningExport": "使用<strong>导出文件</strong>功能永久保存您的工作。",
+            "placeholder": "输入图表名称",
+            "btnSave": "保存",
+            "btnCancel": "取消"
+        },
+        "load": {
+            "title": "加载图表（仅当前会话）",
+            "noteTitle": "提示",
+            "noteMessage": "这些保存是临时的。导出您的图表以永久保存。",
+            "noSavedDiagrams": "当前会话中未找到已保存的图表",
+            "updated": "更新时间",
+            "btnLoad": "加载",
+            "btnDelete": "删除",
+            "btnClose": "关闭"
+        },
+        "export": {
+            "title": "导出图表",
+            "recommendedTitle": "推荐",
+            "recommendedMessage": "这是永久保存工作的最佳方式。",
+            "noteMessage": "导出的 JSON 文件可以稍后导入或与他人共享。",
+            "btnDownload": "下载 JSON",
+            "btnCancel": "取消"
+        }
+    },
+    "alert": {
+        "enterDiagramName": "请输入图表名称",
+        "diagramExists": "名为\"{{name}}\"的图表已存在于此会话中。这将覆盖它。您确定要继续吗？",
+        "unsavedChanges": "您有未保存的更改。继续加载？",
+        "createNewDiagram": "创建新图表？",
+        "unsavedChangesExport": "您有未保存的更改。请先导出图表以保存。继续？",
+        "confirmDelete": "您确定要删除此图表吗？",
+        "storageFull": "存储空间已满！正在打开存储管理器...",
+        "autoSaveFailed": "存储空间已满！请使用存储管理器释放空间。",
+        "beforeUnload": "您有未保存的更改。您确定要离开吗？",
+        "quotaExceeded": "存储配额已超出。请导出重要图表并清理一些空间。"
+    }
 }

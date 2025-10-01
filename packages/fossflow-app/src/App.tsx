@@ -138,14 +138,14 @@ function App() {
     } catch (e) {
       console.error('Failed to save diagrams:', e);
       if (e instanceof DOMException && e.name === 'QuotaExceededError') {
-        alert('Storage quota exceeded. Please export important diagrams and clear some space.');
+        alert(t('alert.quotaExceeded'));
       }
     }
   }, [diagrams]);
 
   const saveDiagram = () => {
     if (!diagramName.trim()) {
-      alert('Please enter a diagram name');
+      alert(t('alert.enterDiagramName'));
       return;
     }
 
@@ -156,7 +156,7 @@ function App() {
     
     if (existingDiagram) {
       const confirmOverwrite = window.confirm(
-        `A diagram named "${diagramName}" already exists in this session. This will overwrite it. Are you sure you want to continue?`
+        t('alert.diagramExists', { name: diagramName })
       );
       if (!confirmOverwrite) {
         return;
@@ -210,14 +210,14 @@ function App() {
     } catch (e) {
       console.error('Failed to save diagram:', e);
       if (e instanceof DOMException && e.name === 'QuotaExceededError') {
-        alert('Storage full! Opening Storage Manager...');
+        alert(t('alert.storageFull'));
         setShowStorageManager(true);
       }
     }
   };
 
   const loadDiagram = (diagram: SavedDiagram) => {
-    if (hasUnsavedChanges && !window.confirm('You have unsaved changes. Continue loading?')) {
+    if (hasUnsavedChanges && !window.confirm(t('alert.unsavedChanges'))) {
       return;
     }
     
@@ -247,7 +247,7 @@ function App() {
   };
 
   const deleteDiagram = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this diagram?')) {
+    if (window.confirm(t('alert.confirmDelete'))) {
       setDiagrams(diagrams.filter(d => d.id !== id));
       if (currentDiagram?.id === id) {
         setCurrentDiagram(null);
@@ -258,8 +258,8 @@ function App() {
 
   const newDiagram = () => {
     const message = hasUnsavedChanges 
-      ? 'You have unsaved changes. Export your diagram first to save it. Continue?'
-      : 'Create a new diagram?';
+      ? t('alert.unsavedChangesExport')
+      : t('alert.createNewDiagram');
       
     if (window.confirm(message)) {
       const emptyDiagram: DiagramData = {
@@ -445,7 +445,7 @@ function App() {
       } catch (e) {
         console.error('Auto-save failed:', e);
         if (e instanceof DOMException && e.name === 'QuotaExceededError') {
-          alert('Storage full! Please use Storage Manager to free up space.');
+          alert(t('alert.autoSaveFailed'));
           setShowStorageManager(true);
         }
       }
@@ -459,7 +459,7 @@ function App() {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
         e.preventDefault();
-        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        e.returnValue = t('alert.beforeUnload');
         return e.returnValue;
       }
     };
@@ -471,7 +471,6 @@ function App() {
   return (
     <div className="App">
       <div className="toolbar">
-        {canI18n && <ChangeLanguage />}
         <button onClick={newDiagram}>{t('nav.newDiagram')}</button>
         {serverStorageAvailable && (
           <button 
@@ -505,11 +504,12 @@ function App() {
         >
           {t('nav.quickSaveSession')}
         </button>
+        <ChangeLanguage />
         <span className="current-diagram">
-          {currentDiagram ? `Current: ${currentDiagram.name}` : diagramName || 'Untitled Diagram'}
-          {hasUnsavedChanges && <span style={{ color: '#ff9800', marginLeft: '10px' }}>• Modified</span>}
+          {currentDiagram ? `${t('status.current')}: ${currentDiagram.name}` : diagramName || t('status.untitled')}
+          {hasUnsavedChanges && <span style={{ color: '#ff9800', marginLeft: '10px' }}>• {t('status.modified')}</span>}
           <span style={{ fontSize: '12px', color: '#666', marginLeft: '10px' }}>
-            (Session storage only - export to save permanently)
+            ({t('status.sessionStorageNote')})
           </span>
         </span>
       </div>
@@ -528,7 +528,7 @@ function App() {
       {showSaveDialog && (
         <div className="dialog-overlay">
           <div className="dialog">
-            <h2>Save Diagram (Current Session Only)</h2>
+            <h2>{t('dialog.save.title')}</h2>
             <div style={{
               backgroundColor: '#fff3cd',
               border: '1px solid #ffeeba',
@@ -536,21 +536,21 @@ function App() {
               borderRadius: '4px',
               marginBottom: '20px'
             }}>
-              <strong>⚠️ Important:</strong> This save is temporary and will be lost when you close the browser.
+              <strong>⚠️ {t('dialog.save.warningTitle')}:</strong> {t('dialog.save.warningMessage')}
               <br />
-              Use <strong>Export File</strong> to permanently save your work.
+              <span dangerouslySetInnerHTML={{ __html: t('dialog.save.warningExport') }} />
             </div>
             <input
               type="text"
-              placeholder="Enter diagram name"
+              placeholder={t('dialog.save.placeholder')}
               value={diagramName}
               onChange={(e) => setDiagramName(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && saveDiagram()}
               autoFocus
             />
             <div className="dialog-buttons">
-              <button onClick={saveDiagram}>Save</button>
-              <button onClick={() => setShowSaveDialog(false)}>Cancel</button>
+              <button onClick={saveDiagram}>{t('dialog.save.btnSave')}</button>
+              <button onClick={() => setShowSaveDialog(false)}>{t('dialog.save.btnCancel')}</button>
             </div>
           </div>
         </div>
@@ -560,7 +560,7 @@ function App() {
       {showLoadDialog && (
         <div className="dialog-overlay">
           <div className="dialog">
-            <h2>Load Diagram (Current Session Only)</h2>
+            <h2>{t('dialog.load.title')}</h2>
             <div style={{
               backgroundColor: '#fff3cd',
               border: '1px solid #ffeeba',
@@ -568,29 +568,29 @@ function App() {
               borderRadius: '4px',
               marginBottom: '20px'
             }}>
-              <strong>⚠️ Note:</strong> These saves are temporary. Export your diagrams to keep them permanently.
+              <strong>⚠️ {t('dialog.load.noteTitle')}:</strong> {t('dialog.load.noteMessage')}
             </div>
             <div className="diagram-list">
               {diagrams.length === 0 ? (
-                <p>No saved diagrams found in this session</p>
+                <p>{t('dialog.load.noSavedDiagrams')}</p>
               ) : (
                 diagrams.map(diagram => (
                   <div key={diagram.id} className="diagram-item">
                     <div>
                       <strong>{diagram.name}</strong>
                       <br />
-                      <small>Updated: {new Date(diagram.updatedAt).toLocaleString()}</small>
+                      <small>{t('dialog.load.updated')}: {new Date(diagram.updatedAt).toLocaleString()}</small>
                     </div>
                     <div className="diagram-actions">
-                      <button onClick={() => loadDiagram(diagram)}>Load</button>
-                      <button onClick={() => deleteDiagram(diagram.id)}>Delete</button>
+                      <button onClick={() => loadDiagram(diagram)}>{t('dialog.load.btnLoad')}</button>
+                      <button onClick={() => deleteDiagram(diagram.id)}>{t('dialog.load.btnDelete')}</button>
                     </div>
                   </div>
                 ))
               )}
             </div>
             <div className="dialog-buttons">
-              <button onClick={() => setShowLoadDialog(false)}>Close</button>
+              <button onClick={() => setShowLoadDialog(false)}>{t('dialog.load.btnClose')}</button>
             </div>
           </div>
         </div>
@@ -601,7 +601,7 @@ function App() {
       {showExportDialog && (
         <div className="dialog-overlay">
           <div className="dialog">
-            <h2>Export Diagram</h2>
+            <h2>{t('dialog.export.title')}</h2>
             <div style={{
               backgroundColor: '#d4edda',
               border: '1px solid #c3e6cb',
@@ -610,15 +610,15 @@ function App() {
               marginBottom: '20px'
             }}>
               <p style={{ margin: '0 0 10px 0' }}>
-                <strong>✅ Recommended:</strong> This is the best way to save your work permanently.
+                <strong>✅ {t('dialog.export.recommendedTitle')}:</strong> {t('dialog.export.recommendedMessage')}
               </p>
               <p style={{ margin: 0, fontSize: '14px', color: '#155724' }}>
-                Exported JSON files can be imported later or shared with others.
+                {t('dialog.export.noteMessage')}
               </p>
             </div>
             <div className="dialog-buttons">
-              <button onClick={exportDiagram}>Download JSON</button>
-              <button onClick={() => setShowExportDialog(false)}>Cancel</button>
+              <button onClick={exportDiagram}>{t('dialog.export.btnDownload')}</button>
+              <button onClick={() => setShowExportDialog(false)}>{t('dialog.export.btnCancel')}</button>
             </div>
           </div>
         </div>

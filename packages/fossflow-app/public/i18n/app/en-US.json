@@ -1,11 +1,58 @@
 {
-  "nav": {
-    "newDiagram": "New Diagram",
-    "saveSessionOnly": "Save (Session Only)",
-    "loadSessionOnly": "Load (Session Only)",
-    "importFile": "Import File",
-    "exportFile": "Export File",
-    "quickSaveSession": "Quick Save(Session)",
-    "serverStorage": "Server Storage"
-  }
+    "nav": {
+        "newDiagram": "New Diagram",
+        "saveSessionOnly": "Save (Session Only)",
+        "loadSessionOnly": "Load (Session Only)",
+        "importFile": "Import File",
+        "exportFile": "Export File",
+        "quickSaveSession": "Quick Save (Session)",
+        "serverStorage": "Server Storage"
+    },
+    "status": {
+        "current": "Current",
+        "untitled": "Untitled Diagram",
+        "modified": "Modified",
+        "sessionStorageNote": "Session storage only - export to save permanently"
+    },
+    "dialog": {
+        "save": {
+            "title": "Save Diagram (Current Session Only)",
+            "warningTitle": "Important",
+            "warningMessage": "This save is temporary and will be lost when you close the browser.",
+            "warningExport": "Use <strong>Export File</strong> to permanently save your work.",
+            "placeholder": "Enter diagram name",
+            "btnSave": "Save",
+            "btnCancel": "Cancel"
+        },
+        "load": {
+            "title": "Load Diagram (Current Session Only)",
+            "noteTitle": "Note",
+            "noteMessage": "These saves are temporary. Export your diagrams to keep them permanently.",
+            "noSavedDiagrams": "No saved diagrams found in this session",
+            "updated": "Updated",
+            "btnLoad": "Load",
+            "btnDelete": "Delete",
+            "btnClose": "Close"
+        },
+        "export": {
+            "title": "Export Diagram",
+            "recommendedTitle": "Recommended",
+            "recommendedMessage": "This is the best way to save your work permanently.",
+            "noteMessage": "Exported JSON files can be imported later or shared with others.",
+            "btnDownload": "Download JSON",
+            "btnCancel": "Cancel"
+        }
+    },
+    "alert": {
+        "enterDiagramName": "Please enter a diagram name",
+        "diagramExists": "A diagram named \"{{name}}\" already exists in this session. This will overwrite it. Are you sure you want to continue?",
+        "unsavedChanges": "You have unsaved changes. Continue loading?",
+        "createNewDiagram": "Create a new diagram?",
+        "unsavedChangesExport": "You have unsaved changes. Export your diagram first to save it. Continue?",
+        "confirmDelete": "Are you sure you want to delete this diagram?",
+        "storageFull": "Storage full! Opening Storage Manager...",
+        "autoSaveFailed": "Storage full! Please use Storage Manager to free up space.",
+        "beforeUnload": "You have unsaved changes. Are you sure you want to leave?",
+        "quotaExceeded": "Storage quota exceeded. Please export important diagrams and clear some space."
+    }
 }
