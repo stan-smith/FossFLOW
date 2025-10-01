@@ -400,14 +400,7 @@ function App() {
   };
 
   // i18n
-  const [canI18n, setCanI18n] = useState(false);
   const { t, i18n } = useTranslation('app');
-  useEffect(() => {
-    // http://localhost:3000/?canI18n=1
-    const params = new URLSearchParams(window.location.search);
-    // show demo
-    setCanI18n(params.get('canI18n') === '1');
-  }, [window.location.search]);
   
   // Auto-save functionality
   useEffect(() => {
