@@ -106,6 +106,17 @@ export interface LassoMode {
   isDragging: boolean;
 }
 
+export interface FreehandLassoMode {
+  type: 'FREEHAND_LASSO';
+  showCursor: boolean;
+  path: Coords[]; // Screen coordinates of the drawn path
+  selection: {
+    pathTiles: Coords[]; // Tile coordinates of the path points
+    items: ItemReference[];
+  } | null;
+  isDragging: boolean;
+}
+
 export type Mode =
   | InteractionsDisabled
   | CursorMode
@@ -116,7 +127,8 @@ export type Mode =
   | TransformRectangleMode
   | DragItemsMode
   | TextBoxMode
-  | LassoMode;
+  | LassoMode
+  | FreehandLassoMode;
 // End mode types
 
 export interface Scroll {

@@ -10,7 +10,8 @@ import {
   Undo as UndoIcon,
   Redo as RedoIcon,
   Help as HelpIcon,
-  HighlightAltOutlined as LassoIcon
+  HighlightAltOutlined as LassoIcon,
+  GestureOutlined as FreehandLassoIcon
 } from '@mui/icons-material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { IconButton } from 'src/components/IconButton/IconButton';
@@ -105,6 +106,20 @@ export const ToolMenu = () => {
             });
           }}
           isActive={mode.type === 'LASSO'}
+        />
+        <IconButton
+          name={`Freehand lasso${hotkeys.freehandLasso ? ` (${hotkeys.freehandLasso.toUpperCase()})` : ''}`}
+          Icon={<FreehandLassoIcon />}
+          onClick={() => {
+            uiStateStoreActions.setMode({
+              type: 'FREEHAND_LASSO',
+              showCursor: true,
+              path: [],
+              selection: null,
+              isDragging: false
+            });
+          }}
+          isActive={mode.type === 'FREEHAND_LASSO'}
         />
         <IconButton
           name={`Pan${hotkeys.pan ? ` (${hotkeys.pan.toUpperCase()})` : ''}`}

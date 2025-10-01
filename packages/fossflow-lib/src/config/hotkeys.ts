@@ -8,6 +8,7 @@ export interface HotkeyMapping {
   connector: string | null;
   text: string | null;
   lasso: string | null;
+  freehandLasso: string | null;
 }
 
 export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
@@ -18,7 +19,8 @@ export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
     rectangle: 'r',
     connector: 't',
     text: 'y',
-    lasso: 'l'
+    lasso: 'l',
+    freehandLasso: 'f'
   },
   smnrct: {
     select: 's',
@@ -27,7 +29,8 @@ export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
     rectangle: 'r',
     connector: 'c',
     text: 't',
-    lasso: 'l'
+    lasso: 'l',
+    freehandLasso: 'f'
   },
   none: {
     select: null,
@@ -36,7 +39,8 @@ export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
     rectangle: null,
     connector: null,
     text: null,
-    lasso: null
+    lasso: null,
+    freehandLasso: null
   }
 };
 

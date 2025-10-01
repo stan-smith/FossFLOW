@@ -18,6 +18,7 @@ import { Pan } from './modes/Pan';
 import { PlaceIcon } from './modes/PlaceIcon';
 import { TextBox } from './modes/TextBox';
 import { Lasso } from './modes/Lasso';
+import { FreehandLasso } from './modes/FreehandLasso';
 import { usePanHandlers } from './usePanHandlers';
 
 const modes: { [k in string]: ModeActions } = {
@@ -29,7 +30,8 @@ const modes: { [k in string]: ModeActions } = {
   PAN: Pan,
   PLACE_ICON: PlaceIcon,
   TEXTBOX: TextBox,
-  LASSO: Lasso
+  LASSO: Lasso,
+  FREEHAND_LASSO: FreehandLasso
 };
 
 const getModeFunction = (mode: ModeActions, e: SlimMouseEvent) => {
@@ -169,6 +171,15 @@ export const useInteractionManager = () => {
         uiState.actions.setMode({
           type: 'LASSO',
           showCursor: true,
+          selection: null,
+          isDragging: false
+        });
+      } else if (hotkeyMapping.freehandLasso && key === hotkeyMapping.freehandLasso) {
+        e.preventDefault();
+        uiState.actions.setMode({
+          type: 'FREEHAND_LASSO',
+          showCursor: true,
+          path: [],
           selection: null,
           isDragging: false
         });
