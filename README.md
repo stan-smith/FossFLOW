@@ -19,6 +19,10 @@ Thanks,
 
 -Stan
 
+## Try it online
+
+Go to  <b> --> https://stan-smith.github.io/FossFLOW/ <-- </b>
+
 
 ------------------------------------------------------------------------------------------------------------------------------
 FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beautiful isometric diagrams. Built with React and the <a href="https://github.com/markmanx/isoflow">Isoflow</a> (Now forked and published to NPM as fossflow) library, it runs entirely in your browser with offline support.
@@ -85,9 +89,6 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 - 🌐 **Offline Support** - Work without internet connection
 - 🗄️ **Server Storage** - Optional persistent storage when using Docker (enabled by default)
 
-## Try it online
-
-Go to https://stan-smith.github.io/FossFLOW/
 
 ## 🐳 Quick Deploy with Docker
 
