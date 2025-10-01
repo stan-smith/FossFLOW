@@ -95,6 +95,17 @@ export interface TextBoxMode {
   id: string | null;
 }
 
+export interface LassoMode {
+  type: 'LASSO';
+  showCursor: boolean;
+  selection: {
+    startTile: Coords;
+    endTile: Coords;
+    items: ItemReference[];
+  } | null;
+  isDragging: boolean;
+}
+
 export type Mode =
   | InteractionsDisabled
   | CursorMode
@@ -104,7 +115,8 @@ export type Mode =
   | DrawRectangleMode
   | TransformRectangleMode
   | DragItemsMode
-  | TextBoxMode;
+  | TextBoxMode
+  | LassoMode;
 // End mode types
 
 export interface Scroll {

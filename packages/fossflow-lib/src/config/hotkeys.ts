@@ -7,6 +7,7 @@ export interface HotkeyMapping {
   rectangle: string | null;
   connector: string | null;
   text: string | null;
+  lasso: string | null;
 }
 
 export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
@@ -16,7 +17,8 @@ export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
     addItem: 'e',
     rectangle: 'r',
     connector: 't',
-    text: 'y'
+    text: 'y',
+    lasso: 'l'
   },
   smnrct: {
     select: 's',
@@ -24,7 +26,8 @@ export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
     addItem: 'n',
     rectangle: 'r',
     connector: 'c',
-    text: 't'
+    text: 't',
+    lasso: 'l'
   },
   none: {
     select: null,
@@ -32,7 +35,8 @@ export const HOTKEY_PROFILES: Record<HotkeyProfile, HotkeyMapping> = {
     addItem: null,
     rectangle: null,
     connector: null,
-    text: null
+    text: null,
+    lasso: null
   }
 };
 

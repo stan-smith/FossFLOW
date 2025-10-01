@@ -17,6 +17,7 @@ import { Connector } from './modes/Connector';
 import { Pan } from './modes/Pan';
 import { PlaceIcon } from './modes/PlaceIcon';
 import { TextBox } from './modes/TextBox';
+import { Lasso } from './modes/Lasso';
 import { usePanHandlers } from './usePanHandlers';
 
 const modes: { [k in string]: ModeActions } = {
@@ -27,7 +28,8 @@ const modes: { [k in string]: ModeActions } = {
   CONNECTOR: Connector,
   PAN: Pan,
   PLACE_ICON: PlaceIcon,
-  TEXTBOX: TextBox
+  TEXTBOX: TextBox,
+  LASSO: Lasso
 };
 
 const getModeFunction = (mode: ModeActions, e: SlimMouseEvent) => {
@@ -161,6 +163,14 @@ export const useInteractionManager = () => {
           type: 'TEXTBOX',
           showCursor: false,
           id: textBoxId
+        });
+      } else if (hotkeyMapping.lasso && key === hotkeyMapping.lasso) {
+        e.preventDefault();
+        uiState.actions.setMode({
+          type: 'LASSO',
+          showCursor: true,
+          selection: null,
+          isDragging: false
         });
       }
     };
@@ -308,7 +318,7 @@ export const useInteractionManager = () => {
     el.addEventListener('touchstart', onTouchStart);
     el.addEventListener('touchmove', onTouchMove);
     el.addEventListener('touchend', onTouchEnd);
-    uiState.rendererEl?.addEventListener('wheel', onScroll);
+    uiState.rendererEl?.addEventListener('wheel', onScroll, { passive: true });
 
     return () => {
       el.removeEventListener('mousemove', onMouseEvent);

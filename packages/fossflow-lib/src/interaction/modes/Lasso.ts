@@ -1,79 +1,122 @@
-// import { CoordsUtils, isWithinBounds } from 'src/utils';
-// import { ModeActions } from 'src/types';
+import { produce } from 'immer';
+import { ModeActions, ItemReference } from 'src/types';
+import { CoordsUtils, isWithinBounds, hasMovedTile } from 'src/utils';
 
-// export const Lasso: ModeActions = {
-//   type: 'LASSO',
-//   mousemove: ({ uiState, Model }) => {
-//     if (uiState.mode.type !== 'LASSO') return;
+// Helper to find all items within the lasso bounds
+const getItemsInBounds = (
+  startTile: { x: number; y: number },
+  endTile: { x: number; y: number },
+  scene: any
+): ItemReference[] => {
+  const items: ItemReference[] = [];
 
-//     if (uiState.mouse.mousedown === null) return;
-//     // User is in mousedown mode
+  // Check all nodes/items
+  scene.items.forEach((item: any) => {
+    if (isWithinBounds(item.tile, [startTile, endTile])) {
+      items.push({ type: 'ITEM', id: item.id });
+    }
+  });
 
-//     if (
-//       uiState.mouse.delta === null ||
-//       CoordsUtils.isEqual(uiState.mouse.delta.tile, CoordsUtils.zero())
-//     )
-//       return;
-//     // User has moved tile since they moused down
+  // Check all rectangles
+  scene.rectangles.forEach((rectangle: any) => {
+    // Check if rectangle's center or any corner is within bounds
+    if (
+      isWithinBounds(rectangle.from, [startTile, endTile]) ||
+      isWithinBounds(rectangle.to, [startTile, endTile])
+    ) {
+      items.push({ type: 'RECTANGLE', id: rectangle.id });
+    }
+  });
 
-//     if (!uiState.mode.isDragging) {
-//       const { mousedown } = uiState.mouse;
-//       const items = Model.nodes.filter((node) => {
-//         return CoordsUtils.isEqual(node.tile, mousedown.tile);
-//       });
+  // Check all text boxes
+  scene.textBoxes.forEach((textBox: any) => {
+    if (isWithinBounds(textBox.tile, [startTile, endTile])) {
+      items.push({ type: 'TEXTBOX', id: textBox.id });
+    }
+  });
 
-//       // User is creating a selection
-//       uiState.mode.selection = {
-//         startTile: uiState.mouse.mousedown.tile,
-//         endTile: uiState.mouse.position.tile,
-//         items
-//       };
+  return items;
+};
 
-//       return;
-//     }
+export const Lasso: ModeActions = {
+  mousemove: ({ uiState, scene }) => {
+    if (uiState.mode.type !== 'LASSO' || !uiState.mouse.mousedown) return;
 
-//     if (uiState.mode.isDragging) {
-//       // User is dragging an existing selection
-//       uiState.mode.selection.startTile = CoordsUtils.add(
-//         uiState.mode.selection.startTile,
-//         uiState.mouse.delta.tile
-//       );
-//       uiState.mode.selection.endTile = CoordsUtils.add(
-//         uiState.mode.selection.endTile,
-//         uiState.mouse.delta.tile
-//       );
-//     }
-//   },
-//   mousedown: (draft) => {
-//     if (draft.mode.type !== 'LASSO') return;
+    if (!hasMovedTile(uiState.mouse)) return;
 
-//     if (draft.mode.selection) {
-//       const isWithinSelection = isWithinBounds(draft.mouse.position.tile, [
-//         draft.mode.selection.startTile,
-//         draft.mode.selection.endTile
-//       ]);
+    if (uiState.mode.isDragging && uiState.mode.selection) {
+      // User is dragging an existing selection - switch to DRAG_ITEMS mode
+      uiState.actions.setMode({
+        type: 'DRAG_ITEMS',
+        showCursor: true,
+        items: uiState.mode.selection.items,
+        isInitialMovement: true
+      });
+      return;
+    }
 
-//       if (!isWithinSelection) {
-//         draft.mode = {
-//           type: 'CURSOR',
-//           showCursor: true,
-//           mousedown: null
-//         };
+    // User is creating/updating the selection box
+    const startTile = uiState.mouse.mousedown.tile;
+    const endTile = uiState.mouse.position.tile;
+    const items = getItemsInBounds(startTile, endTile, scene);
 
-//         return;
-//       }
+    uiState.actions.setMode(
+      produce(uiState.mode, (draft) => {
+        if (draft.type === 'LASSO') {
+          draft.selection = {
+            startTile,
+            endTile,
+            items
+          };
+        }
+      })
+    );
+  },
 
-//       if (isWithinSelection) {
-//         draft.mode.isDragging = true;
+  mousedown: ({ uiState }) => {
+    if (uiState.mode.type !== 'LASSO') return;
 
-//         return;
-//       }
-//     }
+    // If there's an existing selection, check if click is within it
+    if (uiState.mode.selection) {
+      const isWithinSelection = isWithinBounds(uiState.mouse.position.tile, [
+        uiState.mode.selection.startTile,
+        uiState.mode.selection.endTile
+      ]);
 
-//     draft.mode = {
-//       type: 'CURSOR',
-//       showCursor: true,
-//       mousedown: null
-//     };
-//   }
-// };
+      if (isWithinSelection) {
+        // Clicked within selection - prepare to drag
+        uiState.actions.setMode(
+          produce(uiState.mode, (draft) => {
+            if (draft.type === 'LASSO') {
+              draft.isDragging = true;
+            }
+          })
+        );
+        return;
+      }
+
+      // Clicked outside selection - clear it and stay in LASSO mode
+      uiState.actions.setMode(
+        produce(uiState.mode, (draft) => {
+          if (draft.type === 'LASSO') {
+            draft.selection = null;
+            draft.isDragging = false;
+          }
+        })
+      );
+    }
+  },
+
+  mouseup: ({ uiState }) => {
+    if (uiState.mode.type !== 'LASSO') return;
+
+    // Reset dragging state but keep selection
+    uiState.actions.setMode(
+      produce(uiState.mode, (draft) => {
+        if (draft.type === 'LASSO') {
+          draft.isDragging = false;
+        }
+      })
+    );
+  }
+};

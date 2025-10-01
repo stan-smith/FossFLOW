@@ -225,16 +225,21 @@ export const useScene = () => {
   );
 
   const updateViewItem = useCallback(
-    (id: string, updates: Partial<ViewItem>) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+    (id: string, updates: Partial<ViewItem>, currentState?: State) => {
+      if (!model?.actions || !scene?.actions || !currentViewId) return getState();
 
-      saveToHistoryBeforeChange();
+      if (!transactionInProgress.current) {
+        saveToHistoryBeforeChange();
+      }
+
+      const stateToUse = currentState || getState();
       const newState = reducers.view({
         action: 'UPDATE_VIEWITEM',
         payload: { id, ...updates },
-        ctx: { viewId: currentViewId, state: getState() }
+        ctx: { viewId: currentViewId, state: stateToUse }
       });
       setState(newState);
+      return newState; // Return for chaining
     },
     [
       getState,

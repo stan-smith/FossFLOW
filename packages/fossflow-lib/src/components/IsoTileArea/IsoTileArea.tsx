@@ -12,6 +12,7 @@ interface Props {
   stroke?: {
     width: number;
     color: string;
+    dashArray?: string;
   };
 }
 
@@ -30,10 +31,16 @@ export const IsoTileArea = ({
   const strokeParams = useMemo(() => {
     if (!stroke) return {};
 
-    return {
+    const params: Record<string, any> = {
       stroke: stroke.color,
       strokeWidth: stroke.width
     };
+
+    if (stroke.dashArray) {
+      params.strokeDasharray = stroke.dashArray;
+    }
+
+    return params;
   }, [stroke]);
 
   return (

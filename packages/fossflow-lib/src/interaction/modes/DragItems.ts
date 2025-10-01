@@ -1,6 +1,7 @@
 import { produce } from 'immer';
 import { ModeActions, Coords, ItemReference } from 'src/types';
 import { useScene } from 'src/hooks/useScene';
+import type { State } from 'src/stores/reducers/types';
 import {
   getItemByIdOrThrow,
   CoordsUtils,
@@ -19,7 +20,7 @@ const dragItems = (
   // Separate items from other draggable elements
   const itemRefs = items.filter(item => item.type === 'ITEM');
   const otherRefs = items.filter(item => item.type !== 'ITEM');
-  
+
   // If there are items being dragged, find nearest unoccupied tiles for them
   if (itemRefs.length > 0) {
     const itemsWithTargets = itemRefs.map(item => {
@@ -29,19 +30,24 @@ const dragItems = (
         targetTile: CoordsUtils.add(node.tile, delta)
       };
     });
-    
+
     // Find nearest unoccupied tiles for all items
     const newTiles = findNearestUnoccupiedTilesForGroup(
       itemsWithTargets,
       scene,
       itemRefs.map(item => item.id) // Exclude the items being dragged
     );
-    
+
     // If we found valid positions for all items, move them
     if (newTiles) {
-      itemRefs.forEach((item, index) => {
-        scene.updateViewItem(item.id, {
-          tile: newTiles[index]
+      // Wrap all updates in a transaction to prevent history issues
+      scene.transaction(() => {
+        // Chain state updates to avoid race conditions
+        let currentState: State | undefined;
+        itemRefs.forEach((item, index) => {
+          currentState = scene.updateViewItem(item.id, {
+            tile: newTiles[index]
+          }, currentState);
         });
       });
     }

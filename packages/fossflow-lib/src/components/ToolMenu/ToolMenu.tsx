@@ -9,7 +9,8 @@ import {
   Title as TitleIcon,
   Undo as UndoIcon,
   Redo as RedoIcon,
-  Help as HelpIcon
+  Help as HelpIcon,
+  HighlightAltOutlined as LassoIcon
 } from '@mui/icons-material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { IconButton } from 'src/components/IconButton/IconButton';
@@ -91,6 +92,19 @@ export const ToolMenu = () => {
             });
           }}
           isActive={mode.type === 'CURSOR' || mode.type === 'DRAG_ITEMS'}
+        />
+        <IconButton
+          name={`Lasso select${hotkeys.lasso ? ` (${hotkeys.lasso.toUpperCase()})` : ''}`}
+          Icon={<LassoIcon />}
+          onClick={() => {
+            uiStateStoreActions.setMode({
+              type: 'LASSO',
+              showCursor: true,
+              selection: null,
+              isDragging: false
+            });
+          }}
+          isActive={mode.type === 'LASSO'}
         />
         <IconButton
           name={`Pan${hotkeys.pan ? ` (${hotkeys.pan.toUpperCase()})` : ''}`}

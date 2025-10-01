@@ -12,6 +12,7 @@ import { TextBoxes } from 'src/components/SceneLayers/TextBoxes/TextBoxes';
 import { SizeIndicator } from 'src/components/DebugUtils/SizeIndicator';
 import { SceneLayer } from 'src/components/SceneLayer/SceneLayer';
 import { TransformControlsManager } from 'src/components/TransformControlsManager/TransformControlsManager';
+import { Lasso } from 'src/components/Lasso/Lasso';
 import { useScene } from 'src/hooks/useScene';
 import { RendererProps } from 'src/types/rendererProps';
 
@@ -58,6 +59,9 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
     >
       <SceneLayer>
         <Rectangles rectangles={rectangles} />
+      </SceneLayer>
+      <SceneLayer>
+        <Lasso />
       </SceneLayer>
       <Box
         sx={{
