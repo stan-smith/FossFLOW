@@ -38,41 +38,73 @@ if (STORAGE_ENABLED) {
   async function ensureStorageDir() {
     try {
       await fs.access(STORAGE_PATH);
+      console.log(`Storage directory exists: ${STORAGE_PATH}`);
+
+      // Log current files
+      const files = await fs.readdir(STORAGE_PATH);
+      console.log(`Current files in storage: ${files.length} files`);
+      if (files.length > 0) {
+        console.log('Files:', files.join(', '));
+      }
     } catch {
+      console.log(`Creating storage directory: ${STORAGE_PATH}`);
       await fs.mkdir(STORAGE_PATH, { recursive: true });
       console.log(`Created storage directory: ${STORAGE_PATH}`);
     }
   }
 
   // Initialize storage
-  ensureStorageDir().catch(console.error);
+  ensureStorageDir().catch((err) => {
+    console.error('Failed to initialize storage:', err);
+  });
 
   // List all diagrams
   app.get('/api/diagrams', async (req, res) => {
     try {
+      // First check if storage directory exists
+      try {
+        await fs.access(STORAGE_PATH);
+      } catch (err) {
+        console.error(`Storage directory does not exist: ${STORAGE_PATH}`);
+        return res.json([]); // Return empty array if directory doesn't exist
+      }
+
       const files = await fs.readdir(STORAGE_PATH);
+      console.log(`Found ${files.length} files in ${STORAGE_PATH}:`, files);
       const diagrams = [];
-      
+
       for (const file of files) {
         if (file.endsWith('.json') && file !== 'metadata.json') {
-          const filePath = path.join(STORAGE_PATH, file);
-          const stats = await fs.stat(filePath);
-          const content = await fs.readFile(filePath, 'utf-8');
-          const data = JSON.parse(content);
-          
-          diagrams.push({
-            id: file.replace('.json', ''),
-            name: data.name || 'Untitled Diagram',
-            lastModified: stats.mtime,
-            size: stats.size
-          });
+          try {
+            const filePath = path.join(STORAGE_PATH, file);
+            const stats = await fs.stat(filePath);
+            const content = await fs.readFile(filePath, 'utf-8');
+            const data = JSON.parse(content);
+
+            // Extract name from various possible locations
+            const name = data.name || data.title || 'Untitled Diagram';
+
+            console.log(`Successfully read diagram: ${file} (name: ${name})`);
+
+            diagrams.push({
+              id: file.replace('.json', ''),
+              name: name,
+              lastModified: stats.mtime,
+              size: stats.size
+            });
+          } catch (fileError) {
+            console.error(`Error reading diagram file ${file}:`, fileError.message);
+            // Skip this file and continue with others
+            continue;
+          }
         }
       }
-      
+
+      console.log(`Returning ${diagrams.length} diagrams`);
       res.json(diagrams);
     } catch (error) {
       console.error('Error listing diagrams:', error);
-      res.status(500).json({ error: 'Failed to list diagrams' });
+      res.status(500).json({ error: 'Failed to list diagrams', details: error.message });
     }
   });
 

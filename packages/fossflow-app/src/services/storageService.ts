@@ -44,10 +44,19 @@ class ServerStorage implements StorageService {
   }
 
   async listDiagrams(): Promise<DiagramInfo[]> {
+    console.log(`Fetching diagrams from: ${this.baseUrl}/api/diagrams`);
     const response = await fetch(`${this.baseUrl}/api/diagrams`);
-    if (!response.ok) throw new Error('Failed to list diagrams');
-    
+    console.log(`Response status: ${response.status}`);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('Failed to list diagrams:', errorText);
+      throw new Error(`Failed to list diagrams: ${response.status} ${errorText}`);
+    }
+
     const diagrams = await response.json();
+    console.log(`Received ${diagrams.length} diagrams from server:`, diagrams);
+
     return diagrams.map((d: any) => ({
       ...d,
       lastModified: new Date(d.lastModified)

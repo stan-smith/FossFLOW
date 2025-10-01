@@ -30,17 +30,24 @@ export const DiagramManager: React.FC<Props> = ({
     try {
       setLoading(true);
       setError(null);
-      
+
+      console.log('DiagramManager: Initializing storage...');
       // Initialize storage if not already done
       await storageManager.initialize();
-      setIsServerStorage(storageManager.isServerStorage());
-      
+      const isServer = storageManager.isServerStorage();
+      setIsServerStorage(isServer);
+      console.log(`DiagramManager: Using ${isServer ? 'server' : 'session'} storage`);
+
       // Load diagram list
       const storage = storageManager.getStorage();
+      console.log('DiagramManager: Loading diagram list...');
       const list = await storage.listDiagrams();
+      console.log(`DiagramManager: Loaded ${list.length} diagrams`);
       setDiagrams(list);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load diagrams');
+      const errorMsg = err instanceof Error ? err.message : 'Failed to load diagrams';
+      console.error('DiagramManager error:', err);
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }

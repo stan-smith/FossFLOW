@@ -42,8 +42,13 @@ export const useInitialDataManager = () => {
         const newConnectors = JSON.stringify(_initialData.views?.[0]?.connectors || []);
         const prevItems = JSON.stringify(prevInitialData.current.items || []);
         const newItems = JSON.stringify(_initialData.items || []);
-        
-        if (prevConnectors === newConnectors && prevItems === newItems) {
+        const prevIcons = JSON.stringify(prevInitialData.current.icons || []);
+        const newIcons = JSON.stringify(_initialData.icons || []);
+        const prevColors = JSON.stringify(prevInitialData.current.colors || []);
+        const newColors = JSON.stringify(_initialData.colors || []);
+
+        if (prevConnectors === newConnectors && prevItems === newItems &&
+            prevIcons === newIcons && prevColors === newColors) {
           // Data hasn't actually changed, skip reload
           return;
         }
