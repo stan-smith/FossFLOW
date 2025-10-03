@@ -110,6 +110,13 @@ const locale: LocaleProps = {
     instructionAnd: "and",
     instructionDrag: "drag",
     instructionEnd: "to change it!"
+  },
+  settings: {
+    zoom: {
+      description: "Configure zoom behavior when using the mouse wheel.",
+      zoomToCursor: "Zoom to Cursor",
+      zoomToCursorDesc: "When enabled, zoom in/out centered on the mouse cursor position. When disabled, zoom is centered on the canvas."
+    }
   }
 };
 

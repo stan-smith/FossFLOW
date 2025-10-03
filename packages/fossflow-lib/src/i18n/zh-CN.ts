@@ -110,6 +110,13 @@ const locale: LocaleProps = {
     instructionAnd: "并",
     instructionDrag: "拖拽",
     instructionEnd: "即可更改！"
+  },
+  settings: {
+    zoom: {
+      description: "配置使用鼠标滚轮时的缩放行为。",
+      zoomToCursor: "光标缩放",
+      zoomToCursorDesc: "启用时，以鼠标光标位置为中心进行缩放。禁用时，以画布中心进行缩放。"
+    }
   }
 };
 

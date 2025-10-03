@@ -3,7 +3,7 @@ import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { ModeActions, State, SlimMouseEvent } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
-import { getMouse, getItemAtTile, generateId } from 'src/utils';
+import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom } from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
@@ -315,10 +315,56 @@ export const useInteractionManager = () => {
     };
 
     const onScroll = (e: WheelEvent) => {
+      const zoomToCursor = uiState.zoomSettings.zoomToCursor;
+      const oldZoom = uiState.zoom;
+
+      // Calculate new zoom level
+      let newZoom: number;
       if (e.deltaY > 0) {
-        uiState.actions.decrementZoom();
+        newZoom = decrementZoom(oldZoom);
       } else {
-        uiState.actions.incrementZoom();
+        newZoom = incrementZoom(oldZoom);
+      }
+
+      // If zoom didn't change (at min/max), no need to adjust scroll
+      if (newZoom === oldZoom) {
+        return;
+      }
+
+      if (zoomToCursor && rendererRef.current && rendererSize) {
+        // Get mouse position relative to the renderer viewport
+        const rect = rendererRef.current.getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        // Calculate mouse position relative to viewport center
+        const mouseRelativeToCenterX = mouseX - rendererSize.width / 2;
+        const mouseRelativeToCenterY = mouseY - rendererSize.height / 2;
+
+        // The point under the cursor in world space (before zoom)
+        // World coordinates = (screen coordinates - scroll offset) / zoom
+        const worldX = (mouseRelativeToCenterX - uiState.scroll.position.x) / oldZoom;
+        const worldY = (mouseRelativeToCenterY - uiState.scroll.position.y) / oldZoom;
+
+        // After zooming, to keep the same world point under the cursor:
+        // screen coordinates = world coordinates * newZoom + scroll offset
+        // We want: mouseRelativeToCenterX = worldX * newZoom + newScrollX
+        // Therefore: newScrollX = mouseRelativeToCenterX - worldX * newZoom
+        const newScrollX = mouseRelativeToCenterX - worldX * newZoom;
+        const newScrollY = mouseRelativeToCenterY - worldY * newZoom;
+
+        // Apply zoom and adjusted scroll together
+        uiState.actions.setZoom(newZoom);
+        uiState.actions.setScroll({
+          position: {
+            x: newScrollX,
+            y: newScrollY
+          },
+          offset: uiState.scroll.offset
+        });
+      } else {
+        // Original behavior: zoom to center
+        uiState.actions.setZoom(newZoom);
       }
     };
 
@@ -347,7 +393,11 @@ export const useInteractionManager = () => {
     uiState.mode.type,
     onContextMenu,
     uiState.actions,
-    uiState.rendererEl
+    uiState.rendererEl,
+    uiState.zoom,
+    uiState.scroll,
+    uiState.zoomSettings,
+    rendererSize
   ]);
 
   const setInteractionsElement = useCallback((element: HTMLElement) => {

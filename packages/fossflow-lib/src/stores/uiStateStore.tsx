@@ -10,6 +10,7 @@ import { UiStateStore } from 'src/types';
 import { INITIAL_UI_STATE } from 'src/config';
 import { DEFAULT_HOTKEY_PROFILE } from 'src/config/hotkeys';
 import { DEFAULT_PAN_SETTINGS } from 'src/config/panSettings';
+import { DEFAULT_ZOOM_SETTINGS } from 'src/config/zoomSettings';
 
 const initialState = () => {
   return createStore<UiStateStore>((set, get) => {
@@ -34,6 +35,7 @@ const initialState = () => {
       enableDebugTools: false,
       hotkeyProfile: DEFAULT_HOTKEY_PROFILE,
       panSettings: DEFAULT_PAN_SETTINGS,
+      zoomSettings: DEFAULT_ZOOM_SETTINGS,
       connectorInteractionMode: 'click', // Default to click mode
 
       actions: {
@@ -103,6 +105,9 @@ const initialState = () => {
         },
         setPanSettings: (panSettings) => {
           set({ panSettings });
+        },
+        setZoomSettings: (zoomSettings) => {
+          set({ zoomSettings });
         },
         setConnectorInteractionMode: (connectorInteractionMode) => {
           set({ connectorInteractionMode });

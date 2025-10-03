@@ -118,6 +118,13 @@ export interface LocaleProps {
     instructionDrag: string;
     instructionEnd: string;
   };
+  settings: {
+    zoom: {
+      description: string;
+      zoomToCursor: string;
+      zoomToCursorDesc: string;
+    };
+  };
   // other namespaces can be added here
 }
 

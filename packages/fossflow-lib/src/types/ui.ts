@@ -3,6 +3,7 @@ import { Icon } from './model';
 import { ItemReference } from './scene';
 import { HotkeyProfile } from 'src/config/hotkeys';
 import { PanSettings } from 'src/config/panSettings';
+import { ZoomSettings } from 'src/config/zoomSettings';
 
 interface AddItemControls {
   type: 'ADD_ITEM';
@@ -177,6 +178,7 @@ export interface UiState {
   enableDebugTools: boolean;
   hotkeyProfile: HotkeyProfile;
   panSettings: PanSettings;
+  zoomSettings: ZoomSettings;
   connectorInteractionMode: ConnectorInteractionMode;
 
 }
@@ -201,6 +203,7 @@ export interface UiStateActions {
   setEnableDebugTools: (enabled: boolean) => void;
   setHotkeyProfile: (profile: HotkeyProfile) => void;
   setPanSettings: (settings: PanSettings) => void;
+  setZoomSettings: (settings: ZoomSettings) => void;
   setConnectorInteractionMode: (mode: ConnectorInteractionMode) => void;
 
 }
