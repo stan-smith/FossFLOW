@@ -4,6 +4,7 @@ import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { Gradient } from 'src/components/Gradient/Gradient';
 import { ExpandButton } from './ExpandButton';
 import { Label, Props as LabelProps } from './Label';
+import { useUiStateStore } from 'src/stores/uiStateStore';
 
 type Props = Omit<LabelProps, 'maxHeight'> & {
   onToggleExpand?: (isExpanded: boolean) => void;
@@ -16,6 +17,8 @@ export const ExpandableLabel = ({
   onToggleExpand,
   ...rest
 }: Props) => {
+  const forceExpandLabels = useUiStateStore((state) => state.expandLabels);
+  const editorMode = useUiStateStore((state) => state.editorMode);
   const [isExpanded, setIsExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement>();
   const { observe, size: contentSize } = useResizeObserver();
@@ -26,23 +29,39 @@ export const ExpandableLabel = ({
     observe(contentRef.current);
   }, [observe]);
 
+  const effectiveExpanded = useMemo(() => {
+    // Only force expand in NON_INTERACTIVE mode (export preview)
+    const shouldForceExpand = forceExpandLabels && editorMode === 'NON_INTERACTIVE';
+    return shouldForceExpand || isExpanded;
+  }, [forceExpandLabels, isExpanded, editorMode]);
+
   const containerMaxHeight = useMemo(() => {
-    return isExpanded ? undefined : STANDARD_LABEL_HEIGHT;
-  }, [isExpanded]);
+    return effectiveExpanded ? undefined : STANDARD_LABEL_HEIGHT;
+  }, [effectiveExpanded]);
 
   const isContentTruncated = useMemo(() => {
-    return !isExpanded && contentSize.height >= STANDARD_LABEL_HEIGHT - 10;
-  }, [isExpanded, contentSize.height]);
+    return !effectiveExpanded && contentSize.height >= STANDARD_LABEL_HEIGHT - 10;
+  }, [effectiveExpanded, contentSize.height]);
+
+  // Determine overflow behavior based on mode
+  const overflowBehavior = useMemo(() => {
+    if (editorMode === 'NON_INTERACTIVE') {
+      // In export mode, no overflow needed - container expands to fit
+      return 'visible';
+    }
+    // In interactive modes, use scroll when expanded, hidden when collapsed
+    return effectiveExpanded ? 'scroll' : 'hidden';
+  }, [editorMode, effectiveExpanded]);
 
   useEffect(() => {
     contentRef.current?.scrollTo({ top: 0 });
-  }, [isExpanded]);
+  }, [effectiveExpanded]);
 
   return (
     <Label
       {...rest}
       maxHeight={containerMaxHeight}
-      maxWidth={isExpanded ? rest.maxWidth * 1.5 : rest.maxWidth}
+      maxWidth={effectiveExpanded ? rest.maxWidth * 1.5 : rest.maxWidth}
     >
       <Box
         ref={contentRef}
@@ -52,7 +71,7 @@ export const ExpandableLabel = ({
           }
         }}
         style={{
-          overflowY: isExpanded ? 'scroll' : 'hidden',
+          overflowY: overflowBehavior,
           maxHeight: containerMaxHeight
         }}
       >
@@ -71,7 +90,7 @@ export const ExpandableLabel = ({
         )}
       </Box>
 
-      {((!isExpanded && isContentTruncated) || isExpanded) && (
+      {editorMode !== 'NON_INTERACTIVE' && ((!isExpanded && isContentTruncated) || isExpanded) && (
         <ExpandButton
           sx={{
             position: 'absolute',

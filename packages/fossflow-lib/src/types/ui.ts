@@ -180,6 +180,7 @@ export interface UiState {
   panSettings: PanSettings;
   zoomSettings: ZoomSettings;
   connectorInteractionMode: ConnectorInteractionMode;
+  expandLabels: boolean;
 
 }
 
@@ -205,6 +206,7 @@ export interface UiStateActions {
   setPanSettings: (settings: PanSettings) => void;
   setZoomSettings: (settings: ZoomSettings) => void;
   setConnectorInteractionMode: (mode: ConnectorInteractionMode) => void;
+  setExpandLabels: (expand: boolean) => void;
 
 }
 

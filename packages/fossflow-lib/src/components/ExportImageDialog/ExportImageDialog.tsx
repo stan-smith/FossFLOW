@@ -296,6 +296,11 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     setShowGrid(checked);
   };
 
+  const [expandLabels, setExpandLabels] = useState(true);
+  const handleExpandLabelsChange = (checked: boolean) => {
+    setExpandLabels(checked);
+  };
+
   const [backgroundColor, setBackgroundColor] = useState<string>(
     customVars.customPalette.diagramBg
   );
@@ -343,7 +348,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       }, 200);
       return () => clearTimeout(timer);
     }
-  }, [showGrid, backgroundColor, exportImage, cropToContent]);
+  }, [showGrid, backgroundColor, expandLabels, exportImage, cropToContent]);
 
   useEffect(() => {
     if (!imageData) {
@@ -413,7 +418,8 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     }}
                     renderer={{
                       showGrid,
-                      backgroundColor
+                      backgroundColor,
+                      expandLabels
                     }}
                   />
                 </Box>
@@ -490,6 +496,18 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                       checked={showGrid}
                       onChange={(event) => {
                         handleShowGridChange(event.target.checked);
+                      }}
+                    />
+                  }
+                />
+                <FormControlLabel
+                  label="Expand descriptions"
+                  control={
+                    <Checkbox
+                      size="small"
+                      checked={expandLabels}
+                      onChange={(event) => {
+                        handleExpandLabelsChange(event.target.checked);
                       }}
                     />
                   }

@@ -61,6 +61,12 @@ const App = ({
     uiStateActions.setEnableDebugTools(enableDebugTools);
   }, [enableDebugTools, uiStateActions]);
 
+  useEffect(() => {
+    if (renderer?.expandLabels !== undefined) {
+      uiStateActions.setExpandLabels(renderer.expandLabels);
+    }
+  }, [renderer?.expandLabels, uiStateActions]);
+
   if (!initialDataManager.isReady) return null;
 
   return (

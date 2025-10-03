@@ -37,6 +37,7 @@ const initialState = () => {
       panSettings: DEFAULT_PAN_SETTINGS,
       zoomSettings: DEFAULT_ZOOM_SETTINGS,
       connectorInteractionMode: 'click', // Default to click mode
+      expandLabels: false, // Default to collapsed labels
 
       actions: {
         setView: (view) => {
@@ -111,6 +112,9 @@ const initialState = () => {
         },
         setConnectorInteractionMode: (connectorInteractionMode) => {
           set({ connectorInteractionMode });
+        },
+        setExpandLabels: (expandLabels) => {
+          set({ expandLabels });
         }
       }
     };
