@@ -100,6 +100,16 @@ const locale: LocaleProps = {
     instructionMiddle: "（☰），然后选择",
     openButton: "\"打开\"",
     instructionEnd: "来加载您的图表文件。"
+  },
+  connectorRerouteTooltip: {
+    title: "提示：重新规划连接器路径",
+    instructionStart: "连接器放置后，您可以随意重新规划路径。",
+    instructionSelect: "先选择连接器",
+    instructionMiddle: "，然后",
+    instructionClick: "点击连接器路径",
+    instructionAnd: "并",
+    instructionDrag: "拖拽",
+    instructionEnd: "即可更改！"
   }
 };
 

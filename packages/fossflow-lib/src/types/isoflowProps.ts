@@ -108,6 +108,16 @@ export interface LocaleProps {
     openButton: string;
     instructionEnd: string;
   };
+  connectorRerouteTooltip: {
+    title: string;
+    instructionStart: string;
+    instructionSelect: string;
+    instructionMiddle: string;
+    instructionClick: string;
+    instructionAnd: string;
+    instructionDrag: string;
+    instructionEnd: string;
+  };
   // other namespaces can be added here
 }
 

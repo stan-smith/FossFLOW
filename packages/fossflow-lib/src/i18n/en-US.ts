@@ -100,6 +100,16 @@ const locale: LocaleProps = {
     instructionMiddle: "(☰) in the top left corner, then select",
     openButton: "\"Open\"",
     instructionEnd: "to load your diagram files."
+  },
+  connectorRerouteTooltip: {
+    title: "Tip: Reroute Connectors",
+    instructionStart: "Once your connectors are placed you can reroute them as you please.",
+    instructionSelect: "Select the connector",
+    instructionMiddle: "first, then",
+    instructionClick: "click on the connector path",
+    instructionAnd: "and",
+    instructionDrag: "drag",
+    instructionEnd: "to change it!"
   }
 };
 

@@ -20,6 +20,7 @@ import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
 import { ConnectorHintTooltip } from '../ConnectorHintTooltip/ConnectorHintTooltip';
 import { ConnectorEmptySpaceTooltip } from '../ConnectorEmptySpaceTooltip/ConnectorEmptySpaceTooltip';
+import { ConnectorRerouteTooltip } from '../ConnectorRerouteTooltip/ConnectorRerouteTooltip';
 import { ImportHintTooltip } from '../ImportHintTooltip/ImportHintTooltip';
 import { LassoHintTooltip } from '../LassoHintTooltip/LassoHintTooltip';
 
@@ -249,6 +250,7 @@ export const UiOverlay = () => {
       {/* Show hint tooltips only in editable mode */}
       {editorMode === EditorModeEnum.EDITABLE && <ConnectorHintTooltip toolMenuRef={toolMenuRef} />}
       {editorMode === EditorModeEnum.EDITABLE && <ConnectorEmptySpaceTooltip />}
+      {editorMode === EditorModeEnum.EDITABLE && <ConnectorRerouteTooltip />}
       {editorMode === EditorModeEnum.EDITABLE && <ImportHintTooltip />}
       {editorMode === EditorModeEnum.EDITABLE && <LassoHintTooltip toolMenuRef={toolMenuRef} />}
 
