@@ -55,12 +55,25 @@ export const DiagramManager: React.FC<Props> = ({
 
   const handleLoad = async (id: string) => {
     try {
+      setLoading(true);
+      setError(null);
+      console.log(`DiagramManager: Loading diagram ${id}...`);
+
       const storage = storageManager.getStorage();
       const data = await storage.loadDiagram(id);
+
+      console.log(`DiagramManager: Successfully loaded diagram ${id}`);
       onLoadDiagram(id, data);
+
+      // Small delay to ensure parent component finishes state updates
+      await new Promise(resolve => setTimeout(resolve, 100));
+
       onClose();
     } catch (err) {
+      console.error(`DiagramManager: Failed to load diagram ${id}:`, err);
       setError(err instanceof Error ? err.message : 'Failed to load diagram');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,12 +99,12 @@ export const DiagramManager: React.FC<Props> = ({
 
     try {
       const storage = storageManager.getStorage();
-      
+
       // Check if a diagram with this name already exists (excluding current diagram)
-      const existingDiagram = diagrams.find(d => 
+      const existingDiagram = diagrams.find(d =>
         d.name === saveName.trim() && d.id !== currentDiagramId
       );
-      
+
       if (existingDiagram) {
         const confirmOverwrite = window.confirm(
           `A diagram named "${saveName}" already exists. This will overwrite it. Are you sure you want to continue?`
@@ -99,15 +112,29 @@ export const DiagramManager: React.FC<Props> = ({
         if (!confirmOverwrite) {
           return;
         }
-        
+
         // Delete the existing diagram first
         await storage.deleteDiagram(existingDiagram.id);
       }
-      
+
+      /**
+       * Icon Persistence: Save ALL icons (default + imported)
+       *
+       * currentDiagramData comes from parent's currentModel/diagramData which includes:
+       * - All default icon collections (isoflow, aws, gcp, azure, kubernetes)
+       * - All imported custom icons (collection='imported')
+       *
+       * This ensures when loading, we have the complete icon set and don't lose
+       * any custom imported icons.
+       */
       const dataToSave = {
         ...currentDiagramData,
         name: saveName
       };
+
+      console.log(`DiagramManager: Saving diagram with ${dataToSave.icons?.length || 0} icons`);
+      const importedCount = (dataToSave.icons || []).filter((icon: any) => icon.collection === 'imported').length;
+      console.log(`DiagramManager: Including ${importedCount} imported icons`);
 
       if (currentDiagramId) {
         // Update existing
@@ -182,15 +209,17 @@ export const DiagramManager: React.FC<Props> = ({
                     </span>
                   </div>
                   <div className="diagram-actions">
-                    <button 
+                    <button
                       className="action-button"
                       onClick={() => handleLoad(diagram.id)}
+                      disabled={loading}
                     >
-                      Load
+                      {loading ? 'Loading...' : 'Load'}
                     </button>
-                    <button 
+                    <button
                       className="action-button danger"
                       onClick={() => handleDelete(diagram.id)}
+                      disabled={loading}
                     >
                       Delete
                     </button>

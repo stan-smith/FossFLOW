@@ -110,15 +110,24 @@ if (STORAGE_ENABLED) {
 
   // Get specific diagram
   app.get('/api/diagrams/:id', async (req, res) => {
+    const diagramId = req.params.id;
+    console.log(`[GET /api/diagrams/${diagramId}] Loading diagram...`);
+
     try {
-      const filePath = path.join(STORAGE_PATH, `${req.params.id}.json`);
+      const filePath = path.join(STORAGE_PATH, `${diagramId}.json`);
+      console.log(`[GET /api/diagrams/${diagramId}] Reading from: ${filePath}`);
+
       const content = await fs.readFile(filePath, 'utf-8');
-      res.json(JSON.parse(content));
+      const data = JSON.parse(content);
+
+      console.log(`[GET /api/diagrams/${diagramId}] Successfully loaded, size: ${content.length} bytes, items: ${data.items?.length || 0}`);
+      res.json(data);
     } catch (error) {
       if (error.code === 'ENOENT') {
+        console.error(`[GET /api/diagrams/${diagramId}] Diagram not found`);
         res.status(404).json({ error: 'Diagram not found' });
       } else {
-        console.error('Error reading diagram:', error);
+        console.error(`[GET /api/diagrams/${diagramId}] Error reading diagram:`, error);
         res.status(500).json({ error: 'Failed to read diagram' });
       }
     }
@@ -126,25 +135,34 @@ if (STORAGE_ENABLED) {
 
   // Save or update diagram
   app.put('/api/diagrams/:id', async (req, res) => {
+    const diagramId = req.params.id;
+    console.log(`[PUT /api/diagrams/${diagramId}] Saving diagram...`);
+
     try {
-      const filePath = path.join(STORAGE_PATH, `${req.params.id}.json`);
+      const filePath = path.join(STORAGE_PATH, `${diagramId}.json`);
       const data = {
         ...req.body,
-        id: req.params.id,
+        id: diagramId,
         lastModified: new Date().toISOString()
       };
-      
+
+      const iconCount = data.icons?.length || 0;
+      const importedIconCount = (data.icons || []).filter(icon => icon.collection === 'imported').length;
+      console.log(`[PUT /api/diagrams/${diagramId}] Writing to: ${filePath}`);
+      console.log(`[PUT /api/diagrams/${diagramId}]   Items: ${data.items?.length || 0}, Icons: ${iconCount} (${importedIconCount} imported)`);
+
       await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-      
+      console.log(`[PUT /api/diagrams/${diagramId}] Successfully saved`);
+
       // Git backup if enabled
       if (ENABLE_GIT_BACKUP) {
         // TODO: Implement git commit
-        console.log('Git backup not yet implemented');
+        console.log('[PUT] Git backup not yet implemented');
       }
-      
-      res.json({ success: true, id: req.params.id });
+
+      res.json({ success: true, id: diagramId });
     } catch (error) {
-      console.error('Error saving diagram:', error);
+      console.error(`[PUT /api/diagrams/${diagramId}] Error saving diagram:`, error);
       res.status(500).json({ error: 'Failed to save diagram' });
     }
   });

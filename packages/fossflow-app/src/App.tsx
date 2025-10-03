@@ -356,27 +356,51 @@ function App() {
 
 
   const handleDiagramManagerLoad = (id: string, data: any) => {
-    // Load diagram from server storage
-    // Server storage contains ALL icons (including imported), so use them directly
+    console.log(`App: handleDiagramManagerLoad called for diagram ${id}`);
+
+    /**
+     * Icon Persistence Strategy:
+     *
+     * NEW BEHAVIOR (after this fix):
+     * - Server storage saves ALL icons (default collections + imported custom icons)
+     * - When loading, if we detect default collection icons, use ALL icons from server
+     * - This preserves imported custom icons without data loss
+     *
+     * BACKWARD COMPATIBILITY (for old saves):
+     * - Old format only saved imported icons (collection='imported')
+     * - If no default icons detected, merge imported icons with current defaults
+     * - This ensures old diagrams still load correctly
+     *
+     * DETECTION:
+     * - Check if loaded icons contain any default collection (isoflow, aws, gcp, etc.)
+     * - If yes: New format, use all icons from server
+     * - If no: Old format, merge imported with defaults
+     */
     const loadedIcons = data.icons || [];
-    
-    // Check if we have all default icons in the loaded data
-    const hasAllDefaults = icons.every(defaultIcon => 
-      loadedIcons.some((loadedIcon: any) => loadedIcon.id === defaultIcon.id)
-    );
-    
-    // If the saved data has all icons, use it as-is
-    // Otherwise, merge imported icons with defaults (for backward compatibility)
+    console.log(`App: Server sent ${loadedIcons.length} icons`);
+
+    // Strategy: Check if server has ALL icons (both default and imported)
+    // Server storage now saves ALL icons, so we should use them directly
+    // For backward compatibility with old saves, we detect and merge
+
     let finalIcons;
-    if (hasAllDefaults) {
-      // Server saved all icons, use them directly
+    const hasDefaultIcons = loadedIcons.some((icon: any) =>
+      icon.collection === 'isoflow' || icon.collection === 'aws' || icon.collection === 'gcp'
+    );
+
+    if (hasDefaultIcons) {
+      // New format: Server saved ALL icons (default + imported)
+      // Use them directly to preserve any custom icon modifications
+      console.log(`App: Using all ${loadedIcons.length} icons from server (includes defaults + imported)`);
       finalIcons = loadedIcons;
     } else {
-      // Old format or session storage - merge imported with defaults
+      // Old format: Server only saved imported icons
+      // Merge imported icons with current default icons
       const importedIcons = loadedIcons.filter((icon: any) => icon.collection === 'imported');
       finalIcons = [...icons, ...importedIcons];
+      console.log(`App: Old format detected. Merged ${importedIcons.length} imported icons with ${icons.length} defaults = ${finalIcons.length} total`);
     }
-    
+
     const mergedData: DiagramData = {
       ...data,
       title: data.title || data.name || 'Loaded Diagram',
@@ -384,19 +408,34 @@ function App() {
       colors: data.colors?.length ? data.colors : defaultColors,
       fitToScreen: data.fitToScreen !== false
     };
-    
-    setDiagramData(mergedData);
-    setDiagramName(data.name || 'Loaded Diagram');
-    setCurrentModel(mergedData);
-    setCurrentDiagram({
+
+    const newDiagram = {
       id,
       name: data.name || 'Loaded Diagram',
       data: mergedData,
       createdAt: data.created || new Date().toISOString(),
       updatedAt: data.lastModified || new Date().toISOString()
-    });
-    setFossflowKey(prev => prev + 1); // Force re-render
+    };
+
+    console.log(`App: Setting all state for diagram ${id}`);
+
+    // Use a single batch of state updates to minimize re-render issues
+    // Update diagram data and increment key in the same render cycle
+    setDiagramName(newDiagram.name);
+    setCurrentDiagram(newDiagram);
+    setCurrentModel(mergedData);
     setHasUnsavedChanges(false);
+
+    // Update diagramData and key together
+    // This ensures Isoflow gets the correct data with the new key
+    setDiagramData(mergedData);
+    setFossflowKey(prev => {
+      const newKey = prev + 1;
+      console.log(`App: Updated fossflowKey from ${prev} to ${newKey}`);
+      return newKey;
+    });
+
+    console.log(`App: Finished loading diagram ${id}, final icon count: ${finalIcons.length}`);
   };
 
   // i18n
