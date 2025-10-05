@@ -10,6 +10,7 @@ export interface Props {
   expandDirection?: 'CENTER' | 'BOTTOM';
   children: React.ReactNode;
   sx?: SxProps;
+  showLine?: boolean;
 }
 
 export const Label = ({
@@ -18,7 +19,8 @@ export const Label = ({
   maxHeight,
   expandDirection = 'CENTER',
   labelHeight = 0,
-  sx
+  sx,
+  showLine = true
 }: Props) => {
   const contentRef = useRef<HTMLDivElement>();
 
@@ -29,7 +31,7 @@ export const Label = ({
         width: maxWidth
       }}
     >
-      {labelHeight > 0 && (
+      {labelHeight > 0 && showLine && (
         <Box
           component="svg"
           viewBox={`0 0 ${CONNECTOR_DOT_SIZE} ${labelHeight}`}

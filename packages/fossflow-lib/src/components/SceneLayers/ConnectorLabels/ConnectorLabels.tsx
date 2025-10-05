@@ -11,7 +11,12 @@ export const ConnectorLabels = ({ connectors }: Props) => {
     <>
       {connectors
         .filter((connector) => {
-          return Boolean(connector.description || connector.startLabel || connector.endLabel);
+          return Boolean(
+            connector.description ||
+              connector.startLabel ||
+              connector.endLabel ||
+              (connector.labels && connector.labels.length > 0)
+          );
         })
         .map((connector) => {
           return <ConnectorLabel key={connector.id} connector={connector} />;

@@ -53,6 +53,7 @@ export const CONNECTOR_DEFAULTS: Required<Omit<Connector, 'id' | 'color'>> = {
   startLabelHeight: 0,
   centerLabelHeight: 0,
   endLabelHeight: 0,
+  labels: [],
   customColor: '',
   anchors: [],
   style: 'SOLID',
