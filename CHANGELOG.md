@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0](https://github.com/stan-smith/FossFLOW/compare/v1.0.5...v1.1.0) (2025-10-08)
+
+### Features
+
+* **ci:** fixing ci stuff ([85fa0e6](https://github.com/stan-smith/FossFLOW/commit/85fa0e668129577f7ab6427946b0e6c5b2c1bccb))
+
 ## 1.0.0 (2025-10-08)
 
 ### Features
