@@ -34,12 +34,11 @@ jobs:
         with:
           images: stnsmith/fossflow
           tags: |
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha,prefix={{branch}}-
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
+            type=semver,pattern={{version}},enable=${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{major}},enable=${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
+            type=ref,event=branch,enable=${{ github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/v') }}
+            type=sha,prefix={{branch}}-,enable=${{ github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/v') }}
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image
