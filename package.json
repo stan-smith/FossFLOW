@@ -1,6 +1,6 @@
 {
   "name": "fossflow-monorepo",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "private": true,
   "description": "Monorepo for FossFLOW diagram editor and library",
   "workspaces": [
@@ -19,13 +19,20 @@
     "clean": "npm run clean --workspaces --if-present && rm -rf node_modules",
     "publish:lib": "npm run build:lib && npm publish --workspace=packages/fossflow-lib",
     "docker:build": "docker build -t fossflow:local .",
-    "docker:run": "docker compose -f compose.dev.yml up"
+    "docker:run": "docker compose -f compose.dev.yml up",
+    "update-version": "node scripts/update-version.js",
+    "semantic-release": "semantic-release"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
     "@types/node": "^18.19.0",
     "@types/react": "^18.3.1",
     "@types/react-dom": "^18.3.0",
+    "conventional-changelog-conventionalcommits": "^9.1.0",
     "cross-env": "^10.0.0",
+    "semantic-release": "^24.2.9",
     "typescript": "^5.3.3"
   },
   "engines": {

@@ -6,12 +6,15 @@ on:
     types:
       - completed
     branches: ["main", "master"]
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -34,6 +37,9 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=sha,prefix={{branch}}-
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
             type=raw,value=latest,enable={{is_default_branch}}
 
       - name: Build and push Docker image

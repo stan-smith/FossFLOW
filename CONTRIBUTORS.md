@@ -217,22 +217,76 @@ npm run dev
 
 ### 4. Commit Your Changes
 
-We follow conventional commits:
+**IMPORTANT**: We use [Conventional Commits](https://www.conventionalcommits.org/) with automated semantic versioning. Your commit messages directly control version bumps and changelog generation.
+
+#### Commit Format
+
+```
+<type>(<scope>): <subject>
+
+[optional body]
+
+[optional footer]
+```
+
+#### Examples
 
 ```bash
 git commit -m "feat: add undo/redo functionality"
 git commit -m "fix: prevent menu from opening during drag"
 git commit -m "docs: update installation instructions"
+git commit -m "feat(connector)!: change default connector mode to click"
 ```
 
-Commit types:
-- `feat`: New feature
-- `fix`: Bug fix
-- `docs`: Documentation changes
-- `style`: Code style changes (formatting, etc.)
-- `refactor`: Code changes that neither fix bugs nor add features
-- `test`: Adding or updating tests
-- `chore`: Maintenance tasks
+#### Commit Types
+
+**Version-bumping commits:**
+- `feat`: New feature (triggers MINOR version bump, e.g., 1.0.0 → 1.1.0)
+- `fix`: Bug fix (triggers PATCH version bump, e.g., 1.0.0 → 1.0.1)
+- `perf`: Performance improvement (triggers PATCH version bump)
+- `refactor`: Code refactoring (triggers PATCH version bump)
+
+**Non-version-bumping commits:**
+- `docs`: Documentation only changes (no version bump)
+- `style`: Code style changes - formatting, whitespace (no version bump)
+- `test`: Adding or updating tests (no version bump)
+- `chore`: Maintenance tasks, dependency updates (no version bump)
+- `build`: Build system changes (no version bump)
+- `ci`: CI/CD configuration changes (no version bump)
+
+**Breaking changes:**
+- Add `!` after type/scope OR add `BREAKING CHANGE:` in footer
+- Triggers MAJOR version bump (e.g., 1.0.0 → 2.0.0)
+- Example: `feat!: redesign node selection API`
+
+#### Scopes (optional but recommended)
+
+Common scopes in FossFLOW:
+- `connector`: Connector-related changes
+- `ui`: UI components and interactions
+- `storage`: Storage and persistence
+- `export`: Export/import functionality
+- `docker`: Docker and deployment
+- `i18n`: Internationalization
+
+#### Breaking Change Examples
+
+```bash
+# Option 1: Using ! in type
+git commit -m "feat(api)!: remove deprecated exportImage function"
+
+# Option 2: Using footer
+git commit -m "feat: update node API
+
+BREAKING CHANGE: Node.position is now an object with x,y properties instead of array"
+```
+
+#### Release Notes
+
+Your commits will automatically generate:
+- Version number based on commit types
+- Changelog with categorized changes
+- GitHub release notes
 
 ## Coding Standards
 
