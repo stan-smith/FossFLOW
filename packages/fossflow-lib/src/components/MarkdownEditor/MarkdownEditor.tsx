@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import ReactQuill from 'react-quill';
+import ReactQuill from 'react-quill-new';
 import { Box } from '@mui/material';
 
 interface Props {
