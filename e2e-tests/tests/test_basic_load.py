@@ -110,6 +110,52 @@ def test_page_has_body_and_root(driver):
     print("✓ React root element found")
 
 
+def test_javascript_is_executing(driver):
+    """Test that JavaScript is actually running in the browser."""
+    base_url = get_base_url()
+
+    # Navigate to homepage
+    driver.get(base_url)
+    time.sleep(5)
+
+    # Check if JavaScript is enabled
+    js_enabled = driver.execute_script("return true;")
+    print(f"\n✓ JavaScript enabled: {js_enabled}")
+    assert js_enabled, "JavaScript should be enabled"
+
+    # Check if we can access window object
+    has_window = driver.execute_script("return typeof window !== 'undefined';")
+    print(f"✓ Window object available: {has_window}")
+    assert has_window, "Window object should be available"
+
+    # Check if React has mounted
+    root_content = driver.execute_script("return document.getElementById('root').innerHTML.length;")
+    print(f"✓ Root innerHTML length: {root_content} characters")
+
+    if root_content == 0:
+        print("⚠️  WARNING: React root is empty - React may not have mounted!")
+        # Get browser console logs
+        logs = driver.get_log('browser')
+        if logs:
+            print("\nBrowser console logs:")
+            for log in logs[-10:]:  # Last 10 logs
+                print(f"  [{log['level']}] {log['message']}")
+
+        # Check for specific elements that React should create
+        print("\nChecking for expected React-created elements...")
+        all_divs = driver.execute_script("return document.querySelectorAll('div').length;")
+        print(f"  Total div elements: {all_divs}")
+
+        all_buttons = driver.execute_script("return document.querySelectorAll('button').length;")
+        print(f"  Total button elements: {all_buttons}")
+
+        all_canvases = driver.execute_script("return document.querySelectorAll('canvas').length;")
+        print(f"  Total canvas elements: {all_canvases}")
+
+    assert root_content > 0, "React should have rendered content into the root element"
+    print(f"✓ React has rendered content into root")
+
+
 def test_page_has_canvas(driver):
     """Test that the page has a canvas element for diagram drawing."""
     base_url = get_base_url()
