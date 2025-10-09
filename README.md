@@ -151,7 +151,7 @@ npm run lint         # Check for linting errors
 
 # E2E Tests (Selenium)
 cd e2e-tests
-./run-tests.sh       # Run end-to-end tests (requires Docker & Rust)
+./run-tests.sh       # Run end-to-end tests (requires Docker & Python)
 
 # Publishing
 npm run publish:lib  # Publish library to npm
