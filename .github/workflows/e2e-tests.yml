@@ -1,0 +1,109 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+    branches: ["main", "master"]
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+
+    services:
+      selenium:
+        image: selenium/standalone-chrome:latest
+        options: >-
+          --shm-size=2g
+        ports:
+          - 4444:4444
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            e2e-tests/target/
+          key: ${{ runner.os }}-cargo-${{ hashFiles('e2e-tests/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Build FossFLOW library
+        run: npm run build:lib
+
+      - name: Build FossFLOW app
+        run: npm run build:app
+
+      - name: Install serve globally
+        run: npm install -g serve
+
+      - name: Start FossFLOW server
+        run: |
+          cd packages/fossflow-app/build
+          serve -s . -l 3000 &
+          SERVER_PID=$!
+          echo "Server PID: $SERVER_PID"
+          echo "Waiting for server to start..."
+          timeout 60 bash -c 'until curl -sf http://localhost:3000; do sleep 2; done' || {
+            echo "Server failed to start"
+            kill $SERVER_PID 2>/dev/null || true
+            exit 1
+          }
+          echo "Server is ready"
+        env:
+          CI: true
+
+      - name: Wait for Selenium
+        run: |
+          echo "Waiting for Selenium to be ready..."
+          timeout 60 bash -c 'until curl -sf http://localhost:4444/status; do sleep 2; done' || {
+            echo "Selenium failed to start"
+            exit 1
+          }
+          echo "Selenium is ready"
+          curl -s http://localhost:4444/status | jq '.' || true
+
+      - name: Verify connectivity before tests
+        run: |
+          echo "Testing app connectivity..."
+          curl -sf http://localhost:3000 || echo "App not accessible"
+          echo "Testing Selenium connectivity..."
+          curl -sf http://localhost:4444/status || echo "Selenium not accessible"
+
+      - name: Run E2E tests
+        run: |
+          cd e2e-tests
+          cargo test --verbose -- --nocapture
+        env:
+          FOSSFLOW_TEST_URL: http://localhost:3000
+          WEBDRIVER_URL: http://localhost:4444
+          RUST_BACKTRACE: 1
+          RUST_LOG: debug
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: e2e-tests/target/
+          if-no-files-found: ignore
+          retention-days: 7

@@ -146,8 +146,12 @@ npm run build:lib    # Build library only
 npm run build:app    # Build app only
 
 # Testing & Linting
-npm test             # Run tests
+npm test             # Run unit tests
 npm run lint         # Check for linting errors
+
+# E2E Tests (Selenium)
+cd e2e-tests
+./run-tests.sh       # Run end-to-end tests (requires Docker & Rust)
 
 # Publishing
 npm run publish:lib  # Publish library to npm
