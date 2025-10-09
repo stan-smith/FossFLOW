@@ -10,14 +10,6 @@ jobs:
   e2e-tests:
     runs-on: ubuntu-latest
 
-    services:
-      selenium:
-        image: selenium/standalone-chrome:latest
-        options: >-
-          --shm-size=2g
-        ports:
-          - 4444:4444
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -52,6 +44,23 @@ jobs:
       - name: Install serve globally
         run: npm install -g serve
 
+      - name: Start Selenium Chrome in background
+        run: |
+          docker run -d \
+            --name selenium-chrome \
+            --network host \
+            --shm-size=2g \
+            selenium/standalone-chrome:latest
+
+          echo "Waiting for Selenium to be ready..."
+          timeout 60 bash -c 'until curl -sf http://localhost:4444/status; do sleep 2; done' || {
+            echo "Selenium failed to start"
+            docker logs selenium-chrome
+            exit 1
+          }
+          echo "Selenium is ready"
+          curl -s http://localhost:4444/status | jq '.' || true
+
       - name: Start FossFLOW server in background
         run: |
           cd packages/fossflow-app/build
@@ -71,16 +80,6 @@ jobs:
         env:
           CI: true
 
-      - name: Wait for Selenium
-        run: |
-          echo "Waiting for Selenium to be ready..."
-          timeout 60 bash -c 'until curl -sf http://localhost:4444/status; do sleep 2; done' || {
-            echo "Selenium failed to start"
-            exit 1
-          }
-          echo "Selenium is ready"
-          curl -s http://localhost:4444/status | jq '.' || true
-
       - name: Verify connectivity before tests
         run: |
           echo "Testing app connectivity..."
@@ -96,9 +95,13 @@ jobs:
           FOSSFLOW_TEST_URL: http://localhost:3000
           WEBDRIVER_URL: http://localhost:4444
 
-      - name: Stop FossFLOW server
+      - name: Stop Selenium and FossFLOW server
         if: always()
         run: |
+          echo "Stopping Selenium container..."
+          docker stop selenium-chrome 2>/dev/null || true
+          docker rm selenium-chrome 2>/dev/null || true
+
           if [ -f /tmp/server.pid ]; then
             echo "Stopping server (PID: $(cat /tmp/server.pid))"
             kill $(cat /tmp/server.pid) 2>/dev/null || true
