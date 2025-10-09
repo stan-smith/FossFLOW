@@ -2,20 +2,20 @@
 
 ## What Was Added
 
-A complete Selenium-based end-to-end testing framework using Rust and the `thirtyfour` WebDriver library.
+A complete Selenium-based end-to-end testing framework using Python and pytest with the Selenium WebDriver library.
 
 ### File Structure
 
 ```
 e2e-tests/
-├── Cargo.toml           # Rust project configuration with thirtyfour dependencies
-├── Cargo.lock           # Locked dependency versions
-├── .gitignore           # Ignore target/ and artifacts
-├── README.md            # Comprehensive testing documentation
-├── SETUP.md             # This file
-├── run-tests.sh         # Helper script for local testing
+├── requirements.txt         # Python dependencies (selenium, pytest)
+├── pytest.ini              # Pytest configuration
+├── .gitignore              # Ignore __pycache__, .pytest_cache, venv
+├── README.md               # Comprehensive testing documentation
+├── SETUP.md                # This file
+├── run-tests.sh            # Helper script for local testing
 └── tests/
-    └── basic_load.rs    # Initial test suite
+    └── test_basic_load.py  # Initial test suite
 ```
 
 ### Tests Included
@@ -38,23 +38,25 @@ Three basic tests to verify the application loads correctly:
 
 ### CI/CD Integration
 
-Created `.github/workflows/e2e-tests.yml` that:
-- Runs on push/PR to master/main branches
-- Spins up Selenium standalone Chrome in Docker
-- Builds the FossFLOW app
-- Serves the built app
-- Runs all E2E tests
-- Uploads test artifacts
+Updated `.github/workflows/e2e-tests.yml` to:
+- Run on push/PR to master/main branches
+- Set up Python 3.11 with pip caching
+- Spin up Selenium standalone Chrome in Docker
+- Build the FossFLOW app
+- Serve the built app with nohup for persistence
+- Install Python test dependencies
+- Run all E2E tests with pytest
+- Upload test artifacts
 
 ### Dependencies
 
-**Rust crates:**
-- `thirtyfour` v0.34.0 - WebDriver client
-- `tokio` v1.47 - Async runtime
-- `anyhow` v1.0 - Error handling
+**Python packages:**
+- `selenium` v4.27.1 - WebDriver automation library
+- `pytest` v8.3.4 - Testing framework
+- `pytest-xdist` v3.6.1 - Parallel test execution support
 
 **External services:**
-- ChromeDriver or Selenium Server
+- Selenium Server (via Docker)
 - Running FossFLOW instance
 
 ## Quick Start
@@ -62,18 +64,36 @@ Created `.github/workflows/e2e-tests.yml` that:
 ### Local Development
 
 ```bash
-# 1. Start Selenium (in Docker)
+# Easiest: Use the helper script
+cd e2e-tests
 ./run-tests.sh
 
-# Or manually:
-docker run -d -p 4444:4444 --shm-size=2g selenium/standalone-chrome
+# The script will:
+# - Start Selenium container
+# - Create Python venv
+# - Install dependencies
+# - Prompt you to start the app
+# - Run tests
+# - Clean up
+```
+
+### Manual Setup
+
+```bash
+# 1. Start Selenium (in Docker)
+docker run -d -p 4444:4444 -p 7900:7900 --shm-size=2g selenium/standalone-chrome
 
 # 2. Start FossFLOW dev server (in another terminal)
 npm run dev
 
-# 3. Run tests
+# 3. Set up Python environment
 cd e2e-tests
-cargo test
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+
+# 4. Run tests
+pytest -v
 ```
 
 ### CI/CD
@@ -110,50 +130,114 @@ You can now expand the test suite to cover:
 
 ## Example: Adding a New Test
 
-Create `tests/diagram_creation.rs`:
+Create `tests/test_diagram_creation.py`:
 
-```rust
-use anyhow::Result;
-use thirtyfour::prelude::*;
+```python
+import pytest
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-#[tokio::test]
-async fn test_can_add_node() -> Result<()> {
-    let driver = WebDriver::new("http://localhost:4444", DesiredCapabilities::chrome()).await?;
-    driver.goto("http://localhost:3000").await?;
 
-    // Wait for app to load
-    tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
+def test_can_add_node(driver):
+    """Test that users can add a node to the canvas."""
+    driver.get("http://localhost:3000")
 
-    // Click the add node button
-    let add_button = driver.find(By::Css("button[aria-label='Add Node']")).await?;
-    add_button.click().await?;
+    # Wait for app to load
+    wait = WebDriverWait(driver, 10)
 
-    // Verify node library appears
-    let library = driver.find(By::ClassName("node-library")).await?;
-    assert!(library.is_displayed().await?);
+    # Click the add node button
+    add_button = wait.until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "button[aria-label='Add Node']"))
+    )
+    add_button.click()
 
-    driver.quit().await?;
-    Ok(())
-}
+    # Verify node library appears
+    library = wait.until(
+        EC.visibility_of_element_located((By.CLASS_NAME, "node-library"))
+    )
+    assert library.is_displayed()
 ```
 
-Add to `Cargo.toml`:
+Run: `pytest tests/test_diagram_creation.py::test_can_add_node -v`
 
-```toml
-[[test]]
-name = "diagram_creation"
-path = "tests/diagram_creation.rs"
+## Pytest Features
+
+### Running Tests
+
+```bash
+# Run all tests
+pytest -v
+
+# Run specific test file
+pytest tests/test_basic_load.py -v
+
+# Run specific test
+pytest tests/test_basic_load.py::test_homepage_loads -v
+
+# Run tests matching pattern
+pytest -k "canvas" -v
+
+# Run with more verbose output
+pytest -vv --tb=long
 ```
 
-Run: `cargo test test_can_add_node`
+### Test Fixtures
+
+The `driver` fixture is automatically available to all tests:
+
+```python
+def test_example(driver):
+    driver.get("http://localhost:3000")
+    # driver is automatically created and cleaned up
+```
+
+## Debugging
+
+### Watch Tests with VNC
+
+Connect to `http://localhost:7900` (password: `secret`) to watch tests run in real-time.
+
+### Run Non-Headless
+
+Edit `test_basic_load.py` and comment out:
+```python
+# chrome_options.add_argument("--headless")
+```
+
+### Add Screenshots on Failure
+
+Add to your test:
+```python
+def test_example(driver):
+    try:
+        # Your test code
+        assert something
+    except AssertionError:
+        driver.save_screenshot("failure.png")
+        raise
+```
 
 ## Troubleshooting
 
-See `README.md` for common issues and solutions.
+See `README.md` for detailed troubleshooting steps including:
+- Connection refused errors
+- Element not found errors
+- Import errors
+- Docker container conflicts
 
 ## Resources
 
-- [thirtyfour documentation](https://docs.rs/thirtyfour/)
-- [thirtyfour GitHub](https://github.com/Vrtgs/thirtyfour)
-- [Selenium documentation](https://www.selenium.dev/documentation/)
+- [Selenium Python documentation](https://selenium-python.readthedocs.io/)
+- [pytest documentation](https://docs.pytest.org/)
+- [Selenium WebDriver docs](https://www.selenium.dev/documentation/webdriver/)
 - [WebDriver spec](https://w3c.github.io/webdriver/)
+
+## Migration Notes
+
+This test suite was migrated from Rust (thirtyfour) to Python (selenium + pytest) for:
+- Simpler syntax and easier maintenance
+- Better debugging tools
+- Wider community support
+- Faster test development
+- More reliable WebDriver connections

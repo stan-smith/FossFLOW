@@ -1,14 +1,8 @@
-# Rust
-/target/
-Cargo.lock
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# Test artifacts
-screenshots/
-test-results/
+__pycache__/
+*.pyc
+.pytest_cache/
+htmlcov/
+.coverage
+*.log
+venv/
+env/

@@ -1,53 +1,57 @@
 # FossFLOW E2E Tests
 
-End-to-end tests for FossFLOW using Selenium WebDriver via the [thirtyfour](https://github.com/Vrtgs/thirtyfour) Rust library.
+End-to-end tests for FossFLOW using Selenium WebDriver with Python and pytest.
 
 ## Prerequisites
 
-1. **Rust** - Install from https://rustup.rs/
-2. **Chrome/Chromium** browser
-3. **ChromeDriver** or Selenium Server
+1. **Python 3.11+** - Install from https://www.python.org/
+2. **Docker** - For running Selenium Grid
+3. **Chrome/Chromium** browser (provided by Selenium Docker image)
 
 ## Running Tests Locally
 
-### Option 1: Using Selenium Standalone (Recommended)
+### Quick Start (Recommended)
+
+Use the provided test runner script:
+
+```bash
+cd e2e-tests
+./run-tests.sh
+```
+
+The script will:
+- Check for required dependencies (Docker, Python)
+- Start Selenium container automatically
+- Create a Python virtual environment
+- Install test dependencies
+- Prompt you to start the FossFLOW app if not running
+- Run the tests
+- Clean up Selenium container
+
+### Manual Setup
 
 1. Start Selenium server with Chrome:
    ```bash
-   docker run -d -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome:latest
+   docker run -d --name fossflow-selenium -p 4444:4444 -p 7900:7900 --shm-size="2g" selenium/standalone-chrome:latest
    ```
 
 2. Start the FossFLOW dev server:
    ```bash
+   cd ..  # Go to project root
    npm run dev
    ```
 
-3. Run the tests:
+3. Install Python dependencies:
    ```bash
    cd e2e-tests
-   cargo test -- --test-threads=1
-   ```
-
-   **Note**: Tests must run serially (`--test-threads=1`) because Selenium standalone only supports one session at a time.
-
-### Option 2: Using ChromeDriver directly
-
-1. Download ChromeDriver matching your Chrome version from https://chromedriver.chromium.org/
-
-2. Start ChromeDriver:
-   ```bash
-   chromedriver --port=4444
-   ```
-
-3. Start the FossFLOW dev server:
-   ```bash
-   npm run dev
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
    ```
 
 4. Run the tests:
    ```bash
-   cd e2e-tests
-   cargo test -- --test-threads=1
+   pytest -v
    ```
 
 ## Environment Variables
@@ -57,7 +61,7 @@ End-to-end tests for FossFLOW using Selenium WebDriver via the [thirtyfour](http
 
 Example:
 ```bash
-FOSSFLOW_TEST_URL=http://localhost:8080 cargo test
+FOSSFLOW_TEST_URL=http://localhost:8080 pytest -v
 ```
 
 ## Available Tests
@@ -74,50 +78,103 @@ Tests run automatically in GitHub Actions on:
 
 The CI workflow:
 1. Builds the app
-2. Starts the app server
+2. Starts the app server in background
 3. Starts Selenium standalone Chrome
-4. Runs all E2E tests
+4. Installs Python dependencies
+5. Runs all E2E tests with pytest
+
+## Test Structure
+
+```
+e2e-tests/
+├── tests/
+│   └── test_basic_load.py    # Main test suite
+├── requirements.txt           # Python dependencies
+├── pytest.ini                 # Pytest configuration
+├── run-tests.sh              # Test runner script
+└── README.md                 # This file
+```
 
 ## Adding New Tests
 
-1. Create a new test file in `tests/` directory
-2. Add it to `Cargo.toml` under `[[test]]` sections
-3. Use the thirtyfour API: https://docs.rs/thirtyfour/latest/thirtyfour/
+1. Create a new test file in `tests/` directory (must start with `test_`)
+2. Import required modules:
+   ```python
+   import pytest
+   from selenium import webdriver
+   from selenium.webdriver.common.by import By
+   ```
 
-Example:
-```rust
-use anyhow::Result;
-use thirtyfour::prelude::*;
+3. Use the `driver` fixture:
+   ```python
+   def test_my_feature(driver):
+       driver.get("http://localhost:3000")
+       element = driver.find_element(By.ID, "my-element")
+       assert element.is_displayed()
+   ```
 
-#[tokio::test]
-async fn test_my_feature() -> Result<()> {
-    let driver = WebDriver::new("http://localhost:4444", DesiredCapabilities::chrome()).await?;
-    driver.goto("http://localhost:3000").await?;
-
-    // Your test logic here
-
-    driver.quit().await?;
-    Ok(())
-}
-```
+4. Run your test:
+   ```bash
+   pytest tests/test_my_feature.py -v
+   ```
 
 ## Debugging
 
-To run tests with visible browser (non-headless):
-1. Modify the test to remove `.set_headless()?` from capabilities
-2. Use `selenium/standalone-chrome-debug` Docker image with VNC viewer on port 7900
+### Running with Visible Browser
+
+To see the browser during tests, modify the driver fixture in `test_basic_load.py`:
+```python
+# Comment out headless mode
+# chrome_options.add_argument("--headless")
+```
+
+### Using VNC to Watch Tests
+
+When using the Selenium Docker image, you can watch tests in real-time:
+
+1. Connect to VNC viewer at `http://localhost:7900` (password: `secret`)
+2. Remove `--headless` from Chrome options
+3. Run tests and watch in VNC viewer
+
+### Verbose Output
+
+Run tests with more verbose output:
+```bash
+pytest -vv --tb=long
+```
+
+### Running Specific Tests
+
+```bash
+# Run a single test
+pytest tests/test_basic_load.py::test_homepage_loads -v
+
+# Run tests matching a pattern
+pytest -k "canvas" -v
+```
 
 ## Troubleshooting
 
-**Connection refused errors:**
-- Ensure Selenium/ChromeDriver is running on port 4444
-- Ensure FossFLOW app is running on port 3000
+### Connection refused errors
+- Ensure Selenium is running: `docker ps | grep selenium`
+- Check Selenium status: `curl http://localhost:4444/status`
+- Ensure FossFLOW app is running: `curl http://localhost:3000`
 
-**Element not found errors:**
+### Element not found errors
 - Increase wait times in tests
 - Check if the app URL is correct
 - Verify the app loaded successfully in browser
 
-**Chrome version mismatch:**
-- Update ChromeDriver to match your Chrome version
-- Use Selenium Docker image (automatically handles version matching)
+### Import errors
+- Activate virtual environment: `source venv/bin/activate`
+- Install dependencies: `pip install -r requirements.txt`
+
+### Docker container conflicts
+- Remove existing container: `docker rm -f fossflow-selenium`
+- Check for port conflicts: `lsof -i :4444`
+
+## Dependencies
+
+- **selenium** (4.27.1) - WebDriver automation library
+- **pytest** (8.3.4) - Testing framework
+- **pytest-xdist** (3.6.1) - Parallel test execution support

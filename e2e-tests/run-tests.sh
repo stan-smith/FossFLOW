@@ -18,10 +18,17 @@ if ! command -v docker &> /dev/null; then
     exit 1
 fi
 
-# Check if Rust/Cargo is available
-if ! command -v cargo &> /dev/null; then
-    echo "❌ Rust/Cargo is required but not installed."
-    echo "Please install Rust from https://rustup.rs/"
+# Check if Python is available
+if ! command -v python3 &> /dev/null; then
+    echo "❌ Python 3 is required but not installed."
+    echo "Please install Python 3 from https://www.python.org/"
+    exit 1
+fi
+
+# Check if pip is available
+if ! command -v pip3 &> /dev/null; then
+    echo "❌ pip3 is required but not installed."
+    echo "Please install pip3"
     exit 1
 fi
 
@@ -65,15 +72,28 @@ fi
 echo "✅ FossFLOW app is accessible"
 echo ""
 
+# Install Python dependencies if needed
+if [ ! -d "venv" ]; then
+    echo "Creating Python virtual environment..."
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+else
+    source venv/bin/activate
+fi
+
 # Run tests
 echo "Running E2E tests..."
 echo ""
 
 FOSSFLOW_TEST_URL="http://localhost:$APP_PORT" \
 WEBDRIVER_URL="http://localhost:$SELENIUM_PORT" \
-cargo test -- --test-threads=1 "$@"
+pytest -v --tb=short "$@"
 
 TEST_RESULT=$?
+
+# Deactivate venv
+deactivate
 
 # Cleanup
 echo ""
