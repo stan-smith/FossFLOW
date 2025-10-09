@@ -71,7 +71,7 @@ echo ""
 
 FOSSFLOW_TEST_URL="http://localhost:$APP_PORT" \
 WEBDRIVER_URL="http://localhost:$SELENIUM_PORT" \
-cargo test "$@"
+cargo test -- --test-threads=1 "$@"
 
 TEST_RESULT=$?
 

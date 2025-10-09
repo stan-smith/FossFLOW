@@ -25,8 +25,10 @@ End-to-end tests for FossFLOW using Selenium WebDriver via the [thirtyfour](http
 3. Run the tests:
    ```bash
    cd e2e-tests
-   cargo test
+   cargo test -- --test-threads=1
    ```
+
+   **Note**: Tests must run serially (`--test-threads=1`) because Selenium standalone only supports one session at a time.
 
 ### Option 2: Using ChromeDriver directly
 
@@ -45,7 +47,7 @@ End-to-end tests for FossFLOW using Selenium WebDriver via the [thirtyfour](http
 4. Run the tests:
    ```bash
    cd e2e-tests
-   cargo test
+   cargo test -- --test-threads=1
    ```
 
 ## Environment Variables
