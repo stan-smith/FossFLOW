@@ -62,7 +62,7 @@ FOSSFLOW_TEST_URL=http://localhost:8080 cargo test
 
 - `test_homepage_loads` - Verifies the homepage loads and has basic React elements
 - `test_page_has_canvas` - Checks for the canvas element used for diagram drawing
-- `test_no_javascript_errors` - Checks browser console for severe JavaScript errors
+- `test_page_renders_without_crash` - Verifies the page fully renders with all key elements visible
 
 ## CI/CD
 

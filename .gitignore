@@ -14,3 +14,4 @@ coverage/
 .npm
 .eslintcache
 *.tsbuildinfo
+/e2e-tests/target

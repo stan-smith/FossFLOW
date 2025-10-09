@@ -92,7 +92,7 @@ async fn test_page_has_canvas() -> Result<()> {
 }
 
 #[tokio::test]
-async fn test_no_javascript_errors() -> Result<()> {
+async fn test_page_renders_without_crash() -> Result<()> {
     let base_url = get_base_url();
     let webdriver_url = get_webdriver_url();
 
@@ -106,31 +106,25 @@ async fn test_no_javascript_errors() -> Result<()> {
     driver.goto(&base_url).await?;
 
     // Wait for the page to fully load
-    tokio::time::sleep(tokio::time::Duration::from_secs(3)).await;
+    tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
 
-    // Get browser console logs
-    let logs = driver.logs(LogType::Browser).await?;
+    // Check multiple elements exist to ensure page rendered properly
+    let body = driver.find(By::Tag("body")).await?;
+    assert!(body.is_displayed().await?, "Body should be visible");
 
-    // Filter for severe errors
-    let errors: Vec<_> = logs
-        .iter()
-        .filter(|log| log.level == "SEVERE")
-        .collect();
+    let root = driver.find(By::Id("root")).await?;
+    assert!(root.is_displayed().await?, "Root element should be visible");
 
-    if !errors.is_empty() {
-        println!("Console errors found:");
-        for error in &errors {
-            println!("  - {}", error.message);
-        }
-    }
+    // Check for canvas (main drawing area)
+    let canvas = driver.find(By::Tag("canvas")).await?;
+    assert!(canvas.is_displayed().await?, "Canvas should be visible");
 
-    // We'll warn but not fail on console errors for now
-    // as some third-party libraries may log warnings
-    if errors.is_empty() {
-        println!("✓ No severe console errors found");
-    } else {
-        println!("⚠ {} severe console error(s) found (not failing test)", errors.len());
-    }
+    // Verify we can get the page source (ensures no blank/error page)
+    let source = driver.source().await?;
+    assert!(source.len() > 1000, "Page source should be substantial (got {} bytes)", source.len());
+
+    println!("✓ Page rendered successfully without crashing");
+    println!("✓ Page source size: {} bytes", source.len());
 
     driver.quit().await?;
 

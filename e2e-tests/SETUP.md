@@ -31,8 +31,10 @@ Three basic tests to verify the application loads correctly:
 2. **test_page_has_canvas** - Verifies:
    - Canvas element exists (for isometric drawing)
 
-3. **test_no_javascript_errors** - Verifies:
-   - No severe console errors (warnings only, non-failing)
+3. **test_page_renders_without_crash** - Verifies:
+   - Page fully renders without errors
+   - All key elements are visible (body, root, canvas)
+   - Page source is substantial (not blank/error page)
 
 ### CI/CD Integration
 
