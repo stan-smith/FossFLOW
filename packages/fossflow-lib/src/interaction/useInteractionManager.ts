@@ -65,6 +65,43 @@ export const useInteractionManager = () => {
   // Keyboard shortcuts for undo/redo
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      // ESC key handling - should work even in input fields
+      if (e.key === 'Escape') {
+        e.preventDefault();
+
+        // Priority 1: Close ItemControls (node menus) if open
+        if (uiState.itemControls) {
+          uiState.actions.setItemControls(null);
+          return;
+        }
+
+        // Priority 2: Cancel in-progress connector
+        if (uiState.mode.type === 'CONNECTOR') {
+          const connectorMode = uiState.mode;
+
+          // Check if connection is in progress
+          const isConnectionInProgress =
+            (uiState.connectorInteractionMode === 'click' && connectorMode.isConnecting) ||
+            (uiState.connectorInteractionMode === 'drag' && connectorMode.id !== null);
+
+          if (isConnectionInProgress && connectorMode.id) {
+            // Delete the temporary connector
+            scene.deleteConnector(connectorMode.id);
+
+            // Reset connector mode to initial state
+            uiState.actions.setMode({
+              type: 'CONNECTOR',
+              showCursor: true,
+              id: null,
+              startAnchor: undefined,
+              isConnecting: false
+            });
+          }
+        }
+
+        return;
+      }
+
       // Don't handle shortcuts when typing in input fields
       const target = e.target as HTMLElement;
       if (
@@ -190,7 +227,7 @@ export const useInteractionManager = () => {
     return () => {
       return window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [undo, redo, canUndo, canRedo, uiState.hotkeyProfile, uiState.actions, createTextBox, uiState.mouse.position.tile]);
+  }, [undo, redo, canUndo, canRedo, uiState.hotkeyProfile, uiState.actions, createTextBox, uiState.mouse.position.tile, scene, uiState.itemControls, uiState.mode, uiState.connectorInteractionMode]);
 
   const onMouseEvent = useCallback(
     (e: SlimMouseEvent) => {
