@@ -1,6 +1,6 @@
 {
   "name": "fossflow-monorepo",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "description": "Monorepo for FossFLOW diagram editor and library",
   "workspaces": [

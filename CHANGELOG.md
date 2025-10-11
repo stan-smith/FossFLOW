@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0](https://github.com/stan-smith/FossFLOW/compare/v1.3.0...v1.4.0) (2025-10-11)
+
+### Features
+
+* added in esc to get ya out of menus/interactions/connectors Fixes [#154](https://github.com/stan-smith/FossFLOW/issues/154) ([5cf61c3](https://github.com/stan-smith/FossFLOW/commit/5cf61c3055c9ef1ad6a2cf5b67659e3a825a28fa))
+
 ## [1.3.0](https://github.com/stan-smith/FossFLOW/compare/v1.2.0...v1.3.0) (2025-10-09)
 
 ### Features
