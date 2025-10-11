@@ -1,8 +1,9 @@
 name: Release
 
 on:
+  # Runs after Pages deployment completes successfully
   workflow_run:
-    workflows: ["Run Tests"]
+    workflows: ["Deploy static content to Pages"]
     types:
       - completed
     branches: ["main", "master"]

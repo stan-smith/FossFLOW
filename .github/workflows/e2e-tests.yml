@@ -1,14 +1,17 @@
 name: E2E Tests
 
 on:
-  push:
-    branches: ["main", "master"]
-  pull_request:
+  # Runs after unit tests complete successfully
+  workflow_run:
+    workflows: ["Run Tests"]
+    types:
+      - completed
     branches: ["main", "master"]
 
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout code
