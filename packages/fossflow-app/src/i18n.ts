@@ -36,6 +36,26 @@ export const supportedLanguages = [
     label: 'Español',
     value: 'es-ES',
   },
+  {
+    label: 'Português',
+    value: 'pt-BR',
+  },
+  {
+    label: 'Français',
+    value: 'fr-FR',
+  },
+  {
+    label: 'हिन्दी',
+    value: 'hi-IN',
+  },
+  {
+    label: 'বাংলা',
+    value: 'bn-BD',
+  },
+  {
+    label: 'Русский',
+    value: 'ru-RU',
+  },
 ];
 
 export default i18n;
