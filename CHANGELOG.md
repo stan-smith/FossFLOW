@@ -5,6 +5,14 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0](https://github.com/stan-smith/FossFLOW/compare/v1.4.0...v1.5.0) (2025-10-17)
+
+### Features
+
+* Added Portugues, French, Hindi, Bengali, and Russian support -Stan ([b299bc3](https://github.com/stan-smith/FossFLOW/commit/b299bc33018b47708d546a43c80ee46629be818f))
+* Added Spanish support! added more I18n compatability -Stan ([be14d87](https://github.com/stan-smith/FossFLOW/commit/be14d8705319da406a1cad142731ee0a698bcd3c))
+* Lots of language support! ([956a2af](https://github.com/stan-smith/FossFLOW/commit/956a2af52f534be02b7d417f413a0ee66dd2e17d))
+
 ## [1.4.0](https://github.com/stan-smith/FossFLOW/compare/v1.3.0...v1.4.0) (2025-10-11)
 
 ### Features
