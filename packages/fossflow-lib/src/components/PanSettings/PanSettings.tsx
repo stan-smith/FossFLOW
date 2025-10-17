@@ -9,10 +9,12 @@ import {
   Divider
 } from '@mui/material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
+import { useTranslation } from 'src/stores/localeStore';
 
 export const PanSettings = () => {
   const panSettings = useUiStateStore((state) => state.panSettings);
   const setPanSettings = useUiStateStore((state) => state.actions.setPanSettings);
+  const { t } = useTranslation();
 
   const handleToggle = (setting: keyof typeof panSettings) => {
     if (typeof panSettings[setting] === 'boolean') {
@@ -33,14 +35,14 @@ export const PanSettings = () => {
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h6" gutterBottom>
-        Pan Settings
+        {t('settings.pan.title')}
       </Typography>
-      
+
       <Paper sx={{ p: 2, mb: 2 }}>
         <Typography variant="subtitle2" gutterBottom>
-          Mouse Pan Options
+          {t('settings.pan.mousePanOptions')}
         </Typography>
-        
+
         <FormControlLabel
           control={
             <Switch
@@ -48,9 +50,9 @@ export const PanSettings = () => {
               onChange={() => handleToggle('emptyAreaClickPan')}
             />
           }
-          label="Click and drag on empty area"
+          label={t('settings.pan.emptyAreaClickPan')}
         />
-        
+
         <FormControlLabel
           control={
             <Switch
@@ -58,9 +60,9 @@ export const PanSettings = () => {
               onChange={() => handleToggle('middleClickPan')}
             />
           }
-          label="Middle click and drag"
+          label={t('settings.pan.middleClickPan')}
         />
-        
+
         <FormControlLabel
           control={
             <Switch
@@ -68,9 +70,9 @@ export const PanSettings = () => {
               onChange={() => handleToggle('rightClickPan')}
             />
           }
-          label="Right click and drag"
+          label={t('settings.pan.rightClickPan')}
         />
-        
+
         <FormControlLabel
           control={
             <Switch
@@ -78,9 +80,9 @@ export const PanSettings = () => {
               onChange={() => handleToggle('ctrlClickPan')}
             />
           }
-          label="Ctrl + click and drag"
+          label={t('settings.pan.ctrlClickPan')}
         />
-        
+
         <FormControlLabel
           control={
             <Switch
@@ -88,15 +90,15 @@ export const PanSettings = () => {
               onChange={() => handleToggle('altClickPan')}
             />
           }
-          label="Alt + click and drag"
+          label={t('settings.pan.altClickPan')}
         />
       </Paper>
 
       <Paper sx={{ p: 2 }}>
         <Typography variant="subtitle2" gutterBottom>
-          Keyboard Pan Options
+          {t('settings.pan.keyboardPanOptions')}
         </Typography>
-        
+
         <FormControlLabel
           control={
             <Switch
@@ -104,9 +106,9 @@ export const PanSettings = () => {
               onChange={() => handleToggle('arrowKeysPan')}
             />
           }
-          label="Arrow keys"
+          label={t('settings.pan.arrowKeys')}
         />
-        
+
         <FormControlLabel
           control={
             <Switch
@@ -114,9 +116,9 @@ export const PanSettings = () => {
               onChange={() => handleToggle('wasdPan')}
             />
           }
-          label="WASD keys"
+          label={t('settings.pan.wasdKeys')}
         />
-        
+
         <FormControlLabel
           control={
             <Switch
@@ -124,15 +126,15 @@ export const PanSettings = () => {
               onChange={() => handleToggle('ijklPan')}
             />
           }
-          label="IJKL keys"
+          label={t('settings.pan.ijklKeys')}
         />
-        
+
         <Divider sx={{ my: 2 }} />
-        
+
         <Typography variant="subtitle2" gutterBottom>
-          Keyboard Pan Speed
+          {t('settings.pan.keyboardPanSpeed')}
         </Typography>
-        
+
         <Box sx={{ px: 2 }}>
           <Slider
             value={panSettings.keyboardPanSpeed}
@@ -147,7 +149,7 @@ export const PanSettings = () => {
       </Paper>
 
       <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
-        Note: Pan options work in addition to the dedicated Pan tool
+        {t('settings.pan.note')}
       </Typography>
     </Box>
   );

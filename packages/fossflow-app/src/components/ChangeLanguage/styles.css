@@ -23,10 +23,11 @@
   background-color: white;
   border-radius: 4px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  width: 100%;
+  min-width: 120px;
   z-index: 1000;
   margin-top: 4px;
   overflow: hidden;
+  white-space: nowrap;
 }
 
 .language-option {

@@ -116,6 +116,46 @@ const locale: LocaleProps = {
       description: "Configure zoom behavior when using the mouse wheel.",
       zoomToCursor: "Zoom to Cursor",
       zoomToCursorDesc: "When enabled, zoom in/out centered on the mouse cursor position. When disabled, zoom is centered on the canvas."
+    },
+    hotkeys: {
+      title: "Hotkey Settings",
+      profile: "Hotkey Profile",
+      profileQwerty: "QWERTY (Q, W, E, R, T, Y)",
+      profileSmnrct: "SMNRCT (S, M, N, R, C, T)",
+      profileNone: "No Hotkeys",
+      tool: "Tool",
+      hotkey: "Hotkey",
+      toolSelect: "Select",
+      toolPan: "Pan",
+      toolAddItem: "Add Item",
+      toolRectangle: "Rectangle",
+      toolConnector: "Connector",
+      toolText: "Text",
+      note: "Note: Hotkeys work when not typing in text fields"
+    },
+    pan: {
+      title: "Pan Settings",
+      mousePanOptions: "Mouse Pan Options",
+      emptyAreaClickPan: "Click and drag on empty area",
+      middleClickPan: "Middle click and drag",
+      rightClickPan: "Right click and drag",
+      ctrlClickPan: "Ctrl + click and drag",
+      altClickPan: "Alt + click and drag",
+      keyboardPanOptions: "Keyboard Pan Options",
+      arrowKeys: "Arrow keys",
+      wasdKeys: "WASD keys",
+      ijklKeys: "IJKL keys",
+      keyboardPanSpeed: "Keyboard Pan Speed",
+      note: "Note: Pan options work in addition to the dedicated Pan tool"
+    },
+    connector: {
+      title: "Connector Settings",
+      connectionMode: "Connection Creation Mode",
+      clickMode: "Click Mode (Recommended)",
+      clickModeDesc: "Click the first node, then click the second node to create a connection",
+      dragMode: "Drag Mode",
+      dragModeDesc: "Click and drag from the first node to the second node",
+      note: "Note: You can change this setting at any time. The selected mode will be used when the Connector tool is active."
     }
   }
 };

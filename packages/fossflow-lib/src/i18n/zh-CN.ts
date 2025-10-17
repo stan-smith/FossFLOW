@@ -116,6 +116,46 @@ const locale: LocaleProps = {
       description: "配置使用鼠标滚轮时的缩放行为。",
       zoomToCursor: "光标缩放",
       zoomToCursorDesc: "启用时，以鼠标光标位置为中心进行缩放。禁用时，以画布中心进行缩放。"
+    },
+    hotkeys: {
+      title: "快捷键设置",
+      profile: "快捷键配置",
+      profileQwerty: "QWERTY（Q、W、E、R、T、Y）",
+      profileSmnrct: "SMNRCT（S、M、N、R、C、T）",
+      profileNone: "无快捷键",
+      tool: "工具",
+      hotkey: "快捷键",
+      toolSelect: "选择",
+      toolPan: "平移",
+      toolAddItem: "添加项目",
+      toolRectangle: "矩形",
+      toolConnector: "连接器",
+      toolText: "文本",
+      note: "注意：在文本输入框中输入时快捷键不生效"
+    },
+    pan: {
+      title: "平移设置",
+      mousePanOptions: "鼠标平移选项",
+      emptyAreaClickPan: "点击并拖拽空白区域",
+      middleClickPan: "中键点击并拖拽",
+      rightClickPan: "右键点击并拖拽",
+      ctrlClickPan: "Ctrl + 点击并拖拽",
+      altClickPan: "Alt + 点击并拖拽",
+      keyboardPanOptions: "键盘平移选项",
+      arrowKeys: "方向键",
+      wasdKeys: "WASD 键",
+      ijklKeys: "IJKL 键",
+      keyboardPanSpeed: "键盘平移速度",
+      note: "注意：平移选项可与专用的平移工具一起使用"
+    },
+    connector: {
+      title: "连接器设置",
+      connectionMode: "连接创建模式",
+      clickMode: "点击模式（推荐）",
+      clickModeDesc: "先点击第一个节点，然后点击第二个节点来创建连接",
+      dragMode: "拖拽模式",
+      dragModeDesc: "从第一个节点点击并拖拽到第二个节点",
+      note: "注意：您可以随时更改此设置。所选模式将在连接器工具激活时使用。"
     }
   }
 };

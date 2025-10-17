@@ -10,10 +10,12 @@ import {
   Paper
 } from '@mui/material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
+import { useTranslation } from 'src/stores/localeStore';
 
 export const ConnectorSettings = () => {
   const connectorInteractionMode = useUiStateStore((state) => state.connectorInteractionMode);
   const setConnectorInteractionMode = useUiStateStore((state) => state.actions.setConnectorInteractionMode);
+  const { t } = useTranslation();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setConnectorInteractionMode(event.target.value as 'click' | 'drag');
@@ -22,12 +24,12 @@ export const ConnectorSettings = () => {
   return (
     <Box>
       <Typography variant="h6" gutterBottom>
-        Connector Settings
+        {t('settings.connector.title')}
       </Typography>
-      
+
       <Paper variant="outlined" sx={{ p: 2, mt: 2 }}>
         <FormControl component="fieldset">
-          <FormLabel component="legend">Connection Creation Mode</FormLabel>
+          <FormLabel component="legend">{t('settings.connector.connectionMode')}</FormLabel>
           <RadioGroup
             value={connectorInteractionMode}
             onChange={handleChange}
@@ -38,9 +40,9 @@ export const ConnectorSettings = () => {
               control={<Radio />}
               label={
                 <Box>
-                  <Typography variant="body1">Click Mode (Recommended)</Typography>
+                  <Typography variant="body1">{t('settings.connector.clickMode')}</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Click the first node, then click the second node to create a connection
+                    {t('settings.connector.clickModeDesc')}
                   </Typography>
                 </Box>
               }
@@ -50,9 +52,9 @@ export const ConnectorSettings = () => {
               control={<Radio />}
               label={
                 <Box>
-                  <Typography variant="body1">Drag Mode</Typography>
+                  <Typography variant="body1">{t('settings.connector.dragMode')}</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    Click and drag from the first node to the second node
+                    {t('settings.connector.dragModeDesc')}
                   </Typography>
                 </Box>
               }
@@ -61,10 +63,9 @@ export const ConnectorSettings = () => {
           </RadioGroup>
         </FormControl>
       </Paper>
-      
+
       <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
-        Note: You can change this setting at any time. The selected mode will be used
-        when the Connector tool is active.
+        {t('settings.connector.note')}
       </Typography>
     </Box>
   );
