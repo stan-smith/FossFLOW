@@ -1,7 +1,7 @@
 # FossFLOW - Isometric Diagramming Tool <img width="30" height="30" alt="fossflow" src="https://github.com/user-attachments/assets/56d78887-601c-4336-ab87-76f8ee4cde96" />
 
 <p align="center">
- <a href="README.md">English</a> | <a href="docs/README.cn.md">简体中文</a>
+ <a href="README.md">English</a> | <a href="docs/README.cn.md">简体中文</a> | <a href="docs/README.es.md">Español</a> | <a href="docs/README.pt.md">Português</a> | <a href="docs/README.fr.md">Français</a> | <a href="docs/README.hi.md">हिन्दी</a> | <a href="docs/README.bn.md">বাংলা</a> | <a href="docs/README.ru.md">Русский</a>
 </p>
 
 <b>Hey!</b> Stan here, if you've used FossFLOW and it's helped you, <b>I'd really appreciate if you could donate something small :)</b> I work full time, and finding the time to work on this project is challenging enough.
@@ -34,8 +34,11 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 
 ## Recent Updates (October 2025)
 
-### Spanish Support:
-- Added support for Spanish
+### Multilingual Support
+- **8 Languages Supported** - Full interface translation in English, Chinese (Simplified), Spanish, Portuguese (Brazilian), French, Hindi, Bengali, and Russian
+- **Language Selector** - Easy-to-use language switcher in the app header
+- **Complete Translation** - All menus, dialogs, settings, tooltips, and help content translated
+- **Locale-Aware** - Automatically detects and remembers your language preference
 
 ### Improved Connector Tool
 - **Click-based Creation** - New default mode: click first node, then second node to connect
@@ -91,6 +94,7 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 - 🎯 **Session Storage** - Quick save without dialogs
 - 🌐 **Offline Support** - Work without internet connection
 - 🗄️ **Server Storage** - Optional persistent storage when using Docker (enabled by default)
+- 🌍 **Multilingual** - Full support for 8 languages: English, 简体中文, Español, Português, Français, हिन्दी, বাংলা, Русский
 
 
 ## 🐳 Quick Deploy with Docker
