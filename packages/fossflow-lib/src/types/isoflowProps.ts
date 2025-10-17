@@ -124,6 +124,46 @@ export interface LocaleProps {
       zoomToCursor: string;
       zoomToCursorDesc: string;
     };
+    hotkeys: {
+      title: string;
+      profile: string;
+      profileQwerty: string;
+      profileSmnrct: string;
+      profileNone: string;
+      tool: string;
+      hotkey: string;
+      toolSelect: string;
+      toolPan: string;
+      toolAddItem: string;
+      toolRectangle: string;
+      toolConnector: string;
+      toolText: string;
+      note: string;
+    };
+    pan: {
+      title: string;
+      mousePanOptions: string;
+      emptyAreaClickPan: string;
+      middleClickPan: string;
+      rightClickPan: string;
+      ctrlClickPan: string;
+      altClickPan: string;
+      keyboardPanOptions: string;
+      arrowKeys: string;
+      wasdKeys: string;
+      ijklKeys: string;
+      keyboardPanSpeed: string;
+      note: string;
+    };
+    connector: {
+      title: string;
+      connectionMode: string;
+      clickMode: string;
+      clickModeDesc: string;
+      dragMode: string;
+      dragModeDesc: string;
+      note: string;
+    };
   };
   // other namespaces can be added here
 }

@@ -16,38 +16,40 @@ import {
 } from '@mui/material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { HOTKEY_PROFILES, HotkeyProfile } from 'src/config/hotkeys';
+import { useTranslation } from 'src/stores/localeStore';
 
 export const HotkeySettings = () => {
   const hotkeyProfile = useUiStateStore((state) => state.hotkeyProfile);
   const setHotkeyProfile = useUiStateStore((state) => state.actions.setHotkeyProfile);
+  const { t } = useTranslation();
 
   const currentMapping = HOTKEY_PROFILES[hotkeyProfile];
 
   const tools = [
-    { name: 'Select', key: currentMapping.select },
-    { name: 'Pan', key: currentMapping.pan },
-    { name: 'Add Item', key: currentMapping.addItem },
-    { name: 'Rectangle', key: currentMapping.rectangle },
-    { name: 'Connector', key: currentMapping.connector },
-    { name: 'Text', key: currentMapping.text }
+    { name: t('settings.hotkeys.toolSelect'), key: currentMapping.select },
+    { name: t('settings.hotkeys.toolPan'), key: currentMapping.pan },
+    { name: t('settings.hotkeys.toolAddItem'), key: currentMapping.addItem },
+    { name: t('settings.hotkeys.toolRectangle'), key: currentMapping.rectangle },
+    { name: t('settings.hotkeys.toolConnector'), key: currentMapping.connector },
+    { name: t('settings.hotkeys.toolText'), key: currentMapping.text }
   ];
 
   return (
     <Box sx={{ p: 2 }}>
       <Typography variant="h6" gutterBottom>
-        Hotkey Settings
+        {t('settings.hotkeys.title')}
       </Typography>
-      
+
       <FormControl fullWidth sx={{ mb: 3 }}>
-        <InputLabel>Hotkey Profile</InputLabel>
+        <InputLabel>{t('settings.hotkeys.profile')}</InputLabel>
         <Select
           value={hotkeyProfile}
-          label="Hotkey Profile"
+          label={t('settings.hotkeys.profile')}
           onChange={(e) => setHotkeyProfile(e.target.value as HotkeyProfile)}
         >
-          <MenuItem value="qwerty">QWERTY (Q, W, E, R, T, Y)</MenuItem>
-          <MenuItem value="smnrct">SMNRCT (S, M, N, R, C, T)</MenuItem>
-          <MenuItem value="none">No Hotkeys</MenuItem>
+          <MenuItem value="qwerty">{t('settings.hotkeys.profileQwerty')}</MenuItem>
+          <MenuItem value="smnrct">{t('settings.hotkeys.profileSmnrct')}</MenuItem>
+          <MenuItem value="none">{t('settings.hotkeys.profileNone')}</MenuItem>
         </Select>
       </FormControl>
 
@@ -56,8 +58,8 @@ export const HotkeySettings = () => {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>Tool</TableCell>
-                <TableCell>Hotkey</TableCell>
+                <TableCell>{t('settings.hotkeys.tool')}</TableCell>
+                <TableCell>{t('settings.hotkeys.hotkey')}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -77,7 +79,7 @@ export const HotkeySettings = () => {
       )}
 
       <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
-        Note: Hotkeys work when not typing in text fields
+        {t('settings.hotkeys.note')}
       </Typography>
     </Box>
   );

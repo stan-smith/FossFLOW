@@ -32,6 +32,10 @@ export const supportedLanguages = [
     label: '中文',
     value: 'zh-CN',
   },
+  {
+    label: 'Español',
+    value: 'es-ES',
+  },
 ];
 
 export default i18n;
