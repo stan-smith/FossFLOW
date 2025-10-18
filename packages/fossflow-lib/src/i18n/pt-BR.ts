@@ -156,7 +156,33 @@ const locale: LocaleProps = {
       dragMode: "Modo arrastar",
       dragModeDesc: "Clique e arraste do primeiro nó ao segundo nó",
       note: "Nota: Você pode alterar esta configuração a qualquer momento. O modo selecionado será usado quando a ferramenta de conector estiver ativa."
+    },
+    iconPacks: {
+      title: "Gerenciamento de Pacotes de Ícones",
+      lazyLoading: "Ativar Carregamento Sob Demanda",
+      lazyLoadingDesc: "Carregar pacotes de ícones sob demanda para inicialização mais rápida",
+      availablePacks: "Pacotes de Ícones Disponíveis",
+      coreIsoflow: "Core Isoflow (Sempre Carregado)",
+      alwaysEnabled: "Sempre ativado",
+      awsPack: "Ícones AWS",
+      gcpPack: "Ícones Google Cloud",
+      azurePack: "Ícones Azure",
+      kubernetesPack: "Ícones Kubernetes",
+      loading: "Carregando...",
+      loaded: "Carregado",
+      notLoaded: "Não carregado",
+      iconCount: "{count} ícones",
+      lazyLoadingDisabledNote: "O carregamento sob demanda está desativado. Todos os pacotes de ícones são carregados na inicialização.",
+      note: "Os pacotes de ícones podem ser ativados ou desativados conforme suas necessidades. Pacotes desativados reduzirão o uso de memória e melhorarão o desempenho."
     }
+  },
+  lazyLoadingWelcome: {
+    title: "Novo Recurso: Carregamento Sob Demanda!",
+    message: "Ei! Após demanda popular, implementamos o Carregamento Sob Demanda de ícones, então agora se você quiser ativar pacotes de ícones não padrão, você pode ativá-los na seção 'Configuração'.",
+    configPath: "Clique no ícone do Menu",
+    configPath2: "no canto superior esquerdo para acessar a Configuração.",
+    canDisable: "Você pode desativar esse comportamento se desejar.",
+    signature: "-Stan"
   }
 };
 

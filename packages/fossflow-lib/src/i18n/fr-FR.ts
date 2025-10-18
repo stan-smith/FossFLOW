@@ -156,7 +156,33 @@ const locale: LocaleProps = {
       dragMode: "Mode glisser",
       dragModeDesc: "Cliquez et glissez du premier nœud au deuxième nœud",
       note: "Remarque : Vous pouvez modifier ce paramètre à tout moment. Le mode sélectionné sera utilisé lorsque l'outil de connecteur est actif."
+    },
+    iconPacks: {
+      title: "Gestion des Packs d'Icônes",
+      lazyLoading: "Activer le Chargement Paresseux",
+      lazyLoadingDesc: "Charger les packs d'icônes à la demande pour un démarrage plus rapide",
+      availablePacks: "Packs d'Icônes Disponibles",
+      coreIsoflow: "Core Isoflow (Toujours Chargé)",
+      alwaysEnabled: "Toujours activé",
+      awsPack: "Icônes AWS",
+      gcpPack: "Icônes Google Cloud",
+      azurePack: "Icônes Azure",
+      kubernetesPack: "Icônes Kubernetes",
+      loading: "Chargement...",
+      loaded: "Chargé",
+      notLoaded: "Non chargé",
+      iconCount: "{count} icônes",
+      lazyLoadingDisabledNote: "Le chargement paresseux est désactivé. Tous les packs d'icônes sont chargés au démarrage.",
+      note: "Les packs d'icônes peuvent être activés ou désactivés selon vos besoins. Les packs désactivés réduiront l'utilisation de la mémoire et amélioreront les performances."
     }
+  },
+  lazyLoadingWelcome: {
+    title: "Nouvelle Fonctionnalité : Chargement Paresseux !",
+    message: "Salut ! Suite à une forte demande, nous avons implémenté le Chargement Paresseux des icônes, donc maintenant si vous voulez activer des packs d'icônes non standard, vous pouvez les activer dans la section 'Configuration'.",
+    configPath: "Cliquez sur l'icône Hamburger",
+    configPath2: "en haut à gauche pour accéder à la Configuration.",
+    canDisable: "Vous pouvez désactiver ce comportement si vous le souhaitez.",
+    signature: "-Stan"
   }
 };
 

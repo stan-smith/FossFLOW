@@ -38,6 +38,7 @@ const initialState = () => {
       zoomSettings: DEFAULT_ZOOM_SETTINGS,
       connectorInteractionMode: 'click', // Default to click mode
       expandLabels: false, // Default to collapsed labels
+      iconPackManager: null, // Will be set by Isoflow if provided
 
       actions: {
         setView: (view) => {
@@ -115,6 +116,9 @@ const initialState = () => {
         },
         setExpandLabels: (expandLabels) => {
           set({ expandLabels });
+        },
+        setIconPackManager: (iconPackManager) => {
+          set({ iconPackManager });
         }
       }
     };

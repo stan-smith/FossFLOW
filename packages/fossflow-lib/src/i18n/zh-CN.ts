@@ -156,7 +156,33 @@ const locale: LocaleProps = {
       dragMode: "拖拽模式",
       dragModeDesc: "从第一个节点点击并拖拽到第二个节点",
       note: "注意：您可以随时更改此设置。所选模式将在连接器工具激活时使用。"
+    },
+    iconPacks: {
+      title: "图标包管理",
+      lazyLoading: "启用延迟加载",
+      lazyLoadingDesc: "按需加载图标包以加快启动速度",
+      availablePacks: "可用图标包",
+      coreIsoflow: "核心 Isoflow（始终加载）",
+      alwaysEnabled: "始终启用",
+      awsPack: "AWS 图标",
+      gcpPack: "Google Cloud 图标",
+      azurePack: "Azure 图标",
+      kubernetesPack: "Kubernetes 图标",
+      loading: "加载中...",
+      loaded: "已加载",
+      notLoaded: "未加载",
+      iconCount: "{count} 个图标",
+      lazyLoadingDisabledNote: "延迟加载已禁用。所有图标包将在启动时加载。",
+      note: "可以根据需要启用或禁用图标包。禁用的图标包将减少内存使用并提高性能。"
     }
+  },
+  lazyLoadingWelcome: {
+    title: "新功能：延迟加载！",
+    message: "嘿！应大家的要求，我们实现了图标的延迟加载功能，现在如果您想启用非标准图标包，可以在「配置」部分中启用它们。",
+    configPath: "点击左上角的汉堡菜单图标",
+    configPath2: "以访问配置。",
+    canDisable: "如果您愿意，可以禁用此行为。",
+    signature: "-Stan"
   }
 };
 

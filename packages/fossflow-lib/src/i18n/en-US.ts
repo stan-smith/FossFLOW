@@ -156,7 +156,33 @@ const locale: LocaleProps = {
       dragMode: "Drag Mode",
       dragModeDesc: "Click and drag from the first node to the second node",
       note: "Note: You can change this setting at any time. The selected mode will be used when the Connector tool is active."
+    },
+    iconPacks: {
+      title: "Icon Pack Management",
+      lazyLoading: "Enable Lazy Loading",
+      lazyLoadingDesc: "Load icon packs on demand for faster startup",
+      availablePacks: "Available Icon Packs",
+      coreIsoflow: "Core Isoflow (Always Loaded)",
+      alwaysEnabled: "Always enabled",
+      awsPack: "AWS Icons",
+      gcpPack: "Google Cloud Icons",
+      azurePack: "Azure Icons",
+      kubernetesPack: "Kubernetes Icons",
+      loading: "Loading...",
+      loaded: "Loaded",
+      notLoaded: "Not loaded",
+      iconCount: "{count} icons",
+      lazyLoadingDisabledNote: "Lazy loading is disabled. All icon packs are loaded at startup.",
+      note: "Icon packs can be enabled or disabled based on your needs. Disabled packs will reduce memory usage and improve performance."
     }
+  },
+  lazyLoadingWelcome: {
+    title: "New Feature: Lazy Loading!",
+    message: "Hey! After popular demand, we have implemented Lazy Loading of icons, so now if you want to enable non-standard icon packs you can enable them in the 'Configuration' section.",
+    configPath: "Click on the Hamburger icon",
+    configPath2: "in the top left to access Configuration.",
+    canDisable: "You can disable this behaviour if you wish.",
+    signature: "-Stan"
   }
 };
 

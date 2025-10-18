@@ -164,8 +164,49 @@ export interface LocaleProps {
       dragModeDesc: string;
       note: string;
     };
+    iconPacks: {
+      title: string;
+      lazyLoading: string;
+      lazyLoadingDesc: string;
+      availablePacks: string;
+      coreIsoflow: string;
+      alwaysEnabled: string;
+      awsPack: string;
+      gcpPack: string;
+      azurePack: string;
+      kubernetesPack: string;
+      loading: string;
+      loaded: string;
+      notLoaded: string;
+      iconCount: string;
+      lazyLoadingDisabledNote: string;
+      note: string;
+    };
+  };
+  lazyLoadingWelcome: {
+    title: string;
+    message: string;
+    configPath: string;
+    configPath2: string;
+    canDisable: string;
+    signature: string;
   };
   // other namespaces can be added here
+}
+
+export interface IconPackManagerProps {
+  lazyLoadingEnabled: boolean;
+  onToggleLazyLoading: (enabled: boolean) => void;
+  packInfo: Array<{
+    name: string;
+    displayName: string;
+    loaded: boolean;
+    loading: boolean;
+    error: string | null;
+    iconCount: number;
+  }>;
+  enabledPacks: string[];
+  onTogglePack: (packName: string, enabled: boolean) => void;
 }
 
 export interface IsoflowProps {
@@ -178,4 +219,5 @@ export interface IsoflowProps {
   editorMode?: keyof typeof EditorModeEnum;
   renderer?: RendererProps;
   locale?: LocaleProps;
+  iconPackManager?: IconPackManagerProps;
 }

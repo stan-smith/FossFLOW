@@ -4,6 +4,7 @@ import { ItemReference } from './scene';
 import { HotkeyProfile } from 'src/config/hotkeys';
 import { PanSettings } from 'src/config/panSettings';
 import { ZoomSettings } from 'src/config/zoomSettings';
+import { IconPackManagerProps } from './isoflowProps';
 
 interface AddItemControls {
   type: 'ADD_ITEM';
@@ -181,6 +182,7 @@ export interface UiState {
   zoomSettings: ZoomSettings;
   connectorInteractionMode: ConnectorInteractionMode;
   expandLabels: boolean;
+  iconPackManager: IconPackManagerProps | null;
 
 }
 
@@ -207,6 +209,7 @@ export interface UiStateActions {
   setZoomSettings: (settings: ZoomSettings) => void;
   setConnectorInteractionMode: (mode: ConnectorInteractionMode) => void;
   setExpandLabels: (expand: boolean) => void;
+  setIconPackManager: (iconPackManager: IconPackManagerProps | null) => void;
 
 }
 

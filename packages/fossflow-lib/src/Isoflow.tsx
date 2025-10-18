@@ -25,6 +25,7 @@ const App = ({
   editorMode = 'EDITABLE',
   renderer,
   locale = enUS,
+  iconPackManager,
 }: IsoflowProps) => {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
@@ -66,6 +67,10 @@ const App = ({
       uiStateActions.setExpandLabels(renderer.expandLabels);
     }
   }, [renderer?.expandLabels, uiStateActions]);
+
+  useEffect(() => {
+    uiStateActions.setIconPackManager(iconPackManager || null);
+  }, [iconPackManager, uiStateActions]);
 
   if (!initialDataManager.isReady) return null;
 

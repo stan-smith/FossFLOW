@@ -2,10 +2,6 @@ import { useState, useEffect, useRef } from 'react';
 import { Isoflow } from 'fossflow';
 import { flattenCollections } from '@isoflow/isopacks/dist/utils';
 import isoflowIsopack from '@isoflow/isopacks/dist/isoflow';
-import awsIsopack from '@isoflow/isopacks/dist/aws';
-import gcpIsopack from '@isoflow/isopacks/dist/gcp';
-import azureIsopack from '@isoflow/isopacks/dist/azure';
-import kubernetesIsopack from '@isoflow/isopacks/dist/kubernetes';
 import { useTranslation } from 'react-i18next';
 import { DiagramData, mergeDiagramData, extractSavableData } from './diagramUtils';
 import { StorageManager } from './StorageManager';
@@ -13,15 +9,11 @@ import { DiagramManager } from './components/DiagramManager';
 import { storageManager } from './services/storageService';
 import ChangeLanguage from './components/ChangeLanguage';
 import { allLocales } from 'fossflow';
+import { useIconPackManager, IconPackName } from './services/iconPackManager';
 import './App.css';
 
-const icons = flattenCollections([
-  isoflowIsopack,
-  awsIsopack,
-  azureIsopack,
-  gcpIsopack,
-  kubernetesIsopack
-]);
+// Load core isoflow icons (always loaded)
+const coreIcons = flattenCollections([isoflowIsopack]);
 
 
 interface SavedDiagram {
@@ -33,6 +25,9 @@ interface SavedDiagram {
 }
 
 function App() {
+  // Initialize icon pack manager with core icons
+  const iconPackManager = useIconPackManager(coreIcons);
+
   const [diagrams, setDiagrams] = useState<SavedDiagram[]>([]);
   const [currentDiagram, setCurrentDiagram] = useState<SavedDiagram | null>(null);
   const [diagramName, setDiagramName] = useState('');
@@ -67,7 +62,7 @@ function App() {
       try {
         const data = JSON.parse(lastOpenedData);
         const importedIcons = (data.icons || []).filter((icon: any) => icon.collection === 'imported');
-        const mergedIcons = [...icons, ...importedIcons];
+        const mergedIcons = [...coreIcons, ...importedIcons];
         return {
           ...data,
           icons: mergedIcons,
@@ -78,11 +73,11 @@ function App() {
         console.error('Failed to load last opened data:', e);
       }
     }
-    
+
     // Default state if no saved data
     return {
       title: 'Untitled Diagram',
-      icons: icons,
+      icons: coreIcons,
       colors: defaultColors,
       items: [],
       views: [],
@@ -96,6 +91,17 @@ function App() {
       setServerStorageAvailable(storageManager.isServerStorage());
     }).catch(console.error);
   }, []);
+
+  // Update diagramData when loaded icons change
+  useEffect(() => {
+    setDiagramData(prev => ({
+      ...prev,
+      icons: [
+        ...iconPackManager.loadedIcons,
+        ...(prev.icons || []).filter(icon => icon.collection === 'imported')
+      ]
+    }));
+  }, [iconPackManager.loadedIcons]);
 
   // Load diagrams from localStorage on component mount
   useEffect(() => {
@@ -216,14 +222,17 @@ function App() {
     }
   };
 
-  const loadDiagram = (diagram: SavedDiagram) => {
+  const loadDiagram = async (diagram: SavedDiagram) => {
     if (hasUnsavedChanges && !window.confirm(t('alert.unsavedChanges'))) {
       return;
     }
-    
-    // Merge imported icons with default icon set
+
+    // Auto-detect and load required icon packs
+    await iconPackManager.loadPacksForDiagram(diagram.data.items || []);
+
+    // Merge imported icons with loaded icon set
     const importedIcons = (diagram.data.icons || []).filter((icon: any) => icon.collection === 'imported');
-    const mergedIcons = [...icons, ...importedIcons];
+    const mergedIcons = [...iconPackManager.loadedIcons, ...importedIcons];
     const dataWithIcons = {
       ...diagram.data,
       icons: mergedIcons
@@ -257,14 +266,14 @@ function App() {
   };
 
   const newDiagram = () => {
-    const message = hasUnsavedChanges 
+    const message = hasUnsavedChanges
       ? t('alert.unsavedChangesExport')
       : t('alert.createNewDiagram');
-      
+
     if (window.confirm(message)) {
       const emptyDiagram: DiagramData = {
         title: 'Untitled Diagram',
-        icons: icons, // Always include full icon set
+        icons: iconPackManager.loadedIcons, // Use currently loaded icons
         colors: defaultColors,
         items: [],
         views: [],
@@ -276,7 +285,7 @@ function App() {
       setCurrentModel(emptyDiagram); // Reset current model too
       setFossflowKey(prev => prev + 1); // Force re-render of FossFLOW
       setHasUnsavedChanges(false);
-      
+
       // Clear last opened
       localStorage.removeItem('fossflow-last-opened');
       localStorage.removeItem('fossflow-last-opened-data');
@@ -355,7 +364,7 @@ function App() {
   };
 
 
-  const handleDiagramManagerLoad = (id: string, data: any) => {
+  const handleDiagramManagerLoad = async (id: string, data: any) => {
     console.log(`App: handleDiagramManagerLoad called for diagram ${id}`);
 
     /**
@@ -379,6 +388,9 @@ function App() {
     const loadedIcons = data.icons || [];
     console.log(`App: Server sent ${loadedIcons.length} icons`);
 
+    // Auto-detect and load required icon packs
+    await iconPackManager.loadPacksForDiagram(data.items || []);
+
     // Strategy: Check if server has ALL icons (both default and imported)
     // Server storage now saves ALL icons, so we should use them directly
     // For backward compatibility with old saves, we detect and merge
@@ -395,10 +407,10 @@ function App() {
       finalIcons = loadedIcons;
     } else {
       // Old format: Server only saved imported icons
-      // Merge imported icons with current default icons
+      // Merge imported icons with currently loaded icon packs
       const importedIcons = loadedIcons.filter((icon: any) => icon.collection === 'imported');
-      finalIcons = [...icons, ...importedIcons];
-      console.log(`App: Old format detected. Merged ${importedIcons.length} imported icons with ${icons.length} defaults = ${finalIcons.length} total`);
+      finalIcons = [...iconPackManager.loadedIcons, ...importedIcons];
+      console.log(`App: Old format detected. Merged ${importedIcons.length} imported icons with ${iconPackManager.loadedIcons.length} defaults = ${finalIcons.length} total`);
     }
 
     const mergedData: DiagramData = {
@@ -444,12 +456,12 @@ function App() {
   // Auto-save functionality
   useEffect(() => {
     if (!currentModel || !hasUnsavedChanges || !currentDiagram) return;
-    
+
     const autoSaveTimer = setTimeout(() => {
       // Include imported icons in auto-save
       const importedIcons = (currentModel?.icons || diagramData.icons || [])
         .filter(icon => icon.collection === 'imported');
-      
+
       const savedData = {
         title: diagramName || currentDiagram.name,
         icons: importedIcons, // Save imported icons in auto-save
@@ -458,17 +470,17 @@ function App() {
         views: currentModel.views || [],
         fitToScreen: true
       };
-      
+
       const updatedDiagram: SavedDiagram = {
         ...currentDiagram,
         data: savedData,
         updatedAt: new Date().toISOString()
       };
-      
-      setDiagrams(prevDiagrams => 
+
+      setDiagrams(prevDiagrams =>
         prevDiagrams.map(d => d.id === currentDiagram.id ? updatedDiagram : d)
       );
-      
+
       // Update last opened data
       try {
         localStorage.setItem('fossflow-last-opened-data', JSON.stringify(savedData));
@@ -482,9 +494,9 @@ function App() {
         }
       }
     }, 5000); // Auto-save after 5 seconds of changes
-    
+
     return () => clearTimeout(autoSaveTimer);
-  }, [currentModel, hasUnsavedChanges, currentDiagram, diagramName, icons]);
+  }, [currentModel, hasUnsavedChanges, currentDiagram, diagramName]);
   
   // Warn before closing if there are unsaved changes
   useEffect(() => {
@@ -547,12 +559,19 @@ function App() {
       </div>
 
       <div className="fossflow-container">
-        <Isoflow 
+        <Isoflow
           key={fossflowKey}
           initialData={diagramData}
           onModelUpdated={handleModelUpdated}
           editorMode="EDITABLE"
           locale={allLocales[i18n.language as keyof typeof allLocales]}
+          iconPackManager={{
+            lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,
+            onToggleLazyLoading: iconPackManager.toggleLazyLoading,
+            packInfo: Object.values(iconPackManager.packInfo),
+            enabledPacks: iconPackManager.enabledPacks,
+            onTogglePack: iconPackManager.togglePack
+          }}
         />
       </div>
 

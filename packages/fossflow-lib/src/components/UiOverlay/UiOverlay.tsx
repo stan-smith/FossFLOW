@@ -23,6 +23,7 @@ import { ConnectorEmptySpaceTooltip } from '../ConnectorEmptySpaceTooltip/Connec
 import { ConnectorRerouteTooltip } from '../ConnectorRerouteTooltip/ConnectorRerouteTooltip';
 import { ImportHintTooltip } from '../ImportHintTooltip/ImportHintTooltip';
 import { LassoHintTooltip } from '../LassoHintTooltip/LassoHintTooltip';
+import { LazyLoadingWelcomeNotification } from '../LazyLoadingWelcomeNotification/LazyLoadingWelcomeNotification';
 
 const ToolsEnum = {
   MAIN_MENU: 'MAIN_MENU',
@@ -95,6 +96,9 @@ export const UiOverlay = () => {
   });
   const title = useModelStore((state) => {
     return state.title;
+  });
+  const iconPackManager = useUiStateStore((state) => {
+    return state.iconPackManager;
   });
   const { size: rendererSize } = useResizeObserver(rendererEl);
 
@@ -245,7 +249,7 @@ export const UiOverlay = () => {
 
       {dialog === DialogTypeEnum.HELP && <HelpDialog />}
 
-      {dialog === DialogTypeEnum.SETTINGS && <SettingsDialog />}
+      {dialog === DialogTypeEnum.SETTINGS && <SettingsDialog iconPackManager={iconPackManager || undefined} />}
 
       {/* Show hint tooltips only in editable mode */}
       {editorMode === EditorModeEnum.EDITABLE && <ConnectorHintTooltip toolMenuRef={toolMenuRef} />}
@@ -253,6 +257,9 @@ export const UiOverlay = () => {
       {editorMode === EditorModeEnum.EDITABLE && <ConnectorRerouteTooltip />}
       {editorMode === EditorModeEnum.EDITABLE && <ImportHintTooltip />}
       {editorMode === EditorModeEnum.EDITABLE && <LassoHintTooltip toolMenuRef={toolMenuRef} />}
+
+      {/* Show lazy loading welcome notification if icon pack manager is provided */}
+      {iconPackManager && <LazyLoadingWelcomeNotification />}
 
       <SceneLayer>
         <Box ref={contextMenuAnchorRef} />
