@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.1](https://github.com/stan-smith/FossFLOW/compare/v1.5.0...v1.5.1) (2025-10-18)
+
+### Bug Fixes
+
+* Added lazy icon loading, users now select which icons they want loaded in, by default only the isoflow ones get loaded in, users can quickly change this, or disable this behaviour, this results in much faster loads. Fixes [#79](https://github.com/stan-smith/FossFLOW/issues/79) ([e0462f6](https://github.com/stan-smith/FossFLOW/commit/e0462f6bbd58543b98bfb395fca4fc6a10e62a50))
+
 ## [1.5.0](https://github.com/stan-smith/FossFLOW/compare/v1.4.0...v1.5.0) (2025-10-17)
 
 ### Features
