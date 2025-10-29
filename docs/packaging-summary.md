@@ -109,7 +109,7 @@ FossFLOW is a Progressive Web App (PWA) built with React. To package it as a nat
 - Users can install it like any other desktop application
 - It works offline (already a PWA feature)
 - It provides consistent experience across platforms
-- It handles web technologies natively
+- It renders web technologies natively
 
 Alternative approaches considered:
 - Browser wrapper (requires browser installation)
