@@ -71,7 +71,7 @@ modules:
         cat > /app/bin/fossflow << 'EOF'
         #!/bin/bash
         set -e
-        
+
         # Use Electron to launch the app
         exec electron /app/share/fossflow/index.html "$@"
         EOF

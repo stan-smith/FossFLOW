@@ -246,6 +246,8 @@ fossflow
 - [FOSSFLOW_ENCYCLOPEDIA.md](FOSSFLOW_ENCYCLOPEDIA.md) - Comprehensive guide to the codebase
 - [FOSSFLOW_TODO.md](FOSSFLOW_TODO.md) - Current issues and roadmap
 - [CONTRIBUTORS.md](CONTRIBUTORS.md) - Contributing guidelines
+- [PACKAGING.md](PACKAGING.md) - Linux packaging guide (Flatpak & Snap)
+- [Quick Start: Packaging](docs/packaging-quick-start.md) - Quick reference for package builds
 
 ## License
 
