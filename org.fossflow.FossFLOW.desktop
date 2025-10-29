@@ -1,0 +1,12 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=FossFLOW
+GenericName=Isometric Diagramming Tool
+Comment=Create beautiful isometric diagrams
+Categories=Graphics;VectorGraphics;Engineering;
+Exec=fossflow
+Icon=org.fossflow.FossFLOW
+Terminal=false
+StartupWMClass=FossFLOW
+Keywords=diagram;isometric;flowchart;network;architecture;

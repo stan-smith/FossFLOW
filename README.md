@@ -194,6 +194,53 @@ npm run publish:lib  # Publish library to npm
 
 We welcome contributions! Please see [CONTRIBUTORS.md](CONTRIBUTORS.md) for guidelines.
 
+## Packaging for Linux
+
+### Flatpak
+
+FossFLOW can be packaged as a Flatpak for easy distribution on Linux systems.
+
+**Prerequisites:**
+- flatpak
+- flatpak-builder
+
+**Building:**
+```bash
+# Install Flatpak SDK
+flatpak install flathub org.freedesktop.Platform//23.08 org.freedesktop.Sdk//23.08
+
+# Build the Flatpak
+flatpak-builder --force-clean build-dir org.fossflow.FossFLOW.yml
+
+# Install locally
+flatpak-builder --user --install --force-clean build-dir org.fossflow.FossFLOW.yml
+
+# Run the application
+flatpak run org.fossflow.FossFLOW
+```
+
+### Snap
+
+FossFLOW can also be packaged as a Snap for distribution via Snapcraft.
+
+**Prerequisites:**
+- snapcraft
+- multipass or lxd
+
+**Building:**
+```bash
+# Build the snap
+snapcraft
+
+# Install locally
+sudo snap install --dangerous fossflow_1.5.1_amd64.snap
+
+# Run the application
+fossflow
+```
+
+**Note:** Both packaging formats use Electron to wrap the web application for a native desktop experience.
+
 ## Documentation
 
 - [FOSSFLOW_ENCYCLOPEDIA.md](FOSSFLOW_ENCYCLOPEDIA.md) - Comprehensive guide to the codebase

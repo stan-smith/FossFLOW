@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>org.fossflow.FossFLOW</id>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <name>FossFLOW</name>
+  <summary>Isometric Diagramming Tool</summary>
+  
+  <description>
+    <p>
+      FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beautiful isometric diagrams. 
+      Built with React and the Isoflow library, it runs entirely in your browser with offline support.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Isometric Diagramming - Create stunning 3D-style technical diagrams</li>
+      <li>Auto-Save - Your work is automatically saved every 5 seconds</li>
+      <li>PWA Support - Install as a native app on Mac and Linux</li>
+      <li>Privacy-First - All data stored locally in your browser</li>
+      <li>Import/Export - Share diagrams as JSON files</li>
+      <li>Session Storage - Quick save without dialogs</li>
+      <li>Offline Support - Work without internet connection</li>
+      <li>Multilingual - Full support for 8 languages</li>
+    </ul>
+  </description>
+  
+  <launchable type="desktop-id">org.fossflow.FossFLOW.desktop</launchable>
+  
+  <url type="homepage">https://stan-smith.github.io/FossFLOW/</url>
+  <url type="bugtracker">https://github.com/stan-smith/FossFLOW/issues</url>
+  <url type="help">https://github.com/stan-smith/FossFLOW/blob/master/README.md</url>
+  
+  <developer_name>Stan Smith</developer_name>
+  
+  <content_rating type="oars-1.1"/>
+  
+  <screenshots>
+    <screenshot type="default">
+      <image>https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55</image>
+      <caption>Main interface showing isometric diagram editor</caption>
+    </screenshot>
+  </screenshots>
+  
+  <releases>
+    <release version="1.5.1" date="2025-10-29"/>
+  </releases>
+  
+  <categories>
+    <category>Graphics</category>
+    <category>VectorGraphics</category>
+    <category>Engineering</category>
+  </categories>
+  
+  <keywords>
+    <keyword>diagram</keyword>
+    <keyword>isometric</keyword>
+    <keyword>flowchart</keyword>
+    <keyword>network</keyword>
+    <keyword>architecture</keyword>
+  </keywords>
+</component>

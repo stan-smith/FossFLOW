@@ -1,0 +1,142 @@
+name: fossflow
+base: core22
+version: '1.5.1'
+summary: Isometric Diagramming Tool
+description: |
+  FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating 
+  beautiful isometric diagrams. Built with React and the Isoflow library, it 
+  runs entirely in your browser with offline support.
+  
+  Features:
+  - Isometric Diagramming - Create stunning 3D-style technical diagrams
+  - Auto-Save - Your work is automatically saved every 5 seconds
+  - PWA Support - Install as a native app on Mac and Linux
+  - Privacy-First - All data stored locally in your browser
+  - Import/Export - Share diagrams as JSON files
+  - Session Storage - Quick save without dialogs
+  - Offline Support - Work without internet connection
+  - Multilingual - Full support for 8 languages
+
+grade: stable
+confinement: strict
+license: MIT
+
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+
+apps:
+  fossflow:
+    command: bin/desktop-launch $SNAP/bin/fossflow-launcher
+    extensions: [gnome]
+    plugs:
+      - home
+      - network
+      - network-bind
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
+      - opengl
+      - browser-support
+
+parts:
+  fossflow:
+    plugin: nil
+    source: .
+    override-build: |
+      # Install Node.js
+      curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+      apt-get install -y nodejs
+      
+      # Install dependencies
+      npm install --legacy-peer-deps
+      
+      # Build the application
+      npm run build:lib
+      npm run build:app
+      
+      # Create application directory structure
+      mkdir -p $SNAPCRAFT_PART_INSTALL/share/fossflow
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      
+      # Copy built app
+      cp -r packages/fossflow-app/build/* $SNAPCRAFT_PART_INSTALL/share/fossflow/
+      
+      # Copy backend if needed
+      cp -r packages/fossflow-backend $SNAPCRAFT_PART_INSTALL/share/fossflow/backend
+      
+      # Create launcher script
+      cat > $SNAPCRAFT_PART_INSTALL/bin/fossflow-launcher << 'EOF'
+      #!/bin/bash
+      set -e
+      
+      # Set up environment
+      export HOME=$SNAP_USER_DATA
+      
+      # Launch the app using electron
+      cd $SNAP/share/fossflow
+      exec electron $SNAP/share/fossflow/index.html "$@"
+      EOF
+      
+      chmod +x $SNAPCRAFT_PART_INSTALL/bin/fossflow-launcher
+      
+      # Install desktop file
+      mkdir -p $SNAPCRAFT_PART_INSTALL/share/applications
+      cp org.fossflow.FossFLOW.desktop $SNAPCRAFT_PART_INSTALL/share/applications/
+      
+      # Install icons
+      mkdir -p $SNAPCRAFT_PART_INSTALL/share/icons/hicolor/512x512/apps
+      mkdir -p $SNAPCRAFT_PART_INSTALL/share/icons/hicolor/192x192/apps
+      cp packages/fossflow-app/public/logo512.png $SNAPCRAFT_PART_INSTALL/share/icons/hicolor/512x512/apps/org.fossflow.FossFLOW.png
+      cp packages/fossflow-app/public/logo192.png $SNAPCRAFT_PART_INSTALL/share/icons/hicolor/192x192/apps/org.fossflow.FossFLOW.png
+      
+      # Install AppStream metadata
+      mkdir -p $SNAPCRAFT_PART_INSTALL/share/metainfo
+      cp org.fossflow.FossFLOW.metainfo.xml $SNAPCRAFT_PART_INSTALL/share/metainfo/
+    
+    build-packages:
+      - curl
+      - git
+    
+    stage-packages:
+      - libgtk-3-0
+      - libnotify4
+      - libnss3
+      - libxss1
+      - libxtst6
+      - xdg-utils
+      - libatspi2.0-0
+      - libuuid1
+      - libsecret-1-0
+
+  electron:
+    plugin: nil
+    override-build: |
+      # Download and install Electron
+      ELECTRON_VERSION=32.2.5
+      ARCH=$(uname -m)
+      
+      if [ "$ARCH" = "x86_64" ]; then
+        ELECTRON_ARCH="x64"
+      elif [ "$ARCH" = "aarch64" ]; then
+        ELECTRON_ARCH="arm64"
+      fi
+      
+      curl -L -o electron.zip "https://github.com/electron/electron/releases/download/v${ELECTRON_VERSION}/electron-v${ELECTRON_VERSION}-linux-${ELECTRON_ARCH}.zip"
+      
+      mkdir -p $SNAPCRAFT_PART_INSTALL/lib/electron
+      unzip -q electron.zip -d $SNAPCRAFT_PART_INSTALL/lib/electron
+      
+      # Create electron wrapper
+      mkdir -p $SNAPCRAFT_PART_INSTALL/bin
+      cat > $SNAPCRAFT_PART_INSTALL/bin/electron << 'EOF'
+      #!/bin/bash
+      exec $SNAP/lib/electron/electron "$@"
+      EOF
+      
+      chmod +x $SNAPCRAFT_PART_INSTALL/bin/electron
+    
+    build-packages:
+      - curl
+      - unzip

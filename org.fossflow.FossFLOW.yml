@@ -1,0 +1,86 @@
+app-id: org.fossflow.FossFLOW
+runtime: org.freedesktop.Platform
+runtime-version: '23.08'
+sdk: org.freedesktop.Sdk
+base: org.electronjs.Electron2.BaseApp
+base-version: '23.08'
+command: fossflow
+separate-locales: false
+
+finish-args:
+  # X11 + XShm access
+  - --share=ipc
+  - --socket=x11
+  # Wayland access
+  - --socket=wayland
+  # GPU acceleration
+  - --device=dri
+  # Network access for optional server storage
+  - --share=network
+  # Access to home directory for saving/loading diagrams
+  - --filesystem=home
+  # Persist data
+  - --persist=.config/fossflow
+
+modules:
+  - name: nodejs
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/bin
+      - cp -ra * /app/
+      - ln -s /app/bin/node /app/bin/nodejs
+    sources:
+      - type: archive
+        url: https://nodejs.org/dist/v22.11.0/node-v22.11.0-linux-x64.tar.xz
+        sha256: 26dd13a6f7253f0ab9bcad59c5c0e9f7c4cd7d5d14e85d0680df3f6e6db2f1bc
+        only-arches:
+          - x86_64
+      - type: archive
+        url: https://nodejs.org/dist/v22.11.0/node-v22.11.0-linux-arm64.tar.xz
+        sha256: 5eb624adcd5c5fb2cf0b26c6b5d4dd25e55c5e7ad2fb600f45ef9cbc1f32b229
+        only-arches:
+          - aarch64
+
+  - name: fossflow
+    buildsystem: simple
+    build-options:
+      env:
+        NPM_CONFIG_LOGLEVEL: info
+    build-commands:
+      # Install dependencies
+      - npm install --legacy-peer-deps
+      # Build the application
+      - npm run build:lib
+      - npm run build:app
+      # Create application directory structure
+      - mkdir -p /app/share/fossflow
+      - mkdir -p /app/bin
+      # Copy built app
+      - cp -r packages/fossflow-app/build/* /app/share/fossflow/
+      # Copy backend if needed
+      - cp -r packages/fossflow-backend /app/share/fossflow/backend
+      # Install desktop file
+      - install -Dm644 org.fossflow.FossFLOW.desktop /app/share/applications/org.fossflow.FossFLOW.desktop
+      # Install icons
+      - install -Dm644 packages/fossflow-app/public/logo512.png /app/share/icons/hicolor/512x512/apps/org.fossflow.FossFLOW.png
+      - install -Dm644 packages/fossflow-app/public/logo192.png /app/share/icons/hicolor/192x192/apps/org.fossflow.FossFLOW.png
+      # Install AppStream metadata
+      - install -Dm644 org.fossflow.FossFLOW.metainfo.xml /app/share/metainfo/org.fossflow.FossFLOW.metainfo.xml
+      # Create launcher script
+      - |
+        cat > /app/bin/fossflow << 'EOF'
+        #!/bin/bash
+        set -e
+        
+        # Use Electron to launch the app
+        exec electron /app/share/fossflow/index.html "$@"
+        EOF
+      - chmod +x /app/bin/fossflow
+    sources:
+      - type: git
+        url: https://github.com/stan-smith/FossFLOW.git
+        branch: main
+      - type: file
+        path: org.fossflow.FossFLOW.desktop
+      - type: file
+        path: org.fossflow.FossFLOW.metainfo.xml
