@@ -15,3 +15,16 @@ coverage/
 .eslintcache
 *.tsbuildinfo
 /e2e-tests/target
+
+# Flatpak build artifacts
+.flatpak-builder/
+build-dir/
+repo/
+*.flatpak
+
+# Snap build artifacts
+snap/.snapcraft/
+*.snap
+parts/
+prime/
+stage/
