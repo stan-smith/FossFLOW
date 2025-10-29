@@ -8,10 +8,16 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: read
+
 jobs:
   flatpak:
     name: Build Flatpak
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     container:
       image: bilelmoussaoui/flatpak-github-actions:freedesktop-23.08
       options: --privileged
