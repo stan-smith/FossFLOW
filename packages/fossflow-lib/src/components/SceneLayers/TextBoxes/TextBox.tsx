@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { toPx, CoordsUtils } from 'src/utils';
 import { useIsoProjection } from 'src/hooks/useIsoProjection';
@@ -9,7 +9,7 @@ interface Props {
   textBox: ReturnType<typeof useScene>['textBoxes'][0];
 }
 
-export const TextBox = ({ textBox }: Props) => {
+export const TextBox = memo(({ textBox }: Props) => {
   const { paddingX, fontProps } = useTextBoxProps(textBox);
 
   const to = useMemo(() => {
@@ -49,4 +49,4 @@ export const TextBox = ({ textBox }: Props) => {
       </Box>
     </Box>
   );
-};
+});

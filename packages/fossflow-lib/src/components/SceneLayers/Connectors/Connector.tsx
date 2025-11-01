@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { useTheme, Box } from '@mui/material';
 import { UNPROJECTED_TILE_SIZE } from 'src/config';
 import {
@@ -18,7 +18,7 @@ interface Props {
   isSelected?: boolean;
 }
 
-export const Connector = ({ connector: _connector, isSelected }: Props) => {
+export const Connector = memo(({ connector: _connector, isSelected }: Props) => {
   const theme = useTheme();
   const predefinedColor = useColor(_connector.color);
   const { currentView } = useScene();
@@ -326,4 +326,4 @@ export const Connector = ({ connector: _connector, isSelected }: Props) => {
       </Svg>
     </Box>
   );
-};
+});

@@ -52,6 +52,17 @@ const createShadows = () => {
 export const themeConfig: ThemeOptions = {
   customVars,
   shadows: createShadows(),
+  transitions: {
+    duration: {
+      shortest: 50,
+      shorter: 100,
+      short: 150,
+      standard: 200,
+      complex: 250,
+      enteringScreen: 150,
+      leavingScreen: 100
+    }
+  },
   typography: {
     h2: {
       fontSize: '4em',
