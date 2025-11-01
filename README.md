@@ -12,8 +12,7 @@ If you've had a feature that I've implemented for you, or fixed a bug it'd be gr
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P61KBXA3)
 
-<img width="30" height="30" alt="image" src="https://github.com/user-attachments/assets/dc6ec9ca-48d7-4047-94cf-5c4f7ed63b84" /> <b> https://buymeacoffee.com/stan.smith </b>
-
+<a href="https://www.buymeacoffee.com/stan.smith" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 Thanks,
 
@@ -33,6 +32,9 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 - **🤝 [CONTRIBUTORS.md](https://github.com/stan-smith/FossFLOW/blob/master/CONTRIBUTORS.md)** - How to contribute to the project.
 
 ## Recent Updates (October 2025)
+
+### Performance updates
+ - **Reduced frame refresh delay, should look much smoother now**
 
 ### Multilingual Support
 - **8 Languages Supported** - Full interface translation in English, Chinese (Simplified), Spanish, Portuguese (Brazilian), French, Hindi, Bengali, and Russian
