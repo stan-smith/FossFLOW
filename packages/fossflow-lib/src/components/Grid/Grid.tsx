@@ -30,7 +30,8 @@ export const Grid = () => {
     };
 
     gsap.to(elementRef.current, {
-      duration: isFirstRender ? 0 : 0.25,
+      duration: isFirstRender ? 0 : 0.016, // ~1 frame at 60fps for smooth motion
+      ease: 'none', // Linear easing for immediate response
       backgroundSize: `${tileSize.width}px ${tileSize.height * 2}px`,
       backgroundPosition: `${backgroundPosition.width}px ${backgroundPosition.height}px`
     });

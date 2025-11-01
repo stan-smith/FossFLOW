@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Box, Typography, Stack } from '@mui/material';
 import {
   PROJECTED_TILE_SIZE,
@@ -17,7 +17,7 @@ interface Props {
   order: number;
 }
 
-export const Node = ({ node, order }: Props) => {
+export const Node = memo(({ node, order }: Props) => {
   const modelItem = useModelItem(node.id);
   const { iconComponent } = useIcon(modelItem?.icon);
 
@@ -93,4 +93,4 @@ export const Node = ({ node, order }: Props) => {
       </Box>
     </Box>
   );
-};
+});

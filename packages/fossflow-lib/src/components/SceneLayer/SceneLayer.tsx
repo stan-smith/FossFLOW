@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, memo } from 'react';
 import gsap from 'gsap';
 import { Box, SxProps } from '@mui/material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
@@ -10,7 +10,7 @@ interface Props {
   disableAnimation?: boolean;
 }
 
-export const SceneLayer = ({
+export const SceneLayer = memo(({
   children,
   order = 0,
   sx,
@@ -30,7 +30,8 @@ export const SceneLayer = ({
     if (!elementRef.current) return;
 
     gsap.to(elementRef.current, {
-      duration: disableAnimation || isFirstRender ? 0 : 0.25,
+      duration: disableAnimation || isFirstRender ? 0 : 0.016, // ~1 frame at 60fps for smooth motion
+      ease: 'none', // Linear easing for immediate response
       translateX: scroll.position.x,
       translateY: scroll.position.y,
       scale: zoom
@@ -58,4 +59,4 @@ export const SceneLayer = ({
       {children}
     </Box>
   );
-};
+});

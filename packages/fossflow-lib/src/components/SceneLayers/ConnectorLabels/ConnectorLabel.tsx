@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useScene } from 'src/hooks/useScene';
 import { useConnector } from 'src/hooks/useConnector';
@@ -16,7 +16,7 @@ interface Props {
   connector: ReturnType<typeof useScene>['connectors'][0];
 }
 
-export const ConnectorLabel = ({ connector: sceneConnector }: Props) => {
+export const ConnectorLabel = memo(({ connector: sceneConnector }: Props) => {
   const connector = useConnector(sceneConnector.id);
 
   const labels = useMemo(() => {
@@ -123,4 +123,4 @@ export const ConnectorLabel = ({ connector: sceneConnector }: Props) => {
       })}
     </>
   );
-};
+});

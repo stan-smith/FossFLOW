@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useScene } from 'src/hooks/useScene';
 import { IsoTileArea } from 'src/components/IsoTileArea/IsoTileArea';
 import { getColorVariant } from 'src/utils';
@@ -6,7 +6,7 @@ import { useColor } from 'src/hooks/useColor';
 
 type Props = ReturnType<typeof useScene>['rectangles'][0];
 
-export const Rectangle = ({ from, to, color: colorId, customColor }: Props) => {
+export const Rectangle = memo(({ from, to, color: colorId, customColor }: Props) => {
   const predefinedColor = useColor(colorId);
   
   // Use custom color if provided, otherwise use predefined color
@@ -30,4 +30,4 @@ export const Rectangle = ({ from, to, color: colorId, customColor }: Props) => {
       }}
     />
   );
-};
+});
