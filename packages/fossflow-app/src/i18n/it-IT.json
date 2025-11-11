@@ -1,0 +1,58 @@
+{
+    "nav": {
+        "newDiagram": "Nuovo Diagramma",
+        "saveSessionOnly": "Salva (solo sessione)",
+        "loadSessionOnly": "Carica (solo sessione)",
+        "importFile": "Importa file",
+        "exportFile": "Esporta file",
+        "quickSaveSession": "Salvataggio rapido (sessione)",
+        "serverStorage": "Archivio server"
+    },
+    "status": {
+        "current": "Corrente",
+        "untitled": "Diagramma senza titolo",
+        "modified": "Modificato",
+        "sessionStorageNote": "Solo archiviazione di sessione - esporta per salvare in modo permanente"
+    },
+    "dialog": {
+        "save": {
+            "title": "Salva diagramma (solo sessione corrente)",
+            "warningTitle": "Importante",
+            "warningMessage": "Questo salvataggio è temporaneo e verrà perso alla chiusura del browser.",
+            "warningExport": "Usa <strong>Esporta file</strong> per salvare il tuo lavoro in modo permanente.",
+            "placeholder": "Inserisci il nome del diagramma",
+            "btnSave": "Salva",
+            "btnCancel": "Annulla"
+        },
+        "load": {
+            "title": "Carica diagramma (solo sessione corrente)",
+            "noteTitle": "Nota",
+            "noteMessage": "Questi salvataggi sono temporanei. Esporta i tuoi diagrammi per conservarli in modo permanente.",
+            "noSavedDiagrams": "Nessun diagramma salvato trovato in questa sessione",
+            "updated": "Aggiornato",
+            "btnLoad": "Carica",
+            "btnDelete": "Elimina",
+            "btnClose": "Chiudi"
+        },
+        "export": {
+            "title": "Esporta diagramma",
+            "recommendedTitle": "Consigliato",
+            "recommendedMessage": "Questo è il modo migliore per salvare il tuo lavoro in modo permanente.",
+            "noteMessage": "I file JSON esportati possono essere importati in seguito o condivisi con altri.",
+            "btnDownload": "Scarica JSON",
+            "btnCancel": "Annulla"
+        }
+    },
+    "alert": {
+        "enterDiagramName": "Inserisci un nome per il diagramma",
+        "diagramExists": "Un diagramma chiamato \"{{name}}\" esiste già in questa sessione. Verrà sovrascritto. Sei sicuro di voler continuare?",
+        "unsavedChanges": "Hai modifiche non salvate. Continuare con il caricamento?",
+        "createNewDiagram": "Creare un nuovo diagramma?",
+        "unsavedChangesExport": "Hai modifiche non salvate. Esporta prima il tuo diagramma per salvarlo. Continuare?",
+        "confirmDelete": "Sei sicuro di voler eliminare questo diagramma?",
+        "storageFull": "Archiviazione piena! Apertura Gestore archiviazione...",
+        "autoSaveFailed": "Archiviazione piena! Usa il Gestore archiviazione per liberare spazio.",
+        "beforeUnload": "Hai modifiche non salvate. Sei sicuro di voler uscire?",
+        "quotaExceeded": "Quota di archiviazione superata. Esporta i diagrammi importanti e libera spazio."
+    }
+}

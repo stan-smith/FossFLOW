@@ -56,6 +56,10 @@ export const supportedLanguages = [
     label: 'Русский',
     value: 'ru-RU',
   },
+  {
+    label: 'Italian',
+    value: 'it-IT',
+  },
 ];
 
 export default i18n;
