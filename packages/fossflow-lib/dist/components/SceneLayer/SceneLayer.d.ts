@@ -6,5 +6,5 @@ interface Props {
     sx?: SxProps;
     disableAnimation?: boolean;
 }
-export declare const SceneLayer: ({ children, order, sx, disableAnimation }: Props) => import("react/jsx-runtime").JSX.Element;
+export declare const SceneLayer: React.MemoExoticComponent<({ children, order, sx, disableAnimation }: Props) => import("react/jsx-runtime").JSX.Element>;
 export {};
