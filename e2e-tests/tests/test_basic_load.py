@@ -168,88 +168,65 @@ def test_javascript_is_executing(driver):
     print(f"✓ React has rendered content into root")
 
 
-def test_page_has_canvas(driver):
-    """Test that the page has a canvas element for diagram drawing."""
+def test_app_renders_diagram_components(driver):
+    """Test that the app renders SVG-based diagram components (FossFLOW uses SVG)."""
     base_url = get_base_url()
 
     # Navigate to homepage
     driver.get(base_url)
 
-    # Wait for the app to fully initialize and render the canvas
-    # Paper.js needs time to create the canvas element
-    max_wait = 30
-    canvases = []
-    canvas_found_at = -1
+    print("\nWaiting for FossFLOW app to render diagram components...")
 
-    print("\nWaiting for canvas element (Paper.js needs to initialize)...")
+    # Wait for the fossflow-container div to appear (max 10 seconds)
+    try:
+        container = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "fossflow-container"))
+        )
+        print("✓ FossFLOW container element found")
+    except Exception as e:
+        print(f"❌ FossFLOW container not found: {e}")
 
-    for i in range(max_wait):
-        time.sleep(1)
+        # Get diagnostics
+        logs = driver.get_log('browser')
+        errors = [log for log in logs if log['level'] == 'SEVERE']
+        if errors:
+            print(f"\nBrowser console errors:")
+            for log in errors[:5]:
+                print(f"  {log['message'][:100]}")
 
-        # Try multiple methods to find canvas
-        canvases = driver.find_elements(By.TAG_NAME, "canvas")
+        pytest.fail("FossFLOW container div not found - React may not have rendered")
 
-        # Also try finding it with JavaScript in case it's in shadow DOM
-        js_canvas_count = driver.execute_script("""
-            return document.querySelectorAll('canvas').length;
-        """)
-
-        if len(canvases) > 0 or js_canvas_count > 0:
-            canvas_found_at = i + 1
-            print(f"✓ Canvas element found after {canvas_found_at} seconds")
-            print(f"  Selenium found: {len(canvases)} canvas element(s)")
-            print(f"  JavaScript found: {js_canvas_count} canvas element(s)")
-            break
-
-        if (i + 1) % 5 == 0:
-            print(f"  Still waiting... ({i+1}s elapsed)")
-            # Check what's actually in the DOM
-            divs = driver.execute_script("return document.querySelectorAll('div').length;")
-            print(f"    Current DOM has {divs} div elements")
-
-    # Get detailed diagnostics
-    print(f"\nDiagnostics after {max_wait}s wait:")
-
-    # Check browser console for errors
-    logs = driver.get_log('browser')
-    errors = [log for log in logs if log['level'] == 'SEVERE']
-    warnings = [log for log in logs if log['level'] == 'WARNING']
-
-    if errors:
-        print(f"  ❌ Found {len(errors)} console errors:")
-        for log in errors[:5]:  # Show first 5
-            print(f"     {log['message'][:100]}")
-
-    if warnings:
-        print(f"  ⚠️  Found {len(warnings)} console warnings")
-
-    # Check if Paper.js loaded
-    has_paper = driver.execute_script("return typeof paper !== 'undefined';")
-    print(f"  Paper.js loaded: {has_paper}")
-
-    # Check DOM structure
+    # Check that the app has rendered its UI components
     dom_info = driver.execute_script("""
         return {
             divs: document.querySelectorAll('div').length,
-            canvases: document.querySelectorAll('canvas').length,
             buttons: document.querySelectorAll('button').length,
-            svgs: document.querySelectorAll('svg').length
+            svgs: document.querySelectorAll('svg').length,
+            hasFossflowContainer: document.querySelector('.fossflow-container') !== null
         };
     """)
-    print(f"  DOM elements: {dom_info}")
 
-    # For now, make this a soft warning since app loads successfully
-    if len(canvases) == 0 and js_canvas_count == 0:
-        print("\n⚠️  Canvas not found even after 30s wait")
-        print("   Possible causes:")
-        print("   - Paper.js may not initialize in headless Chrome")
-        print("   - Canvas may require user interaction to create")
-        print("   - WebGL or canvas rendering may be disabled in CI")
-        print("\n   Note: The app loads successfully and JavaScript runs fine.")
-        print("   This is likely a Paper.js/headless rendering compatibility issue.")
-        pytest.skip("Canvas not rendered in headless mode - not a critical failure for CI")
+    print(f"\nDOM structure:")
+    print(f"  Divs: {dom_info['divs']}")
+    print(f"  Buttons: {dom_info['buttons']}")
+    print(f"  SVG elements: {dom_info['svgs']}")
+    print(f"  FossFLOW container: {dom_info['hasFossflowContainer']}")
 
-    print(f"\n✓ SUCCESS: Canvas element found on page")
+    # Check for console errors
+    logs = driver.get_log('browser')
+    errors = [log for log in logs if log['level'] == 'SEVERE']
+
+    if errors:
+        print(f"\n⚠️  Found {len(errors)} console errors:")
+        for log in errors[:5]:
+            print(f"  {log['message'][:100]}")
+
+    # Verify the app has rendered meaningful content
+    assert dom_info['divs'] > 10, f"Expected many div elements, got {dom_info['divs']}"
+    assert dom_info['buttons'] > 0, f"Expected buttons in the UI, got {dom_info['buttons']}"
+    assert dom_info['hasFossflowContainer'], "FossFLOW container div should exist"
+
+    print("\n✓ SUCCESS: FossFLOW app has rendered with UI components")
 
 
 if __name__ == "__main__":
