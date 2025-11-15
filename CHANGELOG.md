@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.2](https://github.com/stan-smith/FossFLOW/compare/v1.5.1...v1.5.2) (2025-11-15)
+
+### Bug Fixes
+
+* Fixes [#58](https://github.com/stan-smith/FossFLOW/issues/58) now allows for CTRL+S and CTRL+O to save/load diagrams, thanks [@fatflyingpigs](https://github.com/fatflyingpigs) for bringing this to my attention ([ed944a0](https://github.com/stan-smith/FossFLOW/commit/ed944a0b61d93c97917390eabc5bbc165f78ebc1))
+
 ## [1.5.1](https://github.com/stan-smith/FossFLOW/compare/v1.5.0...v1.5.1) (2025-10-18)
 
 ### Bug Fixes
