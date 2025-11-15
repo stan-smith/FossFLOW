@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0](https://github.com/stan-smith/FossFLOW/compare/v1.5.2...v1.6.0) (2025-11-15)
+
+### Features
+
+* Variable DPI images! Finally! Fixes [#70](https://github.com/stan-smith/FossFLOW/issues/70) you're welcome [@fatflyingpigs](https://github.com/fatflyingpigs) ;) ([88ab63c](https://github.com/stan-smith/FossFLOW/commit/88ab63c969fd95538f369b8b5f0e4bba2b2e3b63))
+
 ## [1.5.2](https://github.com/stan-smith/FossFLOW/compare/v1.5.1...v1.5.2) (2025-11-15)
 
 ### Bug Fixes
