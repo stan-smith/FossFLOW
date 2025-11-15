@@ -175,13 +175,27 @@ export const exportAsCompactJSON = (model: Model) => {
   downloadFile(data, generateGenericFilename('compact.json'));
 };
 
-export const exportAsImage = async (el: HTMLDivElement, size?: Size) => {
+export const exportAsImage = async (
+  el: HTMLDivElement,
+  size?: Size,
+  scale: number = 1
+) => {
+  // Calculate scaled dimensions
+  const width = size ? size.width * scale : el.clientWidth * scale;
+  const height = size ? size.height * scale : el.clientHeight * scale;
+
   // dom-to-image-more is a better maintained fork
   const options = {
-    ...size,
+    width,
+    height,
     cacheBust: true,
     bgcolor: '#ffffff',
-    quality: 1.0
+    quality: 1.0,
+    // Apply CSS transform for high-quality scaling
+    style: scale !== 1 ? {
+      transform: `scale(${scale})`,
+      transformOrigin: 'top left'
+    } : undefined
   };
 
   try {
@@ -191,6 +205,8 @@ export const exportAsImage = async (el: HTMLDivElement, size?: Size) => {
     console.error('Export failed, trying fallback method:', error);
     // Fallback: try with minimal options
     return await domtoimage.toPng(el, {
+      width,
+      height,
       cacheBust: true,
       bgcolor: '#ffffff'
     });

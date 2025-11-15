@@ -15,7 +15,11 @@ import {
   Alert,
   Checkbox,
   FormControlLabel,
-  Typography
+  Typography,
+  Slider,
+  Select,
+  MenuItem,
+  FormControl
 } from '@mui/material';
 import { useModelStore } from 'src/stores/modelStore';
 import {
@@ -66,6 +70,18 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
   const [cropArea, setCropArea] = useState<CropArea | null>(null);
   const [isInCropMode, setIsInCropMode] = useState(false);
 
+  // Scale/DPI state
+  const [exportScale, setExportScale] = useState<number>(2);
+  const [scaleMode, setScaleMode] = useState<'preset' | 'custom'>('preset');
+
+  // DPI presets
+  const dpiPresets = [
+    { label: '1x (72 DPI)', value: 1 },
+    { label: '2x (144 DPI)', value: 2 },
+    { label: '3x (216 DPI)', value: 3 },
+    { label: '4x (288 DPI)', value: 4 }
+  ];
+
   // Use original bounds for the base image
   const bounds = useMemo(() => {
     return getUnprojectedBounds();
@@ -84,13 +100,14 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     }
 
     isExporting.current = true;
-    
+
+    // Base size without scale (scale is applied via CSS transform)
     const containerSize = {
-      width: bounds.width * quality,
-      height: bounds.height * quality
+      width: bounds.width,
+      height: bounds.height
     };
-    
-    exportAsImage(containerRef.current as HTMLDivElement, containerSize)
+
+    exportAsImage(containerRef.current as HTMLDivElement, containerSize, exportScale)
       .then((data) => {
         setImageData(data);
         isExporting.current = false;
@@ -100,7 +117,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
         setExportError(true);
         isExporting.current = false;
       });
-  }, [bounds, quality]);
+  }, [bounds, exportScale]);
 
   // Crop the image based on selected area
   const cropImage = useCallback((cropArea: CropArea, sourceImage: string) => {
@@ -348,7 +365,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       }, 200);
       return () => clearTimeout(timer);
     }
-  }, [showGrid, backgroundColor, expandLabels, exportImage, cropToContent]);
+  }, [showGrid, backgroundColor, expandLabels, exportImage, cropToContent, exportScale]);
 
   useEffect(() => {
     if (!imageData) {
@@ -405,8 +422,8 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     left: 0
                   }}
                   style={{
-                    width: bounds.width * quality,
-                    height: bounds.height * quality
+                    width: bounds.width,
+                    height: bounds.height
                   }}
                 >
                   <Isoflow
@@ -533,6 +550,58 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     />
                   }
                 />
+
+                <Box sx={{ mt: 2, mb: 1 }}>
+                  <Typography variant="caption" component="div" sx={{ mb: 1 }}>
+                    Export Quality (DPI)
+                  </Typography>
+
+                  <FormControl fullWidth size="small" sx={{ mb: 1 }}>
+                    <Select
+                      value={scaleMode === 'preset' ? exportScale : 'custom'}
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        if (value === 'custom') {
+                          setScaleMode('custom');
+                        } else {
+                          setScaleMode('preset');
+                          setExportScale(Number(value));
+                        }
+                      }}
+                    >
+                      {dpiPresets.map((preset) => (
+                        <MenuItem key={preset.value} value={preset.value}>
+                          {preset.label}
+                        </MenuItem>
+                      ))}
+                      <MenuItem value="custom">Custom</MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  {scaleMode === 'custom' && (
+                    <Box sx={{ px: 1 }}>
+                      <Typography variant="caption" gutterBottom>
+                        Scale: {exportScale.toFixed(1)}x ({(exportScale * 72).toFixed(0)} DPI)
+                      </Typography>
+                      <Slider
+                        value={exportScale}
+                        onChange={(_, value) => setExportScale(value as number)}
+                        min={1}
+                        max={5}
+                        step={0.1}
+                        marks={[
+                          { value: 1, label: '1x' },
+                          { value: 2, label: '2x' },
+                          { value: 3, label: '3x' },
+                          { value: 4, label: '4x' },
+                          { value: 5, label: '5x' }
+                        ]}
+                        valueLabelDisplay="auto"
+                        valueLabelFormat={(value) => `${value.toFixed(1)}x`}
+                      />
+                    </Box>
+                  )}
+                </Box>
               </Box>
 
               {/* Crop controls */}
