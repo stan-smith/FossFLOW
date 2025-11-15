@@ -507,10 +507,37 @@ function App() {
         return e.returnValue;
       }
     };
-    
+
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [hasUnsavedChanges]);
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl+S or Cmd+S for Save
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+
+        // Quick save if current diagram exists and has unsaved changes
+        if (currentDiagram && hasUnsavedChanges) {
+          saveDiagram();
+        } else {
+          // Otherwise show save dialog
+          setShowSaveDialog(true);
+        }
+      }
+
+      // Ctrl+O or Cmd+O for Open/Load
+      if ((e.ctrlKey || e.metaKey) && e.key === 'o') {
+        e.preventDefault();
+        setShowLoadDialog(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentDiagram, hasUnsavedChanges]);
 
   return (
     <div className="App">
@@ -570,7 +597,9 @@ function App() {
             onToggleLazyLoading: iconPackManager.toggleLazyLoading,
             packInfo: Object.values(iconPackManager.packInfo),
             enabledPacks: iconPackManager.enabledPacks,
-            onTogglePack: iconPackManager.togglePack
+            onTogglePack: (packName: string, enabled: boolean) => {
+              iconPackManager.togglePack(packName as any, enabled);
+            }
           }}
         />
       </div>
