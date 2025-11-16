@@ -61,7 +61,6 @@ function EditorPage() {
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
   const [isReadOnlyMode, setIsReadOnlyMode] = useState(false);
   const [readonlyDiagramLoading, setReadonlyDiagramLoading] = useState(false);
-  const [readonlyDiagramError, setReadonlyDiagramError] = useState(false);
 
   // Initialize with empty diagram data
   // Create default colors for connectors
@@ -119,59 +118,38 @@ function EditorPage() {
 
   // Check if readonlyDiagramId exists - if exists, load diagram in view-only mode
   useEffect(() => {
-    if (!readonlyDiagramId || readonlyDiagramError || !serverStorageAvailable)
-      return;
+    if (!readonlyDiagramId || !serverStorageAvailable) return;
     const loadReadonlyDiagram = async () => {
       try {
         setReadonlyDiagramLoading(true);
-        console.log(`Loading readonly diagram: ${readonlyDiagramId}`);
-
         const storage = storageManager.getStorage();
-
         // Get diagram metadata
         const diagramList = await storage.listDiagrams();
         const diagramInfo = diagramList.find((d) => {
           return d.id === readonlyDiagramId;
         });
-        if (!diagramInfo) {
-          console.error(
-            `Readonly diagram name not found: ${readonlyDiagramId}`
-          );
-        }
-
         // Load the diagram data from server storage
         const data = await storage.loadDiagram(readonlyDiagramId);
-        console.log(
-          `Successfully loaded readonly diagram: ${readonlyDiagramId}`
-        );
-
         // Convert to SavedDiagram interface format
         const readonlyDiagram: SavedDiagram = {
           id: readonlyDiagramId,
           name: diagramInfo?.name || data.title || 'Readonly Diagram',
           data: data,
-          createdAt: new Date().toISOString(), // listDiagrams doesn't include created date
+          createdAt: new Date().toISOString(),
           updatedAt:
             diagramInfo?.lastModified.toISOString() || new Date().toISOString()
         };
-        console.log(`Readonly diagram data prepared:`, readonlyDiagram);
-
-        // Call the loadDiagram function
         await loadDiagram(readonlyDiagram, true);
-
         setIsReadOnlyMode(true);
-
-        console.log(`Readonly diagram loaded in view-only mode`);
       } catch (error) {
-        console.error('Failed to load readonly diagram:', error);
-        setReadonlyDiagramError(true);
+        // Alert if unable to load readonly diagram and redirect to new diagram
+        alert(t('dialog.readOnly.failed'));
+        window.location.href = '/';
       } finally {
         setReadonlyDiagramLoading(false);
       }
     };
-
     loadReadonlyDiagram();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [readonlyDiagramId, serverStorageAvailable]);
 
   // Update diagramData when loaded icons change
@@ -816,34 +794,6 @@ function EditorPage() {
             }}
           >
             {t('dialog.readOnly.loading')}
-          </div>
-        ) : readonlyDiagramError ? (
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100%',
-              fontSize: '18px',
-              padding: '20px'
-            }}
-          >
-            <div style={{ marginBottom: '20px', color: '#d32f2f' }}>
-              ❌ {t('dialog.readOnly.failed')}
-            </div>
-            <button
-              onClick={() => {
-                window.location.href = '/';
-              }}
-              style={{
-                padding: '10px 20px',
-                fontSize: '16px',
-                cursor: 'pointer'
-              }}
-            >
-              {t('dialog.readOnly.goToHome')}
-            </button>
           </div>
         ) : (
           <Isoflow
