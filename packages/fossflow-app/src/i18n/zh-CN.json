@@ -44,9 +44,7 @@
         },
         "readOnly": {
             "mode": "阅读模式",
-            "loading": "正在加载图表...",
-            "failed": "加载图表失败",
-            "goToHome": "返回首页"
+            "failed": "加载图表失败"
         }
     },
     "alert": {

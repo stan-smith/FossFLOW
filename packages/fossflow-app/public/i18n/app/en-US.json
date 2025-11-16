@@ -44,9 +44,7 @@
         },
         "readOnly": {
             "mode": "View-Only Mode",
-            "loading": "Loading diagram...",
-            "failed": "Failed to load diagram",
-            "goToHome": "Go to Home"
+            "failed": "Failed to load diagram"
         }
     },
     "alert": {

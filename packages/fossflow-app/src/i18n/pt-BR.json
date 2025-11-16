@@ -44,9 +44,7 @@
         },
         "readOnly": {
             "mode": "Modo somente leitura",
-            "loading": "Carregando diagrama...",
-            "failed": "Falha ao carregar diagrama",
-            "goToHome": "Ir para início"
+            "failed": "Falha ao carregar diagrama"
         }
     },
     "alert": {

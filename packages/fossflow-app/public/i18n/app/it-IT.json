@@ -44,9 +44,7 @@
         },
         "readOnly": {
             "mode": "Modalità sola lettura",
-            "loading": "Caricamento diagramma...",
-            "failed": "Impossibile caricare il diagramma",
-            "goToHome": "Vai alla home"
+            "failed": "Impossibile caricare il diagramma"
         }
     },
     "alert": {
