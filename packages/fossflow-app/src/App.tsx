@@ -15,8 +15,7 @@ import ChangeLanguage from './components/ChangeLanguage';
 import { allLocales } from 'fossflow';
 import { useIconPackManager, IconPackName } from './services/iconPackManager';
 import './App.css';
-import { DisplayPage } from './components/DisplayPage';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 
 // Load core isoflow icons (always loaded)
 const coreIcons = flattenCollections([isoflowIsopack]);
@@ -34,7 +33,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<EditorPage />} />
-        <Route path="/display/:diagramId" element={<DisplayPage />} />
+        <Route path="/display/:readonlyDiagramId" element={<EditorPage />} />
       </Routes>
     </BrowserRouter>
   );
@@ -43,6 +42,7 @@ function App() {
 function EditorPage() {
   // Initialize icon pack manager with core icons
   const iconPackManager = useIconPackManager(coreIcons);
+  const { readonlyDiagramId } = useParams<{ readonlyDiagramId: string }>();
 
   const [diagrams, setDiagrams] = useState<SavedDiagram[]>([]);
   const [currentDiagram, setCurrentDiagram] = useState<SavedDiagram | null>(
@@ -59,6 +59,9 @@ function EditorPage() {
   const [showStorageManager, setShowStorageManager] = useState(false);
   const [showDiagramManager, setShowDiagramManager] = useState(false);
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
+  const [isViewOnlyMode, setIsViewOnlyMode] = useState(false);
+  const [readonlyDiagramLoading, setReadonlyDiagramLoading] = useState(false);
+  const [readonlyDiagramError, setReadonlyDiagramError] = useState(false);
 
   // Initialize with empty diagram data
   // Create default colors for connectors
@@ -113,6 +116,77 @@ function EditorPage() {
       })
       .catch(console.error);
   }, []);
+
+  // Check if readonlyDiagramId exists - if exists, load diagram in view-only mode
+  useEffect(() => {
+    if (!readonlyDiagramId || readonlyDiagramError || !serverStorageAvailable)
+      return;
+
+    const loadReadonlyDiagram = async () => {
+      try {
+        setReadonlyDiagramLoading(true);
+        console.log(`Loading readonly diagram: ${readonlyDiagramId}`);
+
+        const storage = storageManager.getStorage();
+
+        // Load the diagram
+        const data = await storage.loadDiagram(readonlyDiagramId);
+        console.log(
+          `Successfully loaded readonly diagram: ${readonlyDiagramId}`
+        );
+
+        // Auto-detect and load required icon packs
+        await iconPackManager.loadPacksForDiagram(data.items || []);
+
+        // Handle icons (same logic as handleDiagramManagerLoad)
+        const loadedIcons = data.icons || [];
+        let finalIcons;
+        const hasDefaultIcons = loadedIcons.some((icon: any) => {
+          return (
+            icon.collection === 'isoflow' ||
+            icon.collection === 'aws' ||
+            icon.collection === 'gcp'
+          );
+        });
+
+        if (hasDefaultIcons) {
+          finalIcons = loadedIcons;
+        } else {
+          const importedIcons = loadedIcons.filter((icon: any) => {
+            return icon.collection === 'imported';
+          });
+          finalIcons = [...iconPackManager.loadedIcons, ...importedIcons];
+        }
+
+        const mergedData: DiagramData = {
+          ...data,
+          title:
+            (data as any).title || (data as any).name || 'View-Only Diagram',
+          icons: finalIcons,
+          colors: data.colors?.length ? data.colors : defaultColors,
+          fitToScreen: (data as any).fitToScreen !== false
+        };
+
+        // Set the diagram data and switch to view-only mode
+        setDiagramName(mergedData.title);
+        setDiagramData(mergedData);
+        setCurrentModel(mergedData);
+        setIsViewOnlyMode(true);
+        setFossflowKey((prev) => {
+          return prev + 1;
+        });
+
+        console.log(`Readonly diagram loaded in view-only mode`);
+      } catch (error) {
+        console.error('Failed to load readonly diagram:', error);
+        setReadonlyDiagramError(true);
+      } finally {
+        setReadonlyDiagramLoading(false);
+      }
+    };
+
+    loadReadonlyDiagram();
+  }, [readonlyDiagramId]);
 
   // Update diagramData when loaded icons change
   useEffect(() => {
@@ -630,96 +704,173 @@ function EditorPage() {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      return window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [currentDiagram, hasUnsavedChanges]);
 
   return (
     <div className="App">
       <div className="toolbar">
-        <button onClick={newDiagram}>{t('nav.newDiagram')}</button>
-        {serverStorageAvailable && (
-          <button
-            onClick={() => {
-              return setShowDiagramManager(true);
-            }}
-            style={{ backgroundColor: '#2196F3', color: 'white' }}
-          >
-            🌐 {t('nav.serverStorage')}
-          </button>
+        {!isViewOnlyMode && (
+          <>
+            <button onClick={newDiagram}>{t('nav.newDiagram')}</button>
+            {serverStorageAvailable && (
+              <button
+                onClick={() => {
+                  return setShowDiagramManager(true);
+                }}
+                style={{ backgroundColor: '#2196F3', color: 'white' }}
+              >
+                🌐 {t('nav.serverStorage')}
+              </button>
+            )}
+            <button
+              onClick={() => {
+                return setShowSaveDialog(true);
+              }}
+            >
+              {t('nav.saveSessionOnly')}
+            </button>
+            <button
+              onClick={() => {
+                return setShowLoadDialog(true);
+              }}
+            >
+              {t('nav.loadSessionOnly')}
+            </button>
+            <button
+              onClick={() => {
+                return setShowExportDialog(true);
+              }}
+              style={{ backgroundColor: '#007bff' }}
+            >
+              💾 {t('nav.exportFile')}
+            </button>
+            <button
+              onClick={() => {
+                if (currentDiagram && hasUnsavedChanges) {
+                  saveDiagram();
+                }
+              }}
+              disabled={!currentDiagram || !hasUnsavedChanges}
+              style={{
+                backgroundColor:
+                  currentDiagram && hasUnsavedChanges ? '#ffc107' : '#6c757d',
+                opacity: currentDiagram && hasUnsavedChanges ? 1 : 0.5,
+                cursor:
+                  currentDiagram && hasUnsavedChanges
+                    ? 'pointer'
+                    : 'not-allowed'
+              }}
+              title="Save to current session only"
+            >
+              {t('nav.quickSaveSession')}
+            </button>
+          </>
         )}
-        <button
-          onClick={() => {
-            return setShowSaveDialog(true);
-          }}
-        >
-          {t('nav.saveSessionOnly')}
-        </button>
-        <button
-          onClick={() => {
-            return setShowLoadDialog(true);
-          }}
-        >
-          {t('nav.loadSessionOnly')}
-        </button>
-        <button
-          onClick={() => {
-            return setShowExportDialog(true);
-          }}
-          style={{ backgroundColor: '#007bff' }}
-        >
-          💾 {t('nav.exportFile')}
-        </button>
-        <button
-          onClick={() => {
-            if (currentDiagram && hasUnsavedChanges) {
-              saveDiagram();
-            }
-          }}
-          disabled={!currentDiagram || !hasUnsavedChanges}
-          style={{
-            backgroundColor:
-              currentDiagram && hasUnsavedChanges ? '#ffc107' : '#6c757d',
-            opacity: currentDiagram && hasUnsavedChanges ? 1 : 0.5,
-            cursor:
-              currentDiagram && hasUnsavedChanges ? 'pointer' : 'not-allowed'
-          }}
-          title="Save to current session only"
-        >
-          {t('nav.quickSaveSession')}
-        </button>
+        {isViewOnlyMode && (
+          <div
+            style={{
+              backgroundColor: '#2196F3',
+              color: 'white',
+              padding: '8px 16px',
+              borderRadius: '4px',
+              fontWeight: 'bold'
+            }}
+          >
+            👁️ View-Only Mode
+          </div>
+        )}
         <ChangeLanguage />
         <span className="current-diagram">
-          {currentDiagram
-            ? `${t('status.current')}: ${currentDiagram.name}`
-            : diagramName || t('status.untitled')}
-          {hasUnsavedChanges && (
-            <span style={{ color: '#ff9800', marginLeft: '10px' }}>
-              • {t('status.modified')}
-            </span>
+          {isViewOnlyMode ? (
+            <span>{diagramName} (Read-Only)</span>
+          ) : (
+            <>
+              {currentDiagram
+                ? `${t('status.current')}: ${currentDiagram.name}`
+                : diagramName || t('status.untitled')}
+              {hasUnsavedChanges && (
+                <span style={{ color: '#ff9800', marginLeft: '10px' }}>
+                  • {t('status.modified')}
+                </span>
+              )}
+              <span
+                style={{ fontSize: '12px', color: '#666', marginLeft: '10px' }}
+              >
+                ({t('status.sessionStorageNote')})
+              </span>
+            </>
           )}
-          <span style={{ fontSize: '12px', color: '#666', marginLeft: '10px' }}>
-            ({t('status.sessionStorageNote')})
-          </span>
         </span>
       </div>
 
       <div className="fossflow-container">
-        <Isoflow
-          key={fossflowKey}
-          initialData={diagramData}
-          onModelUpdated={handleModelUpdated}
-          editorMode="EDITABLE"
-          locale={allLocales[i18n.language as keyof typeof allLocales]}
-          iconPackManager={{
-            lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,
-            onToggleLazyLoading: iconPackManager.toggleLazyLoading,
-            packInfo: Object.values(iconPackManager.packInfo),
-            enabledPacks: iconPackManager.enabledPacks,
-            onTogglePack: (packName: string, enabled: boolean) => {
-              iconPackManager.togglePack(packName as any, enabled);
-            }
-          }}
-        />
+        {readonlyDiagramLoading ? (
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+              fontSize: '18px'
+            }}
+          >
+            Loading diagram...
+          </div>
+        ) : readonlyDiagramError ? (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100%',
+              fontSize: '18px',
+              padding: '20px'
+            }}
+          >
+            <div style={{ marginBottom: '20px', color: '#d32f2f' }}>
+              ❌ Failed to load diagram
+            </div>
+            <div
+              style={{ fontSize: '14px', color: '#666', marginBottom: '20px' }}
+            >
+              The diagram may not exist or you may not have permission to view
+              it.
+            </div>
+            <button
+              onClick={() => {
+                window.location.href = '/';
+              }}
+              style={{
+                padding: '10px 20px',
+                fontSize: '16px',
+                cursor: 'pointer'
+              }}
+            >
+              Go to Home
+            </button>
+          </div>
+        ) : (
+          <Isoflow
+            key={fossflowKey}
+            initialData={diagramData}
+            onModelUpdated={handleModelUpdated}
+            editorMode={isViewOnlyMode ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
+            locale={allLocales[i18n.language as keyof typeof allLocales]}
+            iconPackManager={{
+              lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,
+              onToggleLazyLoading: iconPackManager.toggleLazyLoading,
+              packInfo: Object.values(iconPackManager.packInfo),
+              enabledPacks: iconPackManager.enabledPacks,
+              onTogglePack: (packName: string, enabled: boolean) => {
+                iconPackManager.togglePack(packName as any, enabled);
+              }
+            }}
+          />
+        )}
       </div>
 
       {/* Save Dialog */}
