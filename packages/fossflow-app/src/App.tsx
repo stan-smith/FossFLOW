@@ -779,7 +779,7 @@ function EditorPage() {
           </div>
         )}
         <ChangeLanguage />
-        <span className="current-diagram" style={{ marginLeft: '10px' }}>
+        <span className="current-diagram">
           {isReadOnlyMode ? (
             <span>
               {t('status.current')}: {diagramName}
