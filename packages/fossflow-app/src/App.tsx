@@ -121,7 +121,6 @@ function EditorPage() {
   useEffect(() => {
     if (!readonlyDiagramId || readonlyDiagramError || !serverStorageAvailable)
       return;
-
     const loadReadonlyDiagram = async () => {
       try {
         setReadonlyDiagramLoading(true);
@@ -129,52 +128,38 @@ function EditorPage() {
 
         const storage = storageManager.getStorage();
 
-        // Load the diagram
+        // Get diagram metadata
+        const diagramList = await storage.listDiagrams();
+        const diagramInfo = diagramList.find((d) => {
+          return d.id === readonlyDiagramId;
+        });
+        if (!diagramInfo) {
+          console.error(
+            `Readonly diagram name not found: ${readonlyDiagramId}`
+          );
+        }
+
+        // Load the diagram data from server storage
         const data = await storage.loadDiagram(readonlyDiagramId);
         console.log(
           `Successfully loaded readonly diagram: ${readonlyDiagramId}`
         );
 
-        // Auto-detect and load required icon packs
-        await iconPackManager.loadPacksForDiagram(data.items || []);
-
-        // Handle icons (same logic as handleDiagramManagerLoad)
-        const loadedIcons = data.icons || [];
-        let finalIcons;
-        const hasDefaultIcons = loadedIcons.some((icon: any) => {
-          return (
-            icon.collection === 'isoflow' ||
-            icon.collection === 'aws' ||
-            icon.collection === 'gcp'
-          );
-        });
-
-        if (hasDefaultIcons) {
-          finalIcons = loadedIcons;
-        } else {
-          const importedIcons = loadedIcons.filter((icon: any) => {
-            return icon.collection === 'imported';
-          });
-          finalIcons = [...iconPackManager.loadedIcons, ...importedIcons];
-        }
-
-        const mergedData: DiagramData = {
-          ...data,
-          title:
-            (data as any).title || (data as any).name || 'View-Only Diagram',
-          icons: finalIcons,
-          colors: data.colors?.length ? data.colors : defaultColors,
-          fitToScreen: (data as any).fitToScreen !== false
+        // Convert to SavedDiagram interface format
+        const readonlyDiagram: SavedDiagram = {
+          id: readonlyDiagramId,
+          name: diagramInfo?.name || data.title || 'Readonly Diagram',
+          data: data,
+          createdAt: new Date().toISOString(), // listDiagrams doesn't include created date
+          updatedAt:
+            diagramInfo?.lastModified.toISOString() || new Date().toISOString()
         };
+        console.log(`Readonly diagram data prepared:`, readonlyDiagram);
 
-        // Set the diagram data and switch to view-only mode
-        setDiagramName(mergedData.title);
-        setDiagramData(mergedData);
-        setCurrentModel(mergedData);
+        // Call the loadDiagram function
+        await loadDiagram(readonlyDiagram, true);
+
         setIsViewOnlyMode(true);
-        setFossflowKey((prev) => {
-          return prev + 1;
-        });
 
         console.log(`Readonly diagram loaded in view-only mode`);
       } catch (error) {
@@ -186,7 +171,8 @@ function EditorPage() {
     };
 
     loadReadonlyDiagram();
-  }, [readonlyDiagramId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [readonlyDiagramId, serverStorageAvailable]);
 
   // Update diagramData when loaded icons change
   useEffect(() => {
@@ -350,8 +336,15 @@ function EditorPage() {
     }
   };
 
-  const loadDiagram = async (diagram: SavedDiagram) => {
-    if (hasUnsavedChanges && !window.confirm(t('alert.unsavedChanges'))) {
+  const loadDiagram = async (
+    diagram: SavedDiagram,
+    skipUnsavedCheck = false
+  ) => {
+    if (
+      !skipUnsavedCheck &&
+      hasUnsavedChanges &&
+      !window.confirm(t('alert.unsavedChanges'))
+    ) {
       return;
     }
 
@@ -449,7 +442,10 @@ function EditorPage() {
 
     setCurrentModel(updatedModel);
     setDiagramData(updatedModel);
-    setHasUnsavedChanges(true);
+
+    if (!isViewOnlyMode) {
+      setHasUnsavedChanges(true);
+    }
   };
 
   const exportDiagram = () => {
@@ -779,7 +775,7 @@ function EditorPage() {
               fontWeight: 'bold'
             }}
           >
-            👁️ View-Only Mode
+            View-Only Mode
           </div>
         )}
         <ChangeLanguage />
@@ -957,7 +953,7 @@ function EditorPage() {
                       <div className="diagram-actions">
                         <button
                           onClick={() => {
-                            return loadDiagram(diagram);
+                            return loadDiagram(diagram, false);
                           }}
                         >
                           {t('dialog.load.btnLoad')}
