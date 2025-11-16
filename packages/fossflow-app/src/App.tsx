@@ -60,7 +60,6 @@ function EditorPage() {
   const [showDiagramManager, setShowDiagramManager] = useState(false);
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
   const [isReadOnlyMode, setIsReadOnlyMode] = useState(false);
-  const [readonlyDiagramLoading, setReadonlyDiagramLoading] = useState(false);
 
   // Initialize with empty diagram data
   // Create default colors for connectors
@@ -121,7 +120,6 @@ function EditorPage() {
     if (!readonlyDiagramId || !serverStorageAvailable) return;
     const loadReadonlyDiagram = async () => {
       try {
-        setReadonlyDiagramLoading(true);
         const storage = storageManager.getStorage();
         // Get diagram metadata
         const diagramList = await storage.listDiagrams();
@@ -145,8 +143,6 @@ function EditorPage() {
         // Alert if unable to load readonly diagram and redirect to new diagram
         alert(t('dialog.readOnly.failed'));
         window.location.href = '/';
-      } finally {
-        setReadonlyDiagramLoading(false);
       }
     };
     loadReadonlyDiagram();
@@ -783,36 +779,22 @@ function EditorPage() {
       </div>
 
       <div className="fossflow-container">
-        {readonlyDiagramLoading ? (
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100%',
-              fontSize: '18px'
-            }}
-          >
-            {t('dialog.readOnly.loading')}
-          </div>
-        ) : (
-          <Isoflow
-            key={fossflowKey}
-            initialData={diagramData}
-            onModelUpdated={handleModelUpdated}
-            editorMode={isReadOnlyMode ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
-            locale={allLocales[i18n.language as keyof typeof allLocales]}
-            iconPackManager={{
-              lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,
-              onToggleLazyLoading: iconPackManager.toggleLazyLoading,
-              packInfo: Object.values(iconPackManager.packInfo),
-              enabledPacks: iconPackManager.enabledPacks,
-              onTogglePack: (packName: string, enabled: boolean) => {
-                iconPackManager.togglePack(packName as any, enabled);
-              }
-            }}
-          />
-        )}
+        <Isoflow
+          key={fossflowKey}
+          initialData={diagramData}
+          onModelUpdated={handleModelUpdated}
+          editorMode={isReadOnlyMode ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
+          locale={allLocales[i18n.language as keyof typeof allLocales]}
+          iconPackManager={{
+            lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,
+            onToggleLazyLoading: iconPackManager.toggleLazyLoading,
+            packInfo: Object.values(iconPackManager.packInfo),
+            enabledPacks: iconPackManager.enabledPacks,
+            onTogglePack: (packName: string, enabled: boolean) => {
+              iconPackManager.togglePack(packName as any, enabled);
+            }
+          }}
+        />
       </div>
 
       {/* Save Dialog */}
