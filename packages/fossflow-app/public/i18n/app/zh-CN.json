@@ -41,6 +41,12 @@
             "noteMessage": "导出的 JSON 文件可以稍后导入或与他人共享。",
             "btnDownload": "下载 JSON",
             "btnCancel": "取消"
+        },
+        "readOnly": {
+            "mode": "阅读模式",
+            "loading": "正在加载图表...",
+            "failed": "加载图表失败",
+            "goToHome": "返回首页"
         }
     },
     "alert": {

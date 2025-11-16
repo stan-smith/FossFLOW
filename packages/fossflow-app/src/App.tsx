@@ -59,7 +59,7 @@ function EditorPage() {
   const [showStorageManager, setShowStorageManager] = useState(false);
   const [showDiagramManager, setShowDiagramManager] = useState(false);
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
-  const [isViewOnlyMode, setIsViewOnlyMode] = useState(false);
+  const [isReadOnlyMode, setIsReadOnlyMode] = useState(false);
   const [readonlyDiagramLoading, setReadonlyDiagramLoading] = useState(false);
   const [readonlyDiagramError, setReadonlyDiagramError] = useState(false);
 
@@ -159,7 +159,7 @@ function EditorPage() {
         // Call the loadDiagram function
         await loadDiagram(readonlyDiagram, true);
 
-        setIsViewOnlyMode(true);
+        setIsReadOnlyMode(true);
 
         console.log(`Readonly diagram loaded in view-only mode`);
       } catch (error) {
@@ -443,7 +443,7 @@ function EditorPage() {
     setCurrentModel(updatedModel);
     setDiagramData(updatedModel);
 
-    if (!isViewOnlyMode) {
+    if (!isReadOnlyMode) {
       setHasUnsavedChanges(true);
     }
   };
@@ -708,7 +708,7 @@ function EditorPage() {
   return (
     <div className="App">
       <div className="toolbar">
-        {!isViewOnlyMode && (
+        {!isReadOnlyMode && (
           <>
             <button onClick={newDiagram}>{t('nav.newDiagram')}</button>
             {serverStorageAvailable && (
@@ -765,23 +765,25 @@ function EditorPage() {
             </button>
           </>
         )}
-        {isViewOnlyMode && (
+        {isReadOnlyMode && (
           <div
             style={{
-              backgroundColor: '#2196F3',
-              color: 'white',
+              color: 'black',
               padding: '8px 16px',
               borderRadius: '4px',
-              fontWeight: 'bold'
+              fontWeight: 'bold',
+              border: '2px solid #000000'
             }}
           >
-            View-Only Mode
+            {t('dialog.readOnly.mode')}
           </div>
         )}
         <ChangeLanguage />
-        <span className="current-diagram">
-          {isViewOnlyMode ? (
-            <span>{diagramName} (Read-Only)</span>
+        <span className="current-diagram" style={{ marginLeft: '10px' }}>
+          {isReadOnlyMode ? (
+            <span>
+              {t('status.current')}: {diagramName}
+            </span>
           ) : (
             <>
               {currentDiagram
@@ -813,7 +815,7 @@ function EditorPage() {
               fontSize: '18px'
             }}
           >
-            Loading diagram...
+            {t('dialog.readOnly.loading')}
           </div>
         ) : readonlyDiagramError ? (
           <div
@@ -828,13 +830,7 @@ function EditorPage() {
             }}
           >
             <div style={{ marginBottom: '20px', color: '#d32f2f' }}>
-              ❌ Failed to load diagram
-            </div>
-            <div
-              style={{ fontSize: '14px', color: '#666', marginBottom: '20px' }}
-            >
-              The diagram may not exist or you may not have permission to view
-              it.
+              ❌ {t('dialog.readOnly.failed')}
             </div>
             <button
               onClick={() => {
@@ -846,7 +842,7 @@ function EditorPage() {
                 cursor: 'pointer'
               }}
             >
-              Go to Home
+              {t('dialog.readOnly.goToHome')}
             </button>
           </div>
         ) : (
@@ -854,7 +850,7 @@ function EditorPage() {
             key={fossflowKey}
             initialData={diagramData}
             onModelUpdated={handleModelUpdated}
-            editorMode={isViewOnlyMode ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
+            editorMode={isReadOnlyMode ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
             locale={allLocales[i18n.language as keyof typeof allLocales]}
             iconPackManager={{
               lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,
