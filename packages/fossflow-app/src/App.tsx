@@ -59,7 +59,7 @@ function EditorPage() {
   const [showStorageManager, setShowStorageManager] = useState(false);
   const [showDiagramManager, setShowDiagramManager] = useState(false);
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
-  const [isReadOnlyMode, setIsReadOnlyMode] = useState(false);
+  const isReadonlyUrl = window.location.pathname.startsWith('/display/');
 
   // Initialize with empty diagram data
   // Create default colors for connectors
@@ -138,7 +138,6 @@ function EditorPage() {
             diagramInfo?.lastModified.toISOString() || new Date().toISOString()
         };
         await loadDiagram(readonlyDiagram, true);
-        setIsReadOnlyMode(true);
       } catch (error) {
         // Alert if unable to load readonly diagram and redirect to new diagram
         alert(t('dialog.readOnly.failed'));
@@ -417,7 +416,7 @@ function EditorPage() {
     setCurrentModel(updatedModel);
     setDiagramData(updatedModel);
 
-    if (!isReadOnlyMode) {
+    if (!isReadonlyUrl) {
       setHasUnsavedChanges(true);
     }
   };
@@ -682,7 +681,7 @@ function EditorPage() {
   return (
     <div className="App">
       <div className="toolbar">
-        {!isReadOnlyMode && (
+        {!isReadonlyUrl && (
           <>
             <button onClick={newDiagram}>{t('nav.newDiagram')}</button>
             {serverStorageAvailable && (
@@ -739,7 +738,7 @@ function EditorPage() {
             </button>
           </>
         )}
-        {isReadOnlyMode && (
+        {isReadonlyUrl && (
           <div
             style={{
               color: 'black',
@@ -754,7 +753,7 @@ function EditorPage() {
         )}
         <ChangeLanguage />
         <span className="current-diagram">
-          {isReadOnlyMode ? (
+          {isReadonlyUrl ? (
             <span>
               {t('status.current')}: {diagramName}
             </span>
@@ -783,7 +782,7 @@ function EditorPage() {
           key={fossflowKey}
           initialData={diagramData}
           onModelUpdated={handleModelUpdated}
-          editorMode={isReadOnlyMode ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
+          editorMode={isReadonlyUrl ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
           locale={allLocales[i18n.language as keyof typeof allLocales]}
           iconPackManager={{
             lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,
