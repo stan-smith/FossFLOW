@@ -19,6 +19,7 @@ export const ExpandableLabel = ({
 }: Props) => {
   const forceExpandLabels = useUiStateStore((state) => state.expandLabels);
   const editorMode = useUiStateStore((state) => state.editorMode);
+  const labelSettings = useUiStateStore((state) => state.labelSettings);
   const [isExpanded, setIsExpanded] = useState(false);
   const contentRef = useRef<HTMLDivElement>();
   const { observe, size: contentSize } = useResizeObserver();
@@ -68,7 +69,8 @@ export const ExpandableLabel = ({
         sx={{
           '&::-webkit-scrollbar': {
             display: 'none'
-          }
+          },
+          pb: isContentTruncated || isExpanded ? labelSettings.expandButtonPadding : 0 // Add bottom padding when expand button is visible
         }}
         style={{
           overflowY: overflowBehavior,

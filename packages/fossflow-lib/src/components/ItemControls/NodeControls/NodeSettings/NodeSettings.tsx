@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Slider, Box, TextField } from '@mui/material';
 import { ModelItem, ViewItem } from 'src/types';
-import { MarkdownEditor } from 'src/components/MarkdownEditor/MarkdownEditor';
+import { RichTextEditor } from 'src/components/RichTextEditor/RichTextEditor';
 import { useModelItem } from 'src/hooks/useModelItem';
 import { useModelStore } from 'src/stores/modelStore';
 import { DeleteButton } from '../../components/DeleteButton';
@@ -87,7 +87,7 @@ export const NodeSettings = ({
         />
       </Section>
       <Section title="Description">
-        <MarkdownEditor
+        <RichTextEditor
           value={modelItem.description}
           onChange={(text) => {
             if (modelItem.description !== text)
