@@ -59,7 +59,8 @@ function EditorPage() {
   const [showStorageManager, setShowStorageManager] = useState(false);
   const [showDiagramManager, setShowDiagramManager] = useState(false);
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
-  const isReadonlyUrl = window.location.pathname.startsWith('/display/');
+  const isReadonlyUrl =
+    window.location.pathname.startsWith('/display/') && readonlyDiagramId;
 
   // Initialize with empty diagram data
   // Create default colors for connectors
@@ -117,7 +118,7 @@ function EditorPage() {
 
   // Check if readonlyDiagramId exists - if exists, load diagram in view-only mode
   useEffect(() => {
-    if (!readonlyDiagramId || !serverStorageAvailable) return;
+    if (!isReadonlyUrl || !serverStorageAvailable) return;
     const loadReadonlyDiagram = async () => {
       try {
         const storage = storageManager.getStorage();
