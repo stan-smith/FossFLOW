@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.1](https://github.com/stan-smith/FossFLOW/compare/v1.6.0...v1.6.1) (2025-11-18)
+
+### Bug Fixes
+
+* Add error boundary to handle React-Quill DOM manipulation errors ([6c38a11](https://github.com/stan-smith/FossFLOW/commit/6c38a11f4b8fde448b18958cfb28cb6dd1862613))
+
 ## [1.6.0](https://github.com/stan-smith/FossFLOW/compare/v1.5.2...v1.6.0) (2025-11-15)
 
 ### Features
