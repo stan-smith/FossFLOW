@@ -10,7 +10,7 @@ import { useIcon } from 'src/hooks/useIcon';
 import { ViewItem } from 'src/types';
 import { useModelItem } from 'src/hooks/useModelItem';
 import { ExpandableLabel } from 'src/components/Label/ExpandableLabel';
-import { MarkdownEditor } from 'src/components/MarkdownEditor/MarkdownEditor';
+import { RichTextEditor } from 'src/components/RichTextEditor/RichTextEditor';
 
 interface Props {
   node: ViewItem;
@@ -74,7 +74,7 @@ export const Node = memo(({ node, order }: Props) => {
                 )}
                 {modelItem.description &&
                   modelItem.description !== MARKDOWN_EMPTY_VALUE && (
-                    <MarkdownEditor value={modelItem.description} readOnly />
+                    <RichTextEditor value={modelItem.description} readOnly />
                   )}
               </Stack>
             </ExpandableLabel>

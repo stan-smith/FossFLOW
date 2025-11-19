@@ -11,6 +11,7 @@ import { INITIAL_UI_STATE } from 'src/config';
 import { DEFAULT_HOTKEY_PROFILE } from 'src/config/hotkeys';
 import { DEFAULT_PAN_SETTINGS } from 'src/config/panSettings';
 import { DEFAULT_ZOOM_SETTINGS } from 'src/config/zoomSettings';
+import { DEFAULT_LABEL_SETTINGS } from 'src/config/labelSettings';
 
 const initialState = () => {
   return createStore<UiStateStore>((set, get) => {
@@ -36,6 +37,7 @@ const initialState = () => {
       hotkeyProfile: DEFAULT_HOTKEY_PROFILE,
       panSettings: DEFAULT_PAN_SETTINGS,
       zoomSettings: DEFAULT_ZOOM_SETTINGS,
+      labelSettings: DEFAULT_LABEL_SETTINGS,
       connectorInteractionMode: 'click', // Default to click mode
       expandLabels: false, // Default to collapsed labels
       iconPackManager: null, // Will be set by Isoflow if provided
@@ -110,6 +112,9 @@ const initialState = () => {
         },
         setZoomSettings: (zoomSettings) => {
           set({ zoomSettings });
+        },
+        setLabelSettings: (labelSettings) => {
+          set({ labelSettings });
         },
         setConnectorInteractionMode: (connectorInteractionMode) => {
           set({ connectorInteractionMode });

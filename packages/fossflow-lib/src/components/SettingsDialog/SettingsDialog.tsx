@@ -15,6 +15,7 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { HotkeySettings } from '../HotkeySettings/HotkeySettings';
 import { PanSettings } from '../PanSettings/PanSettings';
 import { ZoomSettings } from '../ZoomSettings/ZoomSettings';
+import { LabelSettings } from '../LabelSettings/LabelSettings';
 import { ConnectorSettings } from '../ConnectorSettings/ConnectorSettings';
 import { IconPackSettings } from '../IconPackSettings/IconPackSettings';
 import { useTranslation } from 'src/stores/localeStore';
@@ -79,6 +80,7 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
           <Tab label={t('settings.hotkeys.title')} />
           <Tab label={t('settings.pan.title')} />
           <Tab label="Zoom" />
+          <Tab label="Labels" />
           <Tab label={t('settings.connector.title')} />
           {iconPackManager && <Tab label={t('settings.iconPacks.title')} />}
         </Tabs>
@@ -87,8 +89,9 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
           {tabValue === 0 && <HotkeySettings />}
           {tabValue === 1 && <PanSettings />}
           {tabValue === 2 && <ZoomSettings />}
-          {tabValue === 3 && <ConnectorSettings />}
-          {tabValue === 4 && iconPackManager && (
+          {tabValue === 3 && <LabelSettings />}
+          {tabValue === 4 && <ConnectorSettings />}
+          {tabValue === 5 && iconPackManager && (
             <IconPackSettings
               lazyLoadingEnabled={iconPackManager.lazyLoadingEnabled}
               onToggleLazyLoading={iconPackManager.onToggleLazyLoading}
