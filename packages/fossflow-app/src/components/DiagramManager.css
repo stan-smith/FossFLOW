@@ -129,6 +129,15 @@
   background: #da190b;
 }
 
+.action-button.share {
+  background: #2196f3;
+  color: white;
+}
+
+.action-button.share:hover {
+  background: #0b7dda;
+}
+
 .loading {
   padding: 40px;
   text-align: center;

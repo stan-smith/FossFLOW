@@ -41,6 +41,10 @@
             "noteMessage": "I file JSON esportati possono essere importati in seguito o condivisi con altri.",
             "btnDownload": "Scarica JSON",
             "btnCancel": "Annulla"
+        },
+        "readOnly": {
+            "mode": "Modalità sola lettura",
+            "failed": "Impossibile caricare il diagramma"
         }
     },
     "alert": {
