@@ -40,7 +40,7 @@ jobs:
         env:
           # do not report warnings as errors
           CI: false
-          PUBLIC_URL: https://stan-smith.github.io/FossFLOW/
+          PUBLIC_URL: /FossFLOW/
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
