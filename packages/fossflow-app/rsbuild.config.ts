@@ -1,12 +1,22 @@
 import { defineConfig } from '@rsbuild/core';
 import { pluginReact } from '@rsbuild/plugin-react';
 
+const publicUrl = process.env.PUBLIC_URL || '';
+const assetPrefix = publicUrl ? (publicUrl.endsWith('/') ? publicUrl : publicUrl + '/') : '/';
+
 export default defineConfig({
     plugins: [pluginReact()],
     html: {
         template: './public/index.html',
         templateParameters: {
-            assetPrefix: process.env.PUBLIC_URL ? (process.env.PUBLIC_URL.endsWith('/') ? process.env.PUBLIC_URL : process.env.PUBLIC_URL + '/') : '/',
+            assetPrefix: assetPrefix,
+        },
+    },
+    source: {
+        // Define global constants that will be replaced at build time
+        define: {
+            'process.env.PUBLIC_URL': JSON.stringify(publicUrl),
+            'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
         },
     },
     output: {
@@ -15,7 +25,7 @@ export default defineConfig({
         },
         // https://rsbuild.rs/guide/advanced/browser-compatibility
         polyfill: 'usage',
-        assetPrefix: process.env.PUBLIC_URL ? (process.env.PUBLIC_URL.endsWith('/') ? process.env.PUBLIC_URL : process.env.PUBLIC_URL + '/') : '/',
+        assetPrefix: assetPrefix,
         copy: [
             {
                 from: './src/i18n',
