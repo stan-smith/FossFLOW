@@ -1,12 +1,17 @@
 const CACHE_NAME = 'fossflow-v1';
+
+// Get the base path from the service worker's location
+const swPath = self.location.pathname;
+const basePath = swPath.substring(0, swPath.lastIndexOf('/') + 1);
+
 const urlsToCache = [
-  '/',
-  '/static/css/main.css',
-  '/static/js/bundle.js',
-  '/manifest.json',
-  '/favicon.ico',
-  '/logo192.png',
-  '/logo512.png'
+  basePath,
+  `${basePath}static/css/main.css`,
+  `${basePath}static/js/bundle.js`,
+  `${basePath}manifest.json`,
+  `${basePath}favicon.ico`,
+  `${basePath}logo192.png`,
+  `${basePath}logo512.png`
 ];
 
 self.addEventListener('install', event => {

@@ -1,0 +1,122 @@
+name: E2E Tests
+
+on:
+  # Runs after unit tests complete successfully
+  workflow_run:
+    workflows: ["Run Tests"]
+    types:
+      - completed
+    branches: ["main", "master"]
+
+jobs:
+  e2e-tests:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+          cache-dependency-path: 'e2e-tests/requirements.txt'
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install Python dependencies
+        run: |
+          cd e2e-tests
+          pip install -r requirements.txt
+
+      - name: Build FossFLOW library
+        run: npm run build:lib
+
+      - name: Build FossFLOW app
+        run: npm run build:app
+
+      - name: Install serve globally
+        run: npm install -g serve
+
+      - name: Start Selenium Chrome in background
+        run: |
+          docker run -d \
+            --name selenium-chrome \
+            --network host \
+            --shm-size=2g \
+            selenium/standalone-chrome:latest
+
+          echo "Waiting for Selenium to be ready..."
+          timeout 60 bash -c 'until curl -sf http://localhost:4444/status; do sleep 2; done' || {
+            echo "Selenium failed to start"
+            docker logs selenium-chrome
+            exit 1
+          }
+          echo "Selenium is ready"
+          curl -s http://localhost:4444/status | jq '.' || true
+
+      - name: Start FossFLOW server in background
+        run: |
+          cd packages/fossflow-app/build
+          nohup serve -s . -l 3000 > /tmp/server.log 2>&1 &
+          echo $! > /tmp/server.pid
+          echo "Server PID: $(cat /tmp/server.pid)"
+          echo "Waiting for server to start..."
+          timeout 60 bash -c 'until curl -sf http://localhost:3000; do sleep 2; done' || {
+            echo "Server failed to start"
+            echo "Server logs:"
+            cat /tmp/server.log
+            kill $(cat /tmp/server.pid) 2>/dev/null || true
+            exit 1
+          }
+          echo "Server is ready"
+          echo "Server PID saved to /tmp/server.pid"
+        env:
+          CI: true
+
+      - name: Verify connectivity before tests
+        run: |
+          echo "Testing app connectivity..."
+          curl -sf http://localhost:3000 || echo "App not accessible"
+          echo "Testing Selenium connectivity..."
+          curl -sf http://localhost:4444/status || echo "Selenium not accessible"
+
+      - name: Run E2E tests
+        run: |
+          cd e2e-tests
+          pytest -v --tb=short
+        env:
+          FOSSFLOW_TEST_URL: http://localhost:3000
+          WEBDRIVER_URL: http://localhost:4444
+
+      - name: Stop Selenium and FossFLOW server
+        if: always()
+        run: |
+          echo "Stopping Selenium container..."
+          docker stop selenium-chrome 2>/dev/null || true
+          docker rm selenium-chrome 2>/dev/null || true
+
+          if [ -f /tmp/server.pid ]; then
+            echo "Stopping server (PID: $(cat /tmp/server.pid))"
+            kill $(cat /tmp/server.pid) 2>/dev/null || true
+            echo "Server logs:"
+            cat /tmp/server.log || true
+          fi
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-test-results
+          path: e2e-tests/target/
+          if-no-files-found: ignore
+          retention-days: 7

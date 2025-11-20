@@ -15,7 +15,7 @@ i18n
     },
     ns: ['app'],
     backend: {
-      loadPath: '/i18n/{{ns}}/{{lng}}.json'
+      loadPath: `${process.env.PUBLIC_URL || ''}/i18n/{{ns}}/{{lng}}.json`
     },
     detection: {
       order: ['localStorage'],

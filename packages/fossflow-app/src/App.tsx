@@ -29,8 +29,11 @@ interface SavedDiagram {
 }
 
 function App() {
+  // Get base path from PUBLIC_URL or default to '/'
+  const basename = process.env.PUBLIC_URL || '/';
+
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <Routes>
         <Route path="/" element={<EditorPage />} />
         <Route path="/display/:readonlyDiagramId" element={<EditorPage />} />
