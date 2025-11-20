@@ -3,6 +3,10 @@ import { initReactI18next } from 'react-i18next';
 import Backend from 'i18next-http-backend';
 import LanguageDetector from 'i18next-browser-languagedetector';
 
+// Ensure PUBLIC_URL ends with slash for consistent path construction
+const publicUrl = process.env.PUBLIC_URL || '';
+const basePath = publicUrl ? (publicUrl.endsWith('/') ? publicUrl : publicUrl + '/') : '/';
+
 i18n
   .use(Backend)
   .use(LanguageDetector)
@@ -15,7 +19,7 @@ i18n
     },
     ns: ['app'],
     backend: {
-      loadPath: `${process.env.PUBLIC_URL || ''}/i18n/{{ns}}/{{lng}}.json`
+      loadPath: `${basePath}i18n/{{ns}}/{{lng}}.json`
     },
     detection: {
       order: ['localStorage'],
