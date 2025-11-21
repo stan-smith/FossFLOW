@@ -135,7 +135,7 @@ FossFLOW/
    - `bug` - Bug fixes
    - `enhancement` - New features
 
-3. Check [ISOFLOW_TODO.md](./FOSS_FLOW_TODO.md) for prioritized tasks
+3. Check [ISOFLOW_TODO.md](./FOSSFLOW_TODO.md) for prioritized tasks
 
 ### Types of Contributions
 
