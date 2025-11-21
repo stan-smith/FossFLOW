@@ -1,5 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import { ColorSelector } from '../ColorSelector';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from 'src/styles/theme';
