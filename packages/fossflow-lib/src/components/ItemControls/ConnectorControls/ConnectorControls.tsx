@@ -21,6 +21,7 @@ import {
 import { useConnector } from 'src/hooks/useConnector';
 import { ColorSelector } from 'src/components/ColorSelector/ColorSelector';
 import { ColorPicker } from 'src/components/ColorSelector/ColorPicker';
+import { CustomColorInput } from 'src/components/ColorSelector/CustomColorInput';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useScene } from 'src/hooks/useScene';
 import {
@@ -317,17 +318,12 @@ export const ConnectorControls = ({ id }: Props) => {
             sx={{ mb: 2 }}
           />
           {useCustomColor ? (
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-              <ColorPicker
-                value={connector.customColor || '#000000'}
-                onChange={(color) => {
-                  updateConnector(connector.id, { customColor: color });
-                }}
-              />
-              <Typography variant="body2" color="text.secondary">
-                {connector.customColor || '#000000'}
-              </Typography>
-            </Box>
+            <CustomColorInput
+              value={connector.customColor || '#000000'}
+              onChange={(color) => {
+                updateConnector(connector.id, { customColor: color });
+              }}
+            />
           ) : (
             <ColorSelector
               onChange={(color) => {
