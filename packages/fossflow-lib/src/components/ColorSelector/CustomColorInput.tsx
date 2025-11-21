@@ -51,8 +51,6 @@ export const CustomColorInput = ({ value, onChange }: Props) => {
     // On blur, if invalid, revert to prop value
     if (!/^#[0-9A-F]{6}$/i.test(localValue)) {
       setLocalValue(value);
-    } else {
-      onChange(localValue);
     }
   };
 
