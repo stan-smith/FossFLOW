@@ -52,7 +52,7 @@
         "diagramExists": "Ya existe un diagrama llamado \"{{name}}\" en esta sesión. Esto lo sobrescribirá. ¿Estás seguro de que deseas continuar?",
         "unsavedChanges": "Tienes cambios sin guardar. ¿Continuar cargando?",
         "createNewDiagram": "¿Crear un nuevo diagrama?",
-        "unsavedChangesExport": "Tienes cambios sin guardar. Exporta tu diagrama primero para guardarlo. ¿Continuar?",
+        "unsavedChangesExport": "Tienes cambios sin guardar. Exporta tu diagrama primero si no quieres perder los cambios o continúa para comenzar uno nuevo.",
         "confirmDelete": "¿Estás seguro de que deseas eliminar este diagrama?",
         "storageFull": "¡Almacenamiento lleno! Abriendo el gestor de almacenamiento...",
         "autoSaveFailed": "¡Almacenamiento lleno! Por favor usa el gestor de almacenamiento para liberar espacio.",

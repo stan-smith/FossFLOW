@@ -135,7 +135,7 @@ FossFLOW/
    - `bug` - Bug fixes
    - `enhancement` - New features
 
-3. Check [ISOFLOW_TODO.md](./ISOFLOW_TODO.md) for prioritized tasks
+3. Check [FOSSFLOW_TODO.md](./FOSSFLOW_TODO.md) for prioritized tasks
 
 ### Types of Contributions
 
@@ -442,8 +442,8 @@ docker run -p 80:80 stnsmith/fossflow:latest
 
 - **GitHub Issues**: For bugs and feature requests
 - **Discussions**: For questions and ideas
-- **Code Encyclopedia**: See [ISOFLOW_ENCYCLOPEDIA.md](./ISOFLOW_ENCYCLOPEDIA.md)
-- **TODO List**: See [ISOFLOW_TODO.md](./ISOFLOW_TODO.md)
+- **Code Encyclopedia**: See [FOSSFLOW_ENCYCLOPEDIA.md](./FOSSFLOW_ENCYCLOPEDIA.md)
+- **TODO List**: See [FOSSFLOW_TODO.md](./FOSSFLOW_TODO.md)
 
 ### Communication Guidelines
 
