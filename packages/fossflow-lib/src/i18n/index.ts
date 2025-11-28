@@ -6,6 +6,7 @@ import frFR from './fr-FR';
 import hiIN from './hi-IN';
 import bnBD from './bn-BD';
 import ruRU from './ru-RU';
+import plPL from './pl-PL';
 
 const locales = {
     'en-US': enUS,
@@ -15,7 +16,8 @@ const locales = {
     'fr-FR': frFR,
     'hi-IN': hiIN,
     'bn-BD': bnBD,
-    'ru-RU': ruRU
+    'ru-RU': ruRU,
+    'pl-PL': plPL
 };
 
 export default locales;
