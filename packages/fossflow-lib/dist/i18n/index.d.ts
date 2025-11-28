@@ -7,5 +7,6 @@ declare const locales: {
     'hi-IN': import("../types").LocaleProps;
     'bn-BD': import("../types").LocaleProps;
     'ru-RU': import("../types").LocaleProps;
+    'pl-PL': import("../types").LocaleProps;
 };
 export default locales;
