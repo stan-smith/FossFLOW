@@ -96,6 +96,41 @@ export const DiagramManager: React.FC<Props> = ({
     }
   };
 
+  const handleDuplicate = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const storage = storageManager.getStorage();
+      
+      // Load the diagram to be duplicated
+      const data = await storage.loadDiagram(id);
+      
+      // Create new name with (copy) appended
+      // Cast to any because Model type might not strictly include name, but we save it with name
+      const sourceData = data as any;
+      const newName = `${sourceData.name || sourceData.title || 'Untitled'} (copy)`;
+      const newData = {
+        ...sourceData,
+        name: newName
+      };
+      
+      // Remove ID so backend generates a new one
+      if (newData.id) {
+        delete newData.id;
+      }
+
+      // Create the new diagram
+      await storage.createDiagram(newData);
+      
+      await loadDiagrams(); // Refresh list
+    } catch (err) {
+      console.error(`DiagramManager: Failed to duplicate diagram ${id}:`, err);
+      setError(err instanceof Error ? err.message : 'Failed to duplicate diagram');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCopyShareLink = (id: string) => {
     const shareUrl = `${window.location.origin}/display/${id}`;
     navigator.clipboard
@@ -264,6 +299,16 @@ export const DiagramManager: React.FC<Props> = ({
                         title="Copy shareable link"
                       >
                         Share
+                      </button>
+                      <button
+                        className="action-button"
+                        onClick={() => {
+                          return handleDuplicate(diagram.id);
+                        }}
+                        disabled={loading}
+                        title="Duplicate diagram"
+                      >
+                        Duplicate
                       </button>
                       <button
                         className="action-button danger"
