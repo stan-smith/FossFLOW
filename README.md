@@ -202,6 +202,71 @@ We welcome contributions! Please see [CONTRIBUTORS.md](CONTRIBUTORS.md) for guid
 - [FOSSFLOW_TODO.md](FOSSFLOW_TODO.md) - Current issues and roadmap
 - [CONTRIBUTORS.md](CONTRIBUTORS.md) - Contributing guidelines
 
+## AI Integration (LightRAG)
+
+FossFLOW can optionally integrate with an external LightRAG instance to provide
+an AI assistant endpoint on the backend. This is useful for building
+context-aware helpers or search features in the app.
+
+- Backend endpoint: `POST /api/ai/query`
+  - Request body:
+    - `query` (string, required): Natural language question or instruction.
+    - `diagramContext` (object, optional): Extra context (e.g. diagram id,
+      node/edge summary) that the caller wants to pass through to LightRAG.
+    - `options` (object, optional): Implementation-specific options that are
+      forwarded to LightRAG.
+  - Response body (JSON):
+    - `answer` (string): Aggregated answer text from LightRAG’s `query/stream`
+      API.
+    - `raw` (array of strings, optional): Raw streamed chunks from LightRAG,
+      included only when `LIGHTRAG_INCLUDE_RAW=true`.
+
+The backend talks to LightRAG using its `query/stream` HTTP API exposed by the
+LightRAG Web UI (for example,
+`https://lightrag-latest-xyu3.onrender.com/webui/`).
+
+### Configuration
+
+The following environment variables control the integration:
+
+- `LIGHTRAG_BASE_URL` (optional)
+  - Base URL for the LightRAG server.
+  - Default: `https://lightrag-latest-xyu3.onrender.com`
+- `LIGHTRAG_QUERY_STREAM_PATH` (optional)
+  - Path for the query streaming endpoint.
+  - Default: `/query/stream`
+- `LIGHTRAG_TIMEOUT_MS` (optional)
+  - Timeout in milliseconds for requests to LightRAG.
+  - Default: `30000`
+- `LIGHTRAG_INCLUDE_RAW` (optional)
+  - When set to `true`, the backend will include the raw streamed chunks from
+    LightRAG in the `raw` field of the response.
+
+### Example request
+
+```bash
+curl -X POST http://localhost:3001/api/ai/query \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "Explain this payment flow at a high level.",
+    "diagramContext": {
+      "diagramId": "example-diagram-id",
+      "summary": "Short text summary of nodes and edges."
+    }
+  }'
+```
+which should return a response similar to:
+
+```json
+{
+  "answer": "High-level explanation from LightRAG...",
+  "raw": [
+    "...first streamed chunk...",
+    "...second streamed chunk..."
+  ]
+}
+```
+
 ## License
 
 MIT

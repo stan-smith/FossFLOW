@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import { callLightRagQueryStream } from './lightragClient.js';
 
 // Load environment variables
 dotenv.config();
@@ -30,6 +31,57 @@ app.get('/api/storage/status', (req, res) => {
     gitBackup: ENABLE_GIT_BACKUP,
     version: '1.0.0'
   });
+});
+
+// AI assistant endpoint backed by LightRAG query/stream API
+app.post('/api/ai/query', async (req, res) => {
+  const { query, diagramContext, options } = req.body ?? {};
+
+  if (!query || typeof query !== 'string') {
+    return res
+      .status(400)
+      .json({ error: 'Missing required field "query" (string).' });
+  }
+
+  try {
+    const result = await callLightRagQueryStream({
+      query,
+      diagramContext,
+      options
+    });
+
+    const includeRawChunks =
+      process.env.LIGHTRAG_INCLUDE_RAW === 'true';
+
+    return res.json({
+      answer: result.answer,
+      raw: includeRawChunks ? result.chunks : undefined
+    });
+  } catch (error) {
+    // Normalize error output to avoid leaking internal details while
+    // still giving enough information for debugging.
+    const status =
+      typeof error.status === 'number' && error.status >= 400
+        ? error.status
+        : 502;
+
+    const message =
+      error.code === 'LIGHTRAG_TIMEOUT'
+        ? 'Upstream LightRAG request timed out'
+        : 'Failed to query AI assistant';
+
+    console.error('[POST /api/ai/query] LightRAG error:', {
+      message: error.message,
+      code: error.code,
+      status: error.status,
+      config: error.config
+    });
+
+    return res.status(status).json({
+      error: message,
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
 });
 
 // Only enable storage endpoints if storage is enabled

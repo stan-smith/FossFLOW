@@ -12,6 +12,7 @@ import { StorageManager } from './StorageManager';
 import { DiagramManager } from './components/DiagramManager';
 import { storageManager } from './services/storageService';
 import ChangeLanguage from './components/ChangeLanguage';
+import { AiHelperSidebar } from './components/AiHelperSidebar';
 import { allLocales } from 'fossflow';
 import { useIconPackManager, IconPackName } from './services/iconPackManager';
 import './App.css';
@@ -800,6 +801,12 @@ function EditorPage() {
             }
           }}
         />
+        {!isReadonlyUrl && (
+          <AiHelperSidebar
+            diagramId={currentDiagram?.id}
+            diagramData={currentModel || diagramData}
+          />
+        )}
       </div>
 
       {/* Save Dialog */}
