@@ -174,6 +174,13 @@ const locale: LocaleProps = {
       iconCount: "{count} 个图标",
       lazyLoadingDisabledNote: "延迟加载已禁用。所有图标包将在启动时加载。",
       note: "可以根据需要启用或禁用图标包。禁用的图标包将减少内存使用并提高性能。"
+    },
+    perspective: {
+      title: "透视设置",
+      mode: "透视模式",
+      isometric: "等轴测",
+      "2d": "2D",
+      description: "为图表选择等轴测（类似3D）和2D透视视图。"
     }
   },
   lazyLoadingWelcome: {
@@ -183,6 +190,35 @@ const locale: LocaleProps = {
     configPath2: "以访问配置。",
     canDisable: "如果您愿意，可以禁用此行为。",
     signature: "-Stan"
+  },
+  floatingToolbar: {
+    align: {
+      left: "Align Left",
+      right: "Align Right",
+      centerHorizontal: "Center Horizontally",
+      top: "Align Top",
+      bottom: "Align Bottom",
+      centerVertical: "Center Vertically"
+    },
+    arrange: {
+      distributeHorizontal: "Distribute Horizontally",
+      distributeVertical: "Distribute Vertically",
+      bringToFront: "Bring to Front",
+      sendToBack: "Send to Back"
+    },
+    group: {
+      create: "Group",
+      ungroup: "Ungroup"
+    },
+    edge: {
+      edge: "Edge",
+      edges: "Edges",
+      lineStyle: "Line Style",
+      lineType: "Line Type",
+      width: "Width",
+      single: "Single Line",
+      double: "Double Line"
+    }
   }
 };
 

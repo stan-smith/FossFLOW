@@ -28,6 +28,10 @@ export const Node = memo(({ node, order }: Props) => {
     });
   }, [node.tile]);
 
+  const labelOffset = useMemo(() => {
+    return PROJECTED_TILE_SIZE.height / 2;
+  }, []);
+
   const description = useMemo(() => {
     if (
       !modelItem ||
@@ -61,20 +65,31 @@ export const Node = memo(({ node, order }: Props) => {
         {(modelItem?.name || description) && (
           <Box
             sx={{ position: 'absolute' }}
-            style={{ bottom: PROJECTED_TILE_SIZE.height / 2 }}
+            style={{ bottom: labelOffset }}
           >
             <ExpandableLabel
-              maxWidth={250}
+              maxWidth={260}
               expandDirection="BOTTOM"
               labelHeight={node.labelHeight ?? DEFAULT_LABEL_HEIGHT}
             >
-              <Stack spacing={1}>
+              <Stack spacing={0.5}>
                 {modelItem.name && (
-                  <Typography fontWeight={600}>{modelItem.name}</Typography>
+                  <Typography
+                    fontWeight={600}
+                    variant="body1"
+                    sx={{
+                      letterSpacing: 0.1
+                    }}
+                  >
+                    {modelItem.name}
+                  </Typography>
                 )}
                 {modelItem.description &&
                   modelItem.description !== MARKDOWN_EMPTY_VALUE && (
-                    <RichTextEditor value={modelItem.description} readOnly />
+                    <RichTextEditor
+                      value={modelItem.description}
+                      readOnly
+                    />
                   )}
               </Stack>
             </ExpandableLabel>

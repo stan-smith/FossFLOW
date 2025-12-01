@@ -40,6 +40,7 @@ export declare const INITIAL_UI_STATE: {
 export declare const INITIAL_SCENE_STATE: {
     connectors: {};
     textBoxes: {};
+    groups: {};
 };
 export declare const MAIN_MENU_OPTIONS: MainMenuOptions;
 export declare const DEFAULT_ICON: Icon;

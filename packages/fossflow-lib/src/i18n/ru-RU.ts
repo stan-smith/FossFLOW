@@ -174,6 +174,42 @@ const locale: LocaleProps = {
       iconCount: "{count} иконок",
       lazyLoadingDisabledNote: "Ленивая загрузка отключена. Все пакеты иконок загружаются при запуске.",
       note: "Пакеты иконок могут быть включены или отключены в зависимости от ваших потребностей. Отключенные пакеты уменьшат использование памяти и улучшат производительность."
+    },
+    perspective: {
+      title: "Настройки Перспективы",
+      mode: "Режим Перспективы",
+      isometric: "Изометрическая",
+      "2d": "2D",
+      description: "Выберите между изометрическими (типа 3D) и 2D видами перспективы для вашей диаграммы."
+    }
+  },
+  floatingToolbar: {
+    align: {
+      left: "Align Left",
+      right: "Align Right",
+      centerHorizontal: "Center Horizontally",
+      top: "Align Top",
+      bottom: "Align Bottom",
+      centerVertical: "Center Vertically"
+    },
+    arrange: {
+      distributeHorizontal: "Distribute Horizontally",
+      distributeVertical: "Distribute Vertically",
+      bringToFront: "Bring to Front",
+      sendToBack: "Send to Back"
+    },
+    group: {
+      create: "Group",
+      ungroup: "Ungroup"
+    },
+    edge: {
+      edge: "Edge",
+      edges: "Edges",
+      lineStyle: "Line Style",
+      lineType: "Line Type",
+      width: "Width",
+      single: "Single Line",
+      double: "Double Line"
     }
   },
   lazyLoadingWelcome: {

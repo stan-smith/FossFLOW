@@ -182,6 +182,13 @@ export interface LocaleProps {
       lazyLoadingDisabledNote: string;
       note: string;
     };
+    perspective: {
+      title: string;
+      mode: string;
+      isometric: string;
+      '2d': string;
+      description: string;
+    };
   };
   lazyLoadingWelcome: {
     title: string;
@@ -190,6 +197,35 @@ export interface LocaleProps {
     configPath2: string;
     canDisable: string;
     signature: string;
+  };
+  floatingToolbar: {
+    align: {
+      left: string;
+      right: string;
+      centerHorizontal: string;
+      top: string;
+      bottom: string;
+      centerVertical: string;
+    };
+    arrange: {
+      distributeHorizontal: string;
+      distributeVertical: string;
+      bringToFront: string;
+      sendToBack: string;
+    };
+    group: {
+      create: string;
+      ungroup: string;
+    };
+    edge: {
+      edge: string;
+      edges: string;
+      lineStyle: string;
+      lineType: string;
+      width: string;
+      single: string;
+      double: string;
+    };
   };
   // other namespaces can be added here
 }

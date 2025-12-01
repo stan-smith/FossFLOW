@@ -174,6 +174,42 @@ const locale: LocaleProps = {
       iconCount: "{count} আইকন",
       lazyLoadingDisabledNote: "লেজি লোডিং নিষ্ক্রিয়। সমস্ত আইকন প্যাক স্টার্টআপে লোড করা হয়।",
       note: "আইকন প্যাকগুলি আপনার প্রয়োজন অনুসারে সক্রিয় বা নিষ্ক্রিয় করা যেতে পারে। নিষ্ক্রিয় প্যাকগুলি মেমরি ব্যবহার হ্রাস করবে এবং কর্মক্ষমতা উন্নত করবে।"
+    },
+    perspective: {
+      title: "পার্সপেক্টিভ সেটিংস",
+      mode: "পার্সপেক্টিভ মোড",
+      isometric: "আইসোমেট্রিক",
+      "2d": "2D",
+      description: "আপনার ডায়াগ্রামের জন্য আইসোমেট্রিক (3D-এর মতো) এবং 2D পার্সপেক্টিভ ভিউয়ের মধ্যে বেছে নিন।"
+    }
+  },
+  floatingToolbar: {
+    align: {
+      left: "Align Left",
+      right: "Align Right",
+      centerHorizontal: "Center Horizontally",
+      top: "Align Top",
+      bottom: "Align Bottom",
+      centerVertical: "Center Vertically"
+    },
+    arrange: {
+      distributeHorizontal: "Distribute Horizontally",
+      distributeVertical: "Distribute Vertically",
+      bringToFront: "Bring to Front",
+      sendToBack: "Send to Back"
+    },
+    group: {
+      create: "Group",
+      ungroup: "Ungroup"
+    },
+    edge: {
+      edge: "Edge",
+      edges: "Edges",
+      lineStyle: "Line Style",
+      lineType: "Line Type",
+      width: "Width",
+      single: "Single Line",
+      double: "Double Line"
     }
   },
   lazyLoadingWelcome: {

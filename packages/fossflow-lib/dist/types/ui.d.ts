@@ -124,6 +124,7 @@ export interface ContextMenu {
     tile: Coords;
 }
 export type ConnectorInteractionMode = 'click' | 'drag';
+export type PerspectiveMode = 'isometric' | '2d';
 export interface UiState {
     view: string;
     mainMenuOptions: MainMenuOptions;
@@ -146,6 +147,7 @@ export interface UiState {
     connectorInteractionMode: ConnectorInteractionMode;
     expandLabels: boolean;
     iconPackManager: IconPackManagerProps | null;
+    perspectiveMode: PerspectiveMode;
 }
 export interface UiStateActions {
     setView: (view: string) => void;
@@ -172,6 +174,7 @@ export interface UiStateActions {
     setConnectorInteractionMode: (mode: ConnectorInteractionMode) => void;
     setExpandLabels: (expand: boolean) => void;
     setIconPackManager: (iconPackManager: IconPackManagerProps | null) => void;
+    setPerspectiveMode: (mode: PerspectiveMode) => void;
 }
 export type UiStateStore = UiState & {
     actions: UiStateActions;

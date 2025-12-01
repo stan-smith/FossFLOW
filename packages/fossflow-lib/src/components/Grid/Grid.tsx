@@ -24,14 +24,17 @@ export const Grid = () => {
 
     const tileSize = SizeUtils.multiply(PROJECTED_TILE_SIZE, zoom);
     const elSize = elementRef.current.getBoundingClientRect();
+    
+    // For isometric mode, use the SVG grid
     const backgroundPosition: Size = {
       width: elSize.width / 2 + scroll.position.x + tileSize.width / 2,
       height: elSize.height / 2 + scroll.position.y
     };
-
+    
     gsap.to(elementRef.current, {
-      duration: isFirstRender ? 0 : 0.016, // ~1 frame at 60fps for smooth motion
-      ease: 'none', // Linear easing for immediate response
+      duration: isFirstRender ? 0 : 0.016,
+      ease: 'none',
+      backgroundImage: `url("${gridTileSvg}")`,
       backgroundSize: `${tileSize.width}px ${tileSize.height * 2}px`,
       backgroundPosition: `${backgroundPosition.width}px ${backgroundPosition.height}px`
     });
@@ -59,7 +62,7 @@ export const Grid = () => {
           position: 'absolute',
           width: '100%',
           height: '100%',
-          background: `repeat url("${gridTileSvg}")`
+          backgroundRepeat: 'repeat'
         }}
       />
     </Box>

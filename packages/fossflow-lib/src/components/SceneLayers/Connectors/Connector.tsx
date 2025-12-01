@@ -12,6 +12,7 @@ import { useIsoProjection } from 'src/hooks/useIsoProjection';
 import { useConnector } from 'src/hooks/useConnector';
 import { useScene } from 'src/hooks/useScene';
 import { useColor } from 'src/hooks/useColor';
+import { useUiStateStore } from 'src/stores/uiStateStore';
 
 interface Props {
   connector: ReturnType<typeof useScene>['connectors'][0];
@@ -20,6 +21,9 @@ interface Props {
 
 export const Connector = memo(({ connector: _connector, isSelected }: Props) => {
   const theme = useTheme();
+  const uiState = useUiStateStore((state) => {
+    return state;
+  });
   const predefinedColor = useColor(_connector.color);
   const { currentView } = useScene();
   const connector = useConnector(_connector.id);
@@ -54,9 +58,10 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
 
   const pathString = useMemo(() => {
     return connector.path.tiles.reduce((acc, tile) => {
-      return `${acc} ${tile.x * UNPROJECTED_TILE_SIZE + drawOffset.x},${
-        tile.y * UNPROJECTED_TILE_SIZE + drawOffset.y
-      }`;
+      // In isometric mode, the scale(-1, 1) transform inverts x-axis
+      const x = tile.x * UNPROJECTED_TILE_SIZE + drawOffset.x;
+      const y = tile.y * UNPROJECTED_TILE_SIZE + drawOffset.y;
+      return `${acc} ${x},${y}`;
     }, '');
   }, [connector.path.tiles, drawOffset]);
 
@@ -113,6 +118,7 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
       const x = curr.x * UNPROJECTED_TILE_SIZE + drawOffset.x;
       const y = curr.y * UNPROJECTED_TILE_SIZE + drawOffset.y;
       
+      // Scale transform handles inversion in isometric mode
       path1Points.push(`${x + dx * offset},${y + dy * offset}`);
       path2Points.push(`${x - dx * offset},${y - dy * offset}`);
     }
@@ -167,6 +173,9 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
 
   const lineType = connector.lineType || 'SINGLE';
 
+  const isHovered = uiState.hoveredConnectorId === connector.id;
+  const showSelectionGlow = isSelected || isHovered;
+
   return (
     <Box style={css}>
       <Svg
@@ -199,6 +208,18 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
               strokeDasharray={strokeDashArray}
               fill="none"
             />
+            {showSelectionGlow && (
+              <polyline
+                points={pathString}
+                stroke={getColorVariant(color.value, 'light', { grade: 1 })}
+                strokeWidth={connectorWidthPx * 2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeOpacity={0.18}
+                strokeDasharray={strokeDashArray}
+                fill="none"
+              />
+            )}
           </>
         ) : offsetPaths ? (
           <>

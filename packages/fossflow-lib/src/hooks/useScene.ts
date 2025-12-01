@@ -115,7 +115,8 @@ export const useScene = () => {
       },
       scene: {
         connectors: scene?.connectors ?? {},
-        textBoxes: scene?.textBoxes ?? {}
+        textBoxes: scene?.textBoxes ?? {},
+        groups: scene?.groups ?? {}
       }
     };
   }, [model, scene]);

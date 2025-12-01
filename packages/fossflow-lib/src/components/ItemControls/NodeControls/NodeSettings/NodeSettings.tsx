@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { Slider, Box, TextField } from '@mui/material';
+import { Slider, Box, TextField, Stack, Chip, IconButton } from '@mui/material';
+import { Add as AddIcon, Close as CloseIcon } from '@mui/icons-material';
 import { ModelItem, ViewItem } from 'src/types';
 import { RichTextEditor } from 'src/components/RichTextEditor/RichTextEditor';
 import { useModelItem } from 'src/hooks/useModelItem';
@@ -33,6 +34,14 @@ export const NodeSettings = ({
   const currentIcon = icons.find(icon => icon.id === modelItem?.icon);
   const [localScale, setLocalScale] = useState(currentIcon?.scale || 1);
   const debounceRef = useRef<NodeJS.Timeout>();
+
+  // Tags and custom properties state
+  const [newTag, setNewTag] = useState('');
+  const [newPropertyKey, setNewPropertyKey] = useState('');
+  const [newPropertyValue, setNewPropertyValue] = useState('');
+
+  const tags = modelItem?.tags ?? [];
+  const customProperties = modelItem?.customProperties ?? {};
 
   // Update local scale when icon changes
   useEffect(() => {
@@ -70,6 +79,54 @@ export const NodeSettings = ({
       }
     };
   }, []);
+
+  const handleAddTag = useCallback(() => {
+    if (newTag.trim() && !tags.includes(newTag.trim())) {
+      const updatedTags = [...tags, newTag.trim()];
+      onModelItemUpdated({ tags: updatedTags });
+      setNewTag('');
+    }
+  }, [newTag, tags, onModelItemUpdated]);
+
+  const handleRemoveTag = useCallback(
+    (tagToRemove: string) => {
+      const updatedTags = tags.filter((tag) => tag !== tagToRemove);
+      onModelItemUpdated({ tags: updatedTags });
+    },
+    [tags, onModelItemUpdated]
+  );
+
+  const handleAddProperty = useCallback(() => {
+    if (newPropertyKey.trim() && !customProperties[newPropertyKey.trim()]) {
+      const updatedProperties = {
+        ...customProperties,
+        [newPropertyKey.trim()]: newPropertyValue.trim()
+      };
+      onModelItemUpdated({ customProperties: updatedProperties });
+      setNewPropertyKey('');
+      setNewPropertyValue('');
+    }
+  }, [newPropertyKey, newPropertyValue, customProperties, onModelItemUpdated]);
+
+  const handleRemoveProperty = useCallback(
+    (keyToRemove: string) => {
+      const updatedProperties = { ...customProperties };
+      delete updatedProperties[keyToRemove];
+      onModelItemUpdated({ customProperties: updatedProperties });
+    },
+    [customProperties, onModelItemUpdated]
+  );
+
+  const handleUpdateProperty = useCallback(
+    (key: string, value: string) => {
+      const updatedProperties = {
+        ...customProperties,
+        [key]: value
+      };
+      onModelItemUpdated({ customProperties: updatedProperties });
+    },
+    [customProperties, onModelItemUpdated]
+  );
 
   if (!modelItem) {
     return null;
@@ -120,6 +177,94 @@ export const NodeSettings = ({
           value={localScale}
           onChange={handleScaleChange}
         />
+      </Section>
+      <Section title="Tags">
+        <Stack spacing={1}>
+          <Stack direction="row" spacing={1} flexWrap="wrap">
+            {tags.map((tag) => (
+              <Chip
+                key={tag}
+                label={tag}
+                size="small"
+                onDelete={() => handleRemoveTag(tag)}
+              />
+            ))}
+          </Stack>
+          <Stack direction="row" spacing={1}>
+            <TextField
+              size="small"
+              placeholder="Add tag"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleAddTag();
+                }
+              }}
+              sx={{ flex: 1 }}
+            />
+            <IconButton size="small" onClick={handleAddTag} disabled={!newTag.trim()}>
+              <AddIcon />
+            </IconButton>
+          </Stack>
+        </Stack>
+      </Section>
+      <Section title="Custom Properties">
+        <Stack spacing={1}>
+          {Object.entries(customProperties).map(([key, value]) => (
+            <Stack key={key} direction="row" spacing={1} alignItems="center">
+              <TextField
+                size="small"
+                value={key}
+                label="Key"
+                disabled
+                sx={{ flex: 1 }}
+              />
+              <TextField
+                size="small"
+                value={value}
+                label="Value"
+                onChange={(e) => handleUpdateProperty(key, e.target.value)}
+                sx={{ flex: 1 }}
+              />
+              <IconButton
+                size="small"
+                onClick={() => handleRemoveProperty(key)}
+                color="error"
+              >
+                <CloseIcon fontSize="small" />
+              </IconButton>
+            </Stack>
+          ))}
+          <Stack direction="row" spacing={1}>
+            <TextField
+              size="small"
+              placeholder="Property key"
+              value={newPropertyKey}
+              onChange={(e) => setNewPropertyKey(e.target.value)}
+              sx={{ flex: 1 }}
+            />
+            <TextField
+              size="small"
+              placeholder="Property value"
+              value={newPropertyValue}
+              onChange={(e) => setNewPropertyValue(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleAddProperty();
+                }
+              }}
+              sx={{ flex: 1 }}
+            />
+            <IconButton
+              size="small"
+              onClick={handleAddProperty}
+              disabled={!newPropertyKey.trim()}
+            >
+              <AddIcon />
+            </IconButton>
+          </Stack>
+        </Stack>
       </Section>
       <Section>
         <Box>

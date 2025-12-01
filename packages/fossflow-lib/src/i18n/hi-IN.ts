@@ -174,6 +174,42 @@ const locale: LocaleProps = {
       iconCount: "{count} आइकन",
       lazyLoadingDisabledNote: "लेज़ी लोडिंग अक्षम है। सभी आइकन पैक स्टार्टअप पर लोड किए जाते हैं।",
       note: "आइकन पैक आपकी आवश्यकताओं के आधार पर सक्षम या अक्षम किए जा सकते हैं। अक्षम पैक मेमोरी उपयोग को कम करेंगे और प्रदर्शन में सुधार करेंगे।"
+    },
+    perspective: {
+      title: "परिप्रेक्ष्य सेटिंग्स",
+      mode: "परिप्रेक्ष्य मोड",
+      isometric: "आइसोमेट्रिक",
+      "2d": "2D",
+      description: "अपने आरेख के लिए आइसोमेट्रिक (3D जैसा) और 2D परिप्रेक्ष्य दृश्यों के बीच चुनें।"
+    }
+  },
+  floatingToolbar: {
+    align: {
+      left: "Align Left",
+      right: "Align Right",
+      centerHorizontal: "Center Horizontally",
+      top: "Align Top",
+      bottom: "Align Bottom",
+      centerVertical: "Center Vertically"
+    },
+    arrange: {
+      distributeHorizontal: "Distribute Horizontally",
+      distributeVertical: "Distribute Vertically",
+      bringToFront: "Bring to Front",
+      sendToBack: "Send to Back"
+    },
+    group: {
+      create: "Group",
+      ungroup: "Ungroup"
+    },
+    edge: {
+      edge: "Edge",
+      edges: "Edges",
+      lineStyle: "Line Style",
+      lineType: "Line Type",
+      width: "Width",
+      single: "Single Line",
+      double: "Double Line"
     }
   },
   lazyLoadingWelcome: {

@@ -8,16 +8,22 @@ export declare const modelSchema: z.ZodEffects<z.ZodObject<{
         name: z.ZodString;
         description: z.ZodOptional<z.ZodString>;
         icon: z.ZodOptional<z.ZodString>;
+        tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        customProperties: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
     }, "strip", z.ZodTypeAny, {
         id: string;
         name: string;
         description?: string | undefined;
         icon?: string | undefined;
+        tags?: string[] | undefined;
+        customProperties?: Record<string, string> | undefined;
     }, {
         id: string;
         name: string;
         description?: string | undefined;
         icon?: string | undefined;
+        tags?: string[] | undefined;
+        customProperties?: Record<string, string> | undefined;
     }>, "many">;
     views: z.ZodArray<z.ZodObject<{
         id: z.ZodString;
@@ -468,6 +474,8 @@ export declare const modelSchema: z.ZodEffects<z.ZodObject<{
         name: string;
         description?: string | undefined;
         icon?: string | undefined;
+        tags?: string[] | undefined;
+        customProperties?: Record<string, string> | undefined;
     }[];
     title: string;
     views: {
@@ -561,6 +569,8 @@ export declare const modelSchema: z.ZodEffects<z.ZodObject<{
         name: string;
         description?: string | undefined;
         icon?: string | undefined;
+        tags?: string[] | undefined;
+        customProperties?: Record<string, string> | undefined;
     }[];
     title: string;
     views: {
@@ -654,6 +664,8 @@ export declare const modelSchema: z.ZodEffects<z.ZodObject<{
         name: string;
         description?: string | undefined;
         icon?: string | undefined;
+        tags?: string[] | undefined;
+        customProperties?: Record<string, string> | undefined;
     }[];
     title: string;
     views: {
@@ -747,6 +759,8 @@ export declare const modelSchema: z.ZodEffects<z.ZodObject<{
         name: string;
         description?: string | undefined;
         icon?: string | undefined;
+        tags?: string[] | undefined;
+        customProperties?: Record<string, string> | undefined;
     }[];
     title: string;
     views: {

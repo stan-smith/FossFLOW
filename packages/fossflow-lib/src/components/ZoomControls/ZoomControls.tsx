@@ -5,7 +5,7 @@ import {
   CropFreeOutlined as FitToScreenIcon,
   Help as HelpIcon
 } from '@mui/icons-material';
-import { Stack, Box, Typography, Divider } from '@mui/material';
+import { Stack, Box, Typography, Divider, Tooltip } from '@mui/material';
 import { toPx } from 'src/utils';
 import { UiElement } from 'src/components/UiElement/UiElement';
 import { IconButton } from 'src/components/IconButton/IconButton';
@@ -24,15 +24,19 @@ export const ZoomControls = () => {
   const { fitToView } = useDiagramUtils();
 
   return (
-    <Stack direction="row" spacing={1} alignItems="center">
+    <Stack direction="row" spacing={1.5} alignItems="center">
       <UiElement>
         <Stack direction="row">
-          <IconButton
-            name="Zoom out"
-            Icon={<ZoomOutIcon />}
-            onClick={uiStateStoreActions.decrementZoom}
-            disabled={zoom >= MAX_ZOOM}
-          />
+          <Tooltip title="Zoom out">
+            <Box>
+              <IconButton
+                name="Zoom out"
+                Icon={<ZoomOutIcon />}
+                onClick={uiStateStoreActions.decrementZoom}
+                disabled={zoom >= MAX_ZOOM}
+              />
+            </Box>
+          </Tooltip>
           <Divider orientation="vertical" flexItem />
           <Box
             sx={{
@@ -47,29 +51,41 @@ export const ZoomControls = () => {
             </Typography>
           </Box>
           <Divider orientation="vertical" flexItem />
-          <IconButton
-            name="Zoom in"
-            Icon={<ZoomInIcon />}
-            onClick={uiStateStoreActions.incrementZoom}
-            disabled={zoom <= MIN_ZOOM}
-          />
+          <Tooltip title="Zoom in">
+            <Box>
+              <IconButton
+                name="Zoom in"
+                Icon={<ZoomInIcon />}
+                onClick={uiStateStoreActions.incrementZoom}
+                disabled={zoom <= MIN_ZOOM}
+              />
+            </Box>
+          </Tooltip>
         </Stack>
       </UiElement>
       <UiElement>
-        <IconButton
-          name="Fit to screen"
-          Icon={<FitToScreenIcon />}
-          onClick={fitToView}
-        />
+        <Tooltip title="Fit diagram to view">
+          <Box>
+            <IconButton
+              name="Fit to screen"
+              Icon={<FitToScreenIcon />}
+              onClick={fitToView}
+            />
+          </Box>
+        </Tooltip>
       </UiElement>
       <UiElement>
-        <IconButton
-          name="Help (F1)"
-          Icon={<HelpIcon />}
-          onClick={() => {
-            return uiStateStoreActions.setDialog(DialogTypeEnum.HELP);
-          }}
-        />
+        <Tooltip title="Open help (F1)">
+          <Box>
+            <IconButton
+              name="Help (F1)"
+              Icon={<HelpIcon />}
+              onClick={() => {
+                return uiStateStoreActions.setDialog(DialogTypeEnum.HELP);
+              }}
+            />
+          </Box>
+        </Tooltip>
       </UiElement>
     </Stack>
   );

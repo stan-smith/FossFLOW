@@ -1,0 +1,206 @@
+{
+  "name": "FossFLOW Monorepo Rules",
+  "version": 1,
+  "project": {
+    "description": "Monorepo for FossFLOW: React app (RSBuild), component library (Webpack + TypeScript), optional Express backend, Docker & e2e.",
+    "monorepo": true,
+    "workspaces": [
+      "packages/fossflow-lib",
+      "packages/fossflow-app",
+      "packages/fossflow-backend"
+    ],
+    "primary_language": "TypeScript",
+    "frameworks": ["React 18"],
+    "package_manager": "npm",
+    "version": "1.7.0",
+    "build_outputs": {
+      "lib": "packages/fossflow-lib/dist",
+      "app": "packages/fossflow-app/build"
+    }
+  },
+  "guiding_principles": [
+    "Do not break working features. Prefer minimal, isolated changes.",
+    "Enhance and fix carefully; avoid large refactors unless requested.",
+    "Favor readability, explicit types, and clear naming over brevity.",
+    "Match existing formatting and project conventions.",
+    "Prefer incremental PR-sized edits with clear rationale."
+  ],
+  "conventions": {
+    "coding_style": {
+      "typescript": {
+        "explicitReturnTypes": true,
+        "noAny": true,
+        "preferReadonly": true
+      },
+      "react": {
+        "functionComponents": true,
+        "hooksFirst": true,
+        "avoidInlineFunctionsInHotPaths": true
+      },
+      "naming": {
+        "variables": "descriptive full words",
+        "functions": "verb or verb-phrase",
+        "types": "PascalCase",
+        "constants": "UPPER_SNAKE_CASE"
+      },
+      "comments": {
+        "onlyWhenNonObvious": true,
+        "explainRationaleNotWhat": true
+      },
+      "control_flow": {
+        "preferEarlyReturns": true,
+        "avoidDeepNesting": true,
+        "noEmptyCatch": true
+      }
+    },
+    "lint": {
+      "run_before_commit": [
+        "npm run lint --workspaces --if-present"
+      ],
+      "fix_command": "npm run lint:fix --workspace=packages/fossflow-lib"
+    },
+    "tests": {
+      "unit": "npm test --workspaces --if-present",
+      "e2e": "(cd e2e-tests && ./run-tests.sh)",
+      "e2e_framework": "Python + pytest + Selenium WebDriver",
+      "when_to_add": [
+        "Bug fixes (add regression test)",
+        "New behavior or config toggles",
+        "Complex utils and hooks"
+      ]
+    },
+    "build_commands": {
+      "all": "npm run build",
+      "lib": "npm run build:lib",
+      "app": "npm run build:app",
+      "backend": "npm run dev:backend"
+    },
+    "dev_commands": {
+      "app": "npm run dev",
+      "lib": "npm run dev:lib",
+      "backend": "npm run dev:backend"
+    },
+    "run_commands": {
+      "docker_up": "npm run docker:run",
+      "docker_build": "npm run docker:build"
+    },
+    "build_tools": {
+      "lib": "Webpack (CommonJS2 output)",
+      "app": "RSBuild (modern bundler, outputs to build/)",
+      "backend": "Node.js ES modules (no build step)"
+    },
+    "engine_requirements": {
+      "node": ">=18.0.0",
+      "npm": ">=9.0.0"
+    }
+  },
+  "file_preferences": {
+    "treat_as_generated": [
+      "node_modules/**",
+      "packages/**/dist/**",
+      "packages/fossflow-app/build/**",
+      "packages/fossflow-lib/coverage/**"
+    ],
+    "avoid_editing": [
+      "packages/fossflow-lib/dist/**",
+      "packages/fossflow-app/build/**",
+      "packages/fossflow-lib/docs/**/.next/**"
+    ],
+    "prefer_editing": [
+      "packages/fossflow-lib/src/**",
+      "packages/fossflow-app/src/**",
+      "packages/fossflow-backend/server.js"
+    ]
+  },
+  "release": {
+    "semantic_release": true,
+    "commit_message_format": "type(scope): subject",
+    "examples": [
+      "feat(app): add click-based connector mode as default",
+      "fix(lib): prevent null pointer in ConnectorSettings",
+      "chore: update dependencies",
+      "docs: update README with Docker instructions"
+    ]
+  },
+  "ai_rules": {
+    "planning": [
+      "Scan relevant files first; avoid changes outside the necessary scope.",
+      "Propose minimal edits; keep behavior identical unless specified.",
+      "If changing contracts, update types and tests together."
+    ],
+    "editing": [
+      "Do not modify generated files.",
+      "Preserve existing indentation and formatting.",
+      "Add imports explicitly; keep tree-shaking-friendly patterns."
+    ],
+    "typescript_specific": [
+      "Prefer precise types over any/unknown.",
+      "Keep public APIs stable; annotate exports.",
+      "No implicit any; fail fast on TS errors."
+    ],
+    "react_specific": [
+      "Memoize expensive calculations (useMemo/useCallback) when warranted.",
+      "Prefer controlled components for form inputs.",
+      "Handle effects dependencies explicitly; avoid stale closures."
+    ],
+    "performance": [
+      "Avoid unnecessary re-renders; prefer props stability.",
+      "Avoid allocating new arrays/objects in render without memoization.",
+      "Use virtualization or lazy loading for large lists."
+    ],
+    "i18n": [
+      "All user-visible strings must be translated via existing i18n files.",
+      "Add missing keys to app i18n JSONs across languages; default to English if unknown."
+    ],
+    "storage_and_backend": [
+      "Respect optional server storage; guard backend-only code paths.",
+      "Do not break local-only storage flows."
+    ],
+    "docker": [
+      "Keep default compose.dev.yml behavior; don't change ports without request.",
+      "Ensure server storage path mapping remains /data/diagrams.",
+      "Use npm run docker:build and npm run docker:run from root."
+    ],
+    "versioning": [
+      "Uses semantic-release for automated versioning and changelog generation.",
+      "Version updates via scripts/update-version.js.",
+      "Follow conventional commits format for automatic releases."
+    ],
+    "cross_platform": [
+      "Use cross-env for environment variables to support Windows development.",
+      "Dev commands use cross-env NODE_ENV=development for consistency."
+    ]
+  },
+  "acceptance": {
+    "done_definition": [
+      "Build succeeds: npm run build",
+      "Type checks pass: npm run lint (and tsc in lib)",
+      "Unit tests pass (where modified)",
+      "E2E tests pass if UI flows changed: (cd e2e-tests && ./run-tests.sh)",
+      "No regressions in core flows (open, edit, connect, save, export)",
+      "Docs or examples updated if behavior changes"
+    ]
+  },
+  "context_shortcuts": {
+    "open_docs": [
+      "README.md",
+      "FOSSFLOW_ENCYCLOPEDIA.md",
+      "FOSSFLOW_TODO.md"
+    ],
+    "key_sources": [
+      "packages/fossflow-app/src/**",
+      "packages/fossflow-lib/src/**",
+      "packages/fossflow-lib/src/stores/**",
+      "packages/fossflow-lib/src/components/**",
+      "packages/fossflow-lib/src/utils/**"
+    ]
+  },
+  "ci_guardrails": {
+    "prevent": [
+      "Committing large asset binaries",
+      "Editing build artifacts",
+      "Changing public API without semver consideration"
+    ]
+  }
+}
+

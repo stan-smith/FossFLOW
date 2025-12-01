@@ -30,12 +30,20 @@ export interface SceneConnector {
 export interface SceneTextBox {
     size: Size;
 }
+export interface Group {
+    id: string;
+    name: string;
+    itemIds: string[];
+}
 export interface Scene {
     connectors: {
         [key: string]: SceneConnector;
     };
     textBoxes: {
         [key: string]: SceneTextBox;
+    };
+    groups: {
+        [key: string]: Group;
     };
 }
 export type SceneStore = Scene & {

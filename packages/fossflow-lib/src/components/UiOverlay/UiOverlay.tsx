@@ -24,6 +24,7 @@ import { ConnectorRerouteTooltip } from '../ConnectorRerouteTooltip/ConnectorRer
 import { ImportHintTooltip } from '../ImportHintTooltip/ImportHintTooltip';
 import { LassoHintTooltip } from '../LassoHintTooltip/LassoHintTooltip';
 import { LazyLoadingWelcomeNotification } from '../LazyLoadingWelcomeNotification/LazyLoadingWelcomeNotification';
+import { FloatingToolbar } from '../FloatingToolbar/FloatingToolbar';
 
 const ToolsEnum = {
   MAIN_MENU: 'MAIN_MENU',
@@ -260,6 +261,9 @@ export const UiOverlay = () => {
 
       {/* Show lazy loading welcome notification if icon pack manager is provided */}
       {iconPackManager && <LazyLoadingWelcomeNotification />}
+
+      {/* Floating toolbar for 2D editor */}
+      {availableTools.includes('ITEM_CONTROLS') && <FloatingToolbar />}
 
       <SceneLayer>
         <Box ref={contextMenuAnchorRef} />

@@ -9,6 +9,7 @@ import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
 import { HOTKEY_PROFILES } from 'src/config/hotkeys';
 import { TEXTBOX_DEFAULTS } from 'src/config';
+import { getSelectedItems, getSelectedConnectors } from 'src/utils/selection';
 import { Cursor } from './modes/Cursor';
 import { DragItems } from './modes/DragItems';
 import { DrawRectangle } from './modes/Rectangle/DrawRectangle';
@@ -137,6 +138,46 @@ export const useInteractionManager = () => {
       if (e.key === 'F1') {
         e.preventDefault();
         uiState.actions.setDialog(DialogTypeEnum.HELP);
+      }
+
+      // Delete selected items/connectors with Delete key
+      if (e.key === 'Delete') {
+        e.preventDefault();
+
+        const selectedItems = getSelectedItems(uiState);
+        const selectedConnectors = getSelectedConnectors(uiState, scene);
+
+        if (selectedItems.length === 0 && selectedConnectors.length === 0) {
+          return;
+        }
+
+        scene.transaction(() => {
+          selectedItems.forEach((item) => {
+            if (item.type === 'ITEM') {
+              scene.deleteViewItem(item.id);
+            } else if (item.type === 'RECTANGLE') {
+              scene.deleteRectangle(item.id);
+            } else if (item.type === 'TEXTBOX') {
+              scene.deleteTextBox(item.id);
+            }
+          });
+
+          selectedConnectors.forEach((connectorId) => {
+            scene.deleteConnector(connectorId);
+          });
+        });
+
+        // Clear selection after deletion
+        uiState.actions.setItemControls(null);
+        if (uiState.mode.type !== 'INTERACTIONS_DISABLED') {
+          uiState.actions.setMode({
+            type: 'CURSOR',
+            showCursor: true,
+            mousedownItem: null
+          });
+        }
+
+        return;
       }
 
       // Tool hotkeys

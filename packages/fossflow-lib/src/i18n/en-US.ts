@@ -174,6 +174,13 @@ const locale: LocaleProps = {
       iconCount: "{count} icons",
       lazyLoadingDisabledNote: "Lazy loading is disabled. All icon packs are loaded at startup.",
       note: "Icon packs can be enabled or disabled based on your needs. Disabled packs will reduce memory usage and improve performance."
+    },
+    perspective: {
+      title: "Perspective Settings",
+      mode: "Perspective Mode",
+      isometric: "Isometric",
+      "2d": "2D",
+      description: "Choose between isometric (3D-like) and 2D perspective views for your diagram."
     }
   },
   lazyLoadingWelcome: {
@@ -183,6 +190,35 @@ const locale: LocaleProps = {
     configPath2: "in the top left to access Configuration.",
     canDisable: "You can disable this behaviour if you wish.",
     signature: "-Stan"
+  },
+  floatingToolbar: {
+    align: {
+      left: "Align Left",
+      right: "Align Right",
+      centerHorizontal: "Center Horizontally",
+      top: "Align Top",
+      bottom: "Align Bottom",
+      centerVertical: "Center Vertically"
+    },
+    arrange: {
+      distributeHorizontal: "Distribute Horizontally",
+      distributeVertical: "Distribute Vertically",
+      bringToFront: "Bring to Front",
+      sendToBack: "Send to Back"
+    },
+    group: {
+      create: "Group",
+      ungroup: "Ungroup"
+    },
+    edge: {
+      edge: "Edge",
+      edges: "Edges",
+      lineStyle: "Line Style",
+      lineType: "Line Type",
+      width: "Width",
+      single: "Single Line",
+      double: "Double Line"
+    }
   }
 };
 

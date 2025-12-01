@@ -1,24 +1,26 @@
-import { Coords, TileOrigin, Connector, Size, Scroll, Mouse, ConnectorAnchor, ItemReference, Rect, ProjectionOrientationEnum, BoundingBox, TextBox, SlimMouseEvent, View, AnchorPosition } from '../types';
+import { Coords, TileOrigin, Connector, Size, Scroll, Mouse, ConnectorAnchor, ItemReference, Rect, ProjectionOrientationEnum, BoundingBox, TextBox, SlimMouseEvent, View, AnchorPosition, PerspectiveMode } from '../types';
 import { useScene } from '../hooks/useScene';
 interface ScreenToIso {
     mouse: Coords;
     zoom: number;
     scroll: Scroll;
     rendererSize: Size;
+    perspectiveMode?: PerspectiveMode;
 }
-export declare const screenToIso: ({ mouse, zoom, scroll, rendererSize }: ScreenToIso) => {
+export declare const screenToIso: ({ mouse, zoom, scroll, rendererSize, perspectiveMode }: ScreenToIso) => {
     x: number;
     y: number;
 };
 interface GetTilePosition {
     tile: Coords;
     origin?: TileOrigin;
+    perspectiveMode?: PerspectiveMode;
 }
-export declare const getTilePosition: ({ tile, origin }: GetTilePosition) => Coords;
+export declare const getTilePosition: ({ tile, origin, perspectiveMode }: GetTilePosition) => Coords;
 type IsoToScreen = GetTilePosition & {
     rendererSize: Size;
 };
-export declare const isoToScreen: ({ tile, origin, rendererSize }: IsoToScreen) => {
+export declare const isoToScreen: ({ tile, origin, rendererSize, perspectiveMode }: IsoToScreen) => {
     x: number;
     y: number;
 };
@@ -47,6 +49,7 @@ export declare const getBoundingBox: (tiles: Coords[], offset?: Coords) => Bound
 export declare const getBoundingBoxSize: (boundingBox: Coords[]) => Size;
 export declare const getIsoMatrix: (orientation?: keyof typeof ProjectionOrientationEnum) => number[];
 export declare const getIsoProjectionCss: (orientation?: keyof typeof ProjectionOrientationEnum) => string;
+export declare const getProjectionCss: (perspectiveMode: PerspectiveMode, orientation?: keyof typeof ProjectionOrientationEnum) => string;
 export declare const getTranslateCSS: (translate?: Coords) => string;
 export declare const incrementZoom: (zoom: number) => number;
 export declare const decrementZoom: (zoom: number) => number;
@@ -57,8 +60,9 @@ interface GetMouse {
     lastMouse: Mouse;
     mouseEvent: SlimMouseEvent;
     rendererSize: Size;
+    perspectiveMode?: PerspectiveMode;
 }
-export declare const getMouse: ({ interactiveElement, zoom, scroll, lastMouse, mouseEvent, rendererSize }: GetMouse) => Mouse;
+export declare const getMouse: ({ interactiveElement, zoom, scroll, lastMouse, mouseEvent, rendererSize, perspectiveMode }: GetMouse) => Mouse;
 export declare const getAllAnchors: (connectors: Connector[]) => {
     id: string;
     ref: {

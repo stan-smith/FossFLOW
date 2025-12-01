@@ -37,7 +37,8 @@ const createSceneHistoryState = (initialScene: Scene): SceneHistoryState => {
 const extractSceneData = (state: SceneStoreWithHistory): Scene => {
   return {
     connectors: state.connectors,
-    textBoxes: state.textBoxes
+    textBoxes: state.textBoxes,
+    groups: state.groups || {}
   };
 };
 
@@ -45,7 +46,8 @@ const initialState = () => {
   return createStore<SceneStoreWithHistory>((set, get) => {
     const initialScene: Scene = {
       connectors: {},
-      textBoxes: {}
+      textBoxes: {},
+      groups: {}
     };
 
     const saveToHistory = () => {

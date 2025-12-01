@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import { Coords, Size, ProjectionOrientationEnum } from 'src/types';
 import {
   getBoundingBox,
-  getIsoProjectionCss,
+  getProjectionCss,
   getTilePosition
 } from 'src/utils';
 import { UNPROJECTED_TILE_SIZE } from 'src/config';
@@ -63,7 +63,7 @@ export const useIsoProjection = ({
       top: position.y,
       width: `${pxSize.width}px`,
       height: `${pxSize.height}px`,
-      transform: getIsoProjectionCss(orientation),
+      transform: getProjectionCss('isometric', orientation),
       transformOrigin: 'top left'
     },
     position,

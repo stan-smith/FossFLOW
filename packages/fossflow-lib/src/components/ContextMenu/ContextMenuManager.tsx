@@ -5,10 +5,60 @@ import { useScene } from 'src/hooks/useScene';
 import { useModelStore } from 'src/stores/modelStore';
 import { VIEW_ITEM_DEFAULTS } from 'src/config';
 import { ContextMenu } from './ContextMenu';
+import { EnhancedContextMenu } from './EnhancedContextMenu';
+import { Coords } from 'src/types';
 
 interface Props {
   anchorEl?: HTMLElement;
 }
+
+const EnhancedContextMenuWrapper = ({
+  itemId,
+  tile,
+  zoom,
+  anchorEl,
+  onClose
+}: {
+  itemId: string;
+  tile: Coords;
+  zoom: number;
+  anchorEl?: HTMLElement;
+  onClose: () => void;
+}) => {
+  // Use mouse screen position if available for accurate positioning
+  const mouse = useUiStateStore((state) => state.mouse);
+  
+  // Get renderer element and scroll from store
+  const rendererEl = useUiStateStore((state) => state.rendererEl);
+  const scroll = useUiStateStore((state) => state.scroll);
+  
+  // Prefer screen position from mouse, fallback to calculated position
+  const screenPosition = mouse.position.screen || (() => {
+    const tileScreenPos = CoordsUtils.multiply(
+      getTilePosition({ tile }),
+      zoom
+    );
+    
+    if (rendererEl) {
+      const rect = rendererEl.getBoundingClientRect();
+      return {
+        x: rect.left + rect.width / 2 + tileScreenPos.x + scroll.position.x,
+        y: rect.top + rect.height / 2 + tileScreenPos.y + scroll.position.y
+      };
+    }
+    
+    return tileScreenPos;
+  })();
+
+  return (
+    <EnhancedContextMenu
+      itemId={itemId}
+      position={screenPosition}
+      anchorEl={anchorEl}
+      onClose={onClose}
+    />
+  );
+};
 
 export const ContextMenuManager = ({ anchorEl }: Props) => {
   const scene = useScene();
@@ -89,8 +139,17 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
     );
   }
 
-  // Remove ITEM context menu since layer ordering only works for rectangles
-  // and provides no value for regular diagram items
+  if (contextMenu.type === 'ITEM' && contextMenu.item) {
+    return (
+      <EnhancedContextMenuWrapper
+        itemId={contextMenu.item.id}
+        tile={contextMenu.tile}
+        zoom={zoom}
+        anchorEl={anchorEl}
+        onClose={onClose}
+      />
+    );
+  }
 
   return null;
 };

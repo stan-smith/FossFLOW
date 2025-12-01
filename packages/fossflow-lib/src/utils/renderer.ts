@@ -27,7 +27,8 @@ import {
   TextBox,
   SlimMouseEvent,
   View,
-  AnchorPosition
+  AnchorPosition,
+  PerspectiveMode
 } from 'src/types';
 import {
   CoordsUtils,
@@ -45,6 +46,7 @@ interface ScreenToIso {
   zoom: number;
   scroll: Scroll;
   rendererSize: Size;
+  perspectiveMode?: PerspectiveMode;
 }
 
 // converts a mouse position to a tile position
@@ -52,7 +54,8 @@ export const screenToIso = ({
   mouse,
   zoom,
   scroll,
-  rendererSize
+  rendererSize,
+  perspectiveMode = 'isometric'
 }: ScreenToIso) => {
   const projectedTileSize = SizeUtils.multiply(PROJECTED_TILE_SIZE, zoom);
   const halfW = projectedTileSize.width / 2;
@@ -80,11 +83,13 @@ export const screenToIso = ({
 interface GetTilePosition {
   tile: Coords;
   origin?: TileOrigin;
+  perspectiveMode?: PerspectiveMode;
 }
 
 export const getTilePosition = ({
   tile,
-  origin = 'CENTER'
+  origin = 'CENTER',
+  perspectiveMode = 'isometric'
 }: GetTilePosition) => {
   const halfW = PROJECTED_TILE_SIZE.width / 2;
   const halfH = PROJECTED_TILE_SIZE.height / 2;
@@ -113,8 +118,8 @@ type IsoToScreen = GetTilePosition & {
   rendererSize: Size;
 };
 
-export const isoToScreen = ({ tile, origin, rendererSize }: IsoToScreen) => {
-  const position = getTilePosition({ tile, origin });
+export const isoToScreen = ({ tile, origin, rendererSize, perspectiveMode = 'isometric' }: IsoToScreen) => {
+  const position = getTilePosition({ tile, origin, perspectiveMode });
 
   return {
     x: position.x + rendererSize.width / 2,
@@ -226,6 +231,13 @@ export const getIsoProjectionCss = (
   return `matrix(${matrixTransformValues.join(', ')})`;
 };
 
+export const getProjectionCss = (
+  perspectiveMode: PerspectiveMode,
+  orientation?: keyof typeof ProjectionOrientationEnum
+): string => {
+  return getIsoProjectionCss(orientation);
+};
+
 export const getTranslateCSS = (translate: Coords = { x: 0, y: 0 }) => {
   return `translate(${translate.x}px, ${translate.y}px)`;
 };
@@ -247,6 +259,7 @@ interface GetMouse {
   lastMouse: Mouse;
   mouseEvent: SlimMouseEvent;
   rendererSize: Size;
+  perspectiveMode?: PerspectiveMode;
 }
 
 export const getMouse = ({
@@ -255,7 +268,8 @@ export const getMouse = ({
   scroll,
   lastMouse,
   mouseEvent,
-  rendererSize
+  rendererSize,
+  perspectiveMode = 'isometric'
 }: GetMouse): Mouse => {
   const componentOffset = interactiveElement.getBoundingClientRect();
   const offset: Coords = {
@@ -276,7 +290,8 @@ export const getMouse = ({
       mouse: mousePosition,
       zoom,
       scroll,
-      rendererSize
+      rendererSize,
+      perspectiveMode
     })
   };
 

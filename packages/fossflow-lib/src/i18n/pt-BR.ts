@@ -174,6 +174,42 @@ const locale: LocaleProps = {
       iconCount: "{count} ícones",
       lazyLoadingDisabledNote: "O carregamento sob demanda está desativado. Todos os pacotes de ícones são carregados na inicialização.",
       note: "Os pacotes de ícones podem ser ativados ou desativados conforme suas necessidades. Pacotes desativados reduzirão o uso de memória e melhorarão o desempenho."
+    },
+    perspective: {
+      title: "Configurações de Perspectiva",
+      mode: "Modo de Perspectiva",
+      isometric: "Isométrica",
+      "2d": "2D",
+      description: "Escolha entre vistas de perspectiva isométrica (tipo 3D) e 2D para o seu diagrama."
+    }
+  },
+  floatingToolbar: {
+    align: {
+      left: "Align Left",
+      right: "Align Right",
+      centerHorizontal: "Center Horizontally",
+      top: "Align Top",
+      bottom: "Align Bottom",
+      centerVertical: "Center Vertically"
+    },
+    arrange: {
+      distributeHorizontal: "Distribute Horizontally",
+      distributeVertical: "Distribute Vertically",
+      bringToFront: "Bring to Front",
+      sendToBack: "Send to Back"
+    },
+    group: {
+      create: "Group",
+      ungroup: "Ungroup"
+    },
+    edge: {
+      edge: "Edge",
+      edges: "Edges",
+      lineStyle: "Line Style",
+      lineType: "Line Type",
+      width: "Width",
+      single: "Single Line",
+      double: "Double Line"
     }
   },
   lazyLoadingWelcome: {

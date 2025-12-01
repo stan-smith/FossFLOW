@@ -103,7 +103,8 @@ export const INITIAL_UI_STATE = {
 };
 export const INITIAL_SCENE_STATE = {
   connectors: {},
-  textBoxes: {}
+  textBoxes: {},
+  groups: {}
 };
 export const MAIN_MENU_OPTIONS: MainMenuOptions = [
   'ACTION.OPEN',
