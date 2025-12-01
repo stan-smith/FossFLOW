@@ -108,6 +108,48 @@ interface AiHelperSidebarProps {
   readonly diagramData: DiagramData;
 }
 
+function buildAiContextSummary(context: ReturnType<typeof buildDiagramContextPayload>, diagram: DiagramData): string {
+  const title = context.title ?? 'Untitled';
+  const nodeCount = context.nodeCount;
+  const edgeCount = context.edgeCount;
+
+  const sampleNodes = context.nodes.slice(0, 8);
+  const sampleEdges = context.edges.slice(0, 8);
+
+  const nodeLines =
+    sampleNodes.length > 0
+      ? sampleNodes
+          .map((node) => {
+            const label = node.label ?? node.id;
+            const typeSuffix = node.type ? ` (${node.type})` : '';
+            return `- ${label}${typeSuffix}`;
+          })
+          .join('\n')
+      : '- (no nodes found)';
+
+  const edgeLines =
+    sampleEdges.length > 0
+      ? sampleEdges
+          .map((edge) => {
+            const label = edge.label ? ` [${edge.label}]` : '';
+            return `- ${edge.sourceId} -> ${edge.targetId}${label}`;
+          })
+          .join('\n')
+      : '- (no edges found)';
+
+  const descriptionLine =
+    diagram.description && diagram.description.trim().length > 0
+      ? `Description: ${diagram.description.trim()}\n\n`
+      : '';
+
+  return (
+    `Diagram "${title}" with ${nodeCount} nodes and ${edgeCount} edges.\n\n` +
+    descriptionLine +
+    `Nodes:\n${nodeLines}\n\n` +
+    `Edges:\n${edgeLines}`
+  );
+}
+
 export function AiHelperSidebar(props: AiHelperSidebarProps) {
   const { diagramId, diagramData } = props;
   const { t } = useTranslation('app');
@@ -117,6 +159,28 @@ export function AiHelperSidebar(props: AiHelperSidebarProps) {
   const [messages, setMessages] = useState<AiMessage[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+
+  const suggestedPrompts = useMemo(
+    () => [
+      t(
+        'aiHelper.prompt.explainDiagram',
+        'Explain this diagram and the main flows.'
+      ),
+      t(
+        'aiHelper.prompt.findIssues',
+        'Find potential issues or missing steps in this flow.'
+      ),
+      t(
+        'aiHelper.prompt.improveFlow',
+        'Suggest improvements to make this process more efficient.'
+      ),
+      t(
+        'aiHelper.prompt.checkConsistency',
+        'Check if the connections and directions between nodes are consistent.'
+      )
+    ],
+    [t]
+  );
 
   const contextSummary = useMemo(() => {
     return buildDiagramContextPayload(diagramData, diagramId);
@@ -131,6 +195,13 @@ export function AiHelperSidebar(props: AiHelperSidebarProps) {
 
   const handleToggle = () => {
     setIsOpen((prev) => !prev);
+  };
+
+  const handleSuggestedPromptClick = (prompt: string) => {
+    if (isLoading) {
+      return;
+    }
+    setInputValue(prompt);
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -157,10 +228,14 @@ export function AiHelperSidebar(props: AiHelperSidebarProps) {
         query: trimmed,
         diagramContext: {
           diagramId: contextSummary.diagramId,
-          summary: `${contextSummary.title ?? 'Untitled'} - ${contextSummary.nodeCount} nodes, ${contextSummary.edgeCount} edges`,
-          // Full structure for LightRAG
+          summary: buildAiContextSummary(contextSummary, diagramData),
+          // Full structure for LightRAG / backend
           nodes: contextSummary.nodes,
-          edges: contextSummary.edges
+          edges: contextSummary.edges,
+          // Also include raw diagram structure so the backend / LightRAG
+          // can use it if desired.
+          rawItems: diagramData.items,
+          rawViews: diagramData.views
         } as any
       });
 
@@ -215,10 +290,25 @@ export function AiHelperSidebar(props: AiHelperSidebarProps) {
           <div className="ai-messages">
             {messages.length === 0 && (
               <div className="ai-empty-state">
-                {t(
-                  'aiHelper.empty',
-                  'Ask a question about this diagram and I will help you understand or improve it.'
-                )}
+                <div className="ai-empty-text">
+                  {t(
+                    'aiHelper.empty',
+                    'Ask a question about this diagram and I will help you understand or improve it.'
+                  )}
+                </div>
+                <div className="ai-suggested-prompts">
+                  {suggestedPrompts.map((prompt) => (
+                    <button
+                      key={prompt}
+                      type="button"
+                      className="ai-suggested-prompt"
+                      onClick={() => handleSuggestedPromptClick(prompt)}
+                      disabled={isLoading}
+                    >
+                      {prompt}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
             {messages.map((message) => (

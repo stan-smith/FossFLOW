@@ -1,6 +1,6 @@
 .ai-helper-container {
   position: fixed;
-  top: 10px;
+  top: 135px;
   right: 0;
   bottom: 16px;
   display: flex;
@@ -69,6 +69,37 @@
 .ai-empty-state {
   font-size: 13px;
   color: #666666;
+}
+
+.ai-empty-text {
+  margin-bottom: 8px;
+}
+
+.ai-suggested-prompts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.ai-suggested-prompt {
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: #f5f5f5;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #333;
+}
+
+.ai-suggested-prompt:hover:not(:disabled) {
+  background: #e8f0fe;
+  border-color: #90caf9;
+}
+
+.ai-suggested-prompt:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .ai-message {

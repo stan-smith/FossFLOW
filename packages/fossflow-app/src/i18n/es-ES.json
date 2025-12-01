@@ -47,6 +47,27 @@
             "failed": "Error al cargar el diagrama"
         }
     },
+    "auth": {
+        "title": "Iniciar sesión en FossFLOW",
+        "loginTab": "Iniciar sesión",
+        "signupTab": "Crear cuenta",
+        "nameLabel": "Nombre (opcional)",
+        "emailLabel": "Correo electrónico",
+        "passwordLabel": "Contraseña",
+        "loginButton": "Iniciar sesión",
+        "signupButton": "Crear cuenta",
+        "submitting": "Por favor espera...",
+        "loginHint": "Usa un correo y contraseña existentes para acceder a tu trabajo guardado.",
+        "signupHint": "Crea una cuenta básica con tu correo para vincular los diagramas contigo.",
+        "openDialog": "Iniciar sesión / Registrarse",
+        "close": "Cerrar",
+        "logout": "Cerrar sesión",
+        "loggedInAs": "Conectado como {{email}}",
+        "validation": {
+            "required": "El correo y la contraseña son obligatorios.",
+            "passwordLength": "La contraseña debe tener al menos 8 caracteres."
+        }
+    },
     "alert": {
         "enterDiagramName": "Por favor ingresa un nombre para el diagrama",
         "diagramExists": "Ya existe un diagrama llamado \"{{name}}\" en esta sesión. Esto lo sobrescribirá. ¿Estás seguro de que deseas continuar?",

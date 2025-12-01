@@ -1,10 +1,14 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { callLightRagQueryStream } from './lightragClient.js';
+import { AUTH_CORS_ORIGIN, AUTH_ENABLED } from './authConfig.js';
+import { createUser, findUserByEmail, validateUserCredentials } from './userStore.js';
+import { clearAuthCookie, setAuthCookie, verifyUserToken } from './authJwt.js';
 
 // Load environment variables
 dotenv.config();
@@ -21,7 +25,21 @@ const STORAGE_PATH = process.env.STORAGE_PATH || '/data/diagrams';
 const ENABLE_GIT_BACKUP = process.env.ENABLE_GIT_BACKUP === 'true';
 
 // Middleware
-app.use(cors());
+const corsOptions = AUTH_CORS_ORIGIN
+  ? {
+      origin: AUTH_CORS_ORIGIN.split(',').map((origin) => {
+        return origin.trim();
+      }),
+      credentials: true
+    }
+  : undefined;
+
+if (corsOptions) {
+  app.use(cors(corsOptions));
+} else {
+  app.use(cors());
+}
+app.use(cookieParser());
 app.use(express.json({ limit: '10mb' }));
 
 // Health check / Storage status endpoint
@@ -32,6 +50,162 @@ app.get('/api/storage/status', (req, res) => {
     version: '1.0.0'
   });
 });
+
+// Auth endpoints
+if (AUTH_ENABLED) {
+  app.post('/auth/signup', async (req, res) => {
+    const { email, password, name } = req.body ?? {};
+
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    if (!password || typeof password !== 'string' || password.length < 8) {
+      return res
+        .status(400)
+        .json({ error: 'Password must be at least 8 characters long' });
+    }
+
+    try {
+      const user = await createUser({ email, password, name });
+      const token = setUserTokenCookie(res, user);
+
+      return res.status(201).json({
+        user,
+        tokenSet: Boolean(token)
+      });
+    } catch (error) {
+      if (error.message === 'USER_ALREADY_EXISTS') {
+        return res.status(409).json({ error: 'User with this email already exists' });
+      }
+
+      // eslint-disable-next-line no-console
+      console.error('[POST /auth/signup] Error:', error);
+      return res.status(500).json({ error: 'Failed to create user' });
+    }
+  });
+
+  app.post('/auth/login', async (req, res) => {
+    const { email, password } = req.body ?? {};
+
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({ error: 'Email is required' });
+    }
+
+    if (!password || typeof password !== 'string') {
+      return res.status(400).json({ error: 'Password is required' });
+    }
+
+    try {
+      const user = await validateUserCredentials(email, password);
+
+      if (!user) {
+        return res.status(401).json({ error: 'Invalid email or password' });
+      }
+
+      const token = setUserTokenCookie(res, user);
+
+      return res.json({
+        user,
+        tokenSet: Boolean(token)
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[POST /auth/login] Error:', error);
+      return res.status(500).json({ error: 'Failed to log in' });
+    }
+  });
+
+  app.post('/auth/logout', (req, res) => {
+    clearAuthCookie(res);
+    return res.json({ success: true });
+  });
+
+  app.get('/auth/me', (req, res) => {
+    const token = req.cookies?.fossflow_auth;
+
+    if (!token) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+
+    try {
+      const user = verifyUserToken(token);
+      const fullUser = findUserByEmail(user.email) ?? {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        createdAt: null
+      };
+
+      return res.json({
+        user: {
+          id: fullUser.id,
+          email: fullUser.email,
+          name: fullUser.name,
+          createdAt: fullUser.createdAt
+        }
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('[GET /auth/me] Error verifying token:', error);
+      return res.status(401).json({ error: 'Invalid or expired session' });
+    }
+  });
+} else {
+  // When auth is disabled, keep endpoints present but return a clear message.
+  app.post('/auth/signup', (req, res) => {
+    return res
+      .status(503)
+      .json({ error: 'Authentication is disabled on this server' });
+  });
+
+  app.post('/auth/login', (req, res) => {
+    return res
+      .status(503)
+      .json({ error: 'Authentication is disabled on this server' });
+  });
+
+  app.post('/auth/logout', (req, res) => {
+    return res
+      .status(503)
+      .json({ error: 'Authentication is disabled on this server' });
+  });
+
+  app.get('/auth/me', (req, res) => {
+    return res
+      .status(503)
+      .json({ error: 'Authentication is disabled on this server' });
+  });
+}
+
+function setUserTokenCookie(res, user) {
+  try {
+    const token = setAuthCookieAndReturn(res, user);
+    return token;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('[auth] Failed to sign JWT token:', error);
+    return null;
+  }
+}
+
+function setAuthCookieAndReturn(res, user) {
+  const { signUserToken, setAuthCookie: setCookie } = requireAuthJwt();
+  const token = signUserToken(user);
+  setCookie(res, token);
+  return token;
+}
+
+function requireAuthJwt() {
+  // Dynamic import helper to avoid potential import cycles in some bundlers
+  // while keeping types and behavior explicit.
+  // eslint-disable-next-line global-require
+  const jwtModule = require('./authJwt.js');
+  return {
+    signUserToken: jwtModule.signUserToken,
+    setAuthCookie: jwtModule.setAuthCookie
+  };
+}
 
 // AI assistant endpoint backed by LightRAG query/stream API
 app.post('/api/ai/query', async (req, res) => {
@@ -44,6 +218,19 @@ app.post('/api/ai/query', async (req, res) => {
   }
 
   try {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[POST /api/ai/query] Incoming diagramContext snapshot:', {
+        hasContext: Boolean(diagramContext),
+        diagramId: diagramContext?.diagramId,
+        nodeCount: Array.isArray(diagramContext?.nodes)
+          ? diagramContext.nodes.length
+          : undefined,
+        edgeCount: Array.isArray(diagramContext?.edges)
+          ? diagramContext.edges.length
+          : undefined
+      });
+    }
+
     const result = await callLightRagQueryStream({
       query,
       diagramContext,

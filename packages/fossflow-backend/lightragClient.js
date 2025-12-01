@@ -4,7 +4,9 @@ dotenv.config();
 
 const DEFAULT_LIGHTRAG_BASE_URL = 'https://lightrag-latest-xyu3.onrender.com';
 const DEFAULT_LIGHTRAG_QUERY_STREAM_PATH = '/query/stream';
-const DEFAULT_TIMEOUT_MS = 30000;
+// Default timeout for LightRAG queries (in milliseconds). Increased to better
+// support long-running analysis tasks while still failing fast on hangs.
+const DEFAULT_TIMEOUT_MS = 90000;
 
 const LIGHTRAG_BASE_URL =
   process.env.LIGHTRAG_BASE_URL || DEFAULT_LIGHTRAG_BASE_URL;

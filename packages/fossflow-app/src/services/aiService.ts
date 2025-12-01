@@ -51,7 +51,9 @@ export async function queryAi(
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(payload),
-    signal: AbortSignal.timeout(30000)
+    // Match or exceed the backend LightRAG timeout so the browser does not
+    // give up before the server finishes long-running queries.
+    signal: AbortSignal.timeout(90000)
   });
 
   if (!response.ok) {

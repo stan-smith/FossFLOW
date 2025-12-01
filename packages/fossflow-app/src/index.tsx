@@ -10,6 +10,7 @@ import { ErrorBoundary } from 'react-error-boundary';
 import ErrorBoundaryFallbackUI from './components/ErrorBoundary';
 import {I18nextProvider} from 'react-i18next';
 import i18n from './i18n';
+import { AuthProvider } from './AuthContext';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,9 +18,11 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <I18nextProvider i18n={i18n}>
-        <ErrorBoundary FallbackComponent={ErrorBoundaryFallbackUI}>
-            <App />
-        </ErrorBoundary>
+        <AuthProvider>
+          <ErrorBoundary FallbackComponent={ErrorBoundaryFallbackUI}>
+              <App />
+          </ErrorBoundary>
+        </AuthProvider>
     </I18nextProvider>
   </React.StrictMode>
 );

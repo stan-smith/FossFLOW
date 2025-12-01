@@ -47,6 +47,27 @@
             "failed": "Failed to load diagram"
         }
     },
+    "auth": {
+        "title": "Sign in to FossFLOW",
+        "loginTab": "Login",
+        "signupTab": "Sign Up",
+        "nameLabel": "Name (optional)",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "loginButton": "Login",
+        "signupButton": "Create Account",
+        "submitting": "Please wait...",
+        "loginHint": "Use an existing email and password to access your saved work.",
+        "signupHint": "Create a basic account with your email to keep diagrams linked to you.",
+        "openDialog": "Login / Sign Up",
+        "close": "Close",
+        "logout": "Logout",
+        "loggedInAs": "Logged in as {{email}}",
+        "validation": {
+            "required": "Email and password are required.",
+            "passwordLength": "Password must be at least 8 characters long."
+        }
+    },
     "alert": {
         "enterDiagramName": "Please enter a diagram name",
         "diagramExists": "A diagram named \"{{name}}\" already exists in this session. This will overwrite it. Are you sure you want to continue?",
