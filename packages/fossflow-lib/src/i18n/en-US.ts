@@ -219,6 +219,12 @@ const locale: LocaleProps = {
       single: "Single Line",
       double: "Double Line"
     }
+  },
+  canvasHints: {
+    zoomAndPanTitle: "Navigating the canvas",
+    zoomAndPanBody: "Scroll to zoom, drag on empty space to pan. Hold Shift while dragging a node to constrain movement.",
+    contextMenuTitle: "Context actions",
+    contextMenuBody: "Right-click a node, connector, or empty space for context-specific actions."
   }
 };
 

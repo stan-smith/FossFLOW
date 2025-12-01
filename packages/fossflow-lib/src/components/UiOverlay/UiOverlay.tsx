@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { Box, useTheme, Typography, Stack } from '@mui/material';
+import { Box, useTheme, Typography, Stack, Paper, IconButton } from '@mui/material';
+import { Close as CloseIcon } from '@mui/icons-material';
 import { ChevronRight } from '@mui/icons-material';
 import { EditorModeEnum, DialogTypeEnum } from 'src/types';
 import { UiElement } from 'components/UiElement/UiElement';
@@ -24,6 +25,7 @@ import { ConnectorRerouteTooltip } from '../ConnectorRerouteTooltip/ConnectorRer
 import { ImportHintTooltip } from '../ImportHintTooltip/ImportHintTooltip';
 import { LassoHintTooltip } from '../LassoHintTooltip/LassoHintTooltip';
 import { LazyLoadingWelcomeNotification } from '../LazyLoadingWelcomeNotification/LazyLoadingWelcomeNotification';
+import { useTranslation } from 'src/stores/localeStore';
 import { FloatingToolbar } from '../FloatingToolbar/FloatingToolbar';
 
 const ToolsEnum = {
@@ -102,6 +104,8 @@ export const UiOverlay = () => {
     return state.iconPackManager;
   });
   const { size: rendererSize } = useResizeObserver(rendererEl);
+  const { t } = useTranslation('canvasHints');
+  const [showCanvasHints, setShowCanvasHints] = React.useState(true);
 
   return (
     <>
@@ -264,6 +268,60 @@ export const UiOverlay = () => {
 
       {/* Floating toolbar for 2D editor */}
       {availableTools.includes('ITEM_CONTROLS') && <FloatingToolbar />}
+
+      {/* Canvas interaction hints - subtle, dismissible, editable mode only */}
+      {editorMode === EditorModeEnum.EDITABLE && showCanvasHints && (
+        <Box
+          sx={{
+            position: 'absolute',
+            left: appPadding.x,
+            bottom: appPadding.y * 4,
+            maxWidth: 320,
+            pointerEvents: 'auto'
+          }}
+        >
+          <Paper
+            elevation={3}
+            sx={{
+              p: 1.5,
+              pr: 4,
+              backgroundColor: 'rgba(255,255,255,0.9)',
+              borderLeft: '3px solid',
+              borderLeftColor: 'primary.main'
+            }}
+          >
+            <IconButton
+              size="small"
+              onClick={() => {
+                setShowCanvasHints(false);
+              }}
+              sx={{
+                position: 'absolute',
+                right: 4,
+                top: 4
+              }}
+            >
+              <CloseIcon fontSize="small" />
+            </IconButton>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600 }} gutterBottom>
+              {t('zoomAndPanTitle')}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {t('zoomAndPanBody')}
+            </Typography>
+            <Typography
+              variant="subtitle2"
+              sx={{ fontWeight: 600, mt: 1 }}
+              gutterBottom
+            >
+              {t('contextMenuTitle')}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {t('contextMenuBody')}
+            </Typography>
+          </Paper>
+        </Box>
+      )}
 
       <SceneLayer>
         <Box ref={contextMenuAnchorRef} />
