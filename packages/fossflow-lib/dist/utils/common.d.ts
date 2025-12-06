@@ -3,6 +3,7 @@ export declare const generateId: () => string;
 export declare const clamp: (num: number, min: number, max: number) => number;
 export declare const getRandom: (min: number, max: number) => number;
 export declare const roundToOneDecimalPlace: (num: number) => number;
+export declare const roundToTwoDecimalPlaces: (num: number) => number;
 interface GetColorVariantOpts {
     alpha?: number;
     grade?: number;
