@@ -33,7 +33,7 @@ import {
   CoordsUtils,
   SizeUtils,
   clamp,
-  roundToOneDecimalPlace,
+  roundToTwoDecimalPlaces,
   findPath,
   toPx,
   getItemByIdOrThrow
@@ -232,12 +232,12 @@ export const getTranslateCSS = (translate: Coords = { x: 0, y: 0 }) => {
 
 export const incrementZoom = (zoom: number) => {
   const newZoom = clamp(zoom + ZOOM_INCREMENT, MIN_ZOOM, MAX_ZOOM);
-  return roundToOneDecimalPlace(newZoom);
+  return roundToTwoDecimalPlaces(newZoom);
 };
 
 export const decrementZoom = (zoom: number) => {
   const newZoom = clamp(zoom - ZOOM_INCREMENT, MIN_ZOOM, MAX_ZOOM);
-  return roundToOneDecimalPlace(newZoom);
+  return roundToTwoDecimalPlaces(newZoom);
 };
 
 interface GetMouse {

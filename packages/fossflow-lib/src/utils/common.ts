@@ -18,6 +18,10 @@ export const roundToOneDecimalPlace = (num: number) => {
   return Math.round(num * 10) / 10;
 };
 
+export const roundToTwoDecimalPlaces = (num: number) => {
+  return Math.round(num * 100) / 100;
+};
+
 interface GetColorVariantOpts {
   alpha?: number;
   grade?: number;
