@@ -19,6 +19,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -40,7 +43,6 @@ jobs:
             type=ref,event=branch,enable=${{ github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/v') }}
             type=sha,prefix={{branch}}-,enable=${{ github.event_name != 'push' || !startsWith(github.ref, 'refs/tags/v') }}
             type=raw,value=latest,enable={{is_default_branch}}
-
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -52,3 +54,4 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          progress: plain
