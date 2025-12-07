@@ -94,6 +94,12 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     });
   }, [uiStateActions]);
 
+  const [transparentBackground, setTransparentBackground] = useState(false);
+
+  const [backgroundColor, setBackgroundColor] = useState<string>(
+    customVars.customPalette.diagramBg
+  );
+
   const exportImage = useCallback(() => {
     if (!containerRef.current || isExporting.current) {
       return;
@@ -107,7 +113,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       height: bounds.height
     };
 
-    exportAsImage(containerRef.current as HTMLDivElement, containerSize, exportScale)
+    exportAsImage(containerRef.current as HTMLDivElement, containerSize, exportScale, transparentBackground ? 'transparent' : backgroundColor)
       .then((data) => {
         setImageData(data);
         isExporting.current = false;
@@ -117,7 +123,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
         setExportError(true);
         isExporting.current = false;
       });
-  }, [bounds, exportScale]);
+  }, [bounds, exportScale, transparentBackground, backgroundColor]);
 
   // Crop the image based on selected area
   const cropImage = useCallback((cropArea: CropArea, sourceImage: string) => {
@@ -248,6 +254,17 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
+      // Draw checkerboard if transparent background
+      if (transparentBackground) {
+        const squareSize = 10;
+        for (let y = 0; y < canvas.height; y += squareSize) {
+          for (let x = 0; x < canvas.width; x += squareSize) {
+            ctx.fillStyle = (x / squareSize + y / squareSize) % 2 === 0 ? '#f0f0f0' : 'transparent';
+            ctx.fillRect(x, y, squareSize, squareSize);
+          }
+        }
+      }
+      
       // Draw the image scaled to fit canvas
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       
@@ -306,7 +323,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     };
     
     img.src = imageData;
-  }, [imageData, isInCropMode, cropArea]);
+  }, [imageData, isInCropMode, cropArea, transparentBackground]);
 
   const [showGrid, setShowGrid] = useState(false);
   const handleShowGridChange = (checked: boolean) => {
@@ -318,9 +335,15 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     setExpandLabels(checked);
   };
 
-  const [backgroundColor, setBackgroundColor] = useState<string>(
-    customVars.customPalette.diagramBg
-  );
+  const handleTransparentBackgroundChange = (checked: boolean) => {
+    setTransparentBackground(checked);
+    if (checked) {
+      setBackgroundColor('transparent');
+    } else {
+      setBackgroundColor(customVars.customPalette.diagramBg);
+    }
+  };
+
   const handleBackgroundColorChange = (color: string) => {
     setBackgroundColor(color);
   };
@@ -365,7 +388,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       }, 200);
       return () => clearTimeout(timer);
     }
-  }, [showGrid, backgroundColor, expandLabels, exportImage, cropToContent, exportScale]);
+  }, [showGrid, backgroundColor, expandLabels, exportImage, cropToContent, exportScale, transparentBackground]);
 
   useEffect(() => {
     if (!imageData) {
@@ -491,7 +514,10 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     sx={{
                       maxWidth: '100%',
                       maxHeight: '300px',
-                      objectFit: 'contain'
+                      objectFit: 'contain',
+                      backgroundImage: transparentBackground ? 'linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%)' : undefined,
+                      backgroundSize: transparentBackground ? '20px 20px' : undefined,
+                      backgroundPosition: transparentBackground ? '0 0, 0 10px, 10px -10px, -10px 0px' : undefined
                     }}
                     src={displayImage}
                     alt="preview"
@@ -547,6 +573,20 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     <ColorPicker
                       value={backgroundColor}
                       onChange={handleBackgroundColorChange}
+                      disabled={transparentBackground}
+                    />
+                  }
+                />
+
+                <FormControlLabel
+                  label="Transparent background"
+                  control={
+                    <Checkbox
+                      size="small"
+                      checked={transparentBackground}
+                      onChange={(event) => {
+                        handleTransparentBackgroundChange(event.target.checked);
+                      }}
                     />
                   }
                 />

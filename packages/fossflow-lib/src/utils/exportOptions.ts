@@ -178,7 +178,8 @@ export const exportAsCompactJSON = (model: Model) => {
 export const exportAsImage = async (
   el: HTMLDivElement,
   size?: Size,
-  scale: number = 1
+  scale: number = 1,
+  bgcolor: string = '#ffffff'
 ) => {
   // Calculate scaled dimensions
   const width = size ? size.width * scale : el.clientWidth * scale;
@@ -189,7 +190,7 @@ export const exportAsImage = async (
     width,
     height,
     cacheBust: true,
-    bgcolor: '#ffffff',
+    bgcolor,
     quality: 1.0,
     // Apply CSS transform for high-quality scaling
     style: scale !== 1 ? {
@@ -208,7 +209,7 @@ export const exportAsImage = async (
       width,
       height,
       cacheBust: true,
-      bgcolor: '#ffffff'
+      bgcolor
     });
   }
 };

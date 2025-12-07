@@ -53,9 +53,7 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
         width: '100%',
         height: '100%',
         zIndex: 0,
-        bgcolor: (theme) => {
-          return backgroundColor ?? theme.customVars.customPalette.diagramBg;
-        }
+        bgcolor: (theme) => backgroundColor === 'transparent' ? 'transparent' : (backgroundColor ?? theme.customVars.customPalette.diagramBg)
       }}
     >
       <SceneLayer>
