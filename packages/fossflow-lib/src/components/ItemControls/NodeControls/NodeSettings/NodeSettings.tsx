@@ -26,11 +26,17 @@ export const NodeSettings = ({
   onDeleted
 }: Props) => {
   const modelItem = useModelItem(node.id);
-  const modelActions = useModelStore((state) => state.actions);
-  const icons = useModelStore((state) => state.icons);
-  
+  const modelActions = useModelStore((state) => {
+    return state.actions;
+  });
+  const icons = useModelStore((state) => {
+    return state.icons;
+  });
+
   // Local state for smooth slider interaction
-  const currentIcon = icons.find(icon => icon.id === modelItem?.icon);
+  const currentIcon = icons.find((icon) => {
+    return icon.id === modelItem?.icon;
+  });
   const [localScale, setLocalScale] = useState(currentIcon?.scale || 1);
   const debounceRef = useRef<NodeJS.Timeout>();
 
@@ -40,27 +46,31 @@ export const NodeSettings = ({
   }, [currentIcon?.scale]);
 
   // Debounced update to store
-  const updateIconScale = useCallback((scale: number) => {
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-    
-    debounceRef.current = setTimeout(() => {
-      const updatedIcons = icons.map(icon => 
-        icon.id === modelItem?.icon 
-          ? { ...icon, scale }
-          : icon
-      );
-      modelActions.set({ icons: updatedIcons });
-    }, 100); // 100ms debounce
-  }, [icons, modelItem?.icon, modelActions]);
+  const updateIconScale = useCallback(
+    (scale: number) => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+
+      debounceRef.current = setTimeout(() => {
+        const updatedIcons = icons.map((icon) => {
+          return icon.id === modelItem?.icon ? { ...icon, scale } : icon;
+        });
+        modelActions.set({ icons: updatedIcons });
+      }, 100); // 100ms debounce
+    },
+    [icons, modelItem?.icon, modelActions]
+  );
 
   // Handle slider change with local state + debounced store update
-  const handleScaleChange = useCallback((e: Event, newScale: number | number[]) => {
-    const scale = newScale as number;
-    setLocalScale(scale); // Immediate UI update
-    updateIconScale(scale); // Debounced store update
-  }, [updateIconScale]);
+  const handleScaleChange = useCallback(
+    (e: Event, newScale: number | number[]) => {
+      const scale = newScale as number;
+      setLocalScale(scale); // Immediate UI update
+      updateIconScale(scale); // Debounced store update
+    },
+    [updateIconScale]
+  );
 
   // Cleanup timeout on unmount
   useEffect(() => {

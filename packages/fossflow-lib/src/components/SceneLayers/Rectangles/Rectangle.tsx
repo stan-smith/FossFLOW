@@ -6,28 +6,28 @@ import { useColor } from 'src/hooks/useColor';
 
 type Props = ReturnType<typeof useScene>['rectangles'][0];
 
-export const Rectangle = memo(({ from, to, color: colorId, customColor }: Props) => {
-  const predefinedColor = useColor(colorId);
-  
-  // Use custom color if provided, otherwise use predefined color
-  const color = customColor 
-    ? { value: customColor }
-    : predefinedColor;
+export const Rectangle = memo(
+  ({ from, to, color: colorId, customColor }: Props) => {
+    const predefinedColor = useColor(colorId);
 
-  if (!color) {
-    return null;
+    // Use custom color if provided, otherwise use predefined color
+    const color = customColor ? { value: customColor } : predefinedColor;
+
+    if (!color) {
+      return null;
+    }
+
+    return (
+      <IsoTileArea
+        from={from}
+        to={to}
+        fill={color.value}
+        cornerRadius={22}
+        stroke={{
+          color: getColorVariant(color.value, 'dark', { grade: 2 }),
+          width: 1
+        }}
+      />
+    );
   }
-
-  return (
-    <IsoTileArea
-      from={from}
-      to={to}
-      fill={color.value}
-      cornerRadius={22}
-      stroke={{
-        color: getColorVariant(color.value, 'dark', { grade: 2 }),
-        width: 1
-      }}
-    />
-  );
-});
+);

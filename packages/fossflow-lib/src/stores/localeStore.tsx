@@ -9,11 +9,12 @@ interface LocaleProviderProps {
   children: ReactNode;
 }
 
-export const LocaleProvider: React.FC<LocaleProviderProps> = ({ locale, children }) => {
+export const LocaleProvider: React.FC<LocaleProviderProps> = ({
+  locale,
+  children
+}) => {
   return (
-    <LocaleContext.Provider value={locale}>
-      {children}
-    </LocaleContext.Provider>
+    <LocaleContext.Provider value={locale}>{children}</LocaleContext.Provider>
   );
 };
 
@@ -41,11 +42,11 @@ export function useTranslation<K extends keyof LocaleProps>(
   namespace: K
 ): {
   t: (key: keyof LocaleProps[K]) => string;
-  };
+};
 
 export function useTranslation<K extends keyof LocaleProps>(namespace?: K) {
   const locale = useLocale();
-  
+
   if (namespace) {
     // Return scoped translation function for specific namespace
     const namespaceData = locale[namespace];
@@ -59,7 +60,7 @@ export function useTranslation<K extends keyof LocaleProps>(namespace?: K) {
     const t = (key: NestedKeyOf<LocaleProps>): string => {
       const parts = key.split('.');
       let current: any = locale;
-      
+
       for (const part of parts) {
         if (current && typeof current === 'object' && part in current) {
           current = current[part];
@@ -67,7 +68,7 @@ export function useTranslation<K extends keyof LocaleProps>(namespace?: K) {
           return key; // Return key if path not found
         }
       }
-      
+
       return typeof current === 'string' ? current : key;
     };
     return { t };

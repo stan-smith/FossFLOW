@@ -44,7 +44,7 @@ export interface DragItemsMode {
   type: 'DRAG_ITEMS';
   showCursor: boolean;
   items: ItemReference[];
-  isInitialMovement: Boolean;
+  isInitialMovement: boolean;
 }
 
 export interface PanMode {
@@ -160,7 +160,6 @@ export interface ContextMenu {
   tile: Coords;
 }
 
-
 export type ConnectorInteractionMode = 'click' | 'drag';
 
 export interface UiState {
@@ -185,7 +184,6 @@ export interface UiState {
   connectorInteractionMode: ConnectorInteractionMode;
   expandLabels: boolean;
   iconPackManager: IconPackManagerProps | null;
-
 }
 
 export interface UiStateActions {
@@ -213,7 +211,6 @@ export interface UiStateActions {
   setConnectorInteractionMode: (mode: ConnectorInteractionMode) => void;
   setExpandLabels: (expand: boolean) => void;
   setIconPackManager: (iconPackManager: IconPackManagerProps | null) => void;
-
 }
 
 export type UiStateStore = UiState & {

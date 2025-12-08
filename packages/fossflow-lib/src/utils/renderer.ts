@@ -718,18 +718,21 @@ export const getProjectBounds = (
 };
 
 export const getVisualBounds = (view: View, padding = 50) => {
-  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-  
+  let minX = Infinity,
+    maxX = -Infinity,
+    minY = Infinity,
+    maxY = -Infinity;
+
   // Collect actual content positions and find extremes
   view.items.forEach((item) => {
     const pos = getTilePosition({ tile: item.tile });
     const itemSize = 50;
-    minX = Math.min(minX, pos.x - itemSize/2);
-    maxX = Math.max(maxX, pos.x + itemSize/2);
-    minY = Math.min(minY, pos.y - itemSize/2);
-    maxY = Math.max(maxY, pos.y + itemSize/2);
+    minX = Math.min(minX, pos.x - itemSize / 2);
+    maxX = Math.max(maxX, pos.x + itemSize / 2);
+    minY = Math.min(minY, pos.y - itemSize / 2);
+    maxY = Math.max(maxY, pos.y + itemSize / 2);
   });
-  
+
   const connectors = view.connectors ?? [];
   connectors.forEach((connector) => {
     const path = getConnectorPath({ anchors: connector.anchors, view });
@@ -742,7 +745,7 @@ export const getVisualBounds = (view: View, padding = 50) => {
       maxY = Math.max(maxY, pos.y);
     });
   });
-  
+
   const textBoxes = view.textBoxes ?? [];
   textBoxes.forEach((textBox) => {
     const pos = getTilePosition({ tile: textBox.tile });
@@ -753,7 +756,7 @@ export const getVisualBounds = (view: View, padding = 50) => {
     minY = Math.min(minY, pos.y, endPos.y);
     maxY = Math.max(maxY, pos.y, endPos.y);
   });
-  
+
   const rectangles = view.rectangles ?? [];
   rectangles.forEach((rectangle) => {
     const fromPos = getTilePosition({ tile: rectangle.from });
@@ -763,17 +766,17 @@ export const getVisualBounds = (view: View, padding = 50) => {
     minY = Math.min(minY, fromPos.y, toPos.y);
     maxY = Math.max(maxY, fromPos.y, toPos.y);
   });
-  
+
   if (minX === Infinity) {
     return { x: 0, y: 0, width: 200, height: 200 };
   }
-  
+
   // Create tight bounds around actual content extremes
   return {
     x: minX - padding,
     y: minY - padding,
-    width: (maxX - minX) + (padding * 2),
-    height: (maxY - minY) + (padding * 2)
+    width: maxX - minX + padding * 2,
+    height: maxY - minY + padding * 2
   };
 };
 

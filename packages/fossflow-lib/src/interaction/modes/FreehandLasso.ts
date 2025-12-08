@@ -28,7 +28,9 @@ const getItemsInFreehandBounds = (
     ];
 
     // Rectangle is only selected if ALL corners are inside the polygon
-    const allCornersInside = corners.every(corner => isPointInPolygon(corner, pathTiles));
+    const allCornersInside = corners.every((corner) => {
+      return isPointInPolygon(corner, pathTiles);
+    });
 
     if (allCornersInside) {
       items.push({ type: 'RECTANGLE', id: rectangle.id });
@@ -47,7 +49,8 @@ const getItemsInFreehandBounds = (
 
 export const FreehandLasso: ModeActions = {
   mousemove: ({ uiState, scene }) => {
-    if (uiState.mode.type !== 'FREEHAND_LASSO' || !uiState.mouse.mousedown) return;
+    if (uiState.mode.type !== 'FREEHAND_LASSO' || !uiState.mouse.mousedown)
+      return;
 
     // If user is dragging an existing selection, switch to DRAG_ITEMS mode
     if (uiState.mode.isDragging && uiState.mode.selection) {
@@ -68,9 +71,11 @@ export const FreehandLasso: ModeActions = {
         if (draft.type === 'FREEHAND_LASSO') {
           // Add point to path if it's far enough from the last point (throttle)
           const lastPoint = draft.path[draft.path.length - 1];
-          if (!lastPoint ||
-              Math.abs(newScreenPoint.x - lastPoint.x) > 5 ||
-              Math.abs(newScreenPoint.y - lastPoint.y) > 5) {
+          if (
+            !lastPoint ||
+            Math.abs(newScreenPoint.x - lastPoint.x) > 5 ||
+            Math.abs(newScreenPoint.y - lastPoint.y) > 5
+          ) {
             draft.path.push(newScreenPoint);
           }
         }

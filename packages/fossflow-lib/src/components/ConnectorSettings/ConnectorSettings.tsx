@@ -13,8 +13,12 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
 
 export const ConnectorSettings = () => {
-  const connectorInteractionMode = useUiStateStore((state) => state.connectorInteractionMode);
-  const setConnectorInteractionMode = useUiStateStore((state) => state.actions.setConnectorInteractionMode);
+  const connectorInteractionMode = useUiStateStore((state) => {
+    return state.connectorInteractionMode;
+  });
+  const setConnectorInteractionMode = useUiStateStore((state) => {
+    return state.actions.setConnectorInteractionMode;
+  });
   const { t } = useTranslation();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +33,9 @@ export const ConnectorSettings = () => {
 
       <Paper variant="outlined" sx={{ p: 2, mt: 2 }}>
         <FormControl component="fieldset">
-          <FormLabel component="legend">{t('settings.connector.connectionMode')}</FormLabel>
+          <FormLabel component="legend">
+            {t('settings.connector.connectionMode')}
+          </FormLabel>
           <RadioGroup
             value={connectorInteractionMode}
             onChange={handleChange}
@@ -40,7 +46,9 @@ export const ConnectorSettings = () => {
               control={<Radio />}
               label={
                 <Box>
-                  <Typography variant="body1">{t('settings.connector.clickMode')}</Typography>
+                  <Typography variant="body1">
+                    {t('settings.connector.clickMode')}
+                  </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {t('settings.connector.clickModeDesc')}
                   </Typography>
@@ -52,7 +60,9 @@ export const ConnectorSettings = () => {
               control={<Radio />}
               label={
                 <Box>
-                  <Typography variant="body1">{t('settings.connector.dragMode')}</Typography>
+                  <Typography variant="body1">
+                    {t('settings.connector.dragMode')}
+                  </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {t('settings.connector.dragModeDesc')}
                   </Typography>

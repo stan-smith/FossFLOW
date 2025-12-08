@@ -12,8 +12,12 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useTranslation } from 'src/stores/localeStore';
 
 export const PanSettings = () => {
-  const panSettings = useUiStateStore((state) => state.panSettings);
-  const setPanSettings = useUiStateStore((state) => state.actions.setPanSettings);
+  const panSettings = useUiStateStore((state) => {
+    return state.panSettings;
+  });
+  const setPanSettings = useUiStateStore((state) => {
+    return state.actions.setPanSettings;
+  });
   const { t } = useTranslation();
 
   const handleToggle = (setting: keyof typeof panSettings) => {
@@ -47,7 +51,9 @@ export const PanSettings = () => {
           control={
             <Switch
               checked={panSettings.emptyAreaClickPan}
-              onChange={() => handleToggle('emptyAreaClickPan')}
+              onChange={() => {
+                return handleToggle('emptyAreaClickPan');
+              }}
             />
           }
           label={t('settings.pan.emptyAreaClickPan')}
@@ -57,7 +63,9 @@ export const PanSettings = () => {
           control={
             <Switch
               checked={!panSettings.middleClickPan}
-              onChange={() => handleToggle('middleClickPan')}
+              onChange={() => {
+                return handleToggle('middleClickPan');
+              }}
             />
           }
           label={t('settings.pan.middleClickPan')}
@@ -67,7 +75,9 @@ export const PanSettings = () => {
           control={
             <Switch
               checked={!panSettings.rightClickPan}
-              onChange={() => handleToggle('rightClickPan')}
+              onChange={() => {
+                return handleToggle('rightClickPan');
+              }}
             />
           }
           label={t('settings.pan.rightClickPan')}
@@ -77,7 +87,9 @@ export const PanSettings = () => {
           control={
             <Switch
               checked={!panSettings.ctrlClickPan}
-              onChange={() => handleToggle('ctrlClickPan')}
+              onChange={() => {
+                return handleToggle('ctrlClickPan');
+              }}
             />
           }
           label={t('settings.pan.ctrlClickPan')}
@@ -87,7 +99,9 @@ export const PanSettings = () => {
           control={
             <Switch
               checked={!panSettings.altClickPan}
-              onChange={() => handleToggle('altClickPan')}
+              onChange={() => {
+                return handleToggle('altClickPan');
+              }}
             />
           }
           label={t('settings.pan.altClickPan')}
@@ -103,7 +117,9 @@ export const PanSettings = () => {
           control={
             <Switch
               checked={panSettings.arrowKeysPan}
-              onChange={() => handleToggle('arrowKeysPan')}
+              onChange={() => {
+                return handleToggle('arrowKeysPan');
+              }}
             />
           }
           label={t('settings.pan.arrowKeys')}
@@ -113,7 +129,9 @@ export const PanSettings = () => {
           control={
             <Switch
               checked={panSettings.wasdPan}
-              onChange={() => handleToggle('wasdPan')}
+              onChange={() => {
+                return handleToggle('wasdPan');
+              }}
             />
           }
           label={t('settings.pan.wasdKeys')}
@@ -123,7 +141,9 @@ export const PanSettings = () => {
           control={
             <Switch
               checked={panSettings.ijklPan}
-              onChange={() => handleToggle('ijklPan')}
+              onChange={() => {
+                return handleToggle('ijklPan');
+              }}
             />
           }
           label={t('settings.pan.ijklKeys')}
@@ -138,7 +158,9 @@ export const PanSettings = () => {
         <Box sx={{ px: 2 }}>
           <Slider
             value={panSettings.keyboardPanSpeed}
-            onChange={(_, value) => handleSpeedChange(value as number)}
+            onChange={(_, value) => {
+              return handleSpeedChange(value as number);
+            }}
             min={5}
             max={50}
             step={5}
@@ -148,7 +170,11 @@ export const PanSettings = () => {
         </Box>
       </Paper>
 
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ mt: 2, display: 'block' }}
+      >
         {t('settings.pan.note')}
       </Typography>
     </Box>

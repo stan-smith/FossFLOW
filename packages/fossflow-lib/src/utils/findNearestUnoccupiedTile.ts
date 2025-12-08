@@ -22,10 +22,10 @@ export const findNearestUnoccupiedTile = (
 
   // Spiral search pattern: right, down, left, up
   const directions = [
-    { x: 1, y: 0 },   // right
-    { x: 0, y: 1 },   // down
-    { x: -1, y: 0 },  // left
-    { x: 0, y: -1 }   // up
+    { x: 1, y: 0 }, // right
+    { x: 0, y: 1 }, // down
+    { x: -1, y: 0 }, // left
+    { x: 0, y: -1 } // up
   ];
 
   // Search in expanding rings around the target
@@ -40,7 +40,7 @@ export const findNearestUnoccupiedTile = (
     for (let side = 0; side < 4; side++) {
       const direction = directions[side];
       const sideLength = distance * 2;
-      
+
       for (let step = 0; step < sideLength; step++) {
         // Move to the next tile on this side of the ring
         currentTile = {
@@ -78,7 +78,7 @@ export const findNearestUnoccupiedTilesForGroup = (
   const occupiedTiles = new Set<string>();
 
   // Add existing items to occupied tiles (excluding the ones being moved)
-  scene.items.forEach(item => {
+  scene.items.forEach((item) => {
     if (!excludeIds.includes(item.id)) {
       occupiedTiles.add(`${item.tile.x},${item.tile.y}`);
     }
@@ -105,10 +105,14 @@ export const findNearestUnoccupiedTilesForGroup = (
                 y: item.targetTile.y + dy
               };
               const checkKey = `${checkTile.x},${checkTile.y}`;
-              
+
               if (!occupiedTiles.has(checkKey)) {
                 const itemAtTile = getItemAtTile({ tile: checkTile, scene });
-                if (!itemAtTile || itemAtTile.type !== 'ITEM' || excludeIds.includes(itemAtTile.id)) {
+                if (
+                  !itemAtTile ||
+                  itemAtTile.type !== 'ITEM' ||
+                  excludeIds.includes(itemAtTile.id)
+                ) {
                   foundTile = checkTile;
                   break;
                 }

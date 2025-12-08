@@ -1,38 +1,46 @@
-import {
-  deleteViewItem,
-  updateViewItem,
-  createViewItem
-} from '../viewItem';
+import { deleteViewItem, updateViewItem, createViewItem } from '../viewItem';
 import { State, ViewReducerContext } from '../types';
 import { ViewItem, View, Connector } from 'src/types';
 
 // Mock the utility functions and reducers
-jest.mock('src/utils', () => ({
-  getItemByIdOrThrow: jest.fn((items: any[], id: string) => {
-    const index = items.findIndex((item: any) =>
-      (typeof item === 'object' && item.id === id) || item === id
-    );
-    if (index === -1) {
-      throw new Error(`Item with id ${id} not found`);
-    }
-    return { value: items[index], index };
-  }),
-  getConnectorsByViewItem: jest.fn((viewItemId: string, connectors: Connector[]) => {
-    return connectors.filter(connector =>
-      connector.anchors.some((anchor: any) =>
-        anchor.ref?.item === viewItemId
-      )
-    );
-  })
-}));
+jest.mock('src/utils', () => {
+  return {
+    getItemByIdOrThrow: jest.fn((items: any[], id: string) => {
+      const index = items.findIndex((item: any) => {
+        return (typeof item === 'object' && item.id === id) || item === id;
+      });
+      if (index === -1) {
+        throw new Error(`Item with id ${id} not found`);
+      }
+      return { value: items[index], index };
+    }),
+    getConnectorsByViewItem: jest.fn(
+      (viewItemId: string, connectors: Connector[]) => {
+        return connectors.filter((connector) => {
+          return connector.anchors.some((anchor: any) => {
+            return anchor.ref?.item === viewItemId;
+          });
+        });
+      }
+    )
+  };
+});
 
-jest.mock('src/schemas/validation', () => ({
-  validateView: jest.fn(() => [])
-}));
+jest.mock('src/schemas/validation', () => {
+  return {
+    validateView: jest.fn(() => {
+      return [];
+    })
+  };
+});
 
-jest.mock('../view', () => ({
-  view: jest.fn((params: any) => params.ctx.state)
-}));
+jest.mock('../view', () => {
+  return {
+    view: jest.fn((params: any) => {
+      return params.ctx.state;
+    })
+  };
+});
 
 describe('viewItem reducer', () => {
   let mockState: State;
@@ -46,8 +54,7 @@ describe('viewItem reducer', () => {
 
     mockViewItem = {
       id: 'item1',
-      tile: { x: 0, y: 0 },
-      size: { width: 100, height: 100 }
+      tile: { x: 0, y: 0 }
     };
 
     mockConnector = {
@@ -55,15 +62,11 @@ describe('viewItem reducer', () => {
       anchors: [
         {
           id: 'anchor1',
-          ref: { item: 'item1' },
-          face: 'right',
-          offset: 0
+          ref: { item: 'item1' }
         },
         {
           id: 'anchor2',
-          ref: { item: 'item2' },
-          face: 'left',
-          offset: 0
+          ref: { item: 'item2' }
         }
       ]
     };
@@ -88,19 +91,14 @@ describe('viewItem reducer', () => {
         views: [mockView]
       },
       scene: {
-        viewId: 'view1',
-        viewport: { x: 0, y: 0, zoom: 1 },
-        grid: { enabled: true, size: 10, style: 'dots' },
         connectors: {
-          'connector1': {
+          connector1: {
             path: {
               tiles: [],
               rectangle: { from: { x: 0, y: 0 }, to: { x: 1, y: 0 } }
             }
           }
         },
-        viewItems: {},
-        rectangles: {},
         textBoxes: {}
       }
     };
@@ -117,7 +115,11 @@ describe('viewItem reducer', () => {
 
       // Check item is removed from model
       expect(result.model.views[0].items).toHaveLength(1);
-      expect(result.model.views[0].items.find(item => item.id === 'item1')).toBeUndefined();
+      expect(
+        result.model.views[0].items.find((item) => {
+          return item.id === 'item1';
+        })
+      ).toBeUndefined();
 
       // Check connectors referencing the item are removed
       expect(result.model.views[0].connectors).toHaveLength(0);
@@ -125,25 +127,26 @@ describe('viewItem reducer', () => {
     });
 
     it('should only remove connectors that reference the deleted item', () => {
-      const connector2: Connector = {
+      const connector2 = {
         id: 'connector2',
         anchors: [
           {
             id: 'anchor3',
-            ref: { item: 'item2' },
-            face: 'top'
+            ref: { item: 'item2' }
           },
           {
             id: 'anchor4',
-            ref: { item: 'item3' },
-            face: 'bottom'
+            ref: { item: 'item3' }
           }
         ]
       };
 
       mockState.model.views[0].connectors = [mockConnector, connector2];
       mockState.scene.connectors['connector2'] = {
-        path: { tiles: [], rectangle: { from: { x: 1, y: 1 }, to: { x: 2, y: 2 } } }
+        path: {
+          tiles: [],
+          rectangle: { from: { x: 1, y: 1 }, to: { x: 2, y: 2 } }
+        }
       };
 
       const result = deleteViewItem('item1', mockContext);
@@ -157,21 +160,21 @@ describe('viewItem reducer', () => {
 
     it('should handle deletion when no connectors reference the item', () => {
       // Create a connector that doesn't reference item1
-      mockState.model.views[0].connectors = [{
-        id: 'connector2',
-        anchors: [
-          {
-            id: 'anchor3',
-            ref: { item: 'item2' },
-            face: 'top'
-          },
-          {
-            id: 'anchor4',
-            ref: { item: 'item3' },
-            face: 'bottom'
-          }
-        ]
-      }];
+      mockState.model.views[0].connectors = [
+        {
+          id: 'connector2',
+          anchors: [
+            {
+              id: 'anchor3',
+              ref: { item: 'item2' }
+            },
+            {
+              id: 'anchor4',
+              ref: { item: 'item3' }
+            }
+          ]
+        }
+      ];
 
       const result = deleteViewItem('item1', mockContext);
 
@@ -208,18 +211,15 @@ describe('viewItem reducer', () => {
         anchors: [
           {
             id: 'anchor5',
-            ref: { item: 'item1' },
-            face: 'top'
+            ref: { item: 'item1' }
           },
           {
             id: 'anchor6',
-            ref: { item: 'item1' },
-            face: 'bottom'
+            ref: { item: 'item1' }
           },
           {
             id: 'anchor7',
-            ref: { item: 'item2' },
-            face: 'left'
+            ref: { item: 'item2' }
           }
         ]
       };
@@ -237,15 +237,15 @@ describe('viewItem reducer', () => {
     it('should update view item properties', () => {
       const updates = {
         id: 'item1',
-        tile: { x: 2, y: 2 },
-        size: { width: 200, height: 200 }
+        tile: { x: 2, y: 2 }
       };
 
       const result = updateViewItem(updates, mockContext);
 
-      const updatedItem = result.model.views[0].items.find(item => item.id === 'item1');
+      const updatedItem = result.model.views[0].items.find((item) => {
+        return item.id === 'item1';
+      });
       expect(updatedItem?.tile).toEqual({ x: 2, y: 2 });
-      expect(updatedItem?.size).toEqual({ width: 200, height: 200 });
     });
 
     it('should update connectors when item tile position changes', () => {
@@ -257,12 +257,15 @@ describe('viewItem reducer', () => {
       const result = updateViewItem(updates, mockContext);
 
       // The item should be updated with new position
-      const updatedItem = result.model.views[0].items.find(item => item.id === 'item1');
+      const updatedItem = result.model.views[0].items.find((item) => {
+        return item.id === 'item1';
+      });
       expect(updatedItem?.tile).toEqual({ x: 5, y: 5 });
 
       // When tile changes, connectors that reference this item are updated
       // The mock implementation tracks that connectors referencing the item were found
-      const getConnectorsByViewItem = require('src/utils').getConnectorsByViewItem;
+      const getConnectorsByViewItem =
+        require('src/utils').getConnectorsByViewItem;
       expect(getConnectorsByViewItem).toHaveBeenCalled();
     });
 
@@ -281,7 +284,7 @@ describe('viewItem reducer', () => {
 
       const updates = {
         id: 'item1',
-        size: { width: 150, height: 150 }
+        labelHeight: 20
       };
 
       updateViewItem(updates, mockContext);
@@ -292,7 +295,10 @@ describe('viewItem reducer', () => {
 
     it('should throw error when item does not exist', () => {
       expect(() => {
-        updateViewItem({ id: 'nonexistent', tile: { x: 1, y: 1 } }, mockContext);
+        updateViewItem(
+          { id: 'nonexistent', tile: { x: 1, y: 1 } },
+          mockContext
+        );
       }).toThrow('Item with id nonexistent not found');
     });
   });
@@ -301,8 +307,7 @@ describe('viewItem reducer', () => {
     it('should create a new view item', () => {
       const newItem: ViewItem = {
         id: 'item3',
-        tile: { x: 3, y: 3 },
-        size: { width: 100, height: 100 }
+        tile: { x: 3, y: 3 }
       };
 
       const result = createViewItem(newItem, mockContext);
@@ -351,23 +356,41 @@ describe('viewItem reducer', () => {
 
     it('should handle multiple operations in sequence', () => {
       // Create
-      let result = createViewItem({
-        id: 'item3',
-        tile: { x: 2, y: 2 }
-      }, { ...mockContext, state: mockState });
+      let result = createViewItem(
+        {
+          id: 'item3',
+          tile: { x: 2, y: 2 }
+        },
+        { ...mockContext, state: mockState }
+      );
 
       // Update
-      result = updateViewItem({
-        id: 'item3',
-        size: { width: 150, height: 150 }
-      }, { ...mockContext, state: result });
+      result = updateViewItem(
+        {
+          id: 'item3',
+          labelHeight: 25
+        },
+        { ...mockContext, state: result }
+      );
 
       // Delete original
       result = deleteViewItem('item1', { ...mockContext, state: result });
 
-      expect(result.model.views[0].items.find(item => item.id === 'item3')).toBeDefined();
-      expect(result.model.views[0].items.find(item => item.id === 'item3')?.size).toEqual({ width: 150, height: 150 });
-      expect(result.model.views[0].items.find(item => item.id === 'item1')).toBeUndefined();
+      expect(
+        result.model.views[0].items.find((item) => {
+          return item.id === 'item3';
+        })
+      ).toBeDefined();
+      expect(
+        result.model.views[0].items.find((item) => {
+          return item.id === 'item3';
+        })?.labelHeight
+      ).toBe(25);
+      expect(
+        result.model.views[0].items.find((item) => {
+          return item.id === 'item1';
+        })
+      ).toBeUndefined();
 
       // Connector referencing item1 should be removed
       expect(result.model.views[0].connectors).toHaveLength(0);

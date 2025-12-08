@@ -11,8 +11,12 @@ export const ConnectorRerouteTooltip = () => {
   const { t } = useTranslation('connectorRerouteTooltip');
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const mode = useUiStateStore((state) => state.mode);
-  const mouse = useUiStateStore((state) => state.mouse);
+  const mode = useUiStateStore((state) => {
+    return state.mode;
+  });
+  const mouse = useUiStateStore((state) => {
+    return state.mouse;
+  });
   const { connectors } = useScene();
   const previousModeRef = useRef(mode);
   const shownForConnectorRef = useRef<string | null>(null);
@@ -44,7 +48,10 @@ export const ConnectorRerouteTooltip = () => {
       // Find the most recently created connector
       const latestConnector = connectors[connectors.length - 1];
 
-      if (latestConnector && latestConnector.id !== shownForConnectorRef.current) {
+      if (
+        latestConnector &&
+        latestConnector.id !== shownForConnectorRef.current
+      ) {
         // Show tooltip near the mouse position
         setTooltipPosition({
           x: mouse.position.screen.x,
@@ -58,7 +65,9 @@ export const ConnectorRerouteTooltip = () => {
           setShowTooltip(false);
         }, 15000);
 
-        return () => clearTimeout(timer);
+        return () => {
+          return clearTimeout(timer);
+        };
       }
     }
 
@@ -122,7 +131,9 @@ export const ConnectorRerouteTooltip = () => {
           </Typography>
 
           <Typography variant="body2" color="text.secondary">
-            <strong>{t('instructionSelect')}</strong> {t('instructionMiddle')} <strong>{t('instructionClick')}</strong> {t('instructionAnd')} <strong>{t('instructionDrag')}</strong> {t('instructionEnd')}
+            <strong>{t('instructionSelect')}</strong> {t('instructionMiddle')}{' '}
+            <strong>{t('instructionClick')}</strong> {t('instructionAnd')}{' '}
+            <strong>{t('instructionDrag')}</strong> {t('instructionEnd')}
           </Typography>
         </Paper>
       </Box>

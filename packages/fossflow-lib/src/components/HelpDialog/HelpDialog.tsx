@@ -29,7 +29,7 @@ interface ShortcutItem {
 
 export const HelpDialog = () => {
   const { t } = useTranslation('helpDialog');
-  
+
   const dialog = useUiStateStore((state) => {
     return state.dialog;
   });
@@ -162,9 +162,15 @@ export const HelpDialog = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 'bold' }}>{t('action')}</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>{t('shortcut')}</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>{t('description')}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>
+                    {t('action')}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>
+                    {t('shortcut')}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>
+                    {t('description')}
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -203,9 +209,15 @@ export const HelpDialog = () => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell sx={{ fontWeight: 'bold' }}>{t('action')}</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>{t('method')}</TableCell>
-                  <TableCell sx={{ fontWeight: 'bold' }}>{t('description')}</TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>
+                    {t('action')}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>
+                    {t('method')}
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: 'bold' }}>
+                    {t('description')}
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

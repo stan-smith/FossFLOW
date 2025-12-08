@@ -249,14 +249,20 @@ export const UiOverlay = () => {
 
       {dialog === DialogTypeEnum.HELP && <HelpDialog />}
 
-      {dialog === DialogTypeEnum.SETTINGS && <SettingsDialog iconPackManager={iconPackManager || undefined} />}
+      {dialog === DialogTypeEnum.SETTINGS && (
+        <SettingsDialog iconPackManager={iconPackManager || undefined} />
+      )}
 
       {/* Show hint tooltips only in editable mode */}
-      {editorMode === EditorModeEnum.EDITABLE && <ConnectorHintTooltip toolMenuRef={toolMenuRef} />}
+      {editorMode === EditorModeEnum.EDITABLE && (
+        <ConnectorHintTooltip toolMenuRef={toolMenuRef} />
+      )}
       {editorMode === EditorModeEnum.EDITABLE && <ConnectorEmptySpaceTooltip />}
       {editorMode === EditorModeEnum.EDITABLE && <ConnectorRerouteTooltip />}
       {editorMode === EditorModeEnum.EDITABLE && <ImportHintTooltip />}
-      {editorMode === EditorModeEnum.EDITABLE && <LassoHintTooltip toolMenuRef={toolMenuRef} />}
+      {editorMode === EditorModeEnum.EDITABLE && (
+        <LassoHintTooltip toolMenuRef={toolMenuRef} />
+      )}
 
       {/* Show lazy loading welcome notification if icon pack manager is provided */}
       {iconPackManager && <LazyLoadingWelcomeNotification />}

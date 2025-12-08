@@ -26,11 +26,13 @@ afterAll(() => {
 jest.mock('src/stores/modelStore');
 jest.mock('src/stores/uiStateStore');
 jest.mock('src/hooks/useView');
-jest.mock('src/schemas/model', () => ({
-  modelSchema: {
-    safeParse: jest.fn()
-  }
-}));
+jest.mock('src/schemas/model', () => {
+  return {
+    modelSchema: {
+      safeParse: jest.fn()
+    }
+  };
+});
 
 describe('useInitialDataManager - Orphaned Connector Handling', () => {
   let mockModelStore: any;
@@ -49,12 +51,14 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
       icons: [],
       colors: []
     };
-    (modelStoreModule.useModelStore as jest.Mock).mockImplementation((selector) => {
-      if (typeof selector === 'function') {
-        return selector(mockModelStore);
+    (modelStoreModule.useModelStore as jest.Mock).mockImplementation(
+      (selector) => {
+        if (typeof selector === 'function') {
+          return selector(mockModelStore);
+        }
+        return mockModelStore;
       }
-      return mockModelStore;
-    });
+    );
 
     // Setup mock UI state store
     mockUiStateStore = {
@@ -67,12 +71,14 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
       rendererEl: null,
       editorMode: 'INTERACTIVE'
     };
-    (uiStateStoreModule.useUiStateStore as jest.Mock).mockImplementation((selector) => {
-      if (typeof selector === 'function') {
-        return selector(mockUiStateStore);
+    (uiStateStoreModule.useUiStateStore as jest.Mock).mockImplementation(
+      (selector) => {
+        if (typeof selector === 'function') {
+          return selector(mockUiStateStore);
+        }
+        return mockUiStateStore;
       }
-      return mockUiStateStore;
-    });
+    );
 
     // Setup mock changeView
     mockChangeView = jest.fn();
@@ -86,7 +92,9 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
   });
 
   it('should filter out connectors with invalid item references during load', () => {
-    const { result } = renderHook(() => useInitialDataManager());
+    const { result } = renderHook(() => {
+      return useInitialDataManager();
+    });
 
     const initialData: InitialData = {
       version: '1.0',
@@ -107,22 +115,22 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'item1' }, face: 'right' },
-                { id: 'anchor2', ref: { item: 'item2' }, face: 'left' }
+                { id: 'anchor1', ref: { item: 'item1' } },
+                { id: 'anchor2', ref: { item: 'item2' } }
               ]
             },
             {
               id: 'connector2',
               anchors: [
-                { id: 'anchor3', ref: { item: 'item1' }, face: 'top' },
-                { id: 'anchor4', ref: { item: 'nonexistent' }, face: 'bottom' } // Invalid reference
+                { id: 'anchor3', ref: { item: 'item1' } },
+                { id: 'anchor4', ref: { item: 'nonexistent' } } // Invalid reference
               ]
             },
             {
               id: 'connector3',
               anchors: [
-                { id: 'anchor5', ref: { item: 'nonexistent1' }, face: 'right' }, // Invalid reference
-                { id: 'anchor6', ref: { item: 'nonexistent2' }, face: 'left' } // Invalid reference
+                { id: 'anchor5', ref: { item: 'nonexistent1' } }, // Invalid reference
+                { id: 'anchor6', ref: { item: 'nonexistent2' } } // Invalid reference
               ]
             }
           ],
@@ -142,12 +150,18 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
     expect(setCall.views[0].connectors[0].id).toBe('connector1');
 
     // Check that warnings were logged for removed connectors
-    expect(console.warn).toHaveBeenCalledWith('Removing connector connector2 due to invalid item references');
-    expect(console.warn).toHaveBeenCalledWith('Removing connector connector3 due to invalid item references');
+    expect(console.warn).toHaveBeenCalledWith(
+      'Removing connector connector2 due to invalid item references'
+    );
+    expect(console.warn).toHaveBeenCalledWith(
+      'Removing connector connector3 due to invalid item references'
+    );
   });
 
   it('should allow connectors that reference other anchors', () => {
-    const { result } = renderHook(() => useInitialDataManager());
+    const { result } = renderHook(() => {
+      return useInitialDataManager();
+    });
 
     const initialData: InitialData = {
       version: '1.0',
@@ -160,15 +174,13 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
         {
           id: 'view1',
           name: 'Test View',
-          items: [
-            { id: 'item1', tile: { x: 0, y: 0 } }
-          ],
+          items: [{ id: 'item1', tile: { x: 0, y: 0 } }],
           connectors: [
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'item1' }, face: 'right' },
-                { id: 'anchor2', ref: { anchor: 'anchor3' }, face: 'left' } // References another anchor
+                { id: 'anchor1', ref: { item: 'item1' } },
+                { id: 'anchor2', ref: { anchor: 'anchor3' } } // References another anchor
               ]
             }
           ],
@@ -189,7 +201,9 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
   });
 
   it('should handle views with no connectors', () => {
-    const { result } = renderHook(() => useInitialDataManager());
+    const { result } = renderHook(() => {
+      return useInitialDataManager();
+    });
 
     const initialData: InitialData = {
       version: '1.0',
@@ -219,7 +233,9 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
   });
 
   it('should handle all connectors being invalid', () => {
-    const { result } = renderHook(() => useInitialDataManager());
+    const { result } = renderHook(() => {
+      return useInitialDataManager();
+    });
 
     const initialData: InitialData = {
       version: '1.0',
@@ -237,15 +253,15 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'nonexistent1' }, face: 'right' },
-                { id: 'anchor2', ref: { item: 'nonexistent2' }, face: 'left' }
+                { id: 'anchor1', ref: { item: 'nonexistent1' } },
+                { id: 'anchor2', ref: { item: 'nonexistent2' } }
               ]
             },
             {
               id: 'connector2',
               anchors: [
-                { id: 'anchor3', ref: { item: 'deleted1' }, face: 'top' },
-                { id: 'anchor4', ref: { item: 'deleted2' }, face: 'bottom' }
+                { id: 'anchor3', ref: { item: 'deleted1' } },
+                { id: 'anchor4', ref: { item: 'deleted2' } }
               ]
             }
           ],
@@ -266,7 +282,9 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
   });
 
   it('should handle mixed valid and invalid anchor references', () => {
-    const { result } = renderHook(() => useInitialDataManager());
+    const { result } = renderHook(() => {
+      return useInitialDataManager();
+    });
 
     const initialData: InitialData = {
       version: '1.0',
@@ -287,9 +305,9 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'item1' }, face: 'right' }, // Valid
-                { id: 'anchor2', ref: { item: 'item2' }, face: 'left' }, // Valid
-                { id: 'anchor3', ref: { item: 'nonexistent' }, face: 'top' } // Invalid
+                { id: 'anchor1', ref: { item: 'item1' } }, // Valid
+                { id: 'anchor2', ref: { item: 'item2' } }, // Valid
+                { id: 'anchor3', ref: { item: 'nonexistent' } } // Invalid
               ]
             }
           ],
@@ -306,11 +324,15 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
     // Connector with any invalid anchor should be removed
     const setCall = mockModelStore.actions.set.mock.calls[0][0];
     expect(setCall.views[0].connectors).toHaveLength(0);
-    expect(console.warn).toHaveBeenCalledWith('Removing connector connector1 due to invalid item references');
+    expect(console.warn).toHaveBeenCalledWith(
+      'Removing connector connector1 due to invalid item references'
+    );
   });
 
   it('should not modify original initialData object', () => {
-    const { result } = renderHook(() => useInitialDataManager());
+    const { result } = renderHook(() => {
+      return useInitialDataManager();
+    });
 
     const initialData: InitialData = {
       version: '1.0',
@@ -328,8 +350,8 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'nonexistent' }, face: 'right' },
-                { id: 'anchor2', ref: { item: 'item1' }, face: 'left' }
+                { id: 'anchor1', ref: { item: 'nonexistent' } },
+                { id: 'anchor2', ref: { item: 'item1' } }
               ]
             }
           ],
@@ -350,7 +372,9 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
   });
 
   it('should handle validation errors gracefully', () => {
-    const { result } = renderHook(() => useInitialDataManager());
+    const { result } = renderHook(() => {
+      return useInitialDataManager();
+    });
 
     mockModelSchema.safeParse.mockReturnValueOnce({
       success: false,
@@ -373,13 +397,17 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
       result.current.load(initialData);
     });
 
-    expect(window.alert).toHaveBeenCalledWith('There is an error in your model.');
+    expect(window.alert).toHaveBeenCalledWith(
+      'There is an error in your model.'
+    );
     expect(mockModelStore.actions.set).not.toHaveBeenCalled();
     expect(result.current.isReady).toBe(false);
   });
 
   it('should preserve connectors with all valid references', () => {
-    const { result } = renderHook(() => useInitialDataManager());
+    const { result } = renderHook(() => {
+      return useInitialDataManager();
+    });
 
     const initialData: InitialData = {
       version: '1.0',
@@ -401,15 +429,15 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'item1' }, face: 'right' },
-                { id: 'anchor2', ref: { item: 'item2' }, face: 'left' }
+                { id: 'anchor1', ref: { item: 'item1' } },
+                { id: 'anchor2', ref: { item: 'item2' } }
               ]
             },
             {
               id: 'connector2',
               anchors: [
-                { id: 'anchor3', ref: { item: 'item2' }, face: 'right' },
-                { id: 'anchor4', ref: { item: 'item3' }, face: 'left' }
+                { id: 'anchor3', ref: { item: 'item2' } },
+                { id: 'anchor4', ref: { item: 'item3' } }
               ]
             }
           ],

@@ -6,15 +6,19 @@ import { useScene } from 'src/hooks/useScene';
 export const ConnectorEmptySpaceTooltip = () => {
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const mode = useUiStateStore((state) => state.mode);
-  const mouse = useUiStateStore((state) => state.mouse);
+  const mode = useUiStateStore((state) => {
+    return state.mode;
+  });
+  const mouse = useUiStateStore((state) => {
+    return state.mouse;
+  });
   const { connectors } = useScene();
   const previousModeRef = useRef(mode);
   const shownForConnectorRef = useRef<string | null>(null);
 
   useEffect(() => {
     const previousMode = previousModeRef.current;
-    
+
     // Detect when we transition from isConnecting to not isConnecting (connection completed)
     if (
       mode.type === 'CONNECTOR' &&
@@ -25,13 +29,18 @@ export const ConnectorEmptySpaceTooltip = () => {
     ) {
       // Find the most recently created connector
       const latestConnector = connectors[connectors.length - 1];
-      
-      if (latestConnector && latestConnector.id !== shownForConnectorRef.current) {
+
+      if (
+        latestConnector &&
+        latestConnector.id !== shownForConnectorRef.current
+      ) {
         // Check if either end is connected to empty space (tile reference)
         const hasEmptySpaceConnection = latestConnector.anchors.some(
-          anchor => anchor.ref.tile && !anchor.ref.item
+          (anchor) => {
+            return anchor.ref.tile && !anchor.ref.item;
+          }
         );
-        
+
         if (hasEmptySpaceConnection) {
           // Show tooltip near the mouse position
           setTooltipPosition({
@@ -40,22 +49,24 @@ export const ConnectorEmptySpaceTooltip = () => {
           });
           setShowTooltip(true);
           shownForConnectorRef.current = latestConnector.id;
-          
+
           // Auto-hide after 12 seconds
           const timer = setTimeout(() => {
             setShowTooltip(false);
           }, 12000);
-          
-          return () => clearTimeout(timer);
+
+          return () => {
+            return clearTimeout(timer);
+          };
         }
       }
     }
-    
+
     // Hide tooltip when switching away from connector mode
     if (mode.type !== 'CONNECTOR') {
       setShowTooltip(false);
     }
-    
+
     previousModeRef.current = mode;
   }, [mode, connectors, mouse.position.screen]);
 
@@ -88,7 +99,9 @@ export const ConnectorEmptySpaceTooltip = () => {
           }}
         >
           <Typography variant="body2">
-            To connect this connector to a node, <strong>left-click on the end of the connector</strong> and drag it to the desired node.
+            To connect this connector to a node,{' '}
+            <strong>left-click on the end of the connector</strong> and drag it
+            to the desired node.
           </Typography>
         </Paper>
       </Box>

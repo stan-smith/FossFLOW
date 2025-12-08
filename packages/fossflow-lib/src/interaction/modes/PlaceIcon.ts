@@ -1,6 +1,10 @@
 import { produce } from 'immer';
 import { ModeActions } from 'src/types';
-import { generateId, getItemAtTile, findNearestUnoccupiedTile } from 'src/utils';
+import {
+  generateId,
+  getItemAtTile,
+  findNearestUnoccupiedTile
+} from 'src/utils';
 import { VIEW_ITEM_DEFAULTS } from 'src/config';
 
 export const PlaceIcon: ModeActions = {

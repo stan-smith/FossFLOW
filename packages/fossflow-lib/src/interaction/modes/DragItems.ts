@@ -18,12 +18,16 @@ const dragItems = (
   scene: ReturnType<typeof useScene>
 ) => {
   // Separate items from other draggable elements
-  const itemRefs = items.filter(item => item.type === 'ITEM');
-  const otherRefs = items.filter(item => item.type !== 'ITEM');
+  const itemRefs = items.filter((item) => {
+    return item.type === 'ITEM';
+  });
+  const otherRefs = items.filter((item) => {
+    return item.type !== 'ITEM';
+  });
 
   // If there are items being dragged, find nearest unoccupied tiles for them
   if (itemRefs.length > 0) {
-    const itemsWithTargets = itemRefs.map(item => {
+    const itemsWithTargets = itemRefs.map((item) => {
       const node = getItemByIdOrThrow(scene.items, item.id).value;
       return {
         id: item.id,
@@ -35,7 +39,9 @@ const dragItems = (
     const newTiles = findNearestUnoccupiedTilesForGroup(
       itemsWithTargets,
       scene,
-      itemRefs.map(item => item.id) // Exclude the items being dragged
+      itemRefs.map((item) => {
+        return item.id;
+      }) // Exclude the items being dragged
     );
 
     // If we found valid positions for all items, move them
@@ -45,9 +51,13 @@ const dragItems = (
         // Chain state updates to avoid race conditions
         let currentState: State | undefined;
         itemRefs.forEach((item, index) => {
-          currentState = scene.updateViewItem(item.id, {
-            tile: newTiles[index]
-          }, currentState);
+          currentState = scene.updateViewItem(
+            item.id,
+            {
+              tile: newTiles[index]
+            },
+            currentState
+          );
         });
       });
     }

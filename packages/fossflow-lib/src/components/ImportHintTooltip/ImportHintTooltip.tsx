@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Box, IconButton, Paper, Typography } from '@mui/material';
-import { Close as CloseIcon, FolderOpen as FolderOpenIcon } from '@mui/icons-material';
+import {
+  Close as CloseIcon,
+  FolderOpen as FolderOpenIcon
+} from '@mui/icons-material';
 import { useTranslation } from 'src/stores/localeStore';
 
 const STORAGE_KEY = 'fossflow_import_hint_dismissed';
@@ -57,16 +60,18 @@ export const ImportHintTooltip = () => {
         >
           <CloseIcon fontSize="small" />
         </IconButton>
-        
+
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <FolderOpenIcon sx={{ mr: 1, color: 'info.main' }} />
           <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
             {t('title')}
           </Typography>
         </Box>
-        
+
         <Typography variant="body2" color="text.secondary">
-          {t('instructionStart')} <strong>{t('menuButton')}</strong> {t('instructionMiddle')} <strong>{t('openButton')}</strong> {t('instructionEnd')}
+          {t('instructionStart')} <strong>{t('menuButton')}</strong>{' '}
+          {t('instructionMiddle')} <strong>{t('openButton')}</strong>{' '}
+          {t('instructionEnd')}
         </Typography>
       </Paper>
     </Box>

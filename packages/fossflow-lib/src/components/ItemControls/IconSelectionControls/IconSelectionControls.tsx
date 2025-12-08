@@ -1,5 +1,15 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { Stack, Alert, IconButton as MUIIconButton, Box, Button, FormControlLabel, Checkbox, Typography, Slider } from '@mui/material';
+import {
+  Stack,
+  Alert,
+  IconButton as MUIIconButton,
+  Box,
+  Button,
+  FormControlLabel,
+  Checkbox,
+  Typography,
+  Slider
+} from '@mui/material';
 import { ControlsContainer } from 'src/components/ItemControls/components/ControlsContainer';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useModelStore } from 'src/stores/modelStore';
@@ -8,7 +18,10 @@ import { Section } from 'src/components/ItemControls/components/Section';
 import { Searchbox } from 'src/components/ItemControls/IconSelectionControls/Searchbox';
 import { useIconFiltering } from 'src/hooks/useIconFiltering';
 import { useIconCategories } from 'src/hooks/useIconCategories';
-import { Close as CloseIcon, FileUpload as FileUploadIcon } from '@mui/icons-material';
+import {
+  Close as CloseIcon,
+  FileUpload as FileUploadIcon
+} from '@mui/icons-material';
 import { Icons } from './Icons';
 import { IconGrid } from './IconGrid';
 import { generateId } from 'src/utils';
@@ -20,9 +33,15 @@ export const IconSelectionControls = () => {
   const mode = useUiStateStore((state) => {
     return state.mode;
   });
-  const iconCategoriesState = useUiStateStore((state) => state.iconCategoriesState);
-  const modelActions = useModelStore((state) => state.actions);
-  const currentIcons = useModelStore((state) => state.icons);
+  const iconCategoriesState = useUiStateStore((state) => {
+    return state.iconCategoriesState;
+  });
+  const modelActions = useModelStore((state) => {
+    return state.actions;
+  });
+  const currentIcons = useModelStore((state) => {
+    return state.icons;
+  });
   const { setFilter, filteredIcons, filter } = useIconFiltering();
   const { iconCategories } = useIconCategories();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -32,7 +51,6 @@ export const IconSelectionControls = () => {
     // Check localStorage to see if user has dismissed the alert
     return localStorage.getItem('fossflow-show-drag-hint') !== 'false';
   });
-
 
   const onMouseDown = useCallback(
     (icon: Icon) => {
@@ -56,123 +74,144 @@ export const IconSelectionControls = () => {
     localStorage.setItem('fossflow-show-drag-hint', 'false');
   }, []);
 
-  const handleFileSelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
+  const handleFileSelect = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const files = event.target.files;
+      if (!files || files.length === 0) return;
 
-    const newIcons: Icon[] = [];
-    const existingNames = new Set(currentIcons.map(icon => icon.name.toLowerCase()));
+      const newIcons: Icon[] = [];
+      const existingNames = new Set(
+        currentIcons.map((icon) => {
+          return icon.name.toLowerCase();
+        })
+      );
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      
-      // Check if file is an image
-      if (!file.type.startsWith('image/')) {
-        console.warn(`Skipping non-image file: ${file.name}`);
-        continue;
-      }
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
 
-      // Generate unique name
-      let baseName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
-      let finalName = baseName;
-      let counter = 1;
-      
-      while (existingNames.has(finalName.toLowerCase())) {
-        finalName = `${baseName}_${counter}`;
-        counter++;
-      }
-      
-      existingNames.add(finalName.toLowerCase());
+        // Check if file is an image
+        if (!file.type.startsWith('image/')) {
+          console.warn(`Skipping non-image file: ${file.name}`);
+          continue;
+        }
 
-      // Load and scale the image
-      const dataUrl = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-          const originalDataUrl = e.target?.result as string;
-          
-          // For SVG files, use as-is since they scale naturally
-          if (file.type === 'image/svg+xml') {
-            resolve(originalDataUrl);
-            return;
-          }
-          
-          // For raster images, scale them to fit in a square bounding box
-          const img = new Image();
-          img.onload = () => {
-            // Create canvas for scaling
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            if (!ctx) {
-              resolve(originalDataUrl); // Fallback to original
+        // Generate unique name
+        const baseName = file.name.replace(/\.[^/.]+$/, ''); // Remove extension
+        let finalName = baseName;
+        let counter = 1;
+
+        while (existingNames.has(finalName.toLowerCase())) {
+          finalName = `${baseName}_${counter}`;
+          counter++;
+        }
+
+        existingNames.add(finalName.toLowerCase());
+
+        // Load and scale the image
+        const dataUrl = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = async (e) => {
+            const originalDataUrl = e.target?.result as string;
+
+            // For SVG files, use as-is since they scale naturally
+            if (file.type === 'image/svg+xml') {
+              resolve(originalDataUrl);
               return;
             }
-            
-            // Use a square target size for consistent display
-            // This ensures all icons have the same bounding box
-            const TARGET_SIZE = 128; // Square size for consistency
-            
-            // Calculate scaling to fit within square while maintaining aspect ratio
-            const basScale = Math.min(TARGET_SIZE / img.width, TARGET_SIZE / img.height);
-            // Apply user's custom scaling
-            const finalScale = basScale * (iconScale / 100);
-            const scaledWidth = img.width * finalScale;
-            const scaledHeight = img.height * finalScale;
-            
-            // Set canvas to square size
-            canvas.width = TARGET_SIZE;
-            canvas.height = TARGET_SIZE;
-            
-            // Clear canvas with transparent background
-            ctx.clearRect(0, 0, TARGET_SIZE, TARGET_SIZE);
-            
-            // Calculate position to center the image in the square
-            const x = (TARGET_SIZE - scaledWidth) / 2;
-            const y = (TARGET_SIZE - scaledHeight) / 2;
-            
-            // Enable image smoothing for better quality
-            ctx.imageSmoothingEnabled = true;
-            ctx.imageSmoothingQuality = 'high';
-            
-            // Draw scaled and centered image
-            ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
-            
-            // Convert to data URL (using PNG for transparency)
-            resolve(canvas.toDataURL('image/png'));
+
+            // For raster images, scale them to fit in a square bounding box
+            const img = new Image();
+            img.onload = () => {
+              // Create canvas for scaling
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              if (!ctx) {
+                resolve(originalDataUrl); // Fallback to original
+                return;
+              }
+
+              // Use a square target size for consistent display
+              // This ensures all icons have the same bounding box
+              const TARGET_SIZE = 128; // Square size for consistency
+
+              // Calculate scaling to fit within square while maintaining aspect ratio
+              const basScale = Math.min(
+                TARGET_SIZE / img.width,
+                TARGET_SIZE / img.height
+              );
+              // Apply user's custom scaling
+              const finalScale = basScale * (iconScale / 100);
+              const scaledWidth = img.width * finalScale;
+              const scaledHeight = img.height * finalScale;
+
+              // Set canvas to square size
+              canvas.width = TARGET_SIZE;
+              canvas.height = TARGET_SIZE;
+
+              // Clear canvas with transparent background
+              ctx.clearRect(0, 0, TARGET_SIZE, TARGET_SIZE);
+
+              // Calculate position to center the image in the square
+              const x = (TARGET_SIZE - scaledWidth) / 2;
+              const y = (TARGET_SIZE - scaledHeight) / 2;
+
+              // Enable image smoothing for better quality
+              ctx.imageSmoothingEnabled = true;
+              ctx.imageSmoothingQuality = 'high';
+
+              // Draw scaled and centered image
+              ctx.drawImage(img, x, y, scaledWidth, scaledHeight);
+
+              // Convert to data URL (using PNG for transparency)
+              resolve(canvas.toDataURL('image/png'));
+            };
+            img.onerror = () => {
+              return reject(new Error('Failed to load image'));
+            };
+            img.src = originalDataUrl;
           };
-          img.onerror = () => reject(new Error('Failed to load image'));
-          img.src = originalDataUrl;
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
 
-      newIcons.push({
-        id: generateId(),
-        name: finalName,
-        url: dataUrl,
-        collection: 'imported',
-        isIsometric: treatAsIsometric  // Use user's preference
-      });
-    }
-
-    if (newIcons.length > 0) {
-      // Add new icons to the model
-      const updatedIcons = [...currentIcons, ...newIcons];
-      modelActions.set({ icons: updatedIcons });
-      
-      // Update icon categories to include imported collection
-      const hasImported = iconCategoriesState.some(cat => cat.id === 'imported');
-      if (!hasImported) {
-        uiStateActions.setIconCategoriesState([
-          ...iconCategoriesState,
-          { id: 'imported', isExpanded: true }
-        ]);
+        newIcons.push({
+          id: generateId(),
+          name: finalName,
+          url: dataUrl,
+          collection: 'imported',
+          isIsometric: treatAsIsometric // Use user's preference
+        });
       }
-    }
 
-    // Reset input
-    event.target.value = '';
-  }, [currentIcons, modelActions, iconCategoriesState, uiStateActions, treatAsIsometric, iconScale]);
+      if (newIcons.length > 0) {
+        // Add new icons to the model
+        const updatedIcons = [...currentIcons, ...newIcons];
+        modelActions.set({ icons: updatedIcons });
+
+        // Update icon categories to include imported collection
+        const hasImported = iconCategoriesState.some((cat) => {
+          return cat.id === 'imported';
+        });
+        if (!hasImported) {
+          uiStateActions.setIconCategoriesState([
+            ...iconCategoriesState,
+            { id: 'imported', isExpanded: true }
+          ]);
+        }
+      }
+
+      // Reset input
+      event.target.value = '';
+    },
+    [
+      currentIcons,
+      modelActions,
+      iconCategoriesState,
+      uiStateActions,
+      treatAsIsometric,
+      iconScale
+    ]
+  );
 
   return (
     <ControlsContainer
@@ -220,14 +259,16 @@ export const IconSelectionControls = () => {
       {!filteredIcons && (
         <Icons iconCategories={iconCategories} onMouseDown={onMouseDown} />
       )}
-      
+
       <Section>
-        <Box sx={{ 
-          border: '1px solid #e0e0e0', 
-          borderRadius: 1, 
-          p: 1.5,
-          backgroundColor: '#f5f5f5'
-        }}>
+        <Box
+          sx={{
+            border: '1px solid #e0e0e0',
+            borderRadius: 1,
+            p: 1.5,
+            backgroundColor: '#f5f5f5'
+          }}
+        >
           <Button
             variant="outlined"
             startIcon={<FileUploadIcon />}
@@ -240,7 +281,9 @@ export const IconSelectionControls = () => {
             control={
               <Checkbox
                 checked={treatAsIsometric}
-                onChange={(e) => setTreatAsIsometric(e.target.checked)}
+                onChange={(e) => {
+                  return setTreatAsIsometric(e.target.checked);
+                }}
                 size="small"
               />
             }
@@ -251,11 +294,15 @@ export const IconSelectionControls = () => {
             }
             sx={{ mt: 1, ml: 0 }}
           />
-          <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mt: 0.5 }}>
+          <Typography
+            variant="caption"
+            color="text.secondary"
+            sx={{ display: 'block', mt: 0.5 }}
+          >
             Uncheck for flat icons (logos, UI elements)
           </Typography>
         </Box>
-        
+
         <input
           ref={fileInputRef}
           type="file"
@@ -264,10 +311,10 @@ export const IconSelectionControls = () => {
           style={{ display: 'none' }}
           onChange={handleFileSelect}
         />
-        
+
         {showAlert && (
-          <Alert 
-            severity="info" 
+          <Alert
+            severity="info"
             onClose={dismissAlert}
             sx={{ cursor: 'pointer', mt: 1 }}
           >

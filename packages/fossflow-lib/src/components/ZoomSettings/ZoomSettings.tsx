@@ -11,8 +11,12 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useLocale } from 'src/stores/localeStore';
 
 export const ZoomSettings = () => {
-  const zoomSettings = useUiStateStore((state) => state.zoomSettings);
-  const setZoomSettings = useUiStateStore((state) => state.actions.setZoomSettings);
+  const zoomSettings = useUiStateStore((state) => {
+    return state.zoomSettings;
+  });
+  const setZoomSettings = useUiStateStore((state) => {
+    return state.actions.setZoomSettings;
+  });
   const locale = useLocale();
 
   const handleToggle = (setting: keyof typeof zoomSettings) => {
@@ -34,7 +38,9 @@ export const ZoomSettings = () => {
             control={
               <Switch
                 checked={zoomSettings.zoomToCursor}
-                onChange={() => handleToggle('zoomToCursor')}
+                onChange={() => {
+                  return handleToggle('zoomToCursor');
+                }}
               />
             }
             label={

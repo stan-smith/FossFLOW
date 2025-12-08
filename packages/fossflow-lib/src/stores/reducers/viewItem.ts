@@ -82,14 +82,20 @@ export const deleteViewItem = (
     );
 
     // Remove connectors that reference the deleted item
-    if (connectorsToDelete.length > 0 && draft.model.views[view.index].connectors) {
-      draft.model.views[view.index].connectors =
-        draft.model.views[view.index].connectors?.filter(
-          connector => !connectorsToDelete.some(c => c.id === connector.id)
-        );
+    if (
+      connectorsToDelete.length > 0 &&
+      draft.model.views[view.index].connectors
+    ) {
+      draft.model.views[view.index].connectors = draft.model.views[
+        view.index
+      ].connectors?.filter((connector) => {
+        return !connectorsToDelete.some((c) => {
+          return c.id === connector.id;
+        });
+      });
 
       // Also remove from scene
-      connectorsToDelete.forEach(connector => {
+      connectorsToDelete.forEach((connector) => {
         delete draft.scene.connectors[connector.id];
       });
     }

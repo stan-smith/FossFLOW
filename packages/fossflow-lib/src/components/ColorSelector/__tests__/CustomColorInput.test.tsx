@@ -6,13 +6,28 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from 'src/styles/theme';
 
 // Mock ColorPicker since we don't need to test external library behavior
-jest.mock('../ColorPicker', () => ({
-  ColorPicker: ({ value, onChange }: { value: string; onChange: (color: string) => void }) => (
-    <div data-testid="color-picker" onClick={() => onChange('#FFFFFF')}>
-      {value}
-    </div>
-  )
-}));
+jest.mock('../ColorPicker', () => {
+  return {
+    ColorPicker: ({
+      value,
+      onChange
+    }: {
+      value: string;
+      onChange: (color: string) => void;
+    }) => {
+      return (
+        <div
+          data-testid="color-picker"
+          onClick={() => {
+            return onChange('#FFFFFF');
+          }}
+        >
+          {value}
+        </div>
+      );
+    }
+  };
+});
 
 describe('CustomColorInput', () => {
   const defaultProps = {
@@ -42,7 +57,7 @@ describe('CustomColorInput', () => {
   it('updates input value on change', () => {
     renderComponent();
     const input = screen.getByRole('textbox') as HTMLInputElement;
-    
+
     fireEvent.change(input, { target: { value: '#00FF00' } });
     expect(input.value).toBe('#00FF00');
   });
@@ -51,7 +66,7 @@ describe('CustomColorInput', () => {
     const onChange = jest.fn();
     renderComponent({ onChange });
     const input = screen.getByRole('textbox');
-    
+
     fireEvent.change(input, { target: { value: '#00FF00' } });
     expect(onChange).toHaveBeenCalledWith('#00FF00');
   });
@@ -60,7 +75,7 @@ describe('CustomColorInput', () => {
     const onChange = jest.fn();
     renderComponent({ onChange });
     const input = screen.getByRole('textbox');
-    
+
     fireEvent.change(input, { target: { value: 'invalid' } });
     expect(onChange).not.toHaveBeenCalled();
   });
@@ -68,10 +83,10 @@ describe('CustomColorInput', () => {
   it('reverts to prop value on blur if input is invalid', () => {
     renderComponent({ value: '#FF0000' });
     const input = screen.getByRole('textbox') as HTMLInputElement;
-    
+
     fireEvent.change(input, { target: { value: 'invalid' } });
     fireEvent.blur(input);
-    
+
     expect(input.value).toBe('#FF0000');
   });
 
@@ -79,10 +94,10 @@ describe('CustomColorInput', () => {
     const onChange = jest.fn();
     renderComponent({ value: '#FF0000', onChange });
     const input = screen.getByRole('textbox') as HTMLInputElement;
-    
+
     fireEvent.change(input, { target: { value: '#00FF00' } });
     fireEvent.blur(input);
-    
+
     expect(input.value).toBe('#00FF00');
     expect(onChange).toHaveBeenCalledWith('#00FF00');
   });
@@ -105,9 +120,11 @@ describe('CustomColorInput', () => {
       // Mock EyeDropper API
       Object.defineProperty(window, 'EyeDropper', {
         writable: true,
-        value: jest.fn().mockImplementation(() => ({
-          open: jest.fn().mockResolvedValue({ sRGBHex: '#123456' })
-        }))
+        value: jest.fn().mockImplementation(() => {
+          return {
+            open: jest.fn().mockResolvedValue({ sRGBHex: '#123456' })
+          };
+        })
       });
     });
 
@@ -118,13 +135,15 @@ describe('CustomColorInput', () => {
 
     it('renders eyedropper button when API is supported', () => {
       renderComponent();
-      expect(screen.getByRole('button', { name: /pick color/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /pick color/i })
+      ).toBeInTheDocument();
     });
 
     it('calls onChange with picked color', async () => {
       const onChange = jest.fn();
       renderComponent({ onChange });
-      
+
       const button = screen.getByRole('button', { name: /pick color/i });
       await act(async () => {
         fireEvent.click(button);
@@ -136,12 +155,14 @@ describe('CustomColorInput', () => {
     it('handles EyeDropper cancellation gracefully', async () => {
       const onChange = jest.fn();
       // Mock rejection (user cancelled)
-      (window.EyeDropper as any).mockImplementation(() => ({
-        open: jest.fn().mockRejectedValue(new Error('Canceled'))
-      }));
+      (window.EyeDropper as any).mockImplementation(() => {
+        return {
+          open: jest.fn().mockRejectedValue(new Error('Canceled'))
+        };
+      });
 
       renderComponent({ onChange });
-      
+
       const button = screen.getByRole('button', { name: /pick color/i });
       await act(async () => {
         fireEvent.click(button);
@@ -159,7 +180,9 @@ describe('CustomColorInput', () => {
 
     it('does not render eyedropper button when API is not supported', () => {
       renderComponent();
-      expect(screen.queryByRole('button', { name: /pick color/i })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: /pick color/i })
+      ).not.toBeInTheDocument();
     });
   });
 });

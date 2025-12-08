@@ -9,15 +9,15 @@ import ruRU from './ru-RU';
 import plPL from './pl-PL';
 
 const locales = {
-    'en-US': enUS,
-    'zh-CN': zhCN,
-    'es-ES': esES,
-    'pt-BR': ptBR,
-    'fr-FR': frFR,
-    'hi-IN': hiIN,
-    'bn-BD': bnBD,
-    'ru-RU': ruRU,
-    'pl-PL': plPL
+  'en-US': enUS,
+  'zh-CN': zhCN,
+  'es-ES': esES,
+  'pt-BR': ptBR,
+  'fr-FR': frFR,
+  'hi-IN': hiIN,
+  'bn-BD': bnBD,
+  'ru-RU': ruRU,
+  'pl-PL': plPL
 };
 
 export default locales;

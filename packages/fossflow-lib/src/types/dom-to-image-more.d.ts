@@ -17,7 +17,10 @@ declare module 'dom-to-image-more' {
   export function toJpeg(node: Node, options?: Options): Promise<string>;
   export function toSvg(node: Node, options?: Options): Promise<string>;
   export function toBlob(node: Node, options?: Options): Promise<Blob>;
-  export function toPixelData(node: Node, options?: Options): Promise<Uint8ClampedArray>;
+  export function toPixelData(
+    node: Node,
+    options?: Options
+  ): Promise<Uint8ClampedArray>;
 
   const domtoimage: {
     toPng: typeof toPng;

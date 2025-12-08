@@ -70,15 +70,17 @@ export const LazyLoadingWelcomeNotification = () => {
           {t('message')}
         </Typography>
 
-        <Box sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 1,
-          mb: 2,
-          p: 1.5,
-          bgcolor: 'action.hover',
-          borderRadius: 1
-        }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            mb: 2,
+            p: 1.5,
+            bgcolor: 'action.hover',
+            borderRadius: 1
+          }}
+        >
           <MenuIcon sx={{ color: 'primary.main' }} />
           <Typography variant="body2" sx={{ fontWeight: 500 }}>
             {t('configPath')} <strong>{t('configPath2')}</strong>

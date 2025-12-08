@@ -28,7 +28,6 @@ export const ConnectorLabel = memo(({ connector: sceneConnector }: Props) => {
   const labelPositions = useMemo(() => {
     if (!connector) return [];
 
-
     return labels
       .map((label) => {
         const tileIndex = getLabelTileIndex(

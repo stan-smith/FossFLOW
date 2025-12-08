@@ -12,7 +12,14 @@ interface Props {
   onHover?: (index: number) => void;
 }
 
-export const IconGrid = ({ icons, onMouseDown, onClick, onDoubleClick, hoveredIndex, onHover }: Props) => {
+export const IconGrid = ({
+  icons,
+  onMouseDown,
+  onClick,
+  onDoubleClick,
+  hoveredIndex,
+  onHover
+}: Props) => {
   return (
     <Grid container>
       {icons.map((icon, index) => {
@@ -25,7 +32,9 @@ export const IconGrid = ({ icons, onMouseDown, onClick, onDoubleClick, hoveredIn
                 borderRadius: 1,
                 transition: 'background-color 0.2s'
               }}
-              onMouseEnter={() => onHover?.(index)}
+              onMouseEnter={() => {
+                return onHover?.(index);
+              }}
             >
               <Icon
                 icon={icon}

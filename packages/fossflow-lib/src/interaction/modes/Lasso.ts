@@ -27,9 +27,9 @@ const getItemsInBounds = (
     ];
 
     // Rectangle is only selected if ALL corners are inside the bounds
-    const allCornersInside = corners.every(corner =>
-      isWithinBounds(corner, [startTile, endTile])
-    );
+    const allCornersInside = corners.every((corner) => {
+      return isWithinBounds(corner, [startTile, endTile]);
+    });
 
     if (allCornersInside) {
       items.push({ type: 'RECTANGLE', id: rectangle.id });

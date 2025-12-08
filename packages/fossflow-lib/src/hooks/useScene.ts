@@ -1,11 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
-import {
-  ModelItem,
-  ViewItem,
-  Connector,
-  TextBox,
-  Rectangle
-} from 'src/types';
+import { ModelItem, ViewItem, Connector, TextBox, Rectangle } from 'src/types';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useModelStore } from 'src/stores/modelStore';
 import { useSceneStore } from 'src/stores/sceneStore';
@@ -226,7 +220,8 @@ export const useScene = () => {
 
   const updateViewItem = useCallback(
     (id: string, updates: Partial<ViewItem>, currentState?: State) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return getState();
+      if (!model?.actions || !scene?.actions || !currentViewId)
+        return getState();
 
       if (!transactionInProgress.current) {
         saveToHistoryBeforeChange();

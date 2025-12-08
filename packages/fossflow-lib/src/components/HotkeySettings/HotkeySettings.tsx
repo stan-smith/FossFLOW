@@ -19,8 +19,12 @@ import { HOTKEY_PROFILES, HotkeyProfile } from 'src/config/hotkeys';
 import { useTranslation } from 'src/stores/localeStore';
 
 export const HotkeySettings = () => {
-  const hotkeyProfile = useUiStateStore((state) => state.hotkeyProfile);
-  const setHotkeyProfile = useUiStateStore((state) => state.actions.setHotkeyProfile);
+  const hotkeyProfile = useUiStateStore((state) => {
+    return state.hotkeyProfile;
+  });
+  const setHotkeyProfile = useUiStateStore((state) => {
+    return state.actions.setHotkeyProfile;
+  });
   const { t } = useTranslation();
 
   const currentMapping = HOTKEY_PROFILES[hotkeyProfile];
@@ -29,8 +33,14 @@ export const HotkeySettings = () => {
     { name: t('settings.hotkeys.toolSelect'), key: currentMapping.select },
     { name: t('settings.hotkeys.toolPan'), key: currentMapping.pan },
     { name: t('settings.hotkeys.toolAddItem'), key: currentMapping.addItem },
-    { name: t('settings.hotkeys.toolRectangle'), key: currentMapping.rectangle },
-    { name: t('settings.hotkeys.toolConnector'), key: currentMapping.connector },
+    {
+      name: t('settings.hotkeys.toolRectangle'),
+      key: currentMapping.rectangle
+    },
+    {
+      name: t('settings.hotkeys.toolConnector'),
+      key: currentMapping.connector
+    },
     { name: t('settings.hotkeys.toolText'), key: currentMapping.text }
   ];
 
@@ -45,10 +55,16 @@ export const HotkeySettings = () => {
         <Select
           value={hotkeyProfile}
           label={t('settings.hotkeys.profile')}
-          onChange={(e) => setHotkeyProfile(e.target.value as HotkeyProfile)}
+          onChange={(e) => {
+            return setHotkeyProfile(e.target.value as HotkeyProfile);
+          }}
         >
-          <MenuItem value="qwerty">{t('settings.hotkeys.profileQwerty')}</MenuItem>
-          <MenuItem value="smnrct">{t('settings.hotkeys.profileSmnrct')}</MenuItem>
+          <MenuItem value="qwerty">
+            {t('settings.hotkeys.profileQwerty')}
+          </MenuItem>
+          <MenuItem value="smnrct">
+            {t('settings.hotkeys.profileSmnrct')}
+          </MenuItem>
           <MenuItem value="none">{t('settings.hotkeys.profileNone')}</MenuItem>
         </Select>
       </FormControl>
@@ -63,22 +79,31 @@ export const HotkeySettings = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {tools.map((tool) => (
-                <TableRow key={tool.name}>
-                  <TableCell>{tool.name}</TableCell>
-                  <TableCell>
-                    <Typography variant="body2" sx={{ fontFamily: 'monospace' }}>
-                      {tool.key ? tool.key.toUpperCase() : '-'}
-                    </Typography>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {tools.map((tool) => {
+                return (
+                  <TableRow key={tool.name}>
+                    <TableCell>{tool.name}</TableCell>
+                    <TableCell>
+                      <Typography
+                        variant="body2"
+                        sx={{ fontFamily: 'monospace' }}
+                      >
+                        {tool.key ? tool.key.toUpperCase() : '-'}
+                      </Typography>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
       )}
 
-      <Typography variant="caption" color="text.secondary" sx={{ mt: 2, display: 'block' }}>
+      <Typography
+        variant="caption"
+        color="text.secondary"
+        sx={{ mt: 2, display: 'block' }}
+      >
         {t('settings.hotkeys.note')}
       </Typography>
     </Box>

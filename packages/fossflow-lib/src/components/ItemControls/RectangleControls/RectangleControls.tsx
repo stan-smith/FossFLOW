@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { Box, IconButton as MUIIconButton, FormControlLabel, Switch, Typography } from '@mui/material';
+import {
+  Box,
+  IconButton as MUIIconButton,
+  FormControlLabel,
+  Switch,
+  Typography
+} from '@mui/material';
 import { useRectangle } from 'src/hooks/useRectangle';
 import { ColorSelector } from 'src/components/ColorSelector/ColorSelector';
 import { ColorPicker } from 'src/components/ColorSelector/ColorPicker';
@@ -21,7 +27,9 @@ export const RectangleControls = ({ id }: Props) => {
   });
   const rectangle = useRectangle(id);
   const { updateRectangle, deleteRectangle } = useScene();
-  const [useCustomColor, setUseCustomColor] = useState(!!rectangle?.customColor);
+  const [useCustomColor, setUseCustomColor] = useState(
+    !!rectangle?.customColor
+  );
 
   // If rectangle doesn't exist, return null
   if (!rectangle) {

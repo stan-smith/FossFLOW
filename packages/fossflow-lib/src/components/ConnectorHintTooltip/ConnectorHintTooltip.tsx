@@ -13,8 +13,12 @@ interface Props {
 export const ConnectorHintTooltip = ({ toolMenuRef }: Props) => {
   const { t } = useTranslation('connectorHintTooltip');
   const theme = useTheme();
-  const connectorInteractionMode = useUiStateStore((state) => state.connectorInteractionMode);
-  const mode = useUiStateStore((state) => state.mode);
+  const connectorInteractionMode = useUiStateStore((state) => {
+    return state.connectorInteractionMode;
+  });
+  const mode = useUiStateStore((state) => {
+    return state.mode;
+  });
   const [isDismissed, setIsDismissed] = useState(true);
   const [position, setPosition] = useState({ top: 16, right: 16 });
 
@@ -85,17 +89,25 @@ export const ConnectorHintTooltip = ({ toolMenuRef }: Props) => {
         >
           <CloseIcon fontSize="small" />
         </IconButton>
-        
+
         <Typography variant="subtitle2" gutterBottom sx={{ fontWeight: 600 }}>
-          {connectorInteractionMode === 'click' ? t('tipCreatingConnectors') : t('tipConnectorTools')}
+          {connectorInteractionMode === 'click'
+            ? t('tipCreatingConnectors')
+            : t('tipConnectorTools')}
         </Typography>
-        
+
         <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
           {connectorInteractionMode === 'click' ? (
             <>
-              <strong>{t('clickInstructionStart')}</strong> {t('clickInstructionMiddle')} <strong>{t('clickInstructionStart')}</strong> {t('clickInstructionEnd')}
+              <strong>{t('clickInstructionStart')}</strong>{' '}
+              {t('clickInstructionMiddle')}{' '}
+              <strong>{t('clickInstructionStart')}</strong>{' '}
+              {t('clickInstructionEnd')}
               {mode.type === 'CONNECTOR' && mode.isConnecting && (
-                <Box component="span" sx={{ display: 'block', mt: 1, color: 'primary.main' }}>
+                <Box
+                  component="span"
+                  sx={{ display: 'block', mt: 1, color: 'primary.main' }}
+                >
                   {t('nowClickTarget')}
                 </Box>
               )}
@@ -106,9 +118,10 @@ export const ConnectorHintTooltip = ({ toolMenuRef }: Props) => {
             </>
           )}
         </Typography>
-        
+
         <Typography variant="body2" color="text.secondary">
-          {t('rerouteStart')} <strong>{t('rerouteMiddle')}</strong> {t('rerouteEnd')}
+          {t('rerouteStart')} <strong>{t('rerouteMiddle')}</strong>{' '}
+          {t('rerouteEnd')}
         </Typography>
       </Paper>
     </Box>

@@ -1,5 +1,19 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
-import { Box, Stack, Typography, Divider, TextField, InputAdornment, Alert } from '@mui/material';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback
+} from 'react';
+import {
+  Box,
+  Stack,
+  Typography,
+  Divider,
+  TextField,
+  InputAdornment,
+  Alert
+} from '@mui/material';
 import { Search as SearchIcon } from '@mui/icons-material';
 import { Icon } from 'src/types';
 import { useModelStore } from 'src/stores/modelStore';
@@ -30,7 +44,9 @@ const getRecentIcons = (): string[] => {
 const addToRecentIcons = (iconId: string) => {
   const recent = getRecentIcons();
   // Remove if already exists and add to front
-  const filtered = recent.filter(id => id !== iconId);
+  const filtered = recent.filter((id) => {
+    return id !== iconId;
+  });
   const updated = [iconId, ...filtered].slice(0, MAX_RECENT_ICONS);
   localStorage.setItem(RECENT_ICONS_KEY, JSON.stringify(updated));
 };
@@ -40,35 +56,51 @@ const escapeRegex = (str: string): string => {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
 
-export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Props) => {
+export const QuickIconSelector = ({
+  onIconSelected,
+  onClose,
+  currentIconId
+}: Props) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [hoveredIndex, setHoveredIndex] = useState(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  
-  const icons = useModelStore((state) => state.icons);
+
+  const icons = useModelStore((state) => {
+    return state.icons;
+  });
   const { iconCategories } = useIconCategories();
 
   // Get recently used icons
-  const recentIconIds = useMemo(() => getRecentIcons(), []);
+  const recentIconIds = useMemo(() => {
+    return getRecentIcons();
+  }, []);
   const recentIcons = useMemo(() => {
     return recentIconIds
-      .map(id => icons.find(icon => icon.id === id))
+      .map((id) => {
+        return icons.find((icon) => {
+          return icon.id === id;
+        });
+      })
       .filter(Boolean) as Icon[];
   }, [recentIconIds, icons]);
 
   // Filter icons based on search
   const filteredIcons = useMemo(() => {
     if (!searchTerm) return null;
-    
+
     try {
       // Escape special regex characters to prevent errors
       const escapedSearch = escapeRegex(searchTerm);
       const regex = new RegExp(escapedSearch, 'gi');
-      return icons.filter(icon => regex.test(icon.name));
+      return icons.filter((icon) => {
+        return regex.test(icon.name);
+      });
     } catch (e) {
       // If regex still fails somehow, fall back to simple includes
       const lowerSearch = searchTerm.toLowerCase();
-      return icons.filter(icon => icon.name.toLowerCase().includes(lowerSearch));
+      return icons.filter((icon) => {
+        return icon.name.toLowerCase().includes(lowerSearch);
+      });
     }
   }, [searchTerm, icons]);
 
@@ -82,34 +114,34 @@ export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Pr
     const handleKeyDown = (e: KeyboardEvent) => {
       // Only handle navigation if we're showing search results
       if (!filteredIcons || filteredIcons.length === 0) return;
-      
+
       const itemsPerRow = 4; // Adjust based on your grid layout
       const totalItems = filteredIcons.length;
 
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
-          setHoveredIndex(prev => 
-            Math.min(prev + itemsPerRow, totalItems - 1)
-          );
+          setHoveredIndex((prev) => {
+            return Math.min(prev + itemsPerRow, totalItems - 1);
+          });
           break;
         case 'ArrowUp':
           e.preventDefault();
-          setHoveredIndex(prev => 
-            Math.max(prev - itemsPerRow, 0)
-          );
+          setHoveredIndex((prev) => {
+            return Math.max(prev - itemsPerRow, 0);
+          });
           break;
         case 'ArrowLeft':
           e.preventDefault();
-          setHoveredIndex(prev => 
-            prev > 0 ? prev - 1 : prev
-          );
+          setHoveredIndex((prev) => {
+            return prev > 0 ? prev - 1 : prev;
+          });
           break;
         case 'ArrowRight':
           e.preventDefault();
-          setHoveredIndex(prev => 
-            prev < totalItems - 1 ? prev + 1 : prev
-          );
+          setHoveredIndex((prev) => {
+            return prev < totalItems - 1 ? prev + 1 : prev;
+          });
           break;
         case 'Enter':
           e.preventDefault();
@@ -125,18 +157,26 @@ export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Pr
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      return window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [filteredIcons, hoveredIndex, onClose]);
 
-  const handleIconSelect = useCallback((icon: Icon) => {
-    addToRecentIcons(icon.id);
-    onIconSelected(icon);
-  }, [onIconSelected]);
+  const handleIconSelect = useCallback(
+    (icon: Icon) => {
+      addToRecentIcons(icon.id);
+      onIconSelected(icon);
+    },
+    [onIconSelected]
+  );
 
-  const handleIconDoubleClick = useCallback((icon: Icon) => {
-    handleIconSelect(icon);
-    onClose?.();
-  }, [handleIconSelect, onClose]);
+  const handleIconDoubleClick = useCallback(
+    (icon: Icon) => {
+      handleIconSelect(icon);
+      onClose?.();
+    },
+    [handleIconSelect, onClose]
+  );
 
   return (
     <Box>
@@ -202,7 +242,9 @@ export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Pr
               </Section>
             ) : (
               <Section>
-                <Alert severity="info">No icons found matching "{searchTerm}"</Alert>
+                <Alert severity="info">
+                  No icons found matching "{searchTerm}"
+                </Alert>
               </Section>
             )}
           </Box>
@@ -223,10 +265,9 @@ export const QuickIconSelector = ({ onIconSelected, onClose, currentIconId }: Pr
       {/* Help Text */}
       <Section sx={{ py: 1 }}>
         <Typography variant="caption" color="text.secondary">
-          {searchTerm 
+          {searchTerm
             ? 'Use arrow keys to navigate • Enter to select • Double-click to select and close'
-            : 'Type to search • Click category to expand • Double-click to select and close'
-          }
+            : 'Type to search • Click category to expand • Double-click to select and close'}
         </Typography>
       </Section>
     </Box>

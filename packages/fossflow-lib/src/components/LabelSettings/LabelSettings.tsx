@@ -1,14 +1,14 @@
 import React from 'react';
-import {
-  Box,
-  Typography,
-  Slider
-} from '@mui/material';
+import { Box, Typography, Slider } from '@mui/material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 
 export const LabelSettings = () => {
-  const labelSettings = useUiStateStore((state) => state.labelSettings);
-  const setLabelSettings = useUiStateStore((state) => state.actions.setLabelSettings);
+  const labelSettings = useUiStateStore((state) => {
+    return state.labelSettings;
+  });
+  const setLabelSettings = useUiStateStore((state) => {
+    return state.actions.setLabelSettings;
+  });
 
   const handlePaddingChange = (_event: Event, value: number | number[]) => {
     setLabelSettings({
@@ -27,7 +27,11 @@ export const LabelSettings = () => {
         <Typography variant="body1" gutterBottom>
           Expand Button Padding
         </Typography>
-        <Typography variant="caption" color="text.secondary" sx={{ mb: 1, display: 'block' }}>
+        <Typography
+          variant="caption"
+          color="text.secondary"
+          sx={{ mb: 1, display: 'block' }}
+        >
           Bottom padding when expand button is visible (prevents text overlap)
         </Typography>
         <Slider

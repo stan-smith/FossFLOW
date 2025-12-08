@@ -5,22 +5,27 @@ import { useScene } from 'src/hooks/useScene';
 import { SlimMouseEvent } from 'src/types';
 
 export const usePanHandlers = () => {
-  const uiState = useUiStateStore((state) => state);
+  const uiState = useUiStateStore((state) => {
+    return state;
+  });
   const scene = useScene();
   const isPanningRef = useRef(false);
   const panMethodRef = useRef<string | null>(null);
 
   // Helper to start panning
-  const startPan = useCallback((method: string) => {
-    if (uiState.mode.type !== 'PAN') {
-      isPanningRef.current = true;
-      panMethodRef.current = method;
-      uiState.actions.setMode({
-        type: 'PAN',
-        showCursor: false
-      });
-    }
-  }, [uiState.mode.type, uiState.actions]);
+  const startPan = useCallback(
+    (method: string) => {
+      if (uiState.mode.type !== 'PAN') {
+        isPanningRef.current = true;
+        panMethodRef.current = method;
+        uiState.actions.setMode({
+          type: 'PAN',
+          showCursor: false
+        });
+      }
+    },
+    [uiState.mode.type, uiState.actions]
+  );
 
   // Helper to end panning
   const endPan = useCallback(() => {
@@ -36,72 +41,81 @@ export const usePanHandlers = () => {
   }, [uiState.actions]);
 
   // Check if click is on empty area
-  const isEmptyArea = useCallback((e: SlimMouseEvent): boolean => {
-    if (!uiState.rendererEl || e.target !== uiState.rendererEl) return false;
-    
-    const itemAtTile = getItemAtTile({
-      tile: uiState.mouse.position.tile,
-      scene
-    });
-    
-    return !itemAtTile;
-  }, [uiState.rendererEl, uiState.mouse.position.tile, scene]);
+  const isEmptyArea = useCallback(
+    (e: SlimMouseEvent): boolean => {
+      if (!uiState.rendererEl || e.target !== uiState.rendererEl) return false;
+
+      const itemAtTile = getItemAtTile({
+        tile: uiState.mouse.position.tile,
+        scene
+      });
+
+      return !itemAtTile;
+    },
+    [uiState.rendererEl, uiState.mouse.position.tile, scene]
+  );
 
   // Enhanced mouse down handler
-  const handleMouseDown = useCallback((e: SlimMouseEvent): boolean => {
-    const panSettings = uiState.panSettings;
-    
-    // Check for the specific button that was pressed and only handle that one
-    // This fixes the issue where enabling both middle and right click causes neither to work
-    
-    // Middle click pan (button 1)
-    if (e.button === 1 && panSettings.middleClickPan) {
-      e.preventDefault();
-      startPan('middle');
-      return true;
-    }
-    
-    // Right click pan (button 2)
-    if (e.button === 2 && panSettings.rightClickPan) {
-      e.preventDefault();
-      startPan('right');
-      return true;
-    }
-    
-    // Left button (0) with modifiers or empty area
-    if (e.button === 0) {
-      // Ctrl + click pan
-      if (panSettings.ctrlClickPan && e.ctrlKey) {
+  const handleMouseDown = useCallback(
+    (e: SlimMouseEvent): boolean => {
+      const panSettings = uiState.panSettings;
+
+      // Check for the specific button that was pressed and only handle that one
+      // This fixes the issue where enabling both middle and right click causes neither to work
+
+      // Middle click pan (button 1)
+      if (e.button === 1 && panSettings.middleClickPan) {
         e.preventDefault();
-        startPan('ctrl');
+        startPan('middle');
         return true;
       }
-      
-      // Alt + click pan
-      if (panSettings.altClickPan && e.altKey) {
+
+      // Right click pan (button 2)
+      if (e.button === 2 && panSettings.rightClickPan) {
         e.preventDefault();
-        startPan('alt');
+        startPan('right');
         return true;
       }
-      
-      // Empty area click pan
-      if (panSettings.emptyAreaClickPan && isEmptyArea(e)) {
-        startPan('empty');
-        return true;
+
+      // Left button (0) with modifiers or empty area
+      if (e.button === 0) {
+        // Ctrl + click pan
+        if (panSettings.ctrlClickPan && e.ctrlKey) {
+          e.preventDefault();
+          startPan('ctrl');
+          return true;
+        }
+
+        // Alt + click pan
+        if (panSettings.altClickPan && e.altKey) {
+          e.preventDefault();
+          startPan('alt');
+          return true;
+        }
+
+        // Empty area click pan
+        if (panSettings.emptyAreaClickPan && isEmptyArea(e)) {
+          startPan('empty');
+          return true;
+        }
       }
-    }
-    
-    return false;
-  }, [uiState.panSettings, startPan, isEmptyArea]);
+
+      return false;
+    },
+    [uiState.panSettings, startPan, isEmptyArea]
+  );
 
   // Enhanced mouse up handler
-  const handleMouseUp = useCallback((e: SlimMouseEvent): boolean => {
-    if (isPanningRef.current) {
-      endPan();
-      return true;
-    }
-    return false;
-  }, [endPan]);
+  const handleMouseUp = useCallback(
+    (e: SlimMouseEvent): boolean => {
+      if (isPanningRef.current) {
+        endPan();
+        return true;
+      }
+      return false;
+    },
+    [endPan]
+  );
 
   // Keyboard pan handler
   useEffect(() => {
@@ -177,10 +191,10 @@ export const usePanHandlers = () => {
 
       // Apply pan if any movement
       if (dx !== 0 || dy !== 0) {
-        const newPosition = CoordsUtils.add(
-          uiState.scroll.position,
-          { x: dx, y: dy }
-        );
+        const newPosition = CoordsUtils.add(uiState.scroll.position, {
+          x: dx,
+          y: dy
+        });
         uiState.actions.setScroll({
           position: newPosition,
           offset: uiState.scroll.offset
@@ -189,7 +203,9 @@ export const usePanHandlers = () => {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    return () => {
+      return window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [uiState.panSettings, uiState.scroll, uiState.actions]);
 
   return {

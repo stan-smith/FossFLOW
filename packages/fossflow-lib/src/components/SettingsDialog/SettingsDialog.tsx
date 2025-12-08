@@ -38,8 +38,12 @@ export interface SettingsDialogProps {
 }
 
 export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
-  const dialog = useUiStateStore((state) => state.dialog);
-  const setDialog = useUiStateStore((state) => state.actions.setDialog);
+  const dialog = useUiStateStore((state) => {
+    return state.dialog;
+  });
+  const setDialog = useUiStateStore((state) => {
+    return state.actions.setDialog;
+  });
   const [tabValue, setTabValue] = useState(0);
   const { t } = useTranslation();
 
@@ -54,12 +58,7 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
   };
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={handleClose}
-      maxWidth="md"
-      fullWidth
-    >
+    <Dialog open={isOpen} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>
         Settings
         <IconButton
@@ -69,14 +68,20 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
             position: 'absolute',
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.grey[500],
+            color: (theme) => {
+              return theme.palette.grey[500];
+            }
           }}
         >
           <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent dividers>
-        <Tabs value={tabValue} onChange={handleTabChange} sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          sx={{ borderBottom: 1, borderColor: 'divider' }}
+        >
           <Tab label={t('settings.hotkeys.title')} />
           <Tab label={t('settings.pan.title')} />
           <Tab label="Zoom" />

@@ -25,7 +25,7 @@ export const syncConnector = (
   const newState = produce(state, (draft) => {
     const view = getItemByIdOrThrow(draft.model.views, viewId);
     const connector = getItemByIdOrThrow(view.value.connectors ?? [], id);
-    
+
     // Skip validation - allow all connectors regardless of position
     try {
       const path = getConnectorPath({
@@ -36,14 +36,14 @@ export const syncConnector = (
       draft.scene.connectors[connector.value.id] = { path };
     } catch (error) {
       // Even if we can't get the path, keep the connector with an empty path
-      draft.scene.connectors[connector.value.id] = { 
-        path: { 
-          tiles: [], 
-          rectangle: { 
-            from: { x: 0, y: 0 }, 
-            to: { x: 0, y: 0 } 
-          } 
-        } 
+      draft.scene.connectors[connector.value.id] = {
+        path: {
+          tiles: [],
+          rectangle: {
+            from: { x: 0, y: 0 },
+            to: { x: 0, y: 0 }
+          }
+        }
       };
     }
   });

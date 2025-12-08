@@ -38,8 +38,12 @@ export const useInitialDataManager = () => {
       // Deep comparison to prevent unnecessary reloads when data hasn't actually changed
       // Skip this check for NON_INTERACTIVE mode (used by export) to ensure proper initialization
       if (prevInitialData.current && editorMode !== 'NON_INTERACTIVE') {
-        const prevConnectors = JSON.stringify(prevInitialData.current.views?.[0]?.connectors || []);
-        const newConnectors = JSON.stringify(_initialData.views?.[0]?.connectors || []);
+        const prevConnectors = JSON.stringify(
+          prevInitialData.current.views?.[0]?.connectors || []
+        );
+        const newConnectors = JSON.stringify(
+          _initialData.views?.[0]?.connectors || []
+        );
         const prevItems = JSON.stringify(prevInitialData.current.items || []);
         const newItems = JSON.stringify(_initialData.items || []);
         const prevIcons = JSON.stringify(prevInitialData.current.icons || []);
@@ -47,8 +51,12 @@ export const useInitialDataManager = () => {
         const prevColors = JSON.stringify(prevInitialData.current.colors || []);
         const newColors = JSON.stringify(_initialData.colors || []);
 
-        if (prevConnectors === newConnectors && prevItems === newItems &&
-            prevIcons === newIcons && prevColors === newColors) {
+        if (
+          prevConnectors === newConnectors &&
+          prevItems === newItems &&
+          prevIcons === newIcons &&
+          prevColors === newColors
+        ) {
           // Data hasn't actually changed, skip reload
           return;
         }
@@ -68,21 +76,25 @@ export const useInitialDataManager = () => {
 
       // Clean up invalid connector references before loading
       const initialData = { ..._initialData };
-      initialData.views = initialData.views.map(view => {
+      initialData.views = initialData.views.map((view) => {
         if (!view.connectors) return view;
 
-        const validConnectors = view.connectors.filter(connector => {
+        const validConnectors = view.connectors.filter((connector) => {
           // Check if all anchors reference existing items
-          const hasValidAnchors = connector.anchors.every(anchor => {
+          const hasValidAnchors = connector.anchors.every((anchor) => {
             if (anchor.ref.item) {
               // Check if the referenced item exists in the view
-              return view.items.some(item => item.id === anchor.ref.item);
+              return view.items.some((item) => {
+                return item.id === anchor.ref.item;
+              });
             }
             return true; // Allow anchors that reference other anchors
           });
 
           if (!hasValidAnchors) {
-            console.warn(`Removing connector ${connector.id} due to invalid item references`);
+            console.warn(
+              `Removing connector ${connector.id} due to invalid item references`
+            );
           }
 
           return hasValidAnchors;

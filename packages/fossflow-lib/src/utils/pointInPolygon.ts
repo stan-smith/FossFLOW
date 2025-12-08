@@ -35,7 +35,9 @@ export const screenPathToTilePath = (
   screenPath: Coords[],
   screenToIsoFn: (coords: Coords) => Coords
 ): Coords[] => {
-  return screenPath.map((point) => screenToIsoFn(point));
+  return screenPath.map((point) => {
+    return screenToIsoFn(point);
+  });
 };
 
 /**

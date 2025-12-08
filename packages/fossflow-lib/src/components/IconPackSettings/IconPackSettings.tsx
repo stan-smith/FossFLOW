@@ -38,12 +38,16 @@ export const IconPackSettings: React.FC<IconPackSettingsProps> = ({
 }) => {
   const { t } = useTranslation();
 
-  const handleLazyLoadingChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLazyLoadingChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     onToggleLazyLoading(event.target.checked);
   };
 
-  const handlePackToggle = (packName: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    onTogglePack(packName, event.target.checked);
+  const handlePackToggle = (packName: string) => {
+    return (event: React.ChangeEvent<HTMLInputElement>) => {
+      onTogglePack(packName, event.target.checked);
+    };
   };
 
   return (
@@ -55,7 +59,13 @@ export const IconPackSettings: React.FC<IconPackSettingsProps> = ({
       {/* Lazy Loading Toggle */}
       <Paper variant="outlined" sx={{ p: 2, mt: 2 }}>
         <FormControl component="fieldset" fullWidth>
-          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}
+          >
             <Box>
               <FormLabel component="legend" sx={{ fontWeight: 600, mb: 0.5 }}>
                 {t('settings.iconPacks.lazyLoading')}
@@ -75,7 +85,13 @@ export const IconPackSettings: React.FC<IconPackSettingsProps> = ({
 
       {/* Core Isoflow (Always Loaded) */}
       <Paper variant="outlined" sx={{ p: 2, mt: 2, bgcolor: 'action.hover' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
           <Box>
             <Typography variant="body1" sx={{ fontWeight: 600 }}>
               {t('settings.iconPacks.coreIsoflow')}
@@ -101,47 +117,68 @@ export const IconPackSettings: React.FC<IconPackSettingsProps> = ({
         )}
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          {packInfo.map((pack) => (
-            <Paper key={pack.name} variant="outlined" sx={{ p: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant="body1" sx={{ fontWeight: 500 }}>
-                    {pack.displayName}
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
-                    {pack.loading && (
-                      <>
-                        <CircularProgress size={14} />
-                        <Typography variant="caption" color="text.secondary">
-                          {t('settings.iconPacks.loading')}
+          {packInfo.map((pack) => {
+            return (
+              <Paper key={pack.name} variant="outlined" sx={{ p: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Box sx={{ flex: 1 }}>
+                    <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                      {pack.displayName}
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 1,
+                        mt: 0.5
+                      }}
+                    >
+                      {pack.loading && (
+                        <>
+                          <CircularProgress size={14} />
+                          <Typography variant="caption" color="text.secondary">
+                            {t('settings.iconPacks.loading')}
+                          </Typography>
+                        </>
+                      )}
+                      {pack.loaded && !pack.loading && (
+                        <Typography variant="caption" color="success.main">
+                          {t('settings.iconPacks.loaded')} •{' '}
+                          {t('settings.iconPacks.iconCount').replace(
+                            '{count}',
+                            String(pack.iconCount)
+                          )}
                         </Typography>
-                      </>
-                    )}
-                    {pack.loaded && !pack.loading && (
-                      <Typography variant="caption" color="success.main">
-                        {t('settings.iconPacks.loaded')} • {t('settings.iconPacks.iconCount').replace('{count}', String(pack.iconCount))}
-                      </Typography>
-                    )}
-                    {pack.error && (
-                      <Typography variant="caption" color="error">
-                        {pack.error}
-                      </Typography>
-                    )}
-                    {!pack.loaded && !pack.loading && !pack.error && (
-                      <Typography variant="caption" color="text.secondary">
-                        {t('settings.iconPacks.notLoaded')}
-                      </Typography>
-                    )}
+                      )}
+                      {pack.error && (
+                        <Typography variant="caption" color="error">
+                          {pack.error}
+                        </Typography>
+                      )}
+                      {!pack.loaded && !pack.loading && !pack.error && (
+                        <Typography variant="caption" color="text.secondary">
+                          {t('settings.iconPacks.notLoaded')}
+                        </Typography>
+                      )}
+                    </Box>
                   </Box>
+                  <Checkbox
+                    checked={
+                      enabledPacks.includes(pack.name) || !lazyLoadingEnabled
+                    }
+                    onChange={handlePackToggle(pack.name)}
+                    disabled={!lazyLoadingEnabled || pack.loading}
+                  />
                 </Box>
-                <Checkbox
-                  checked={enabledPacks.includes(pack.name) || !lazyLoadingEnabled}
-                  onChange={handlePackToggle(pack.name)}
-                  disabled={!lazyLoadingEnabled || pack.loading}
-                />
-              </Box>
-            </Paper>
-          ))}
+              </Paper>
+            );
+          })}
         </Box>
       </Box>
 

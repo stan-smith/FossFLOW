@@ -2,7 +2,11 @@ import { z } from 'zod';
 import { coords, id, constrainedStrings } from './common';
 
 export const connectorStyleOptions = ['SOLID', 'DOTTED', 'DASHED'] as const;
-export const connectorLineTypeOptions = ['SINGLE', 'DOUBLE', 'DOUBLE_WITH_CIRCLE'] as const;
+export const connectorLineTypeOptions = [
+  'SINGLE',
+  'DOUBLE',
+  'DOUBLE_WITH_CIRCLE'
+] as const;
 
 export const connectorLabelSchema = z.object({
   id,
