@@ -111,6 +111,10 @@ const locale: LocaleProps = {
     instructionDrag: "টেনে আনুন",
     instructionEnd: "এটি পরিবর্তন করতে!"
   },
+  connectorEmptySpaceTooltip: {
+    message: "এই সংযোগকারীটিকে একটি নোডের সাথে সংযোগ করতে,",
+    instruction: "সংযোগকারীর শেষে বাম-ক্লিক করুন এবং এটিকে পছন্দসই নোডে টানুন।"
+  },
   settings: {
     zoom: {
       description: "মাউস হুইল ব্যবহার করার সময় জুম আচরণ কনফিগার করুন।",

@@ -111,6 +111,10 @@ const locale: LocaleProps = {
     instructionDrag: "przesuń",
     instructionEnd: "aby zmienić!"
   },
+  connectorEmptySpaceTooltip: {
+    message: "Aby połączyć to połączenie z węzłem,",
+    instruction: "kliknij lewym przyciskiem myszy koniec połączenia i przeciągnij go do żądanego węzła."
+  },
   settings: {
     zoom: {
       description: "Skonfiguruj zachowanie powiększania podczas korzystania z kółka myszy.",

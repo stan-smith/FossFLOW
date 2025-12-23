@@ -7,6 +7,8 @@ import hiIN from './hi-IN';
 import bnBD from './bn-BD';
 import ruRU from './ru-RU';
 import plPL from './pl-PL';
+import idID from './id-ID';
+import itIT from './it-IT';
 
 const locales = {
     'en-US': enUS,
@@ -17,7 +19,9 @@ const locales = {
     'hi-IN': hiIN,
     'bn-BD': bnBD,
     'ru-RU': ruRU,
-    'pl-PL': plPL
+    'pl-PL': plPL,
+    'id-ID': idID,
+    'it-IT': itIT
 };
 
 export default locales;

@@ -187,3 +187,4 @@ const locale: LocaleProps = {
 };
 
 export default locale;
+

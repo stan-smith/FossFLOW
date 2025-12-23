@@ -63,6 +63,10 @@ export const supportedLanguages = [
   {
     label: 'Italian',
     value: 'it-IT'
+  },
+  {
+    label: 'Bahasa Indonesia',
+    value: 'id-ID'
   }
 ];
 

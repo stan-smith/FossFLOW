@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, Paper, Typography, Fade } from '@mui/material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useScene } from 'src/hooks/useScene';
+import { useTranslation } from 'src/stores/localeStore';
 
 export const ConnectorEmptySpaceTooltip = () => {
+  const { t } = useTranslation('connectorEmptySpaceTooltip');
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const mode = useUiStateStore((state) => state.mode);
@@ -88,7 +90,7 @@ export const ConnectorEmptySpaceTooltip = () => {
           }}
         >
           <Typography variant="body2">
-            To connect this connector to a node, <strong>left-click on the end of the connector</strong> and drag it to the desired node.
+            {t('message')} <strong>{t('instruction')}</strong>
           </Typography>
         </Paper>
       </Box>
