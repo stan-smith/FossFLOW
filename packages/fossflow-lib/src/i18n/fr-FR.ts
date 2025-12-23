@@ -111,6 +111,10 @@ const locale: LocaleProps = {
     instructionDrag: "glissez",
     instructionEnd: "pour le modifier !"
   },
+  connectorEmptySpaceTooltip: {
+    message: "Pour connecter ce connecteur à un nœud,",
+    instruction: "cliquez avec le bouton gauche sur l'extrémité du connecteur et faites-le glisser vers le nœud souhaité."
+  },
   settings: {
     zoom: {
       description: "Configurer le comportement du zoom lors de l'utilisation de la molette de la souris.",

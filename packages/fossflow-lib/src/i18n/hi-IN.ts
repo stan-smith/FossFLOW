@@ -111,6 +111,10 @@ const locale: LocaleProps = {
     instructionDrag: "ड्रैग करें",
     instructionEnd: "इसे बदलने के लिए!"
   },
+  connectorEmptySpaceTooltip: {
+    message: "इस कनेक्टर को एक नोड से कनेक्ट करने के लिए,",
+    instruction: "कनेक्टर के अंत पर बाईं-क्लिक करें और इसे वांछित नोड पर खींचें।"
+  },
   settings: {
     zoom: {
       description: "माउस व्हील का उपयोग करते समय ज़ूम व्यवहार को कॉन्फ़िगर करें।",

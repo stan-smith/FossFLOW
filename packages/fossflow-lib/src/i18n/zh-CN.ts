@@ -111,6 +111,10 @@ const locale: LocaleProps = {
     instructionDrag: "拖拽",
     instructionEnd: "即可更改！"
   },
+  connectorEmptySpaceTooltip: {
+    message: "要将此连接器连接到节点，",
+    instruction: "左键单击连接器末端并将其拖动到所需节点。"
+  },
   settings: {
     zoom: {
       description: "配置使用鼠标滚轮时的缩放行为。",

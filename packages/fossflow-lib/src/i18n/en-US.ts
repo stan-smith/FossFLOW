@@ -111,6 +111,10 @@ const locale: LocaleProps = {
     instructionDrag: "drag",
     instructionEnd: "to change it!"
   },
+  connectorEmptySpaceTooltip: {
+    message: "To connect this connector to a node,",
+    instruction: "left-click on the end of the connector and drag it to the desired node."
+  },
   settings: {
     zoom: {
       description: "Configure zoom behavior when using the mouse wheel.",
