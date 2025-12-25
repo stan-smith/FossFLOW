@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Box, SxProps } from '@mui/material';
+import { useUiStateStore } from 'src/stores/uiStateStore';
 
 const CONNECTOR_DOT_SIZE = 3;
 
@@ -11,6 +12,7 @@ export interface Props {
   children: React.ReactNode;
   sx?: SxProps;
   showLine?: boolean;
+  backgroundOpacity?: number;
 }
 
 export const Label = ({
@@ -20,9 +22,16 @@ export const Label = ({
   expandDirection = 'CENTER',
   labelHeight = 0,
   sx,
-  showLine = true
+  showLine = true,
+  backgroundOpacity
 }: Props) => {
   const contentRef = useRef<HTMLDivElement>();
+  const labelSettings = useUiStateStore((state) => {
+    return state.labelSettings;
+  });
+
+  // Use prop value if provided, otherwise fall back to store setting
+  const opacity = backgroundOpacity ?? labelSettings.backgroundOpacity;
 
   return (
     <Box
@@ -60,7 +69,7 @@ export const Label = ({
         sx={{
           position: 'absolute',
           display: 'inline-block',
-          bgcolor: 'common.white',
+          bgcolor: `rgba(255, 255, 255, ${opacity})`,
           border: '1px solid',
           borderColor: 'grey.400',
           borderRadius: 2,
