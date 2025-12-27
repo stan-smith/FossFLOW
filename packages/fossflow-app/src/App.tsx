@@ -581,6 +581,9 @@ function EditorPage() {
 
   // i18n
   const { t, i18n } = useTranslation('app');
+  
+  // Get locale with fallback to en-US if not found
+  const currentLocale = allLocales[i18n.language as keyof typeof allLocales] || allLocales['en-US'];
 
   // Auto-save functionality
   useEffect(() => {
@@ -785,11 +788,11 @@ function EditorPage() {
 
       <div className="fossflow-container">
         <Isoflow
-          key={fossflowKey}
+          key={`${fossflowKey}-${i18n.language}`}
           initialData={diagramData}
           onModelUpdated={handleModelUpdated}
           editorMode={isReadonlyUrl ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
-          locale={allLocales[i18n.language as keyof typeof allLocales]}
+          locale={currentLocale}
           iconPackManager={{
             lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,
             onToggleLazyLoading: iconPackManager.toggleLazyLoading,
