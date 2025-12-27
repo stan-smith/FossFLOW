@@ -39,7 +39,8 @@ export const Label = ({
           sx={{
             position: 'absolute',
             top: -labelHeight,
-            left: -CONNECTOR_DOT_SIZE / 2
+            left: -CONNECTOR_DOT_SIZE / 2,
+            pointerEvents: 'none'
           }}
         >
           <line
