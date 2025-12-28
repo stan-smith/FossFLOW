@@ -51,17 +51,6 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 - **Mode Selection** - Switch between click and drag modes in Settings → Connectors tab
 - **Better Reliability** - Click mode provides more predictable connection creation
 
-### Custom Icon Import
-agramming** - Create stunning 3D-style technical diagrams
--  **Auto-Save** - Your work is automatically saved every 5 seconds
--  **PWA Support** - Install as a native app on Mac and Linux
--  **Privacy-First** - All data stored locally in your browser
--  **Import/Export** - Share diagrams as JSON files
--  **Session Storage** - Quick save without dialogs
--  **Offline Support** - Work without internet connection
--  **Server Storage** - Optional persistent storage when using Docker (enabled by default)
-- 🌍 **Multilingual** - Full support for 8 languages: English, 简体中文, Español, Português, Français, हिन्दी, বাংলা, Русский
-
 
 ## 🐳 Quick Deploy with Docker
 
