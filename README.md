@@ -54,53 +54,14 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 - **Better Reliability** - Click mode provides more predictable connection creation
 
 ### Custom Icon Import
-- **Import Your Own Icons** - Upload custom icons (PNG, JPG, SVG) to use in your diagrams
-- **Automatic Scaling** - Icons are automatically scaled to consistent sizes for professional appearance
-- **Isometric/Flat Toggle** - Choose whether imported icons appear as 3D isometric or flat 2D
-- **Smart Persistence** - Custom icons are saved with diagrams and work across all storage methods
-- **Icon Resources** - Find free icons at:
-  - [Iconify Icon Sets](https://icon-sets.iconify.design/) - Thousands of free SVG icons
-  - [Flaticon Isometric Icons](https://www.flaticon.com/free-icons/isometric) - High-quality isometric icon packs
-
-### Server Storage Support
-- **Persistent Storage** - Diagrams saved to server filesystem, persist across browser sessions
-- **Multi-device Access** - Access your diagrams from any device when using Docker deployment
-- **Automatic Detection** - UI automatically shows server storage when available
-- **Overwrite Protection** - Confirmation dialog when saving with duplicate names
-- **Docker Integration** - Server storage enabled by default in Docker deployments
-
-### Enhanced Interaction Features
-- **Configurable Hotkeys** - Three profiles (QWERTY, SMNRCT, None) for tool selection with visual indicators
-- **Advanced Pan Controls** - Multiple pan methods including empty area drag, middle/right click, modifier keys (Ctrl/Alt), and keyboard navigation (Arrow/WASD/IJKL)
-- **Toggle Connector Arrows** - Option to show/hide arrows on individual connectors
-- **Persistent Tool Selection** - Connector tool remains active after creating connections
-- **Settings Dialog** - Centralized configuration for hotkeys and pan controls
-
-### Docker & CI/CD Improvements
-- **Automated Docker Builds** - GitHub Actions workflow for automatic Docker Hub deployment on commits
-- **Multi-architecture Support** - Docker images for both `linux/amd64` and `linux/arm64`
-- **Pre-built Images** - Available at `stnsmith/fossflow:latest`
-
-### Monorepo Architecture
-- **Single repository** for both library and application
-- **NPM Workspaces** for streamlined dependency management
-- **Unified build process** with `npm run build` at the root
-
-### UI Fixes
-- Fixed Quill editor toolbar icons display issue
-- Resolved React key warnings in context menus
-- Improved markdown editor styling
-
-## Features
-
-- 🎨 **Isometric Diagramming** - Create stunning 3D-style technical diagrams
-- 💾 **Auto-Save** - Your work is automatically saved every 5 seconds
-- 📱 **PWA Support** - Install as a native app on Mac and Linux
-- 🔒 **Privacy-First** - All data stored locally in your browser
-- 📤 **Import/Export** - Share diagrams as JSON files
-- 🎯 **Session Storage** - Quick save without dialogs
-- 🌐 **Offline Support** - Work without internet connection
-- 🗄️ **Server Storage** - Optional persistent storage when using Docker (enabled by default)
+agramming** - Create stunning 3D-style technical diagrams
+-  **Auto-Save** - Your work is automatically saved every 5 seconds
+-  **PWA Support** - Install as a native app on Mac and Linux
+-  **Privacy-First** - All data stored locally in your browser
+-  **Import/Export** - Share diagrams as JSON files
+-  **Session Storage** - Quick save without dialogs
+-  **Offline Support** - Work without internet connection
+-  **Server Storage** - Optional persistent storage when using Docker (enabled by default)
 - 🌍 **Multilingual** - Full support for 8 languages: English, 简体中文, Español, Português, Français, हिन्दी, বাংলা, Русский
 
 
@@ -145,7 +106,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 This is a monorepo containing two packages:
 
 - `packages/fossflow-lib` - React component library for drawing network diagrams (built with Webpack)
-- `packages/fossflow-app` - Progressive Web App for creating isometric diagrams (built with RSBuild)
+- `packages/fossflow-app` - Progressive Web App which wraps the lib and presents it (built with RSBuild)
 
 ### Development Commands
 
