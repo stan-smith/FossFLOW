@@ -111,6 +111,10 @@ const locale: LocaleProps = {
     instructionDrag: "trascina",
     instructionEnd: "per modificarlo!"
   },
+  connectorEmptySpaceTooltip: {
+    message: "Per collegare questo connettore a un nodo,",
+    instruction: "clicca con il tasto sinistro sulla fine del connettore e trascinalo sul nodo desiderato."
+  },
   settings: {
     zoom: {
       description: "Configura il comportamento dello zoom quando si usa la rotella del mouse.",

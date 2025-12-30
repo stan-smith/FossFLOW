@@ -1,0 +1,63 @@
+{
+    "nav": {
+        "newDiagram": "Diagram Baru",
+        "saveSessionOnly": "Simpan (Hanya Sesi)",
+        "loadSessionOnly": "Muat (Hanya Sesi)",
+        "importFile": "Impor File",
+        "exportFile": "Ekspor File",
+        "quickSaveSession": "Simpan Cepat (Sesi)",
+        "serverStorage": "Penyimpanan Server"
+    },
+    "status": {
+        "current": "Saat Ini",
+        "untitled": "Diagram Tanpa Judul",
+        "modified": "Dimodifikasi",
+        "sessionStorageNote": "Hanya penyimpanan sesi - ekspor untuk menyimpan secara permanen"
+    },
+    "dialog": {
+        "save": {
+            "title": "Simpan Diagram (Hanya Sesi Saat Ini)",
+            "warningTitle": "Penting",
+            "warningMessage": "Simpanan ini bersifat sementara dan akan hilang saat Anda menutup browser.",
+            "warningExport": "Gunakan <strong>Ekspor File</strong> untuk menyimpan pekerjaan Anda secara permanen.",
+            "placeholder": "Masukkan nama diagram",
+            "btnSave": "Simpan",
+            "btnCancel": "Batal"
+        },
+        "load": {
+            "title": "Muat Diagram (Hanya Sesi Saat Ini)",
+            "noteTitle": "Catatan",
+            "noteMessage": "Simpanan ini bersifat sementara. Ekspor diagram Anda untuk menyimpannya secara permanen.",
+            "noSavedDiagrams": "Tidak ada diagram tersimpan yang ditemukan dalam sesi ini",
+            "updated": "Diperbarui",
+            "btnLoad": "Muat",
+            "btnDelete": "Hapus",
+            "btnClose": "Tutup"
+        },
+        "export": {
+            "title": "Ekspor Diagram",
+            "recommendedTitle": "Direkomendasikan",
+            "recommendedMessage": "Ini adalah cara terbaik untuk menyimpan pekerjaan Anda secara permanen.",
+            "noteMessage": "File JSON yang diekspor dapat diimpor nanti atau dibagikan dengan orang lain.",
+            "btnDownload": "Unduh JSON",
+            "btnCancel": "Batal"
+        },
+        "readOnly": {
+            "mode": "Mode Hanya Baca",
+            "failed": "Gagal memuat diagram"
+        }
+    },
+    "alert": {
+        "enterDiagramName": "Silakan masukkan nama diagram",
+        "diagramExists": "Diagram dengan nama \"{{name}}\" sudah ada dalam sesi ini. Ini akan menimpanya. Apakah Anda yakin ingin melanjutkan?",
+        "unsavedChanges": "Anda memiliki perubahan yang belum disimpan. Lanjutkan memuat?",
+        "createNewDiagram": "Buat diagram baru?",
+        "unsavedChangesExport": "Anda memiliki perubahan yang belum disimpan. Ekspor diagram Anda terlebih dahulu untuk menyimpannya. Lanjutkan?",
+        "confirmDelete": "Apakah Anda yakin ingin menghapus diagram ini?",
+        "storageFull": "Penyimpanan penuh! Membuka Manajer Penyimpanan...",
+        "autoSaveFailed": "Penyimpanan penuh! Silakan gunakan Manajer Penyimpanan untuk membebaskan ruang.",
+        "beforeUnload": "Anda memiliki perubahan yang belum disimpan. Apakah Anda yakin ingin keluar?",
+        "quotaExceeded": "Kuota penyimpanan terlampaui. Silakan ekspor diagram penting dan kosongkan beberapa ruang."
+    }
+}
+
