@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { getTilePosition, CoordsUtils, generateId, findNearestUnoccupiedTile } from 'src/utils';
+import { generateId, findNearestUnoccupiedTile } from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
 import { useModelStore } from 'src/stores/modelStore';
 import { VIEW_ITEM_DEFAULTS } from 'src/config';
@@ -14,9 +14,6 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
   const scene = useScene();
   const model = useModelStore((state) => {
     return state;
-  });
-  const zoom = useUiStateStore((state) => {
-    return state.zoom;
   });
   const contextMenu = useUiStateStore((state) => {
     return state.contextMenu;
@@ -39,10 +36,6 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
       <ContextMenu
         anchorEl={anchorEl}
         onClose={onClose}
-        position={CoordsUtils.multiply(
-          getTilePosition({ tile: contextMenu.tile }),
-          zoom
-        )}
         menuItems={[
           {
             label: 'Add Node',
