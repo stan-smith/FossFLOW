@@ -7,7 +7,7 @@ import { VIEW_ITEM_DEFAULTS } from 'src/config';
 import { ContextMenu } from './ContextMenu';
 
 interface Props {
-  anchorEl?: HTMLElement;
+  anchorEl?: HTMLElement | null;
 }
 
 export const ContextMenuManager = ({ anchorEl }: Props) => {
@@ -27,63 +27,58 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
     uiStateActions.setContextMenu(null);
   }, [uiStateActions]);
 
-  if (!contextMenu) {
-    return null;
-  }
+  return (
+    <ContextMenu
+      anchorEl={anchorEl}
+      onClose={onClose}
+      menuItems={[
+        {
+          label: 'Add Node',
+          onClick: () => {
+            if (!contextMenu) return;
+            if (model.icons.length > 0) {
+              const modelItemId = generateId();
+              const firstIcon = model.icons[0];
+              
+              // Find nearest unoccupied tile (should return the same tile since context menu is for empty tiles)
+              const targetTile = findNearestUnoccupiedTile(contextMenu.tile, scene) || contextMenu.tile;
 
-  if (contextMenu.type === 'EMPTY') {
-    return (
-      <ContextMenu
-        anchorEl={anchorEl}
-        onClose={onClose}
-        menuItems={[
-          {
-            label: 'Add Node',
-            onClick: () => {
-              if (model.icons.length > 0) {
-                const modelItemId = generateId();
-                const firstIcon = model.icons[0];
-                
-                // Find nearest unoccupied tile (should return the same tile since context menu is for empty tiles)
-                const targetTile = findNearestUnoccupiedTile(contextMenu.tile, scene) || contextMenu.tile;
-
-                scene.placeIcon({
-                  modelItem: {
-                    id: modelItemId,
-                    name: 'Untitled',
-                    icon: firstIcon.id
-                  },
-                  viewItem: {
-                    ...VIEW_ITEM_DEFAULTS,
-                    id: modelItemId,
-                    tile: targetTile
-                  }
-                });
-              }
-              onClose();
+              scene.placeIcon({
+                modelItem: {
+                  id: modelItemId,
+                  name: 'Untitled',
+                  icon: firstIcon.id
+                },
+                viewItem: {
+                  ...VIEW_ITEM_DEFAULTS,
+                  id: modelItemId,
+                  tile: targetTile
+                }
+              });
             }
-          },
-          {
-            label: 'Add Rectangle',
-            onClick: () => {
-              if (model.colors.length > 0) {
-                scene.createRectangle({
-                  id: generateId(),
-                  color: model.colors[0].id,
-                  from: contextMenu.tile,
-                  to: contextMenu.tile
-                });
-              }
-              onClose();
-            }
+            onClose();
           }
-        ]}
-      />
-    );
-  }
+        },
+        {
+          label: 'Add Rectangle',
+          onClick: () => {
+            if (!contextMenu) return;
+            if (model.colors.length > 0) {
+              scene.createRectangle({
+                id: generateId(),
+                color: model.colors[0].id,
+                from: contextMenu.tile,
+                to: contextMenu.tile
+              });
+            }
+            onClose();
+          }
+        }
+      ]}
+    />
+  );
 
   // Remove ITEM context menu since layer ordering only works for rectangles
   // and provides no value for regular diagram items
 
-  return null;
 };

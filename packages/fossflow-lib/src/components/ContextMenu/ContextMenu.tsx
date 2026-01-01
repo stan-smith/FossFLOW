@@ -8,7 +8,7 @@ interface MenuItemI {
 
 interface Props {
   onClose: () => void;
-  anchorEl?: HTMLElement;
+  anchorEl?: HTMLElement | null;
   menuItems: MenuItemI[];
 }
 
@@ -19,7 +19,7 @@ export const ContextMenu = ({
 }: Props) => {
   return (
     <Menu
-      open
+      open={!!anchorEl}
       anchorEl={anchorEl}
       onClose={onClose}
     >

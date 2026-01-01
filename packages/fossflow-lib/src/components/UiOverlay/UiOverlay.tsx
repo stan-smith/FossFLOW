@@ -101,14 +101,8 @@ export const UiOverlay = () => {
   const iconPackManager = useUiStateStore((state) => {
     return state.iconPackManager;
   });
-  const zoom = useUiStateStore((state) => {
-    return state.zoom;
-  });
   const contextMenu = useUiStateStore((state) => {
     return state.contextMenu;
-  });
-  const tile = useUiStateStore((state) => {
-    return state.mouse.position.tile;
   });
   const { size: rendererSize } = useResizeObserver(rendererEl);
 
@@ -277,12 +271,12 @@ export const UiOverlay = () => {
             ref={contextMenuAnchorRef} 
             sx={{
               position: 'absolute',
-              left: (getTilePosition({ tile: contextMenu.tile }).x * zoom),
-              top: (getTilePosition({ tile: contextMenu.tile }).y * zoom),
+              left: getTilePosition({ tile: contextMenu.tile }).x,
+              top: getTilePosition({ tile: contextMenu.tile }).y
             }}
           />
         )}
-        <ContextMenuManager anchorEl={contextMenuAnchorRef.current} />
+        <ContextMenuManager anchorEl={contextMenu ? contextMenuAnchorRef.current : null} />
       </SceneLayer>
     </>
   );
