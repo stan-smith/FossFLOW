@@ -276,7 +276,7 @@ export const UiOverlay = () => {
             }}
           />
         )}
-        <ContextMenuManager anchorEl={contextMenu ? contextMenuAnchorRef.current : null} />
+        <ContextMenuManager anchorEl={contextMenu && contextMenu.type === "EMPTY" ? contextMenuAnchorRef.current : null} />
       </SceneLayer>
     </>
   );
