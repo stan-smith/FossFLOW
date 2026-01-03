@@ -13,6 +13,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * transparent background for exporting as png ([#180](https://github.com/stan-smith/FossFLOW/issues/180)) @F4tal1t thank you for contributing as always! ([ba1b376](https://github.com/stan-smith/FossFLOW/commit/ba1b3762db9ac34360703553e5428cf39f556534))
 * **ui:** enhance custom color picker and fix docs ([#169](https://github.com/stan-smith/FossFLOW/issues/169)) thank you [@non-stop-dev](https://github.com/non-stop-dev) ([f56812c](https://github.com/stan-smith/FossFLOW/commit/f56812c24e1d2eb402fce990d3607155d9f94014))
 
+### Bug Fixes
+
+* resolve issue [#136](https://github.com/stan-smith/FossFLOW/issues/136) where "Add Node" popup has huge offset ([#195](https://github.com/stan-smith/FossFLOW/issues/195)) ([fa5478e](https://github.com/stan-smith/FossFLOW/commit/fa5478e709f187a9a5b458a967dd99c2ed9da69b))
+
+## [1.7.0](https://github.com/stan-smith/FossFLOW/compare/v1.6.1...v1.7.0) (2026-01-03)
+
+### Features
+
+* read-only mode ([#168](https://github.com/stan-smith/FossFLOW/issues/168)) ([85d32e6](https://github.com/stan-smith/FossFLOW/commit/85d32e64df0f4d22bd7c2d6b3a51275c09813f72))
+* transparent background for exporting as png ([#180](https://github.com/stan-smith/FossFLOW/issues/180)) @F4tal1t thank you for contributing as always! ([ba1b376](https://github.com/stan-smith/FossFLOW/commit/ba1b3762db9ac34360703553e5428cf39f556534))
+* **ui:** enhance custom color picker and fix docs ([#169](https://github.com/stan-smith/FossFLOW/issues/169)) thank you [@non-stop-dev](https://github.com/non-stop-dev) ([f56812c](https://github.com/stan-smith/FossFLOW/commit/f56812c24e1d2eb402fce990d3607155d9f94014))
+
 ## [1.7.0](https://github.com/stan-smith/FossFLOW/compare/v1.6.1...v1.7.0) (2026-01-02)
 
 ### Features
