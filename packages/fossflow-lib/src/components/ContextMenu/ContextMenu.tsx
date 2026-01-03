@@ -1,6 +1,5 @@
 import React from 'react';
 import { Menu, MenuItem } from '@mui/material';
-import { Coords } from 'src/types';
 
 interface MenuItemI {
   label: string;
@@ -9,25 +8,19 @@ interface MenuItemI {
 
 interface Props {
   onClose: () => void;
-  position: Coords;
-  anchorEl?: HTMLElement;
+  anchorEl?: HTMLElement | null;
   menuItems: MenuItemI[];
 }
 
 export const ContextMenu = ({
   onClose,
-  position,
   anchorEl,
   menuItems
 }: Props) => {
   return (
     <Menu
-      open
+      open={!!anchorEl}
       anchorEl={anchorEl}
-      style={{
-        left: position.x,
-        top: position.y
-      }}
       onClose={onClose}
     >
       {menuItems.map((item, index) => {

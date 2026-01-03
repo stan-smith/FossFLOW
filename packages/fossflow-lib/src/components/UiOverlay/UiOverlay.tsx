@@ -24,6 +24,7 @@ import { ConnectorRerouteTooltip } from '../ConnectorRerouteTooltip/ConnectorRer
 import { ImportHintTooltip } from '../ImportHintTooltip/ImportHintTooltip';
 import { LassoHintTooltip } from '../LassoHintTooltip/LassoHintTooltip';
 import { LazyLoadingWelcomeNotification } from '../LazyLoadingWelcomeNotification/LazyLoadingWelcomeNotification';
+import { CoordsUtils, getTilePosition } from 'src/utils';
 
 const ToolsEnum = {
   MAIN_MENU: 'MAIN_MENU',
@@ -99,6 +100,9 @@ export const UiOverlay = () => {
   });
   const iconPackManager = useUiStateStore((state) => {
     return state.iconPackManager;
+  });
+  const contextMenu = useUiStateStore((state) => {
+    return state.contextMenu;
   });
   const { size: rendererSize } = useResizeObserver(rendererEl);
 
@@ -262,8 +266,17 @@ export const UiOverlay = () => {
       {iconPackManager && <LazyLoadingWelcomeNotification />}
 
       <SceneLayer>
-        <Box ref={contextMenuAnchorRef} />
-        <ContextMenuManager anchorEl={contextMenuAnchorRef.current} />
+        {contextMenu && (
+          <Box 
+            ref={contextMenuAnchorRef} 
+            sx={{
+              position: 'absolute',
+              left: getTilePosition({ tile: contextMenu.tile }).x,
+              top: getTilePosition({ tile: contextMenu.tile }).y
+            }}
+          />
+        )}
+        <ContextMenuManager anchorEl={contextMenu && contextMenu.type === "EMPTY" ? contextMenuAnchorRef.current : null} />
       </SceneLayer>
     </>
   );
