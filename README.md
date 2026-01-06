@@ -147,13 +147,13 @@ npm run publish:lib  # Publish library to npm
 
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTORS.md](CONTRIBUTORS.md) for guidelines.
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ## Documentation
 
 - [FOSSFLOW_ENCYCLOPEDIA.md](FOSSFLOW_ENCYCLOPEDIA.md) - Comprehensive guide to the codebase
 - [FOSSFLOW_TODO.md](FOSSFLOW_TODO.md) - Current issues and roadmap
-- [CONTRIBUTORS.md](CONTRIBUTORS.md) - Contributing guidelines
+- [CONTRIBUTING.md](CONTRIBUTING.md) - Contributing guidelines
 
 ## License
 
