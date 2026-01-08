@@ -9,6 +9,8 @@ interface Props {
 export const ControlsContainer = ({ header, children }: Props) => {
   return (
     <Box
+      onMouseDown={e => e.stopPropagation()}
+      onContextMenu={e => e.stopPropagation()}
       sx={{
         position: 'relative',
         height: '100%',
