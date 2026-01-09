@@ -101,7 +101,10 @@ FossFLOW - это мощное прогрессивное веб-приложе�
 
 ```bash
 # Использование Docker Compose (рекомендуется - включает постоянное хранилище)
-docker compose up
+docker compose --profile storage up
+
+# Или Использование Docker Compose (без постоянного хранилища)
+docker compose --profile non-storage up
 
 # Или запустите напрямую из Docker Hub с постоянным хранилищем
 docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams stnsmith/fossflow:latest

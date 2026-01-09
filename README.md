@@ -61,7 +61,10 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 
 ```bash
 # Using Docker Compose (recommended - includes persistent storage)
-docker compose up
+docker compose --profile storage up
+
+# Or Using Docker Compose (non persistent storage)
+docker compose --profile non-storage up
 
 # Or run directly from Docker Hub with persistent storage
 docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams stnsmith/fossflow:latest
