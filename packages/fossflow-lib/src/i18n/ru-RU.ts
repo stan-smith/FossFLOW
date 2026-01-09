@@ -111,6 +111,10 @@ const locale: LocaleProps = {
     instructionDrag: "перетащите",
     instructionEnd: "чтобы изменить его!"
   },
+  connectorEmptySpaceTooltip: {
+    message: "Чтобы подключить этот соединитель к узлу,",
+    instruction: "щелкните левой кнопкой мыши на конце соединителя и перетащите его к нужному узлу."
+  },
   settings: {
     zoom: {
       description: "Настройте поведение масштабирования при использовании колесика мыши.",

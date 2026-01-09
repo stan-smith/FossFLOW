@@ -118,6 +118,10 @@ export interface LocaleProps {
     instructionDrag: string;
     instructionEnd: string;
   };
+  connectorEmptySpaceTooltip: {
+    message: string;
+    instruction: string;
+  };
   settings: {
     zoom: {
       description: string;
