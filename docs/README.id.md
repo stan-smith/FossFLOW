@@ -104,7 +104,10 @@ FossFLOW adalah aplikasi web progresif (PWA) open-source yang powerful untuk mem
 
 ```bash
 # Menggunakan Docker Compose (disarankan - termasuk penyimpanan persisten)
-docker compose up
+docker compose --profile storage up
+
+# Atau Menggunakan Docker Compose (penyimpanan non-persisten)
+docker compose --profile non-storage up
 
 # Atau jalankan langsung dari Docker Hub dengan penyimpanan persisten
 docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams stnsmith/fossflow:latest

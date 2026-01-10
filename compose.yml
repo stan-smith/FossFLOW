@@ -6,8 +6,23 @@ services:
       - 80:80
     environment:
       - NODE_ENV=production
-      - ENABLE_SERVER_STORAGE=${ENABLE_SERVER_STORAGE:-true}
+      - ENABLE_SERVER_STORAGE=false
+      - ENABLE_GIT_BACKUP=${ENABLE_GIT_BACKUP:-false}
+    volumes:
+      - ./diagrams:/data/diagrams
+    profiles: ["non-storage"]
+
+  fossflow-persistent-storage:
+    image: stnsmith/fossflow:latest
+    pull_policy: always
+    ports:
+      - 80:80
+      - 3001:3001
+    environment:
+      - NODE_ENV=production
+      - ENABLE_SERVER_STORAGE=true
       - STORAGE_PATH=/data/diagrams
       - ENABLE_GIT_BACKUP=${ENABLE_GIT_BACKUP:-false}
     volumes:
       - ./diagrams:/data/diagrams
+    profiles: ["storage"]

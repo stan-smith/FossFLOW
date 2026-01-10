@@ -101,7 +101,10 @@ FossFLOW सुंदर आइसोमेट्रिक आरेख बन�
 
 ```bash
 # Docker Compose का उपयोग करना (अनुशंसित - स्थायी भंडारण शामिल)
-docker compose up
+docker compose --profile storage up
+
+# या Docker Compose का उपयोग करना (गैर-स्थायी भंडारण)
+docker compose --profile non-storage up
 
 # या स्थायी भंडारण के साथ Docker Hub से सीधे चलाएं
 docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams stnsmith/fossflow:latest

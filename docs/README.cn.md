@@ -34,6 +34,26 @@ FossFLOW 是一款功能强大的、开源的渐进式 Web 应用（PWA），专
 - 🎯 **会话存储** - 快速保存，无需对话框
 - 🌐 **离线支持** - 无需网络连接即可工作
 
+## 🐳 使用 Docker 快速部署
+
+```bash
+# 使用 Docker Compose（推荐 - 包含持久化存储）
+docker compose --profile storage up
+
+# 或使用 Docker Compose（非持久化存储）
+docker compose --profile non-storage up
+
+# 或直接从 Docker Hub 运行（带持久化存储）
+docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams stnsmith/fossflow:latest
+```
+
+Docker 中默认启用服务器存储。您的图表将保存到主机上的 `./diagrams` 目录。
+
+要禁用服务器存储，请设置 `ENABLE_SERVER_STORAGE=false`：
+```bash
+docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false stnsmith/fossflow:latest
+```
+
 ## 在线试用
 
 访问 https://stan-smith.github.io/FossFLOW/
