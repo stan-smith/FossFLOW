@@ -8,5 +8,7 @@ declare const locales: {
     'bn-BD': import("../types").LocaleProps;
     'ru-RU': import("../types").LocaleProps;
     'pl-PL': import("../types").LocaleProps;
+    'id-ID': import("../types").LocaleProps;
+    'it-IT': import("../types").LocaleProps;
 };
 export default locales;
