@@ -24,9 +24,15 @@ Thanks,
 -Stan
 
 ## Try it online
-
+<p align="center">
 Go to  <b> --> https://stan-smith.github.io/FossFLOW/ <-- </b>
+</p>
+<p align="center">
 
+ <a href="https://github.com/stan-smith/SlingShot">
+  Check out my latest project: <b>SlingShot</b> - Dead easy video streaming over QUIC
+ </a>
+</p>
 
 ------------------------------------------------------------------------------------------------------------------------------
 FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beautiful isometric diagrams. Built with React and the <a href="https://github.com/markmanx/isoflow">Isoflow</a> (Now forked and published to NPM as fossflow) library, it runs entirely in your browser with offline support.
