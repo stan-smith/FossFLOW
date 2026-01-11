@@ -96,6 +96,41 @@ export const DiagramManager: React.FC<Props> = ({
     }
   };
 
+  const handleDuplicate = async (id: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      const storage = storageManager.getStorage();
+      
+      // Load the diagram to be duplicated
+      const data = await storage.loadDiagram(id);
+      
+      // Create new name with (copy) appended
+      // Cast to any because Model type might not strictly include name, but we save it with name
+      const sourceData = data as any;
+      const newName = `${sourceData.name || sourceData.title || 'Untitled'} (copy)`;
+      const newData = {
+        ...sourceData,
+        name: newName
+      };
+      
+      // Remove ID so backend generates a new one
+      if (newData.id) {
+        delete newData.id;
+      }
+
+      // Create the new diagram
+      await storage.createDiagram(newData);
+      
+      await loadDiagrams(); // Refresh list
+    } catch (err) {
+      console.error(`DiagramManager: Failed to duplicate diagram ${id}:`, err);
+      setError(err instanceof Error ? err.message : 'Failed to duplicate diagram');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleCopyShareLink = (id: string) => {
     const shareUrl = `${window.location.origin}/display/${id}`;
     navigator.clipboard
@@ -114,7 +149,7 @@ export const DiagramManager: React.FC<Props> = ({
       });
   };
 
-  const handleSave = async () => {
+  const handleSave = async (asNew: boolean = false) => {
     if (!saveName.trim()) {
       setError('Please enter a diagram name');
       return;
@@ -123,9 +158,9 @@ export const DiagramManager: React.FC<Props> = ({
     try {
       const storage = storageManager.getStorage();
 
-      // Check if a diagram with this name already exists (excluding current diagram)
+      // Check if a diagram with this name already exists (excluding current diagram if not saving as new)
       const existingDiagram = diagrams.find((d) => {
-        return d.name === saveName.trim() && d.id !== currentDiagramId;
+        return d.name === saveName.trim() && (asNew || d.id !== currentDiagramId);
       });
 
       if (existingDiagram) {
@@ -163,7 +198,7 @@ export const DiagramManager: React.FC<Props> = ({
       }).length;
       console.log(`DiagramManager: Including ${importedCount} imported icons`);
 
-      if (currentDiagramId) {
+      if (currentDiagramId && !asNew) {
         // Update existing
         await storage.saveDiagram(currentDiagramId, dataToSave);
       } else {
@@ -214,6 +249,15 @@ export const DiagramManager: React.FC<Props> = ({
           >
             💾 Save Current Diagram
           </button>
+          <button
+            className="action-button"
+            onClick={() => {
+              setSaveName(currentDiagramData?.name ? `${currentDiagramData.name} (Copy)` : 'Untitled Diagram (Copy)');
+              setShowSaveDialog(true);
+            }}
+          >
+            💾 Save As New
+          </button>
         </div>
 
         {loading ? (
@@ -257,6 +301,16 @@ export const DiagramManager: React.FC<Props> = ({
                         Share
                       </button>
                       <button
+                        className="action-button"
+                        onClick={() => {
+                          return handleDuplicate(diagram.id);
+                        }}
+                        disabled={loading}
+                        title="Duplicate diagram"
+                      >
+                        Duplicate
+                      </button>
+                      <button
                         className="action-button danger"
                         onClick={() => {
                           return handleDelete(diagram.id);
@@ -276,7 +330,7 @@ export const DiagramManager: React.FC<Props> = ({
         {/* Save Dialog */}
         {showSaveDialog && (
           <div className="save-dialog">
-            <h3>Save Diagram</h3>
+            <h3>{saveName.includes('(Copy)') ? 'Save As New Diagram' : 'Save Diagram'}</h3>
             <input
               type="text"
               placeholder="Diagram name"
@@ -285,12 +339,12 @@ export const DiagramManager: React.FC<Props> = ({
                 return setSaveName(e.target.value);
               }}
               onKeyDown={(e) => {
-                return e.key === 'Enter' && handleSave();
+                return e.key === 'Enter' && handleSave(saveName.includes('(Copy)'));
               }}
               autoFocus
             />
             <div className="dialog-buttons">
-              <button onClick={handleSave}>Save</button>
+              <button onClick={() => handleSave(saveName.includes('(Copy)'))}>Save</button>
               <button
                 onClick={() => {
                   return setShowSaveDialog(false);
