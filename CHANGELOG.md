@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0](https://github.com/stan-smith/FossFLOW/compare/v1.7.0...v1.8.0) (2026-01-12)
+
+### Features
+
+* Add labels to icons indicating if not isometric (flat) ([#201](https://github.com/stan-smith/FossFLOW/issues/201)) ([a553e3c](https://github.com/stan-smith/FossFLOW/commit/a553e3c00ce8a9e776ba700e8fbdfc304c3e953e))
+
 ## [1.7.0](https://github.com/stan-smith/FossFLOW/compare/v1.6.1...v1.7.0) (2026-01-11)
 
 ### Features
