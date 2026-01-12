@@ -28,7 +28,7 @@ export const Icon = ({ icon, onClick, onMouseDown, onDoubleClick }: Props) => {
         sx={{ overflow: 'hidden', justifyContent: 'flex-start', width: SIZE }}
         spacing={1}
       >
-        <Box sx={{ width: SIZE, height: SIZE, overflow: 'hidden' }}>
+        <Box sx={{ position: 'relative', width: SIZE, height: SIZE, overflow: 'hidden' }}>
           <Box
             component="img"
             draggable={false}
@@ -36,6 +36,23 @@ export const Icon = ({ icon, onClick, onMouseDown, onDoubleClick }: Props) => {
             alt={`Icon ${icon.name}`}
             sx={{ width: SIZE, height: SIZE }}
           />
+          {icon.isIsometric === false && (
+            <Box
+              sx={{
+                position: 'absolute',
+                bottom: 2,
+                right: 2,
+                padding: '1px 4px',
+                borderRadius: '4px',
+                backgroundColor: '#eeeb',
+                color: '#000'
+              }}
+            >
+              <Typography variant='body2'>
+                flat
+              </Typography>
+            </Box>
+          )}
         </Box>
         <Typography
           variant="body2"
