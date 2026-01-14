@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.1](https://github.com/stan-smith/FossFLOW/compare/v1.8.0...v1.8.1) (2026-01-14)
+
+### Bug Fixes
+
+* make dotted line transparent to click events ([#190](https://github.com/stan-smith/FossFLOW/issues/190)) [@majiayu000](https://github.com/majiayu000) ([554325a](https://github.com/stan-smith/FossFLOW/commit/554325ad129529d8938756204f6be89e622d6f0b)), closes [#61](https://github.com/stan-smith/FossFLOW/issues/61)
+
 ## [1.8.0](https://github.com/stan-smith/FossFLOW/compare/v1.7.0...v1.8.0) (2026-01-12)
 
 ### Features
