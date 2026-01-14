@@ -67,6 +67,10 @@ export const supportedLanguages = [
   {
     label: 'Bahasa Indonesia',
     value: 'id-ID'
+  },
+  {
+    label: 'Deutsch',
+    value: 'de-DE'
   }
 ];
 
