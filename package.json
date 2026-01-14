@@ -32,7 +32,7 @@
     "@types/react-dom": "^18.3.7",
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "cross-env": "^10.1.0",
-    "semantic-release": "^24.2.9",
+    "semantic-release": "^25.0.2",
     "typescript": "^5.9.3"
   },
   "engines": {
