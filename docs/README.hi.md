@@ -1,7 +1,7 @@
 # FossFLOW - आइसोमेट्रिक आरेख उपकरण <img width="30" height="30" alt="fossflow" src="https://github.com/user-attachments/assets/56d78887-601c-4336-ab87-76f8ee4cde96" />
 
 <p align="center">
- <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a>
+ <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a>
 </p>
 
 <b>नमस्ते!</b> मैं Stan हूं, यदि आपने FossFLOW का उपयोग किया है और इसने आपकी मदद की है, <b>तो मैं वास्तव में सराहना करूंगा यदि आप कुछ छोटा दान कर सकें :)</b> मैं पूर्णकालिक काम करता हूं, और इस परियोजना पर काम करने के लिए समय निकालना पर्याप्त चुनौतीपूर्ण है।

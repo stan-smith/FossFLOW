@@ -1,7 +1,7 @@
 # FossFLOW - আইসোমেট্রিক ডায়াগ্রাম টুল <img width="30" height="30" alt="fossflow" src="https://github.com/user-attachments/assets/56d78887-601c-4336-ab87-76f8ee4cde96" />
 
 <p align="center">
- <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a>
+ <a href="../README.md">English</a> | <a href="README.cn.md">简体中文</a> | <a href="README.es.md">Español</a> | <a href="README.pt.md">Português</a> | <a href="README.fr.md">Français</a> | <a href="README.hi.md">हिन्दी</a> | <a href="README.bn.md">বাংলা</a> | <a href="README.ru.md">Русский</a> | <a href="README.id.md">Bahasa Indonesia</a> | <a href="README.de.md">Deutsch</a>
 </p>
 
 <b>হ্যালো!</b> আমি Stan, যদি আপনি FossFLOW ব্যবহার করে থাকেন এবং এটি আপনাকে সাহায্য করেছে, <b>আমি সত্যিই প্রশংসা করব যদি আপনি কিছু ছোট দান করতে পারেন :)</b> আমি পূর্ণকালীন কাজ করি, এবং এই প্রকল্পে কাজ করার সময় খুঁজে পাওয়াটা যথেষ্ট চ্যালেঞ্জিং।
