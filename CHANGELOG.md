@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.1](https://github.com/stan-smith/FossFLOW/compare/v1.9.0...v1.9.1) (2026-01-14)
+
+### Bug Fixes
+
+* resolve security vulnerabilities in dependencies ([023c1e9](https://github.com/stan-smith/FossFLOW/commit/023c1e902f2cd2dd35cb5440f2d4afe6ac12c55d))
+
 ## [1.9.0](https://github.com/stan-smith/FossFLOW/compare/v1.8.1...v1.9.0) (2026-01-14)
 
 ### Features
