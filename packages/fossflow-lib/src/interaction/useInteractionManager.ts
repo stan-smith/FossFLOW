@@ -3,7 +3,13 @@ import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { ModeActions, State, SlimMouseEvent } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
-import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom } from 'src/utils';
+import {
+  getMouse,
+  getItemAtTile,
+  generateId,
+  incrementZoom,
+  decrementZoom
+} from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
@@ -60,7 +66,10 @@ export const useInteractionManager = () => {
   const { size: rendererSize } = useResizeObserver(uiState.rendererEl);
   const { undo, redo, canUndo, canRedo } = useHistory();
   const { createTextBox } = scene;
-  const { handleMouseDown: handlePanMouseDown, handleMouseUp: handlePanMouseUp } = usePanHandlers();
+  const {
+    handleMouseDown: handlePanMouseDown,
+    handleMouseUp: handlePanMouseUp
+  } = usePanHandlers();
 
   // Keyboard shortcuts for undo/redo
   useEffect(() => {
@@ -81,8 +90,10 @@ export const useInteractionManager = () => {
 
           // Check if connection is in progress
           const isConnectionInProgress =
-            (uiState.connectorInteractionMode === 'click' && connectorMode.isConnecting) ||
-            (uiState.connectorInteractionMode === 'drag' && connectorMode.id !== null);
+            (uiState.connectorInteractionMode === 'click' &&
+              connectorMode.isConnecting) ||
+            (uiState.connectorInteractionMode === 'drag' &&
+              connectorMode.id !== null);
 
           if (isConnectionInProgress && connectorMode.id) {
             // Delete the temporary connector
@@ -139,12 +150,29 @@ export const useInteractionManager = () => {
         uiState.actions.setDialog(DialogTypeEnum.HELP);
       }
 
+      // Toggle label transparency with ] key
+      if (e.key === ']') {
+        e.preventDefault();
+        const currentOpacity = uiState.labelSettings.backgroundOpacity;
+        // Toggle between full opacity (1.0) and semi-transparent (0.3)
+        const newOpacity = currentOpacity > 0.5 ? 0.3 : 1.0;
+        uiState.actions.setLabelSettings({
+          ...uiState.labelSettings,
+          backgroundOpacity: newOpacity
+        });
+      }
+
       // Tool hotkeys
       const hotkeyMapping = HOTKEY_PROFILES[uiState.hotkeyProfile];
       const key = e.key.toLowerCase();
 
       // Quick icon selection for selected node (when ItemControls is an ItemReference with type 'ITEM')
-      if (key === 'i' && uiState.itemControls && 'id' in uiState.itemControls && uiState.itemControls.type === 'ITEM') {
+      if (
+        key === 'i' &&
+        uiState.itemControls &&
+        'id' in uiState.itemControls &&
+        uiState.itemControls.type === 'ITEM'
+      ) {
         e.preventDefault();
         // Trigger icon change mode
         const event = new CustomEvent('quickIconChange');
@@ -211,7 +239,10 @@ export const useInteractionManager = () => {
           selection: null,
           isDragging: false
         });
-      } else if (hotkeyMapping.freehandLasso && key === hotkeyMapping.freehandLasso) {
+      } else if (
+        hotkeyMapping.freehandLasso &&
+        key === hotkeyMapping.freehandLasso
+      ) {
         e.preventDefault();
         uiState.actions.setMode({
           type: 'FREEHAND_LASSO',
@@ -227,7 +258,21 @@ export const useInteractionManager = () => {
     return () => {
       return window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [undo, redo, canUndo, canRedo, uiState.hotkeyProfile, uiState.actions, createTextBox, uiState.mouse.position.tile, scene, uiState.itemControls, uiState.mode, uiState.connectorInteractionMode]);
+  }, [
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    uiState.hotkeyProfile,
+    uiState.actions,
+    createTextBox,
+    uiState.mouse.position.tile,
+    scene,
+    uiState.itemControls,
+    uiState.mode,
+    uiState.connectorInteractionMode,
+    uiState.labelSettings
+  ]);
 
   const onMouseEvent = useCallback(
     (e: SlimMouseEvent) => {
@@ -380,8 +425,10 @@ export const useInteractionManager = () => {
 
         // The point under the cursor in world space (before zoom)
         // World coordinates = (screen coordinates - scroll offset) / zoom
-        const worldX = (mouseRelativeToCenterX - uiState.scroll.position.x) / oldZoom;
-        const worldY = (mouseRelativeToCenterY - uiState.scroll.position.y) / oldZoom;
+        const worldX =
+          (mouseRelativeToCenterX - uiState.scroll.position.x) / oldZoom;
+        const worldY =
+          (mouseRelativeToCenterY - uiState.scroll.position.y) / oldZoom;
 
         // After zooming, to keep the same world point under the cursor:
         // screen coordinates = world coordinates * newZoom + scroll offset
