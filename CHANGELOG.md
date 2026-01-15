@@ -5,6 +5,16 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.9.2](https://github.com/stan-smith/FossFLOW/compare/v1.9.1...v1.9.2) (2026-01-15)
+
+### Documentation
+
+* add missing language cross-references to all READMEs ([806cf08](https://github.com/stan-smith/FossFLOW/commit/806cf08681a14b68a264279930c9194deb416775))
+
+### Code Refactoring
+
+* bumped react18 to react19 along with associated deps and changes needed, long time coming, fixes [#72](https://github.com/stan-smith/FossFLOW/issues/72), thanks [@mmastrac](https://github.com/mmastrac) for providing some of the groundwork - Stan ([2fa3a3c](https://github.com/stan-smith/FossFLOW/commit/2fa3a3c970ea5dba944bb666f42a1f6ec7725595))
+
 ## [1.9.1](https://github.com/stan-smith/FossFLOW/compare/v1.9.0...v1.9.1) (2026-01-14)
 
 ### Bug Fixes
