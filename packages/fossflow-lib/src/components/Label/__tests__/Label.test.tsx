@@ -1,11 +1,17 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { ThemeProvider } from '@mui/material/styles';
+import { theme } from 'src/styles/theme';
 import { Label } from '../Label';
+
+const renderWithTheme = (ui: React.ReactElement) => {
+  return render(<ThemeProvider theme={theme}>{ui}</ThemeProvider>);
+};
 
 describe('Label', () => {
   describe('dotted line', () => {
     it('should render dotted line with pointerEvents none to not block clicks', () => {
-      const { container } = render(
+      const { container } = renderWithTheme(
         <Label maxWidth={200} labelHeight={50}>
           <span>Test Label</span>
         </Label>
@@ -21,7 +27,7 @@ describe('Label', () => {
     });
 
     it('should not render dotted line when labelHeight is 0', () => {
-      const { container } = render(
+      const { container } = renderWithTheme(
         <Label maxWidth={200} labelHeight={0}>
           <span>Test Label</span>
         </Label>
@@ -32,7 +38,7 @@ describe('Label', () => {
     });
 
     it('should not render dotted line when showLine is false', () => {
-      const { container } = render(
+      const { container } = renderWithTheme(
         <Label maxWidth={200} labelHeight={50} showLine={false}>
           <span>Test Label</span>
         </Label>
@@ -43,7 +49,7 @@ describe('Label', () => {
     });
 
     it('should render children correctly', () => {
-      render(
+      renderWithTheme(
         <Label maxWidth={200} labelHeight={50}>
           <span data-testid="label-content">Test Label Content</span>
         </Label>

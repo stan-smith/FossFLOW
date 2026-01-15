@@ -5,12 +5,12 @@
   "description": "Progressive Web App for creating isometric diagrams",
   "dependencies": {
     "@isoflow/isopacks": "^0.0.10",
-    "fossflow": "^1.1.0",
+    "fossflow": "*",
     "i18next": "^25.5.3",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "react-error-boundary": "^6.0.0",
     "react-i18next": "^15.7.4",
     "react-router-dom": "^7.9.6",
@@ -45,7 +45,7 @@
     "@rsbuild/plugin-react": "^1.4.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
-    "@testing-library/react": "^14.3.1",
+    "@testing-library/react": "^16.0.0",
     "@testing-library/user-event": "^14.6.1"
   }
 }

@@ -6,7 +6,7 @@ exports[`Value matches snapshot 1`] = `
     class="MuiBox-root css-1xrtkr"
   >
     <p
-      class="MuiTypography-root MuiTypography-body2 css-1xnd8mx-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-body2 css-1788z1s-MuiTypography-root"
     >
       Snapshot Value
     </p>

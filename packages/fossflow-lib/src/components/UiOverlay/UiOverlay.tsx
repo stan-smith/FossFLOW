@@ -58,7 +58,7 @@ const getEditorModeMapping = (editorMode: keyof typeof EditorModeEnum) => {
 
 export const UiOverlay = () => {
   const theme = useTheme();
-  const contextMenuAnchorRef = useRef();
+  const contextMenuAnchorRef = useRef<HTMLDivElement>(null);
   const toolMenuRef = useRef<HTMLDivElement>(null);
   const { appPadding } = theme.customVars;
   const spacing = useCallback(

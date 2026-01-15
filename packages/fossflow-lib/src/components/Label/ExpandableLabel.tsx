@@ -21,7 +21,7 @@ export const ExpandableLabel = ({
   const editorMode = useUiStateStore((state) => state.editorMode);
   const labelSettings = useUiStateStore((state) => state.labelSettings);
   const [isExpanded, setIsExpanded] = useState(false);
-  const contentRef = useRef<HTMLDivElement>();
+  const contentRef = useRef<HTMLDivElement>(null);
   const { observe, size: contentSize } = useResizeObserver();
 
   useEffect(() => {

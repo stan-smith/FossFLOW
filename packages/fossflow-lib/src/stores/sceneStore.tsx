@@ -166,7 +166,7 @@ interface ProviderProps {
 }
 
 export const SceneProvider = ({ children }: ProviderProps) => {
-  const storeRef = useRef<ReturnType<typeof initialState>>();
+  const storeRef = useRef<ReturnType<typeof initialState> | undefined>(undefined);
 
   if (!storeRef.current) {
     storeRef.current = initialState();

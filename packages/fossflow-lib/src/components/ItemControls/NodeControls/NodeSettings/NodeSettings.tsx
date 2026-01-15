@@ -32,7 +32,7 @@ export const NodeSettings = ({
   // Local state for smooth slider interaction
   const currentIcon = icons.find(icon => icon.id === modelItem?.icon);
   const [localScale, setLocalScale] = useState(currentIcon?.scale || 1);
-  const debounceRef = useRef<NodeJS.Timeout>();
+  const debounceRef = useRef<NodeJS.Timeout | undefined>(undefined);
 
   // Update local scale when icon changes
   useEffect(() => {

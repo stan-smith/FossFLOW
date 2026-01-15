@@ -50,7 +50,7 @@ interface CropArea {
 }
 
 export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
-  const containerRef = useRef<HTMLDivElement>();
+  const containerRef = useRef<HTMLDivElement>(null);
   const cropCanvasRef = useRef<HTMLCanvasElement>(null);
   const isExporting = useRef<boolean>(false);
   const [isDragging, setIsDragging] = useState(false);

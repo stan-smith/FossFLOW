@@ -16,7 +16,7 @@ import { modelSchema } from 'src/schemas/model';
 
 export const useInitialDataManager = () => {
   const [isReady, setIsReady] = useState(false);
-  const prevInitialData = useRef<InitialData>();
+  const prevInitialData = useRef<InitialData | undefined>(undefined);
   const model = useModelStore((state) => {
     return state;
   });

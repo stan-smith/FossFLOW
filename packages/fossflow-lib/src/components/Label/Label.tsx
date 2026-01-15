@@ -22,7 +22,7 @@ export const Label = ({
   sx,
   showLine = true
 }: Props) => {
-  const contentRef = useRef<HTMLDivElement>();
+  const contentRef = useRef<HTMLDivElement>(null);
 
   return (
     <Box

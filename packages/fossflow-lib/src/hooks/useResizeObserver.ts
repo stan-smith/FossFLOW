@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Size } from 'src/types';
 
 export const useResizeObserver = (el?: HTMLElement | null) => {
-  const resizeObserverRef = useRef<ResizeObserver>();
+  const resizeObserverRef = useRef<ResizeObserver | undefined>(undefined);
   const [size, setSize] = useState<Size>({ width: 0, height: 0 });
 
   const disconnect = useCallback(() => {

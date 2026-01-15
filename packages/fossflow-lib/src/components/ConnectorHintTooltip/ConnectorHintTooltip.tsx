@@ -7,7 +7,7 @@ import { useTranslation } from 'src/stores/localeStore';
 const STORAGE_KEY = 'fossflow_connector_hint_dismissed';
 
 interface Props {
-  toolMenuRef?: React.RefObject<HTMLElement>;
+  toolMenuRef?: React.RefObject<HTMLElement | null>;
 }
 
 export const ConnectorHintTooltip = ({ toolMenuRef }: Props) => {
