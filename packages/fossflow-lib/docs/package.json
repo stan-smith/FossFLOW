@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "next": "^15.4.6",
+    "next": "^15.5.9",
     "nextra": "^4.3.0",
     "nextra-theme-docs": "^4.3.0",
     "react": "^18.2.0",
