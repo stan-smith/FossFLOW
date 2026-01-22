@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.0](https://github.com/stan-smith/FossFLOW/compare/v1.9.2...v1.10.0) (2026-01-22)
+
+### Features
+
+* Added SVG export, fixes [#211](https://github.com/stan-smith/FossFLOW/issues/211) ([b14832f](https://github.com/stan-smith/FossFLOW/commit/b14832f541068d41f88379a8c907648549f433b6))
+
 ## [1.9.2](https://github.com/stan-smith/FossFLOW/compare/v1.9.1...v1.9.2) (2026-01-15)
 
 ### Documentation
