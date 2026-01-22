@@ -24,6 +24,7 @@ import {
 import { useModelStore } from 'src/stores/modelStore';
 import {
   exportAsImage,
+  exportAsSVG,
   downloadFile as downloadFileUtil,
   base64ToBlob,
   generateGenericFilename,
@@ -57,6 +58,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
   const [dragStart, setDragStart] = useState<Coords | null>(null);
   const currentView = useUiStateStore((state) => state.view);
   const [imageData, setImageData] = React.useState<string>();
+  const [svgData, setSvgData] = useState<string>();
   const [croppedImageData, setCroppedImageData] = useState<string>();
   const [exportError, setExportError] = useState(false);
   const { getUnprojectedBounds } = useDiagramUtils();
@@ -100,7 +102,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     customVars.customPalette.diagramBg
   );
 
-  const exportImage = useCallback(() => {
+  const exportImage = useCallback(async () => {
     if (!containerRef.current || isExporting.current) {
       return;
     }
@@ -113,16 +115,23 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
       height: bounds.height
     };
 
-    exportAsImage(containerRef.current as HTMLDivElement, containerSize, exportScale, transparentBackground ? 'transparent' : backgroundColor)
-      .then((data) => {
-        setImageData(data);
-        isExporting.current = false;
-      })
-      .catch((err) => {
-        console.error(err);
-        setExportError(true);
-        isExporting.current = false;
-      });
+    const bgColor = transparentBackground ? 'transparent' : backgroundColor;
+
+    try {
+      // Export both PNG and SVG in parallel
+      const [pngData, svgDataResult] = await Promise.all([
+        exportAsImage(containerRef.current as HTMLDivElement, containerSize, exportScale, bgColor),
+        exportAsSVG(containerRef.current as HTMLDivElement, containerSize, bgColor)
+      ]);
+
+      setImageData(pngData);
+      setSvgData(svgDataResult);
+      isExporting.current = false;
+    } catch (err) {
+      console.error(err);
+      setExportError(true);
+      isExporting.current = false;
+    }
   }, [bounds, exportScale, transparentBackground, backgroundColor]);
 
   // Crop the image based on selected area
@@ -381,6 +390,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
   useEffect(() => {
     if (!cropToContent) {
       setImageData(undefined);
+      setSvgData(undefined);
       setExportError(false);
       isExporting.current = false;
       const timer = setTimeout(() => {
@@ -410,6 +420,20 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
 
     downloadFileUtil(data, generateGenericFilename('png'));
   }, [imageData, croppedImageData]);
+
+  const downloadSvgFile = useCallback(async () => {
+    if (!svgData) return;
+
+    try {
+      // Fetch the data URL as a blob to handle encoding properly
+      const response = await fetch(svgData);
+      const blob = await response.blob();
+      downloadFileUtil(blob, generateGenericFilename('svg'));
+    } catch (error) {
+      console.error('SVG download failed:', error);
+      setExportError(true);
+    }
+  }, [svgData]);
 
   const displayImage = croppedImageData || imageData;
 
@@ -680,7 +704,14 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                   <Button variant="text" onClick={onClose}>
                     Cancel
                   </Button>
-                  <Button 
+                  <Button
+                    variant="outlined"
+                    onClick={downloadSvgFile}
+                    disabled={!svgData || (cropToContent && isInCropMode && !croppedImageData)}
+                  >
+                    Download as SVG
+                  </Button>
+                  <Button
                     onClick={downloadFile}
                     disabled={cropToContent && isInCropMode && !croppedImageData}
                   >

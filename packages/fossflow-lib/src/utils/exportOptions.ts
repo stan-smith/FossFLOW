@@ -4,7 +4,7 @@ import { Model, Size } from '../types';
 import { icons as availableIcons } from '../examples/initialData';
 
 export const generateGenericFilename = (extension: string) => {
-  return `isoflow-export-${new Date().toISOString()}.${extension}`;
+  return `fossflow-export-${new Date().toISOString()}.${extension}`;
 };
 
 export const base64ToBlob = (
@@ -206,6 +206,37 @@ export const exportAsImage = async (
     console.error('Export failed, trying fallback method:', error);
     // Fallback: try with minimal options
     return await domtoimage.toPng(el, {
+      width,
+      height,
+      cacheBust: true,
+      bgcolor
+    });
+  }
+};
+
+export const exportAsSVG = async (
+  el: HTMLDivElement,
+  size?: Size,
+  bgcolor: string = '#ffffff'
+) => {
+  const width = size ? size.width : el.clientWidth;
+  const height = size ? size.height : el.clientHeight;
+
+  const options = {
+    width,
+    height,
+    cacheBust: true,
+    bgcolor,
+    quality: 1.0
+  };
+
+  try {
+    const svgData = await domtoimage.toSvg(el, options);
+    return svgData;
+  } catch (error) {
+    console.error('SVG export failed, trying fallback method:', error);
+    // Fallback: try with minimal options
+    return await domtoimage.toSvg(el, {
       width,
       height,
       cacheBust: true,
