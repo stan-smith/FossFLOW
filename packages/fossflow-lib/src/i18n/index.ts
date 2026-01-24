@@ -9,6 +9,7 @@ import ruRU from './ru-RU';
 import plPL from './pl-PL';
 import idID from './id-ID';
 import itIT from './it-IT';
+import trTR from './tr-TR';
 
 const locales = {
     'en-US': enUS,
@@ -21,7 +22,8 @@ const locales = {
     'ru-RU': ruRU,
     'pl-PL': plPL,
     'id-ID': idID,
-    'it-IT': itIT
+    'it-IT': itIT,
+    'tr-TR': trTR
 };
 
 export default locales;
