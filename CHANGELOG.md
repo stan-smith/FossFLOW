@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.1](https://github.com/stan-smith/FossFLOW/compare/v1.10.0...v1.10.1) (2026-01-26)
+
+### Bug Fixes
+
+* resolve flickering issue ([#203](https://github.com/stan-smith/FossFLOW/issues/203)) ([#215](https://github.com/stan-smith/FossFLOW/issues/215)) @Abrar74774 ([dd2b782](https://github.com/stan-smith/FossFLOW/commit/dd2b782398f932597a8726906107a088a7b68b59))
+
 ## [1.10.0](https://github.com/stan-smith/FossFLOW/compare/v1.9.2...v1.10.0) (2026-01-22)
 
 ### Features
