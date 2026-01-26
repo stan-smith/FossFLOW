@@ -50,6 +50,7 @@ function EditorPage() {
   const { readonlyDiagramId } = useParams<{ readonlyDiagramId: string }>();
 
   const [diagrams, setDiagrams] = useState<SavedDiagram[]>([]);
+  const [isDiagramsInitialized, setIsDiagramsInitialized] = useState<boolean>(false);
   const [currentDiagram, setCurrentDiagram] = useState<SavedDiagram | null>(
     null
   );
@@ -173,6 +174,7 @@ function EditorPage() {
     const savedDiagrams = localStorage.getItem('fossflow-diagrams');
     if (savedDiagrams) {
       setDiagrams(JSON.parse(savedDiagrams));
+      setIsDiagramsInitialized(true);
     }
 
     // Load last opened diagram metadata (data is already loaded in state initialization)
@@ -194,10 +196,12 @@ function EditorPage() {
         console.error('Failed to restore last diagram metadata:', e);
       }
     }
-  }, [diagramData]);
+  }, []);
 
   // Save diagrams to localStorage whenever they change
   useEffect(() => {
+    if (!isDiagramsInitialized) return;
+
     try {
       // Store diagrams without the full icon data
       const diagramsToStore = diagrams.map((d) => {
