@@ -12,5 +12,15 @@ else
 fi
 
 # Start nginx
+
+# Configure HTTP Basic Auth
+if [ -n "$HTTP_AUTH_USER" ] && [ -n "$HTTP_AUTH_PASSWORD" ]; then
+    echo "Setup HTTP Basic Auth..."
+    echo "$HTTP_AUTH_USER:$(openssl passwd -apr1 $HTTP_AUTH_PASSWORD)" > /etc/nginx/.htpasswd
+    sed -i 's/AUTH_BASIC_SETTING/"Restricted"/g' /etc/nginx/http.d/default.conf
+else
+    echo "No HTTP Basic Auth configured"
+    sed -i 's/AUTH_BASIC_SETTING/off/g' /etc/nginx/http.d/default.conf
+fi
 echo "Starting nginx..."
 nginx -g "daemon off;"
