@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { ModeActions, State, SlimMouseEvent } from 'src/types';
+import { ModeActions, State, SlimMouseEvent, Mouse } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
 import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom } from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
@@ -20,6 +20,56 @@ import { TextBox } from './modes/TextBox';
 import { Lasso } from './modes/Lasso';
 import { FreehandLasso } from './modes/FreehandLasso';
 import { usePanHandlers } from './usePanHandlers';
+
+// Added some throttling in for the mouse updates, this was causing unnexessary re-renders  - Stan
+interface PendingMouseUpdate {
+  mouse: Mouse;
+  event: SlimMouseEvent;
+}
+
+const useRAFThrottle = () => {
+  const rafIdRef = useRef<number | null>(null);
+  const pendingUpdateRef = useRef<PendingMouseUpdate | null>(null);
+  const callbackRef = useRef<((update: PendingMouseUpdate) => void) | null>(null);
+
+  const scheduleUpdate = useCallback((mouse: Mouse, event: SlimMouseEvent, callback: (update: PendingMouseUpdate) => void) => {
+    pendingUpdateRef.current = { mouse, event };
+    callbackRef.current = callback;
+
+    // Only schedule a new frame if one isn't already pending
+    if (rafIdRef.current === null) {
+      rafIdRef.current = requestAnimationFrame(() => {
+        rafIdRef.current = null;
+        if (pendingUpdateRef.current && callbackRef.current) {
+          callbackRef.current(pendingUpdateRef.current);
+          pendingUpdateRef.current = null;
+        }
+      });
+    }
+  }, []);
+
+  const flushUpdate = useCallback(() => {
+    // Immediately process pending update (for mousedown/mouseup)
+    if (rafIdRef.current !== null) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
+    if (pendingUpdateRef.current && callbackRef.current) {
+      callbackRef.current(pendingUpdateRef.current);
+      pendingUpdateRef.current = null;
+    }
+  }, []);
+
+  const cleanup = useCallback(() => {
+    if (rafIdRef.current !== null) {
+      cancelAnimationFrame(rafIdRef.current);
+      rafIdRef.current = null;
+    }
+    pendingUpdateRef.current = null;
+  }, []);
+
+  return { scheduleUpdate, flushUpdate, cleanup };
+};
 
 const modes: { [k in string]: ModeActions } = {
   CURSOR: Cursor,
@@ -61,6 +111,7 @@ export const useInteractionManager = () => {
   const { undo, redo, canUndo, canRedo } = useHistory();
   const { createTextBox } = scene;
   const { handleMouseDown: handlePanMouseDown, handleMouseUp: handlePanMouseUp } = usePanHandlers();
+  const { scheduleUpdate, flushUpdate, cleanup } = useRAFThrottle();
 
   // Keyboard shortcuts for undo/redo
   useEffect(() => {
@@ -229,31 +280,14 @@ export const useInteractionManager = () => {
     };
   }, [undo, redo, canUndo, canRedo, uiState.hotkeyProfile, uiState.actions, createTextBox, uiState.mouse.position.tile, scene, uiState.itemControls, uiState.mode, uiState.connectorInteractionMode]);
 
-  const onMouseEvent = useCallback(
-    (e: SlimMouseEvent) => {
+  const processMouseUpdate = useCallback(
+    (nextMouse: Mouse, e: SlimMouseEvent) => {
       if (!rendererRef.current) return;
-
-      // Check pan handlers first
-      if (e.type === 'mousedown' && handlePanMouseDown(e)) {
-        return;
-      }
-      if (e.type === 'mouseup' && handlePanMouseUp(e)) {
-        return;
-      }
 
       const mode = modes[uiState.mode.type];
       const modeFunction = getModeFunction(mode, e);
 
       if (!modeFunction) return;
-
-      const nextMouse = getMouse({
-        interactiveElement: rendererRef.current,
-        zoom: uiState.zoom,
-        scroll: uiState.scroll,
-        lastMouse: uiState.mouse,
-        mouseEvent: e,
-        rendererSize
-      });
 
       uiState.actions.setMouse(nextMouse);
 
@@ -283,7 +317,43 @@ export const useInteractionManager = () => {
       modeFunction(baseState);
       reducerTypeRef.current = uiState.mode.type;
     },
-    [model, scene, uiState, rendererSize, handlePanMouseDown, handlePanMouseUp]
+    [model, scene, uiState, rendererSize]
+  );
+
+  const onMouseEvent = useCallback(
+    (e: SlimMouseEvent) => {
+      if (!rendererRef.current) return;
+
+      // Check pan handlers first
+      if (e.type === 'mousedown' && handlePanMouseDown(e)) {
+        return;
+      }
+      if (e.type === 'mouseup' && handlePanMouseUp(e)) {
+        return;
+      }
+
+      const nextMouse = getMouse({
+        interactiveElement: rendererRef.current,
+        zoom: uiState.zoom,
+        scroll: uiState.scroll,
+        lastMouse: uiState.mouse,
+        mouseEvent: e,
+        rendererSize
+      });
+
+      // For mousedown and mouseup, process immediately for responsiveness
+      // For mousemove, throttle updates to align with renderer frame rate
+      if (e.type === 'mousemove') {
+        scheduleUpdate(nextMouse, e, (update) => {
+          processMouseUpdate(update.mouse, update.event);
+        });
+      } else {
+        // Flush any pending mousemove update before processing mousedown/mouseup
+        flushUpdate();
+        processMouseUpdate(nextMouse, e);
+      }
+    },
+    [uiState.zoom, uiState.scroll, uiState.mouse, rendererSize, handlePanMouseDown, handlePanMouseUp, scheduleUpdate, flushUpdate, processMouseUpdate]
   );
 
   const onContextMenu = useCallback(
@@ -423,6 +493,7 @@ export const useInteractionManager = () => {
       el.removeEventListener('touchmove', onTouchMove);
       el.removeEventListener('touchend', onTouchEnd);
       uiState.rendererEl?.removeEventListener('wheel', onScroll);
+      cleanup(); // Cancel any pending RAF updates
     };
   }, [
     uiState.editorMode,
@@ -434,7 +505,8 @@ export const useInteractionManager = () => {
     uiState.zoom,
     uiState.scroll,
     uiState.zoomSettings,
-    rendererSize
+    rendererSize,
+    cleanup
   ]);
 
   const setInteractionsElement = useCallback((element: HTMLElement) => {
