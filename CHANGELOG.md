@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.2](https://github.com/stan-smith/FossFLOW/compare/v1.10.1...v1.10.2) (2026-01-31)
+
+### Bug Fixes
+
+* memoized tools and other components as they were causing again more re-renders, this improves performance a touch ([e011f8c](https://github.com/stan-smith/FossFLOW/commit/e011f8cea2acd9e46efd9a9713dc3aaf94d923d5))
+
 ## [1.10.1](https://github.com/stan-smith/FossFLOW/compare/v1.10.0...v1.10.1) (2026-01-26)
 
 ### Bug Fixes

@@ -1,6 +1,6 @@
 {
   "name": "fossflow-backend",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "description": "Optional backend server for FossFLOW persistent storage",
   "main": "server.js",
   "type": "module",
