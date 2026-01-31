@@ -13,7 +13,7 @@ interface Props {
 export const LassoHintTooltip = ({ toolMenuRef }: Props) => {
   const { t } = useTranslation('lassoHintTooltip');
   const theme = useTheme();
-  const mode = useUiStateStore((state) => state.mode);
+  const modeType = useUiStateStore((state) => state.mode.type);
   const [isDismissed, setIsDismissed] = useState(true);
   const [position, setPosition] = useState({ top: 16, right: 16 });
 
@@ -50,11 +50,11 @@ export const LassoHintTooltip = ({ toolMenuRef }: Props) => {
   };
 
   // Only show when in LASSO or FREEHAND_LASSO mode
-  if (isDismissed || (mode.type !== 'LASSO' && mode.type !== 'FREEHAND_LASSO')) {
+  if (isDismissed || (modeType !== 'LASSO' && modeType !== 'FREEHAND_LASSO')) {
     return null;
   }
 
-  const isFreehandMode = mode.type === 'FREEHAND_LASSO';
+  const isFreehandMode = modeType === 'FREEHAND_LASSO';
 
   return (
     <Box

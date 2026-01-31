@@ -164,3 +164,14 @@ export function useUiStateStore<T>(selector: (state: UiStateStore) => T) {
   const value = useStore(store, selector);
   return value;
 }
+
+// Hook to get store API for imperative access (getState without subscribing)
+export function useUiStateStoreApi() {
+  const store = useContext(UiStateContext);
+
+  if (store === null) {
+    throw new Error('Missing provider in the tree');
+  }
+
+  return store;
+}

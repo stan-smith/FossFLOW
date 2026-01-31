@@ -14,7 +14,10 @@ export const ConnectorHintTooltip = ({ toolMenuRef }: Props) => {
   const { t } = useTranslation('connectorHintTooltip');
   const theme = useTheme();
   const connectorInteractionMode = useUiStateStore((state) => state.connectorInteractionMode);
-  const mode = useUiStateStore((state) => state.mode);
+  const modeType = useUiStateStore((state) => state.mode.type);
+  const isConnecting = useUiStateStore((state) =>
+    state.mode.type === 'CONNECTOR' ? state.mode.isConnecting : false
+  );
   const [isDismissed, setIsDismissed] = useState(true);
   const [position, setPosition] = useState({ top: 16, right: 16 });
 
@@ -94,7 +97,7 @@ export const ConnectorHintTooltip = ({ toolMenuRef }: Props) => {
           {connectorInteractionMode === 'click' ? (
             <>
               <strong>{t('clickInstructionStart')}</strong> {t('clickInstructionMiddle')} <strong>{t('clickInstructionStart')}</strong> {t('clickInstructionEnd')}
-              {mode.type === 'CONNECTOR' && mode.isConnecting && (
+              {modeType === 'CONNECTOR' && isConnecting && (
                 <Box component="span" sx={{ display: 'block', mt: 1, color: 'primary.main' }}>
                   {t('nowClickTarget')}
                 </Box>

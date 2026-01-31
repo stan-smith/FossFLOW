@@ -56,9 +56,9 @@ export const useIsoProjection = ({
     };
   }, [gridSize]);
 
-  return {
+  return useMemo(() => ({
     css: {
-      position: 'absolute',
+      position: 'absolute' as const,
       left: position.x,
       top: position.y,
       width: `${pxSize.width}px`,
@@ -69,5 +69,5 @@ export const useIsoProjection = ({
     position,
     gridSize,
     pxSize
-  };
+  }), [position, pxSize, gridSize, orientation]);
 };

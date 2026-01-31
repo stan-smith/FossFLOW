@@ -3,22 +3,22 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { createSmoothPath } from 'src/utils';
 
 export const FreehandLasso = () => {
-  const mode = useUiStateStore((state) => {
-    return state.mode;
-  });
+  const modeType = useUiStateStore((state) => state.mode.type);
+  const path = useUiStateStore((state) =>
+    state.mode.type === 'FREEHAND_LASSO' ? state.mode.path : []
+  );
+  const rendererEl = useUiStateStore((state) => state.rendererEl);
 
-  const rendererSize = useUiStateStore((state) => {
-    return state.rendererEl?.getBoundingClientRect();
-  });
+  const rendererSize = rendererEl?.getBoundingClientRect();
 
   const smoothPath = useMemo(() => {
-    if (mode.type !== 'FREEHAND_LASSO' || mode.path.length < 2) {
+    if (modeType !== 'FREEHAND_LASSO' || path.length < 2) {
       return '';
     }
-    return createSmoothPath(mode.path);
-  }, [mode]);
+    return createSmoothPath(path);
+  }, [modeType, path]);
 
-  if (mode.type !== 'FREEHAND_LASSO' || mode.path.length < 2) {
+  if (modeType !== 'FREEHAND_LASSO' || path.length < 2) {
     return null;
   }
 

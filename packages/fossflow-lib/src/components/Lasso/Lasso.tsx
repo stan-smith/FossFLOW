@@ -3,15 +3,16 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { IsoTileArea } from 'src/components/IsoTileArea/IsoTileArea';
 
 export const Lasso = () => {
-  const mode = useUiStateStore((state) => {
-    return state.mode;
-  });
+  const modeType = useUiStateStore((state) => state.mode.type);
+  const selection = useUiStateStore((state) =>
+    state.mode.type === 'LASSO' ? state.mode.selection : null
+  );
 
-  if (mode.type !== 'LASSO' || !mode.selection) {
+  if (modeType !== 'LASSO' || !selection) {
     return null;
   }
 
-  const { startTile, endTile } = mode.selection;
+  const { startTile, endTile } = selection;
 
   return (
     <IsoTileArea

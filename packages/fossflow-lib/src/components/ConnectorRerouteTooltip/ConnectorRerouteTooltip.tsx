@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, IconButton, Paper, Typography, Fade } from '@mui/material';
 import { Close as CloseIcon } from '@mui/icons-material';
-import { useUiStateStore } from 'src/stores/uiStateStore';
+import { useUiStateStore, useUiStateStoreApi } from 'src/stores/uiStateStore';
 import { useScene } from 'src/hooks/useScene';
 import { useTranslation } from 'src/stores/localeStore';
 
@@ -11,10 +11,16 @@ export const ConnectorRerouteTooltip = () => {
   const { t } = useTranslation('connectorRerouteTooltip');
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const mode = useUiStateStore((state) => state.mode);
-  const mouse = useUiStateStore((state) => state.mouse);
+  const modeType = useUiStateStore((state) => state.mode.type);
+  const isConnecting = useUiStateStore((state) =>
+    state.mode.type === 'CONNECTOR' ? state.mode.isConnecting : false
+  );
+  const connectorId = useUiStateStore((state) =>
+    state.mode.type === 'CONNECTOR' ? state.mode.id : null
+  );
+  const storeApi = useUiStateStoreApi();
   const { connectors } = useScene();
-  const previousModeRef = useRef(mode);
+  const previousIsConnectingRef = useRef(isConnecting);
   const shownForConnectorRef = useRef<string | null>(null);
   const [isDismissed, setIsDismissed] = useState(true);
 
@@ -31,24 +37,24 @@ export const ConnectorRerouteTooltip = () => {
       return;
     }
 
-    const previousMode = previousModeRef.current;
+    const wasConnecting = previousIsConnectingRef.current;
 
     // Detect when we transition from isConnecting to not isConnecting (connection completed)
     if (
-      mode.type === 'CONNECTOR' &&
-      previousMode.type === 'CONNECTOR' &&
-      previousMode.isConnecting &&
-      !mode.isConnecting &&
-      !mode.id // After connection is complete, id is set to null
+      modeType === 'CONNECTOR' &&
+      wasConnecting &&
+      !isConnecting &&
+      !connectorId // After connection is complete, id is set to null
     ) {
       // Find the most recently created connector
       const latestConnector = connectors[connectors.length - 1];
 
       if (latestConnector && latestConnector.id !== shownForConnectorRef.current) {
-        // Show tooltip near the mouse position
+        // Show tooltip near the mouse position (read imperatively)
+        const currentMousePosition = storeApi.getState().mouse.position.screen;
         setTooltipPosition({
-          x: mouse.position.screen.x,
-          y: mouse.position.screen.y
+          x: currentMousePosition.x,
+          y: currentMousePosition.y
         });
         setShowTooltip(true);
         shownForConnectorRef.current = latestConnector.id;
@@ -63,12 +69,12 @@ export const ConnectorRerouteTooltip = () => {
     }
 
     // Hide tooltip when switching away from connector mode
-    if (mode.type !== 'CONNECTOR') {
+    if (modeType !== 'CONNECTOR') {
       setShowTooltip(false);
     }
 
-    previousModeRef.current = mode;
-  }, [mode, connectors, mouse.position.screen, isDismissed]);
+    previousIsConnectingRef.current = isConnecting;
+  }, [modeType, isConnecting, connectorId, connectors, isDismissed, storeApi]);
 
   const handleDismiss = () => {
     setShowTooltip(false);

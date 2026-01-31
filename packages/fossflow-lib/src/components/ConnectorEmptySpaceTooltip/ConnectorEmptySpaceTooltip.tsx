@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, Paper, Typography, Fade } from '@mui/material';
-import { useUiStateStore } from 'src/stores/uiStateStore';
+import { useUiStateStore, useUiStateStoreApi } from 'src/stores/uiStateStore';
 import { useScene } from 'src/hooks/useScene';
 import { useTranslation } from 'src/stores/localeStore';
 
@@ -8,58 +8,66 @@ export const ConnectorEmptySpaceTooltip = () => {
   const { t } = useTranslation('connectorEmptySpaceTooltip');
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
-  const mode = useUiStateStore((state) => state.mode);
-  const mouse = useUiStateStore((state) => state.mouse);
+  const modeType = useUiStateStore((state) => state.mode.type);
+  const isConnecting = useUiStateStore((state) =>
+    state.mode.type === 'CONNECTOR' ? state.mode.isConnecting : false
+  );
+  const connectorId = useUiStateStore((state) =>
+    state.mode.type === 'CONNECTOR' ? state.mode.id : null
+  );
+  // Get store API for imperative access to mouse position (without subscribing)
+  const storeApi = useUiStateStoreApi();
+
   const { connectors } = useScene();
-  const previousModeRef = useRef(mode);
+  const previousIsConnectingRef = useRef(isConnecting);
   const shownForConnectorRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const previousMode = previousModeRef.current;
-    
+    const wasConnecting = previousIsConnectingRef.current;
+
     // Detect when we transition from isConnecting to not isConnecting (connection completed)
     if (
-      mode.type === 'CONNECTOR' &&
-      previousMode.type === 'CONNECTOR' &&
-      previousMode.isConnecting &&
-      !mode.isConnecting &&
-      !mode.id // After connection is complete, id is set to null
+      modeType === 'CONNECTOR' &&
+      wasConnecting &&
+      !isConnecting &&
+      !connectorId // After connection is complete, id is set to null
     ) {
       // Find the most recently created connector
       const latestConnector = connectors[connectors.length - 1];
-      
+
       if (latestConnector && latestConnector.id !== shownForConnectorRef.current) {
         // Check if either end is connected to empty space (tile reference)
         const hasEmptySpaceConnection = latestConnector.anchors.some(
           anchor => anchor.ref.tile && !anchor.ref.item
         );
-        
+
         if (hasEmptySpaceConnection) {
-          // Show tooltip near the mouse position
+          // Show tooltip near the mouse position (read imperatively to avoid subscribing)
+          const currentMousePosition = storeApi.getState().mouse.position.screen;
           setTooltipPosition({
-            x: mouse.position.screen.x,
-            y: mouse.position.screen.y
+            x: currentMousePosition.x,
+            y: currentMousePosition.y
           });
           setShowTooltip(true);
           shownForConnectorRef.current = latestConnector.id;
-          
+
           // Auto-hide after 12 seconds
           const timer = setTimeout(() => {
             setShowTooltip(false);
           }, 12000);
-          
+
           return () => clearTimeout(timer);
         }
       }
     }
-    
+
     // Hide tooltip when switching away from connector mode
-    if (mode.type !== 'CONNECTOR') {
+    if (modeType !== 'CONNECTOR') {
       setShowTooltip(false);
     }
-    
-    previousModeRef.current = mode;
-  }, [mode, connectors, mouse.position.screen]);
+
+    previousIsConnectingRef.current = isConnecting;
+  }, [modeType, isConnecting, connectorId, connectors, storeApi]);
 
   // Remove the click handler - tooltip should persist
   // It will only hide after timeout or mode change

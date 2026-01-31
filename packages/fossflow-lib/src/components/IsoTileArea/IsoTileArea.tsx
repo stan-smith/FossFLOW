@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Coords } from 'src/types';
 import { Svg } from 'src/components/Svg/Svg';
 import { useIsoProjection } from 'src/hooks/useIsoProjection';
@@ -16,7 +16,7 @@ interface Props {
   };
 }
 
-export const IsoTileArea = ({
+export const IsoTileArea = memo(({
   from,
   to,
   fill = 'none',
@@ -54,4 +54,4 @@ export const IsoTileArea = ({
       />
     </Svg>
   );
-};
+});

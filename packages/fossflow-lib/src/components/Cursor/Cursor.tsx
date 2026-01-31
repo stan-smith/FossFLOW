@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { memo } from 'react';
 import chroma from 'chroma-js';
 import { useTheme } from '@mui/material';
 import { IsoTileArea } from 'src/components/IsoTileArea/IsoTileArea';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 
-export const Cursor = () => {
+export const Cursor = memo(() => {
   const theme = useTheme();
   const tile = useUiStateStore((state) => {
     return state.mouse.position.tile;
@@ -21,4 +21,4 @@ export const Cursor = () => {
       cornerRadius={10 * zoom}
     />
   );
-};
+});

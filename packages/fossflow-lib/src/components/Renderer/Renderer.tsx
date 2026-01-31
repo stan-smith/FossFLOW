@@ -23,8 +23,8 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
   const enableDebugTools = useUiStateStore((state) => {
     return state.enableDebugTools;
   });
-  const mode = useUiStateStore((state) => {
-    return state.mode;
+  const showCursor = useUiStateStore((state) => {
+    return state.mode.showCursor;
   });
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
@@ -74,7 +74,7 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
       >
         {isShowGrid && <Grid />}
       </Box>
-      {mode.showCursor && (
+      {showCursor && (
         <SceneLayer>
           <Cursor />
         </SceneLayer>
