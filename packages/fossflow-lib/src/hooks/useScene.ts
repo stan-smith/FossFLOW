@@ -362,16 +362,21 @@ export const useScene = () => {
   );
 
   const updateTextBox = useCallback(
-    (id: string, updates: Partial<TextBox>) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+    (id: string, updates: Partial<TextBox>, currentState?: State) => {
+      if (!model?.actions || !scene?.actions || !currentViewId) return currentState || getState();
 
-      saveToHistoryBeforeChange();
+      if (!transactionInProgress.current) {
+        saveToHistoryBeforeChange();
+      }
+
+      const stateToUse = currentState || getState();
       const newState = reducers.view({
         action: 'UPDATE_TEXTBOX',
         payload: { id, ...updates },
-        ctx: { viewId: currentViewId, state: getState() }
+        ctx: { viewId: currentViewId, state: stateToUse }
       });
       setState(newState);
+      return newState;
     },
     [
       getState,
@@ -428,16 +433,21 @@ export const useScene = () => {
   );
 
   const updateRectangle = useCallback(
-    (id: string, updates: Partial<Rectangle>) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+    (id: string, updates: Partial<Rectangle>, currentState?: State) => {
+      if (!model?.actions || !scene?.actions || !currentViewId) return currentState || getState();
 
-      saveToHistoryBeforeChange();
+      if (!transactionInProgress.current) {
+        saveToHistoryBeforeChange();
+      }
+
+      const stateToUse = currentState || getState();
       const newState = reducers.view({
         action: 'UPDATE_RECTANGLE',
         payload: { id, ...updates },
-        ctx: { viewId: currentViewId, state: getState() }
+        ctx: { viewId: currentViewId, state: stateToUse }
       });
       setState(newState);
+      return newState;
     },
     [
       getState,
