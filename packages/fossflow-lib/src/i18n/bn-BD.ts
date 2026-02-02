@@ -13,7 +13,8 @@ const locale: LocaleProps = {
     exportImage: "ছবি হিসাবে রপ্তানি করুন",
     clearCanvas: "ক্যানভাস পরিষ্কার করুন",
     settings: "সেটিংস",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    importMermaid: "Import from Mermaid (Experimental)"
   },
   helpDialog: {
     title: "কীবোর্ড শর্টকাট এবং সহায়তা",

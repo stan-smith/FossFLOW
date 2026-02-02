@@ -27,6 +27,7 @@ import { useHistory } from 'src/hooks/useHistory';
 import { DialogTypeEnum } from 'src/types/ui';
 import { MenuItem } from './MenuItem';
 import { useTranslation } from 'src/stores/localeStore';
+import { importMermaid } from 'src/importers/mermaid';
 
 export const MainMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -134,6 +135,40 @@ export const MainMenu = () => {
     uiStateActions.setDialog(DialogTypeEnum.SETTINGS);
   }, [uiStateActions]);
 
+  const onImportMermaid = useCallback(async () => {
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.mmd,.mermaid,.txt';
+
+    fileInput.onchange = async (event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+
+      if (!file) {
+        throw new Error('No file selected');
+      }
+
+      const fileReader = new FileReader();
+
+      fileReader.onload = async (e) => {
+        const text = e.target?.result as string;
+        try {
+          const modelData = importMermaid(text);
+          load(modelData);
+          clearHistory();
+        } catch (error) {
+          console.error('Failed to import Mermaid:', error);
+          window.alert('Failed to import Mermaid diagram. Please check the syntax.');
+        }
+      };
+      fileReader.readAsText(file);
+
+      uiStateActions.resetUiState();
+    };
+
+    await fileInput.click();
+    uiStateActions.setIsMainMenuOpen(false);
+  }, [uiStateActions, load, clearHistory]);
+
 
 
 
@@ -141,7 +176,7 @@ export const MainMenu = () => {
     return {
       actions: Boolean(
         mainMenuOptions.find((opt) => {
-          return opt.includes('ACTION') || opt.includes('EXPORT');
+          return opt.includes('ACTION') || opt.includes('EXPORT') || opt.includes('IMPORT');
         })
       ),
       links: Boolean(
@@ -208,6 +243,12 @@ export const MainMenu = () => {
           {mainMenuOptions.includes('ACTION.OPEN') && (
             <MenuItem onClick={onOpenModel} Icon={<FolderOpenIcon />}>
               {t('open')}
+            </MenuItem>
+          )}
+
+          {mainMenuOptions.includes('IMPORT.MERMAID') && (
+            <MenuItem onClick={onImportMermaid} Icon={<ExportJsonIcon />}>
+              {t('importMermaid')}
             </MenuItem>
           )}
 

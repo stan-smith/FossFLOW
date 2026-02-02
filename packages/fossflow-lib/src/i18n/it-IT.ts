@@ -13,7 +13,8 @@ const locale: LocaleProps = {
     exportImage: "Esporta come immagine",
     clearCanvas: "Pulisci la tela",
     settings: "Impostazioni",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    importMermaid: "Import from Mermaid (Experimental)"
   },
   helpDialog: {
     title: "Scorciatoie da tastiera e aiuto",

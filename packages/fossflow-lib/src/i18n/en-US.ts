@@ -13,7 +13,8 @@ const locale: LocaleProps = {
     exportImage: "Export as image",
     clearCanvas: "Clear the canvas",
     settings: "Settings",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    importMermaid: "Import from Mermaid (Experimental)"
   },
   helpDialog: {
     title: "Keyboard Shortcuts & Help",
@@ -98,7 +99,7 @@ const locale: LocaleProps = {
     instructionStart: "To import diagrams, click the",
     menuButton: "menu button",
     instructionMiddle: "(☰) in the top left corner, then select",
-    openButton: "\"Open\"",
+    openButton: "\"Open\" or \"Import from Mermaid\"",
     instructionEnd: "to load your diagram files."
   },
   connectorRerouteTooltip: {

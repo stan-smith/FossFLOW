@@ -13,7 +13,8 @@ const locale: LocaleProps = {
     exportImage: "导出为图片",
     clearCanvas: "清空画布",
     settings: "设置",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    importMermaid: "Import from Mermaid (Experimental)"
   },
   helpDialog: {
     title: "键盘快捷键和帮助",

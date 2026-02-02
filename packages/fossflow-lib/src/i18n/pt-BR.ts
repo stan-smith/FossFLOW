@@ -13,7 +13,8 @@ const locale: LocaleProps = {
     exportImage: "Exportar como imagem",
     clearCanvas: "Limpar a tela",
     settings: "Configurações",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    importMermaid: "Import from Mermaid (Experimental)"
   },
   helpDialog: {
     title: "Atalhos de teclado e ajuda",

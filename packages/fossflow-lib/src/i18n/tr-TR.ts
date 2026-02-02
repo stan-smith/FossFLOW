@@ -13,7 +13,8 @@ const locale: LocaleProps = {
     exportImage: "Görüntü olarak dışa aktar",
     clearCanvas: "Tuvali temizle",
     settings: "Ayarlar",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    importMermaid: "Import from Mermaid (Experimental)"
   },
   helpDialog: {
     title: "Klavye Kısayolları ve Yardım",

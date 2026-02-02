@@ -107,6 +107,7 @@ export const INITIAL_SCENE_STATE = {
 };
 export const MAIN_MENU_OPTIONS: MainMenuOptions = [
   'ACTION.OPEN',
+  'IMPORT.MERMAID',
   'EXPORT.JSON',
   'EXPORT.PNG',
   'ACTION.CLEAR_CANVAS',

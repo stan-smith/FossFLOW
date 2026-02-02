@@ -33,6 +33,7 @@ export const EditorModeEnum = {
 
 export const MainMenuOptionsEnum = {
   'ACTION.OPEN': 'ACTION.OPEN',
+  'IMPORT.MERMAID': 'IMPORT.MERMAID',
   'EXPORT.JSON': 'EXPORT.JSON',
   'EXPORT.PNG': 'EXPORT.PNG',
   'ACTION.CLEAR_CANVAS': 'ACTION.CLEAR_CANVAS',
