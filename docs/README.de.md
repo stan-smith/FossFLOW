@@ -27,24 +27,7 @@ FossFLOW ist eine leistungsstarke, quelloffene Progressive Web App (PWA) zum Ers
 
 ![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)
 
-- **📝 [FOSSFLOW_TODO.md](https://github.com/stan-smith/FossFLOW/blob/master/FOSSFLOW_TODO.md)** - Aktuelle Probleme und Roadmap mit Codebase-Zuordnungen. Die meisten Beschwerden betreffen die isoflow-Bibliothek selbst.
 - **🤝 [CONTRIBUTING.md](https://github.com/stan-smith/FossFLOW/blob/master/CONTRIBUTING.md)** - Wie du zum Projekt beitragen kannst.
-
-### Performance-Updates
- - **Reduzierte Frame-Aktualisierungsverzögerung – sollte jetzt viel flüssiger aussehen**
-
-### Mehrsprachige Unterstützung
-- **8 Sprachen unterstützt** - Vollständige Oberflächenübersetzung in Englisch, Chinesisch (vereinfacht), Spanisch, Portugiesisch (Brasilien), Französisch, Hindi, Bengalisch und Russisch
-- **Sprachauswahl** - Einfach zu bedienender Sprachwechsler in der App-Kopfzeile
-- **Vollständige Übersetzung** - Alle Menüs, Dialoge, Einstellungen, Tooltips und Hilfeinhalte übersetzt
-- **Sprachbewusst** - Erkennt und speichert automatisch deine Sprachpräferenz
-
-### Verbessertes Verbindungswerkzeug
-- **Klick-basierte Erstellung** - Neuer Standardmodus: Klicke auf den ersten Knoten, dann auf den zweiten, um zu verbinden
-- **Zieh-Modus Option** - Das ursprüngliche Drag-and-Drop ist weiterhin über die Einstellungen verfügbar
-- **Modus-Auswahl** - Wechsle zwischen Klick- und Zieh-Modus in Einstellungen → Verbindungen
-- **Bessere Zuverlässigkeit** - Der Klick-Modus bietet eine vorhersagbarere Verbindungserstellung
-
 
 ## 🐳 Schnelle Bereitstellung mit Docker
 
@@ -146,7 +129,6 @@ Wir freuen uns über Beiträge! Siehe [CONTRIBUTORS.md](../CONTRIBUTORS.md) für
 ## Dokumentation
 
 - [FOSSFLOW_ENCYCLOPEDIA.md](../FOSSFLOW_ENCYCLOPEDIA.md) - Umfassender Leitfaden zur Codebase
-- [FOSSFLOW_TODO.md](../FOSSFLOW_TODO.md) - Aktuelle Probleme und Roadmap
 - [CONTRIBUTORS.md](../CONTRIBUTORS.md) - Beitragsrichtlinien
 
 ## Lizenz

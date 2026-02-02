@@ -29,7 +29,6 @@ FossFLOW é um poderoso Progressive Web App (PWA) de código aberto para criar b
 
 ![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)
 
-- **📝 [FOSSFLOW_TODO.md](https://github.com/stan-smith/FossFLOW/blob/master/FOSSFLOW_TODO.md)** - Problemas atuais e roteiro com mapeamentos de código base, a maioria das reclamações são com a própria biblioteca isoflow.
 - **🤝 [CONTRIBUTORS.md](https://github.com/stan-smith/FossFLOW/blob/master/CONTRIBUTORS.md)** - Como contribuir para o projeto.
 
 ## Atualizações Recentes (Outubro 2025)
@@ -197,7 +196,6 @@ Damos as boas-vindas a contribuições! Por favor veja [CONTRIBUTORS.md](../CONT
 ## Documentação
 
 - [FOSSFLOW_ENCYCLOPEDIA.md](../FOSSFLOW_ENCYCLOPEDIA.md) - Guia abrangente para a base de código
-- [FOSSFLOW_TODO.md](../FOSSFLOW_TODO.md) - Problemas atuais e roteiro
 - [CONTRIBUTORS.md](../CONTRIBUTORS.md) - Diretrizes de contribuição
 
 ## Licença
