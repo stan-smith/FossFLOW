@@ -13,7 +13,8 @@ const locale: LocaleProps = {
     exportImage: "Ekspor sebagai gambar",
     clearCanvas: "Bersihkan kanvas",
     settings: "Pengaturan",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    importMermaid: "Import from Mermaid (Experimental)"
   },
   helpDialog: {
     title: "Pintasan Keyboard & Bantuan",

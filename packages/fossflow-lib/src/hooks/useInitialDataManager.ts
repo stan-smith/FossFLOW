@@ -61,8 +61,9 @@ export const useInitialDataManager = () => {
       if (!validationResult.success) {
         // TODO: let's get better at reporting error messages here (starting with how we present them to users)
         // - not in console but in a modal
-        console.log(validationResult.error.errors);
-        window.alert('There is an error in your model.');
+        console.error('[InitialDataManager] Model validation failed:', validationResult.error.format());
+        console.log('[InitialDataManager] Problematic data:', _initialData);
+        window.alert('There is an error in your model. Check the console for details.');
         return;
       }
 

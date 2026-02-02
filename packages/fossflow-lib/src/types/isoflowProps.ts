@@ -21,6 +21,7 @@ export interface LocaleProps {
     clearCanvas: string;
     settings: string;
     gitHub: string;
+    importMermaid: string;
   };
   helpDialog: {
     title: string;

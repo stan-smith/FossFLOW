@@ -13,7 +13,8 @@ const locale: LocaleProps = {
     exportImage: "छवि के रूप में निर्यात करें",
     clearCanvas: "कैनवास साफ़ करें",
     settings: "सेटिंग्स",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    importMermaid: "Import from Mermaid (Experimental)"
   },
   helpDialog: {
     title: "कीबोर्ड शॉर्टकट और सहायता",

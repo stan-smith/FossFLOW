@@ -13,7 +13,8 @@ const locale: LocaleProps = {
     exportImage: "Exportar como imagen",
     clearCanvas: "Limpiar el lienzo",
     settings: "Configuración",
-    gitHub: "GitHub"
+    gitHub: "GitHub",
+    importMermaid: "Importar desde Mermaid (Experimental)"
   },
   helpDialog: {
     title: "Atajos de teclado y ayuda",
@@ -98,7 +99,7 @@ const locale: LocaleProps = {
     instructionStart: "Para importar diagramas, haz clic en el",
     menuButton: "botón de menú",
     instructionMiddle: "(☰) en la esquina superior izquierda, luego selecciona",
-    openButton: "\"Abrir\"",
+    openButton: "\"Abrir\" o \"Importar desde Mermaid\"",
     instructionEnd: "para cargar tus archivos de diagrama."
   },
   connectorRerouteTooltip: {
