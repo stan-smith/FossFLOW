@@ -119,7 +119,10 @@ const locale: LocaleProps = {
     zoom: {
       description: "Configurer le comportement du zoom lors de l'utilisation de la molette de la souris.",
       zoomToCursor: "Zoom sur le curseur",
-      zoomToCursorDesc: "Lorsqu'il est activé, le zoom est centré sur la position du curseur de la souris. Lorsqu'il est désactivé, le zoom est centré sur le canevas."
+      zoomToCursorDesc: "Lorsqu'il est activé, le zoom est centré sur la position du curseur de la souris. Lorsqu'il est désactivé, le zoom est centré sur le canevas.",
+
+      trackpadMode: "Mode Trackpad",
+      trackpadModeDesc: "Lorsqu'il est activé : le défilement à deux doigts déplace le canevas, le pincement effectue un zoom sans affecter le navigateur. Lorsqu'il est désactivé : la molette effectue un zoom sur le canevas (comportement par défaut de la souris)."
     },
     hotkeys: {
       title: "Paramètres des raccourcis",

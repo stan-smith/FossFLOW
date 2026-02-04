@@ -119,7 +119,10 @@ const locale: LocaleProps = {
     zoom: {
       description: "Skonfiguruj zachowanie powiększania podczas korzystania z kółka myszy.",
       zoomToCursor: "Powiększ do kursora",
-      zoomToCursorDesc: "Po włączeniu funkcji powiększanie/pomniejszanie odbywa się w oparciu o położenie kursora myszy. Po wyłączeniu funkcji <strong>Powiększ do kursora</strong> odbywa się w oparciu o położenie obszaru roboczego."
+      zoomToCursorDesc: "Po włączeniu funkcji powiększanie/pomniejszanie odbywa się w oparciu o położenie kursora myszy. Po wyłączeniu funkcji <strong>Powiększ do kursora</strong> odbywa się w oparciu o położenie obszaru roboczego.",
+
+      trackpadMode: "Tryb Trackpada",
+      trackpadModeDesc: "Po włączeniu: przewijanie dwoma palcami przesuwa płótno, uszczypnięcie powiększa bez wpływu na przeglądarkę. Po wyłączeniu: kółko myszy powiększa płótno (domyślne zachowanie myszy)."
     },
     hotkeys: {
       title: "Ustawienia skrótów klawiszowych",
