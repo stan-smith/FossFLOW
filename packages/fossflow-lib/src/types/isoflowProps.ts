@@ -127,6 +127,8 @@ export interface LocaleProps {
       description: string;
       zoomToCursor: string;
       zoomToCursorDesc: string;
+      trackpadMode: string;
+      trackpadModeDesc: string;
     };
     hotkeys: {
       title: string;

@@ -119,7 +119,9 @@ const locale: LocaleProps = {
     zoom: {
       description: "Configure zoom behavior when using the mouse wheel.",
       zoomToCursor: "Zoom to Cursor",
-      zoomToCursorDesc: "When enabled, zoom in/out centered on the mouse cursor position. When disabled, zoom is centered on the canvas."
+      zoomToCursorDesc: "When enabled, zoom in/out centered on the mouse cursor position. When disabled, zoom is centered on the canvas.",
+      trackpadMode: "Trackpad Mode",
+      trackpadModeDesc: "When enabled: two-finger scroll pans the canvas, pinch zooms without affecting the browser. When disabled: scroll wheel zooms the canvas (default mouse behavior)."
     },
     hotkeys: {
       title: "Hotkey Settings",

@@ -48,6 +48,25 @@ export const ZoomSettings = () => {
               </Box>
             }
           />
+          
+          <FormControlLabel
+            control={
+              <Switch
+                checked={zoomSettings.trackpadMode}
+                onChange={() => handleToggle('trackpadMode')}
+              />
+            }
+            label={
+              <Box>
+                <Typography variant="body1">
+                  {locale.settings.zoom.trackpadMode}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  {locale.settings.zoom.trackpadModeDesc}
+                </Typography>
+              </Box>
+            }
+          />
         </FormGroup>
       </FormControl>
     </Box>

@@ -119,7 +119,10 @@ const locale: LocaleProps = {
     zoom: {
       description: "Fare tekerleği kullanılırken yakınlaştırma davranışını yapılandırın.",
       zoomToCursor: "İmlece Yakınlaştır",
-      zoomToCursorDesc: "Etkinleştirildiğinde, fare imleci konumunda merkezlenmiş olarak yakınlaştırır/uzaklaştırır. Devre dışı bırakıldığında, yakınlaştırma tuvalde merkezlenir."
+      zoomToCursorDesc: "Etkinleştirildiğinde, fare imleci konumunda merkezlenmiş olarak yakınlaştırır/uzaklaştırır. Devre dışı bırakıldığında, yakınlaştırma tuvalde merkezlenir.",
+
+      trackpadMode: "Trackpad Modu",
+      trackpadModeDesc: "Etkinleştirildiğinde: iki parmakla kaydırma tuvali hareket ettirir, kıstırma tarayıcıyı etkilemeden yakınlaştırır. Devre dışı bırakıldığında: fare tekerleği tuvali yakınlaştırır (varsayılan fare davranışı)."
     },
     hotkeys: {
       title: "Kısayol Tuşu Ayarları",
