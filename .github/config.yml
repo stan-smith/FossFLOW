@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 General Discussion
+    url: https://github.com/stan-smith/FossFLOW/discussions
+    about: Got a question, idea, or just want to chat? Start a discussion instead of an issue.
+  - name: 📖 README & Documentation
+    url: https://github.com/stan-smith/FossFLOW#readme
+    about: Please check the docs before opening an issue - your answer might already be there.

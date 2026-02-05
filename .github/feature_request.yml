@@ -1,0 +1,75 @@
+name: 💡 Feature Request
+description: Suggest a new feature or improvement. Please check the project scope first.
+title: "Feature: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the suggestion! Before submitting, please understand that FossFLOW is a **simple, privacy-first diagramming tool**. 
+        
+        The following are **out of scope** and will be closed immediately:
+        - Authentication, RBAC, OIDC, or multi-tenancy
+        - User accounts or team management
+        - Cloud hosting or SaaS features
+        - Anything that fundamentally changes what FossFLOW is
+        
+        If you're unsure whether your idea fits, open a [Discussion](https://github.com/stan-smith/FossFLOW/discussions) first.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I have searched existing issues and feature requests for duplicates
+          required: true
+        - label: This feature is within the scope described above
+          required: true
+        - label: I have checked [Discussions](https://github.com/stan-smith/FossFLOW/discussions) for related topics
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the problem or limitation you're experiencing. Focus on the *problem*, not the solution.
+      placeholder: "I'm trying to do X but currently I have to..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How do you think this could be solved? Be specific.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you've considered
+      description: What other approaches have you tried or thought about?
+    validations:
+      required: true
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Are you willing to work on this?
+      description: Would you be prepared to submit a PR for this feature?
+      options:
+        - "Yes - I'd like to implement this myself"
+        - "Partially - I could help but would need guidance"
+        - "No - I'm suggesting it for someone else to build"
+      default: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Screenshots, mockups, examples from other tools, etc.
+    validations:
+      required: false
