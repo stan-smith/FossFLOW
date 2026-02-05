@@ -117,7 +117,7 @@ FossFLOW/
 │   │   │   ├── interaction/   # User interaction handling
 │   │   │   ├── types/         # TypeScript types
 │   │   │   └── utils/         # Utility functions
-│   │   ├── webpack.config.js  # Library build config
+│   │   ├── rslib.config.ts # Library build config
 │   │   └── package.json
 │   │
 │   └── fossflow-app/      # PWA application
@@ -136,7 +136,7 @@ FossFLOW/
 ```
 
 ### Key Differences:
-- **fossflow-lib**: The core library, built with Webpack
+- **fossflow-lib**: The core library, built with RSpack
 - **fossflow-app**: The PWA application, built with RSBuild
 - Both packages are managed as npm workspaces
 
