@@ -32,7 +32,7 @@
     "@types/react-dom": "^19.0.0",
     "conventional-changelog-conventionalcommits": "^9.1.0",
     "cross-env": "^10.1.0",
-    "semantic-release": "^25.0.2",
+    "semantic-release": "^25.0.3",
     "typescript": "^5.9.3"
   },
   "engines": {
@@ -41,5 +41,10 @@
   },
   "dependencies": {
     "dom-to-image-more": "^3.7.1"
+  },
+  "overrides": {
+    "lodash": "^4.17.23",
+    "lodash-es": "^4.17.23",
+    "tar": "^7.5.7"
   }
 }
