@@ -9,5 +9,7 @@ services:
       - ENABLE_SERVER_STORAGE=true
       - STORAGE_PATH=/data/diagrams
       - ENABLE_GIT_BACKUP=false
+      - HTTP_AUTH_USER=${HTTP_AUTH_USER:-}
+      - HTTP_AUTH_PASSWORD=${HTTP_AUTH_PASSWORD:-}
     volumes:
       - ./diagrams:/data/diagrams
