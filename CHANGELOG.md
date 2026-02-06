@@ -5,6 +5,17 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.4](https://github.com/stan-smith/FossFLOW/compare/v1.10.3...v1.10.4) (2026-02-06)
+
+### Performance
+
+* refactored useScene and store subscriptions for performance gains ([7f97e07](https://github.com/stan-smith/FossFLOW/commit/7f97e074bb436fe237195af136bac53791608baa))
+
+### Documentation
+
+* removed cruft from readmes ([daa0dd3](https://github.com/stan-smith/FossFLOW/commit/daa0dd3b76162278f79f1a2c1b063df1505c8ce1))
+* update contributing.md ([011f0af](https://github.com/stan-smith/FossFLOW/commit/011f0aff1d8cc38ac54eb4934a8ec775c1915b53))
+
 ## [1.10.3](https://github.com/stan-smith/FossFLOW/compare/v1.10.2...v1.10.3) (2026-02-02)
 
 ### Bug Fixes
