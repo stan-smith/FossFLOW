@@ -1,100 +1,89 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useUiStateStore } from 'src/stores/uiStateStore';
+import { useUiStateStore, useUiStateStoreApi } from 'src/stores/uiStateStore';
 import { CoordsUtils, getItemAtTile } from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
 import { SlimMouseEvent } from 'src/types';
 
 export const usePanHandlers = () => {
-  const uiState = useUiStateStore((state) => state);
+  const modeType = useUiStateStore((state) => state.mode.type);
+  const actions = useUiStateStore((state) => state.actions);
+  const panSettings = useUiStateStore((state) => state.panSettings);
+  const rendererEl = useUiStateStore((state) => state.rendererEl);
+  const mouseTile = useUiStateStore((state) => state.mouse.position.tile);
+  const uiStateApi = useUiStateStoreApi();
   const scene = useScene();
   const isPanningRef = useRef(false);
   const panMethodRef = useRef<string | null>(null);
 
-  // Helper to start panning
   const startPan = useCallback((method: string) => {
-    if (uiState.mode.type !== 'PAN') {
+    if (modeType !== 'PAN') {
       isPanningRef.current = true;
       panMethodRef.current = method;
-      uiState.actions.setMode({
+      actions.setMode({
         type: 'PAN',
         showCursor: false
       });
     }
-  }, [uiState.mode.type, uiState.actions]);
+  }, [modeType, actions]);
 
-  // Helper to end panning
   const endPan = useCallback(() => {
     if (isPanningRef.current) {
       isPanningRef.current = false;
       panMethodRef.current = null;
-      uiState.actions.setMode({
+      actions.setMode({
         type: 'CURSOR',
         showCursor: true,
         mousedownItem: null
       });
     }
-  }, [uiState.actions]);
+  }, [actions]);
 
-  // Check if click is on empty area
   const isEmptyArea = useCallback((e: SlimMouseEvent): boolean => {
-    if (!uiState.rendererEl || e.target !== uiState.rendererEl) return false;
-    
+    if (!rendererEl || e.target !== rendererEl) return false;
+
     const itemAtTile = getItemAtTile({
-      tile: uiState.mouse.position.tile,
+      tile: mouseTile,
       scene
     });
-    
-    return !itemAtTile;
-  }, [uiState.rendererEl, uiState.mouse.position.tile, scene]);
 
-  // Enhanced mouse down handler
+    return !itemAtTile;
+  }, [rendererEl, mouseTile, scene]);
+
   const handleMouseDown = useCallback((e: SlimMouseEvent): boolean => {
-    const panSettings = uiState.panSettings;
-    
-    // Check for the specific button that was pressed and only handle that one
-    // This fixes the issue where enabling both middle and right click causes neither to work
-    
-    // Middle click pan (button 1)
     if (e.button === 1 && panSettings.middleClickPan) {
       e.preventDefault();
       startPan('middle');
       return true;
     }
-    
-    // Right click pan (button 2)
+
     if (e.button === 2 && panSettings.rightClickPan) {
       e.preventDefault();
       startPan('right');
       return true;
     }
-    
-    // Left button (0) with modifiers or empty area
+
     if (e.button === 0) {
-      // Ctrl + click pan
       if (panSettings.ctrlClickPan && e.ctrlKey) {
         e.preventDefault();
         startPan('ctrl');
         return true;
       }
-      
-      // Alt + click pan
+
       if (panSettings.altClickPan && e.altKey) {
         e.preventDefault();
         startPan('alt');
         return true;
       }
-      
-      // Empty area click pan
+
       if (panSettings.emptyAreaClickPan && isEmptyArea(e)) {
         startPan('empty');
         return true;
       }
     }
-    
-    return false;
-  }, [uiState.panSettings, startPan, isEmptyArea]);
 
-  // Enhanced mouse up handler
+    return false;
+  }, [panSettings, startPan, isEmptyArea]);
+
   const handleMouseUp = useCallback((e: SlimMouseEvent): boolean => {
     if (isPanningRef.current) {
       endPan();
@@ -103,10 +92,8 @@ export const usePanHandlers = () => {
     return false;
   }, [endPan]);
 
-  // Keyboard pan handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't handle if typing in input fields
       const target = e.target as HTMLElement;
       if (
         target.tagName === 'INPUT' ||
@@ -117,13 +104,13 @@ export const usePanHandlers = () => {
         return;
       }
 
-      const panSettings = uiState.panSettings;
-      const speed = panSettings.keyboardPanSpeed;
+      const currentState = uiStateApi.getState();
+      const currentPanSettings = currentState.panSettings;
+      const speed = currentPanSettings.keyboardPanSpeed;
       let dx = 0;
       let dy = 0;
 
-      // Arrow keys
-      if (panSettings.arrowKeysPan) {
+      if (currentPanSettings.arrowKeysPan) {
         if (e.key === 'ArrowUp') {
           dy = speed;
           e.preventDefault();
@@ -139,8 +126,7 @@ export const usePanHandlers = () => {
         }
       }
 
-      // WASD keys
-      if (panSettings.wasdPan) {
+      if (currentPanSettings.wasdPan) {
         const key = e.key.toLowerCase();
         if (key === 'w') {
           dy = speed;
@@ -157,8 +143,7 @@ export const usePanHandlers = () => {
         }
       }
 
-      // IJKL keys
-      if (panSettings.ijklPan) {
+      if (currentPanSettings.ijklPan) {
         const key = e.key.toLowerCase();
         if (key === 'i') {
           dy = speed;
@@ -175,22 +160,22 @@ export const usePanHandlers = () => {
         }
       }
 
-      // Apply pan if any movement
       if (dx !== 0 || dy !== 0) {
+        const currentScroll = currentState.scroll;
         const newPosition = CoordsUtils.add(
-          uiState.scroll.position,
+          currentScroll.position,
           { x: dx, y: dy }
         );
-        uiState.actions.setScroll({
+        currentState.actions.setScroll({
           position: newPosition,
-          offset: uiState.scroll.offset
+          offset: currentScroll.offset
         });
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [uiState.panSettings, uiState.scroll, uiState.actions]);
+  }, [uiStateApi]);
 
   return {
     handleMouseDown,

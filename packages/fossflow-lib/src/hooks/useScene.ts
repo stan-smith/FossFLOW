@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
+import { shallow } from 'zustand/shallow';
 import {
   ModelItem,
   ViewItem,
@@ -7,8 +8,8 @@ import {
   Rectangle
 } from 'src/types';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { useModelStore } from 'src/stores/modelStore';
-import { useSceneStore } from 'src/stores/sceneStore';
+import { useModelStore, useModelStoreApi } from 'src/stores/modelStore';
+import { useSceneStore, useSceneStoreApi } from 'src/stores/sceneStore';
 import * as reducers from 'src/stores/reducers';
 import type { State } from 'src/stores/reducers/types';
 import { getItemByIdOrThrow } from 'src/utils';
@@ -19,20 +20,35 @@ import {
 } from 'src/config';
 
 export const useScene = () => {
-  const model = useModelStore((state) => {
-    return state;
-  });
-  const scene = useSceneStore((state) => {
-    return state;
-  });
-  const currentViewId = useUiStateStore((state) => {
-    return state.view;
-  });
+  const { views, colors, icons, items, version, title, description } =
+    useModelStore(
+      (state) => ({
+        views: state.views,
+        colors: state.colors,
+        icons: state.icons,
+        items: state.items,
+        version: state.version,
+        title: state.title,
+        description: state.description
+      }),
+      shallow
+    );
+  const { connectors: sceneConnectors, textBoxes: sceneTextBoxes } =
+    useSceneStore(
+      (state) => ({
+        connectors: state.connectors,
+        textBoxes: state.textBoxes
+      }),
+      shallow
+    );
+  const currentViewId = useUiStateStore((state) => state.view);
   const transactionInProgress = useRef(false);
 
+  const modelStoreApi = useModelStoreApi();
+  const sceneStoreApi = useSceneStoreApi();
+
   const currentView = useMemo(() => {
-    // Handle case where view doesn't exist yet or stores aren't initialized
-    if (!model?.views || !currentViewId) {
+    if (!views || !currentViewId) {
       return {
         id: '',
         name: 'Default View',
@@ -44,12 +60,10 @@ export const useScene = () => {
     }
 
     try {
-      return getItemByIdOrThrow(model.views, currentViewId).value;
+      return getItemByIdOrThrow(views, currentViewId).value;
     } catch (error) {
-      // console.warn(`View "${currentViewId}" not found, using fallback`);
-      // Return first available view or empty view
       return (
-        model.views[0] || {
+        views[0] || {
           id: currentViewId,
           name: 'Default View',
           items: [],
@@ -59,19 +73,19 @@ export const useScene = () => {
         }
       );
     }
-  }, [currentViewId, model?.views]);
+  }, [currentViewId, views]);
 
-  const items = useMemo(() => {
+  const itemsList = useMemo(() => {
     return currentView.items ?? [];
   }, [currentView.items]);
 
-  const colors = useMemo(() => {
-    return model?.colors ?? [];
-  }, [model?.colors]);
+  const colorsList = useMemo(() => {
+    return colors ?? [];
+  }, [colors]);
 
-  const connectors = useMemo(() => {
+  const connectorsList = useMemo(() => {
     return (currentView.connectors ?? []).map((connector) => {
-      const sceneConnector = scene?.connectors?.[connector.id];
+      const sceneConnector = sceneConnectors?.[connector.id];
 
       return {
         ...CONNECTOR_DEFAULTS,
@@ -79,9 +93,9 @@ export const useScene = () => {
         ...sceneConnector
       };
     });
-  }, [currentView.connectors, scene?.connectors]);
+  }, [currentView.connectors, sceneConnectors]);
 
-  const rectangles = useMemo(() => {
+  const rectanglesList = useMemo(() => {
     return (currentView.rectangles ?? []).map((rectangle) => {
       return {
         ...RECTANGLE_DEFAULTS,
@@ -90,9 +104,9 @@ export const useScene = () => {
     });
   }, [currentView.rectangles]);
 
-  const textBoxes = useMemo(() => {
+  const textBoxesList = useMemo(() => {
     return (currentView.textBoxes ?? []).map((textBox) => {
-      const sceneTextBox = scene?.textBoxes?.[textBox.id];
+      const sceneTextBox = sceneTextBoxes?.[textBox.id];
 
       return {
         ...TEXTBOX_DEFAULTS,
@@ -100,110 +114,84 @@ export const useScene = () => {
         ...sceneTextBox
       };
     });
-  }, [currentView.textBoxes, scene?.textBoxes]);
+  }, [currentView.textBoxes, sceneTextBoxes]);
 
-  const getState = useCallback(() => {
+  const getState = useCallback((): State => {
+    const model = modelStoreApi.getState();
+    const scene = sceneStoreApi.getState();
     return {
       model: {
-        version: model?.version ?? '',
-        title: model?.title ?? '',
-        description: model?.description,
-        colors: model?.colors ?? [],
-        icons: model?.icons ?? [],
-        items: model?.items ?? [],
-        views: model?.views ?? []
+        version: model.version,
+        title: model.title,
+        description: model.description,
+        colors: model.colors,
+        icons: model.icons,
+        items: model.items,
+        views: model.views
       },
       scene: {
-        connectors: scene?.connectors ?? {},
-        textBoxes: scene?.textBoxes ?? {}
+        connectors: scene.connectors,
+        textBoxes: scene.textBoxes
       }
     };
-  }, [model, scene]);
+  }, [modelStoreApi, sceneStoreApi]);
 
   const setState = useCallback(
     (newState: State) => {
-      if (model?.actions?.set && scene?.actions?.set) {
-        model.actions.set(newState.model, true); // Skip history since we're managing it here
-        scene.actions.set(newState.scene, true); // Skip history since we're managing it here
-      }
+      modelStoreApi.getState().actions.set(newState.model, true);
+      sceneStoreApi.getState().actions.set(newState.scene, true);
     },
-    [model?.actions, scene?.actions]
+    [modelStoreApi, sceneStoreApi]
   );
 
   const saveToHistoryBeforeChange = useCallback(() => {
-    // Prevent multiple saves during grouped operations
     if (transactionInProgress.current) {
       return;
     }
 
-    model?.actions?.saveToHistory?.();
-    scene?.actions?.saveToHistory?.();
-  }, [model?.actions, scene?.actions]);
+    modelStoreApi.getState().actions.saveToHistory();
+    sceneStoreApi.getState().actions.saveToHistory();
+  }, [modelStoreApi, sceneStoreApi]);
 
   const createModelItem = useCallback(
     (newModelItem: ModelItem) => {
-      if (!model?.actions || !scene?.actions) return getState();
-
       if (!transactionInProgress.current) {
         saveToHistoryBeforeChange();
       }
 
       const newState = reducers.createModelItem(newModelItem, getState());
       setState(newState);
-      return newState; // Return the new state for chaining
+      return newState;
     },
-    [
-      getState,
-      setState,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, saveToHistoryBeforeChange]
   );
 
   const updateModelItem = useCallback(
     (id: string, updates: Partial<ModelItem>) => {
-      if (!model?.actions || !scene?.actions) return;
-
       saveToHistoryBeforeChange();
       const newState = reducers.updateModelItem(id, updates, getState());
       setState(newState);
     },
-    [
-      getState,
-      setState,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, saveToHistoryBeforeChange]
   );
 
   const deleteModelItem = useCallback(
     (id: string) => {
-      if (!model?.actions || !scene?.actions) return;
-
       saveToHistoryBeforeChange();
       const newState = reducers.deleteModelItem(id, getState());
       setState(newState);
     },
-    [
-      getState,
-      setState,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, saveToHistoryBeforeChange]
   );
 
   const createViewItem = useCallback(
     (newViewItem: ViewItem, currentState?: State) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+      if (!currentViewId) return;
 
       if (!transactionInProgress.current) {
         saveToHistoryBeforeChange();
       }
 
-      // Use provided state or get current state
       const stateToUse = currentState || getState();
 
       const newState = reducers.view({
@@ -214,19 +202,12 @@ export const useScene = () => {
       setState(newState);
       return newState;
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const updateViewItem = useCallback(
     (id: string, updates: Partial<ViewItem>, currentState?: State) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return getState();
+      if (!currentViewId) return getState();
 
       if (!transactionInProgress.current) {
         saveToHistoryBeforeChange();
@@ -239,21 +220,14 @@ export const useScene = () => {
         ctx: { viewId: currentViewId, state: stateToUse }
       });
       setState(newState);
-      return newState; // Return for chaining
+      return newState;
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const deleteViewItem = useCallback(
     (id: string) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+      if (!currentViewId) return;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
@@ -263,19 +237,12 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const createConnector = useCallback(
     (newConnector: Connector) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+      if (!currentViewId) return;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
@@ -285,19 +252,12 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const updateConnector = useCallback(
     (id: string, updates: Partial<Connector>) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+      if (!currentViewId) return;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
@@ -307,19 +267,12 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const deleteConnector = useCallback(
     (id: string) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+      if (!currentViewId) return;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
@@ -329,19 +282,12 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const createTextBox = useCallback(
     (newTextBox: TextBox) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+      if (!currentViewId) return;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
@@ -351,19 +297,12 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const updateTextBox = useCallback(
     (id: string, updates: Partial<TextBox>, currentState?: State) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return currentState || getState();
+      if (!currentViewId) return currentState || getState();
 
       if (!transactionInProgress.current) {
         saveToHistoryBeforeChange();
@@ -378,19 +317,12 @@ export const useScene = () => {
       setState(newState);
       return newState;
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const deleteTextBox = useCallback(
     (id: string) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+      if (!currentViewId) return;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
@@ -400,19 +332,12 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const createRectangle = useCallback(
     (newRectangle: Rectangle) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+      if (!currentViewId) return;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
@@ -422,19 +347,12 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const updateRectangle = useCallback(
     (id: string, updates: Partial<Rectangle>, currentState?: State) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return currentState || getState();
+      if (!currentViewId) return currentState || getState();
 
       if (!transactionInProgress.current) {
         saveToHistoryBeforeChange();
@@ -449,19 +367,12 @@ export const useScene = () => {
       setState(newState);
       return newState;
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const deleteRectangle = useCallback(
     (id: string) => {
-      if (!model?.actions || !scene?.actions || !currentViewId) return;
+      if (!currentViewId) return;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
@@ -471,81 +382,52 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [
-      getState,
-      setState,
-      currentViewId,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const transaction = useCallback(
     (operations: () => void) => {
-      if (!model?.actions || !scene?.actions) return;
-
-      // Prevent nested transactions
       if (transactionInProgress.current) {
         operations();
         return;
       }
 
-      // Save state before transaction
       saveToHistoryBeforeChange();
-
-      // Mark transaction as in progress
       transactionInProgress.current = true;
 
       try {
-        // Execute all operations without saving intermediate history
         operations();
       } finally {
-        // Always reset transaction state
         transactionInProgress.current = false;
       }
     },
-    [saveToHistoryBeforeChange, model?.actions, scene?.actions]
+    [saveToHistoryBeforeChange]
   );
 
   const placeIcon = useCallback(
     (params: { modelItem: ModelItem; viewItem: ViewItem }) => {
-      if (!model?.actions || !scene?.actions) return;
-
-      // Save history before the transaction
       saveToHistoryBeforeChange();
-
-      // Mark transaction as in progress
       transactionInProgress.current = true;
 
       try {
-        // Create model item first and get the updated state
         const stateAfterModelItem = createModelItem(params.modelItem);
 
-        // Create view item using the updated state
         if (stateAfterModelItem) {
           createViewItem(params.viewItem, stateAfterModelItem);
         }
       } finally {
-        // Always reset transaction state
         transactionInProgress.current = false;
       }
     },
-    [
-      createModelItem,
-      createViewItem,
-      saveToHistoryBeforeChange,
-      model?.actions,
-      scene?.actions
-    ]
+    [createModelItem, createViewItem, saveToHistoryBeforeChange]
   );
 
   return {
-    items,
-    connectors,
-    colors,
-    rectangles,
-    textBoxes,
+    items: itemsList,
+    connectors: connectorsList,
+    colors: colorsList,
+    rectangles: rectanglesList,
+    textBoxes: textBoxesList,
     currentView,
     createModelItem,
     updateModelItem,
