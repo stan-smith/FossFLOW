@@ -192,3 +192,13 @@ export function useSceneStore<T>(
   const value = useStore(store, selector, equalityFn);
   return value;
 }
+
+export function useSceneStoreApi() {
+  const store = useContext(SceneContext);
+
+  if (store === null) {
+    throw new Error('Missing provider in the tree');
+  }
+
+  return store;
+}

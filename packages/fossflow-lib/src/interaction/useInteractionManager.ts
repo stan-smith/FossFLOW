@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { useModelStore } from 'src/stores/modelStore';
-import { useUiStateStore } from 'src/stores/uiStateStore';
+import { useModelStoreApi } from 'src/stores/modelStore';
+import { useUiStateStore, useUiStateStoreApi } from 'src/stores/uiStateStore';
 import { ModeActions, State, SlimMouseEvent, Mouse } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
 import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom } from 'src/utils';
@@ -21,7 +21,6 @@ import { Lasso } from './modes/Lasso';
 import { FreehandLasso } from './modes/FreehandLasso';
 import { usePanHandlers } from './usePanHandlers';
 
-// Added some throttling in for the mouse updates, this was causing unnexessary re-renders  - Stan
 interface PendingMouseUpdate {
   mouse: Mouse;
   event: SlimMouseEvent;
@@ -36,7 +35,6 @@ const useRAFThrottle = () => {
     pendingUpdateRef.current = { mouse, event };
     callbackRef.current = callback;
 
-    // Only schedule a new frame if one isn't already pending
     if (rafIdRef.current === null) {
       rafIdRef.current = requestAnimationFrame(() => {
         rafIdRef.current = null;
@@ -49,7 +47,6 @@ const useRAFThrottle = () => {
   }, []);
 
   const flushUpdate = useCallback(() => {
-    // Immediately process pending update (for mousedown/mouseup)
     if (rafIdRef.current !== null) {
       cancelAnimationFrame(rafIdRef.current);
       rafIdRef.current = null;
@@ -100,46 +97,42 @@ const getModeFunction = (mode: ModeActions, e: SlimMouseEvent) => {
 export const useInteractionManager = () => {
   const rendererRef = useRef<HTMLElement | undefined>(undefined);
   const reducerTypeRef = useRef<string | undefined>(undefined);
-  const uiState = useUiStateStore((state) => {
-    return state;
-  });
-  const model = useModelStore((state) => {
-    return state;
-  });
+
+  const modeType = useUiStateStore((state) => state.mode.type);
+  const rendererEl = useUiStateStore((state) => state.rendererEl);
+  const editorMode = useUiStateStore((state) => state.editorMode);
+
+  const uiStateApi = useUiStateStoreApi();
+  const modelStoreApi = useModelStoreApi();
   const scene = useScene();
-  const { size: rendererSize } = useResizeObserver(uiState.rendererEl);
+  const { size: rendererSize } = useResizeObserver(rendererEl);
   const { undo, redo, canUndo, canRedo } = useHistory();
   const { createTextBox } = scene;
   const { handleMouseDown: handlePanMouseDown, handleMouseUp: handlePanMouseUp } = usePanHandlers();
   const { scheduleUpdate, flushUpdate, cleanup } = useRAFThrottle();
 
-  // Keyboard shortcuts for undo/redo
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // ESC key handling - should work even in input fields
+      const uiState = uiStateApi.getState();
+
       if (e.key === 'Escape') {
         e.preventDefault();
 
-        // Priority 1: Close ItemControls (node menus) if open
         if (uiState.itemControls) {
           uiState.actions.setItemControls(null);
           return;
         }
 
-        // Priority 2: Cancel in-progress connector
         if (uiState.mode.type === 'CONNECTOR') {
           const connectorMode = uiState.mode;
 
-          // Check if connection is in progress
           const isConnectionInProgress =
             (uiState.connectorInteractionMode === 'click' && connectorMode.isConnecting) ||
             (uiState.connectorInteractionMode === 'drag' && connectorMode.id !== null);
 
           if (isConnectionInProgress && connectorMode.id) {
-            // Delete the temporary connector
             scene.deleteConnector(connectorMode.id);
 
-            // Reset connector mode to initial state
             uiState.actions.setMode({
               type: 'CONNECTOR',
               showCursor: true,
@@ -153,13 +146,12 @@ export const useInteractionManager = () => {
         return;
       }
 
-      // Don't handle shortcuts when typing in input fields
       const target = e.target as HTMLElement;
       if (
         target.tagName === 'INPUT' ||
         target.tagName === 'TEXTAREA' ||
         target.contentEditable === 'true' ||
-        target.closest('.ql-editor') // Quill editor
+        target.closest('.ql-editor')
       ) {
         return;
       }
@@ -184,25 +176,20 @@ export const useInteractionManager = () => {
         }
       }
 
-      // Help dialog shortcut
       if (e.key === 'F1') {
         e.preventDefault();
         uiState.actions.setDialog(DialogTypeEnum.HELP);
       }
 
-      // Tool hotkeys
       const hotkeyMapping = HOTKEY_PROFILES[uiState.hotkeyProfile];
       const key = e.key.toLowerCase();
 
-      // Quick icon selection for selected node (when ItemControls is an ItemReference with type 'ITEM')
       if (key === 'i' && uiState.itemControls && 'id' in uiState.itemControls && uiState.itemControls.type === 'ITEM') {
         e.preventDefault();
-        // Trigger icon change mode
         const event = new CustomEvent('quickIconChange');
         window.dispatchEvent(event);
       }
 
-      // Check if key matches any hotkey
       if (hotkeyMapping.select && key === hotkeyMapping.select) {
         e.preventDefault();
         uiState.actions.setMode({
@@ -278,11 +265,14 @@ export const useInteractionManager = () => {
     return () => {
       return window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [undo, redo, canUndo, canRedo, uiState.hotkeyProfile, uiState.actions, createTextBox, uiState.mouse.position.tile, scene, uiState.itemControls, uiState.mode, uiState.connectorInteractionMode]);
+  }, [undo, redo, canUndo, canRedo, uiStateApi, createTextBox, scene]);
 
   const processMouseUpdate = useCallback(
     (nextMouse: Mouse, e: SlimMouseEvent) => {
       if (!rendererRef.current) return;
+
+      const uiState = uiStateApi.getState();
+      const model = modelStoreApi.getState();
 
       const mode = modes[uiState.mode.type];
       const modeFunction = getModeFunction(mode, e);
@@ -317,20 +307,21 @@ export const useInteractionManager = () => {
       modeFunction(baseState);
       reducerTypeRef.current = uiState.mode.type;
     },
-    [model, scene, uiState, rendererSize]
+    [uiStateApi, modelStoreApi, scene, rendererSize]
   );
 
   const onMouseEvent = useCallback(
     (e: SlimMouseEvent) => {
       if (!rendererRef.current) return;
 
-      // Check pan handlers first
       if (e.type === 'mousedown' && handlePanMouseDown(e)) {
         return;
       }
       if (e.type === 'mouseup' && handlePanMouseUp(e)) {
         return;
       }
+
+      const uiState = uiStateApi.getState();
 
       const nextMouse = getMouse({
         interactiveElement: rendererRef.current,
@@ -341,26 +332,24 @@ export const useInteractionManager = () => {
         rendererSize
       });
 
-      // For mousedown and mouseup, process immediately for responsiveness
-      // For mousemove, throttle updates to align with renderer frame rate
       if (e.type === 'mousemove') {
         scheduleUpdate(nextMouse, e, (update) => {
           processMouseUpdate(update.mouse, update.event);
         });
       } else {
-        // Flush any pending mousemove update before processing mousedown/mouseup
         flushUpdate();
         processMouseUpdate(nextMouse, e);
       }
     },
-    [uiState.zoom, uiState.scroll, uiState.mouse, rendererSize, handlePanMouseDown, handlePanMouseUp, scheduleUpdate, flushUpdate, processMouseUpdate]
+    [uiStateApi, rendererSize, handlePanMouseDown, handlePanMouseUp, scheduleUpdate, flushUpdate, processMouseUpdate]
   );
 
   const onContextMenu = useCallback(
     (e: SlimMouseEvent) => {
       e.preventDefault();
 
-      // Don't show context menu if right-click pan is enabled
+      const uiState = uiStateApi.getState();
+
       if (uiState.panSettings.rightClickPan) {
         return;
       }
@@ -383,11 +372,11 @@ export const useInteractionManager = () => {
         });
       }
     },
-    [uiState.mouse, scene, uiState.actions, uiState.panSettings]
+    [uiStateApi, scene]
   );
 
   useEffect(() => {
-    if (uiState.mode.type === 'INTERACTIONS_DISABLED') return;
+    if (modeType === 'INTERACTIONS_DISABLED') return;
 
     const el = window;
 
@@ -422,10 +411,10 @@ export const useInteractionManager = () => {
     };
 
     const onScroll = (e: WheelEvent) => {
+      const uiState = uiStateApi.getState();
       const zoomToCursor = uiState.zoomSettings.zoomToCursor;
       const oldZoom = uiState.zoom;
 
-      // Calculate new zoom level
       let newZoom: number;
       if (e.deltaY > 0) {
         newZoom = decrementZoom(oldZoom);
@@ -433,34 +422,24 @@ export const useInteractionManager = () => {
         newZoom = incrementZoom(oldZoom);
       }
 
-      // If zoom didn't change (at min/max), no need to adjust scroll
       if (newZoom === oldZoom) {
         return;
       }
 
       if (zoomToCursor && rendererRef.current && rendererSize) {
-        // Get mouse position relative to the renderer viewport
         const rect = rendererRef.current.getBoundingClientRect();
         const mouseX = e.clientX - rect.left;
         const mouseY = e.clientY - rect.top;
 
-        // Calculate mouse position relative to viewport center
         const mouseRelativeToCenterX = mouseX - rendererSize.width / 2;
         const mouseRelativeToCenterY = mouseY - rendererSize.height / 2;
 
-        // The point under the cursor in world space (before zoom)
-        // World coordinates = (screen coordinates - scroll offset) / zoom
         const worldX = (mouseRelativeToCenterX - uiState.scroll.position.x) / oldZoom;
         const worldY = (mouseRelativeToCenterY - uiState.scroll.position.y) / oldZoom;
 
-        // After zooming, to keep the same world point under the cursor:
-        // screen coordinates = world coordinates * newZoom + scroll offset
-        // We want: mouseRelativeToCenterX = worldX * newZoom + newScrollX
-        // Therefore: newScrollX = mouseRelativeToCenterX - worldX * newZoom
         const newScrollX = mouseRelativeToCenterX - worldX * newZoom;
         const newScrollY = mouseRelativeToCenterY - worldY * newZoom;
 
-        // Apply zoom and adjusted scroll together
         uiState.actions.setZoom(newZoom);
         uiState.actions.setScroll({
           position: {
@@ -470,7 +449,6 @@ export const useInteractionManager = () => {
           offset: uiState.scroll.offset
         });
       } else {
-        // Original behavior: zoom to center
         uiState.actions.setZoom(newZoom);
       }
     };
@@ -482,7 +460,7 @@ export const useInteractionManager = () => {
     el.addEventListener('touchstart', onTouchStart);
     el.addEventListener('touchmove', onTouchMove);
     el.addEventListener('touchend', onTouchEnd);
-    uiState.rendererEl?.addEventListener('wheel', onScroll, { passive: true });
+    rendererEl?.addEventListener('wheel', onScroll, { passive: true });
 
     return () => {
       el.removeEventListener('mousemove', onMouseEvent);
@@ -492,20 +470,17 @@ export const useInteractionManager = () => {
       el.removeEventListener('touchstart', onTouchStart);
       el.removeEventListener('touchmove', onTouchMove);
       el.removeEventListener('touchend', onTouchEnd);
-      uiState.rendererEl?.removeEventListener('wheel', onScroll);
-      cleanup(); // Cancel any pending RAF updates
+      rendererEl?.removeEventListener('wheel', onScroll);
+      cleanup();
     };
   }, [
-    uiState.editorMode,
+    editorMode,
+    modeType,
     onMouseEvent,
-    uiState.mode.type,
     onContextMenu,
-    uiState.actions,
-    uiState.rendererEl,
-    uiState.zoom,
-    uiState.scroll,
-    uiState.zoomSettings,
+    rendererEl,
     rendererSize,
+    uiStateApi,
     cleanup
   ]);
 

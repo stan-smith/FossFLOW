@@ -8,7 +8,7 @@ import {
 } from 'src/utils';
 import { UiStateStore } from 'src/types';
 import { INITIAL_UI_STATE } from 'src/config';
-import { DEFAULT_HOTKEY_PROFILE } from 'src/config/hotkeys';
+import { DEFAULT_HOTKEY_PROFILE, HotkeyProfile } from 'src/config/hotkeys';
 import { DEFAULT_PAN_SETTINGS } from 'src/config/panSettings';
 import { DEFAULT_ZOOM_SETTINGS } from 'src/config/zoomSettings';
 import { DEFAULT_LABEL_SETTINGS } from 'src/config/labelSettings';
@@ -104,7 +104,7 @@ const initialState = () => {
         setRendererEl: (el: HTMLDivElement) => {
           set({ rendererEl: el });
         },
-        setHotkeyProfile: (hotkeyProfile: any) => {
+        setHotkeyProfile: (hotkeyProfile: HotkeyProfile) => {
           set({ hotkeyProfile });
         },
         setPanSettings: (panSettings) => {
@@ -154,14 +154,17 @@ export const UiStateProvider = ({ children }: ProviderProps) => {
   );
 };
 
-export function useUiStateStore<T>(selector: (state: UiStateStore) => T) {
+export function useUiStateStore<T>(
+  selector: (state: UiStateStore) => T,
+  equalityFn?: (left: T, right: T) => boolean
+) {
   const store = useContext(UiStateContext);
 
   if (store === null) {
     throw new Error('Missing provider in the tree');
   }
 
-  const value = useStore(store, selector);
+  const value = useStore(store, selector, equalityFn);
   return value;
 }
 
