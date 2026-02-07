@@ -109,7 +109,16 @@ export const DiagramManager: React.FC<Props> = ({
         document.body.appendChild(textArea);
         textArea.select();
         document.execCommand('copy');
-        document.body.removeChild(textArea);
+
+        // Safely remove the temporary element
+        try {
+          if (textArea.parentNode === document.body) {
+            document.body.removeChild(textArea);
+          }
+        } catch (err) {
+          console.warn('Failed to remove temporary textarea:', err);
+        }
+
         alert(`Share link copied to clipboard:\n${shareUrl}`);
       });
   };
