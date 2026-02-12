@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { ModeActions, State, SlimMouseEvent, Mouse } from 'src/types';
+import { ModeActions, State, SlimMouseEvent, Mouse, ItemReference } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
-import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom } from 'src/utils';
+import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom, copyObject, getPastedObject, getItemById, findNearestUnoccupiedTile } from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
@@ -115,7 +115,7 @@ export const useInteractionManager = () => {
 
   // Keyboard shortcuts for undo/redo
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = async (e: KeyboardEvent) => {
       // ESC key handling - should work even in input fields
       if (e.key === 'Escape') {
         e.preventDefault();
@@ -182,6 +182,41 @@ export const useInteractionManager = () => {
         if (canRedo) {
           redo();
         }
+      }
+
+      if (isCtrlOrCmd && (e.key.toLowerCase() === 'c')) {
+        e.preventDefault();
+        
+        const currentNode = (uiState.itemControls as ItemReference);
+        
+        const modelItem = getItemById(model.items, currentNode.id)?.value;
+        const viewItem = getItemById(scene.currentView.items, currentNode.id)?.value;
+        if (!viewItem || !modelItem) return;
+        
+        copyObject({ modelItem, viewItem });
+        
+        return;
+      }
+
+      if (isCtrlOrCmd && (e.key.toLowerCase() === 'v')) {
+        const pastedObject = await getPastedObject();
+        if (!pastedObject || !pastedObject.viewItem || !pastedObject.modelItem) return;
+        e.preventDefault();
+
+        const newId = generateId();
+        scene.placeIcon({
+          modelItem: {
+            ...pastedObject.modelItem,
+            id: newId
+          },
+          viewItem: {
+            ...pastedObject.viewItem,
+            id: newId,
+            tile: findNearestUnoccupiedTile(uiState.mouse.position.tile, scene)
+          }
+        });
+
+        return;
       }
 
       // Help dialog shortcut
