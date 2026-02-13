@@ -124,3 +124,5 @@ export const ConnectorLabel = memo(({ connector: sceneConnector }: Props) => {
     </>
   );
 });
+
+ConnectorLabel.displayName = 'ConnectorLabel';

@@ -50,40 +50,36 @@ const dragItems = (
   const hasUpdates = newTiles || textBoxRefs.length > 0 || rectangleRefs.length > 0;
 
   if (hasUpdates) {
-    // Wrap ALL updates in a single transaction with state chaining
-    // This ensures each update builds on the previous one's state
-    scene.transaction(() => {
-      let currentState: State | undefined;
+    let currentState: State | undefined;
 
-      // 1. Update nodes
-      if (newTiles) {
-        itemRefs.forEach((item, index) => {
-          currentState = scene.updateViewItem(item.id, {
-            tile: newTiles[index]
-          }, currentState);
-        });
-      }
-
-      // 2. Update textboxes (chained from node state)
-      textBoxRefs.forEach((item) => {
-        const textBox = getItemByIdOrThrow(scene.textBoxes, item.id).value;
-        currentState = scene.updateTextBox(item.id, {
-          tile: CoordsUtils.add(textBox.tile, delta)
+    // 1. Update nodes
+    if (newTiles) {
+      itemRefs.forEach((item, index) => {
+        currentState = scene.updateViewItem(item.id, {
+          tile: newTiles[index]
         }, currentState);
       });
+    }
 
-      // 3. Update rectangles (chained from textbox state)
-      rectangleRefs.forEach((item) => {
-        const rectangle = getItemByIdOrThrow(scene.rectangles, item.id).value;
-        currentState = scene.updateRectangle(item.id, {
-          from: CoordsUtils.add(rectangle.from, delta),
-          to: CoordsUtils.add(rectangle.to, delta)
-        }, currentState);
-      });
+    // 2. Update textboxes (chained from node state)
+    textBoxRefs.forEach((item) => {
+      const textBox = getItemByIdOrThrow(scene.textBoxes, item.id).value;
+      currentState = scene.updateTextBox(item.id, {
+        tile: CoordsUtils.add(textBox.tile, delta)
+      }, currentState);
+    });
+
+    // 3. Update rectangles (chained from textbox state)
+    rectangleRefs.forEach((item) => {
+      const rectangle = getItemByIdOrThrow(scene.rectangles, item.id).value;
+      currentState = scene.updateRectangle(item.id, {
+        from: CoordsUtils.add(rectangle.from, delta),
+        to: CoordsUtils.add(rectangle.to, delta)
+      }, currentState);
     });
   }
 
-  // Handle connector anchors separately (they have different update logic)
+  // Handle connector anchors (gesture already in progress from entry)
   anchorRefs.forEach((item) => {
     const connector = getAnchorParent(item.id, scene.connectors);
 
@@ -125,13 +121,15 @@ const dragItems = (
 };
 
 export const DragItems: ModeActions = {
-  entry: ({ uiState, rendererRef }) => {
+  entry: ({ uiState, rendererRef, history }) => {
     if (uiState.mode.type !== 'DRAG_ITEMS' || !uiState.mouse.mousedown) return;
 
+    history.beginGesture();
     const renderer = rendererRef;
     renderer.style.userSelect = 'none';
   },
-  exit: ({ rendererRef }) => {
+  exit: ({ rendererRef, history }) => {
+    history.endGesture();
     const renderer = rendererRef;
     renderer.style.userSelect = 'auto';
   },

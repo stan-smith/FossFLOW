@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { generateId, findNearestUnoccupiedTile } from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
-import { useModelStore } from 'src/stores/modelStore';
+import { useModelStoreApi } from 'src/stores/modelStore';
 import { VIEW_ITEM_DEFAULTS } from 'src/config';
 import { ContextMenu } from './ContextMenu';
 
@@ -12,9 +12,7 @@ interface Props {
 
 export const ContextMenuManager = ({ anchorEl }: Props) => {
   const scene = useScene();
-  const model = useModelStore((state) => {
-    return state;
-  });
+  const modelStoreApi = useModelStoreApi();
   const contextMenu = useUiStateStore((state) => {
     return state.contextMenu;
   });
@@ -36,10 +34,11 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
           label: 'Add Node',
           onClick: () => {
             if (!contextMenu) return;
-            if (model.icons.length > 0) {
+            const { icons } = modelStoreApi.getState();
+            if (icons.length > 0) {
               const modelItemId = generateId();
-              const firstIcon = model.icons[0];
-              
+              const firstIcon = icons[0];
+
               // Find nearest unoccupied tile (should return the same tile since context menu is for empty tiles)
               const targetTile = findNearestUnoccupiedTile(contextMenu.tile, scene) || contextMenu.tile;
 
@@ -63,10 +62,11 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
           label: 'Add Rectangle',
           onClick: () => {
             if (!contextMenu) return;
-            if (model.colors.length > 0) {
+            const { colors } = modelStoreApi.getState();
+            if (colors.length > 0) {
               scene.createRectangle({
                 id: generateId(),
-                color: model.colors[0].id,
+                color: colors[0].id,
                 from: contextMenu.tile,
                 to: contextMenu.tile
               });

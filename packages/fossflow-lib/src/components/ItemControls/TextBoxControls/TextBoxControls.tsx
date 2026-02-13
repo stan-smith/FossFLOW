@@ -16,6 +16,7 @@ import { useTextBox } from 'src/hooks/useTextBox';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { getIsoProjectionCss } from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
+import { useHistory } from 'src/hooks/useHistory';
 import { ControlsContainer } from '../components/ControlsContainer';
 import { Section } from '../components/Section';
 import { DeleteButton } from '../components/DeleteButton';
@@ -30,6 +31,7 @@ export const TextBoxControls = ({ id }: Props) => {
   });
   const textBox = useTextBox(id);
   const { updateTextBox, deleteTextBox } = useScene();
+  const { beginGesture, endGesture } = useHistory();
 
   // If textBox doesn't exist, return null
   if (!textBox) {
@@ -58,6 +60,8 @@ export const TextBoxControls = ({ id }: Props) => {
         <Section title="Enter text">
           <TextField
             value={textBox.content}
+            onFocus={beginGesture}
+            onBlur={endGesture}
             onChange={(e) => {
               updateTextBox(textBox.id, { content: e.target.value as string });
             }}

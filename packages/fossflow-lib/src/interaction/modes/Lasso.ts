@@ -1,24 +1,24 @@
 import { produce } from 'immer';
-import { ModeActions, ItemReference } from 'src/types';
-import { CoordsUtils, isWithinBounds, hasMovedTile } from 'src/utils';
+import { ModeActions, ItemReference, Coords, SceneItemsSnapshot } from 'src/types';
+import { isWithinBounds, hasMovedTile } from 'src/utils';
 
 // Helper to find all items within the lasso bounds
 const getItemsInBounds = (
-  startTile: { x: number; y: number },
-  endTile: { x: number; y: number },
-  scene: any
+  startTile: Coords,
+  endTile: Coords,
+  scene: SceneItemsSnapshot
 ): ItemReference[] => {
   const items: ItemReference[] = [];
 
   // Check all nodes/items
-  scene.items.forEach((item: any) => {
+  scene.items.forEach((item) => {
     if (isWithinBounds(item.tile, [startTile, endTile])) {
       items.push({ type: 'ITEM', id: item.id });
     }
   });
 
   // Check all rectangles - they must be FULLY enclosed (all 4 corners inside)
-  scene.rectangles.forEach((rectangle: any) => {
+  scene.rectangles.forEach((rectangle) => {
     const corners = [
       rectangle.from,
       { x: rectangle.to.x, y: rectangle.from.y },
@@ -37,7 +37,7 @@ const getItemsInBounds = (
   });
 
   // Check all text boxes
-  scene.textBoxes.forEach((textBox: any) => {
+  scene.textBoxes.forEach((textBox) => {
     if (isWithinBounds(textBox.tile, [startTile, endTile])) {
       items.push({ type: 'TEXTBOX', id: textBox.id });
     }

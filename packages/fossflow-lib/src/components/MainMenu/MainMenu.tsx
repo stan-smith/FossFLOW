@@ -12,6 +12,7 @@ import {
   Settings as SettingsIcon,
 
 } from '@mui/icons-material';
+import { shallow } from 'zustand/shallow';
 import { UiElement } from 'src/components/UiElement/UiElement';
 import { IconButton } from 'src/components/IconButton/IconButton';
 import { useUiStateStore } from 'src/stores/uiStateStore';
@@ -32,7 +33,7 @@ export const MainMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const model = useModelStore((state) => {
     return modelFromModelStore(state);
-  });
+  }, shallow);
   const isMainMenuOpen = useUiStateStore((state) => {
     return state.isMainMenuOpen;
   });
@@ -120,13 +121,13 @@ export const MainMenu = () => {
   }, [uiStateActions, clear, clearHistory]);
 
   const handleUndo = useCallback(() => {
-    undo();
-    uiStateActions.setIsMainMenuOpen(false);
+    const success = undo();
+    if (success) uiStateActions.setIsMainMenuOpen(false);
   }, [undo, uiStateActions]);
 
   const handleRedo = useCallback(() => {
-    redo();
-    uiStateActions.setIsMainMenuOpen(false);
+    const success = redo();
+    if (success) uiStateActions.setIsMainMenuOpen(false);
   }, [redo, uiStateActions]);
 
   const onOpenSettings = useCallback(() => {

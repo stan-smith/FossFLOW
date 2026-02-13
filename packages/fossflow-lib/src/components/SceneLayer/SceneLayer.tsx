@@ -60,3 +60,5 @@ export const SceneLayer = memo(({
     </Box>
   );
 });
+
+SceneLayer.displayName = 'SceneLayer';

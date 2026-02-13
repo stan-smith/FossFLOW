@@ -17,8 +17,6 @@ import {
   connectorStyleOptions,
   connectorLineTypeOptions
 } from 'src/schemas';
-import { StoreApi } from 'zustand';
-
 export { connectorStyleOptions, connectorLineTypeOptions } from 'src/schemas';
 export type Model = z.infer<typeof modelSchema>;
 export type ModelItems = z.infer<typeof modelItemsSchema>;
@@ -39,17 +37,7 @@ export type Rectangle = z.infer<typeof rectangleSchema>;
 
 export type ModelStore = Model & {
   actions: {
-    get: StoreApi<ModelStore>['getState'];
-    set: StoreApi<ModelStore>['setState'];
+    get: () => ModelStore;
+    set: (updates: Partial<Model>) => void;
   };
 };
-
-export type {
-  ModelStoreWithHistory,
-  HistoryState as ModelHistoryState
-} from 'src/stores/modelStore';
-
-export type {
-  SceneStoreWithHistory,
-  SceneHistoryState
-} from 'src/stores/sceneStore';

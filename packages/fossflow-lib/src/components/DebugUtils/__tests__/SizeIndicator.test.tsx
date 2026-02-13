@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from 'src/styles/theme';
 import { ModelProvider } from 'src/stores/modelStore';
 import { SceneProvider } from 'src/stores/sceneStore';
+import { HistoryProvider } from 'src/stores/historyStore';
 import { UiStateProvider } from 'src/stores/uiStateStore';
 import { SizeIndicator } from '../SizeIndicator';
 
@@ -13,7 +14,9 @@ describe('SizeIndicator', () => {
       <ThemeProvider theme={theme}>
         <ModelProvider>
           <SceneProvider>
-            <UiStateProvider>{children}</UiStateProvider>
+            <HistoryProvider>
+              <UiStateProvider>{children}</UiStateProvider>
+            </HistoryProvider>
           </SceneProvider>
         </ModelProvider>
       </ThemeProvider>

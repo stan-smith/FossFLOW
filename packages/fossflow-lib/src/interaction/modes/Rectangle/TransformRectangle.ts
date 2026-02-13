@@ -7,7 +7,9 @@ import {
 import { ModeActions } from 'src/types';
 
 export const TransformRectangle: ModeActions = {
-  entry: () => {},
+  entry: ({ history }) => {
+    history.beginGesture();
+  },
   exit: () => {},
   mousemove: ({ uiState, scene }) => {
     if (
@@ -63,9 +65,10 @@ export const TransformRectangle: ModeActions = {
   mousedown: () => {
     // MOUSE_DOWN is triggered by the anchor iteself (see `TransformAnchor.tsx`)
   },
-  mouseup: ({ uiState }) => {
+  mouseup: ({ uiState, history }) => {
     if (uiState.mode.type !== 'RECTANGLE.TRANSFORM') return;
 
+    history.endGesture();
     uiState.actions.setMode({
       type: 'CURSOR',
       mousedownItem: null,

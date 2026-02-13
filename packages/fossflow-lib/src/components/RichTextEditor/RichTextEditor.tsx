@@ -6,6 +6,8 @@ import RichTextEditorErrorBoundary from './RichTextEditorErrorBoundary';
 interface Props {
   value?: string;
   onChange?: (value: string) => void;
+  onFocus?: () => void;
+  onBlur?: () => void;
   readOnly?: boolean;
   height?: number;
   styles?: React.CSSProperties;
@@ -42,6 +44,8 @@ const formats = [
 export const RichTextEditor = ({
   value,
   onChange,
+  onFocus,
+  onBlur,
   readOnly,
   height = 120,
   styles
@@ -92,6 +96,8 @@ export const RichTextEditor = ({
           value={value ?? ''}
           readOnly={readOnly}
           onChange={onChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
           formats={formats}
           modules={modules}
         />

@@ -1,25 +1,25 @@
 import { produce } from 'immer';
-import { ModeActions, ItemReference, Coords } from 'src/types';
+import { ModeActions, ItemReference, Coords, SceneItemsSnapshot } from 'src/types';
 import { screenToIso, isPointInPolygon } from 'src/utils';
 
 // Helper to find all items whose centers are within the freehand polygon
 const getItemsInFreehandBounds = (
   pathTiles: Coords[],
-  scene: any
+  scene: SceneItemsSnapshot
 ): ItemReference[] => {
   const items: ItemReference[] = [];
 
   if (pathTiles.length < 3) return items;
 
   // Check all nodes/items
-  scene.items.forEach((item: any) => {
+  scene.items.forEach((item) => {
     if (isPointInPolygon(item.tile, pathTiles)) {
       items.push({ type: 'ITEM', id: item.id });
     }
   });
 
   // Check all rectangles - they must be FULLY enclosed (all 4 corners inside)
-  scene.rectangles.forEach((rectangle: any) => {
+  scene.rectangles.forEach((rectangle) => {
     const corners = [
       rectangle.from,
       { x: rectangle.to.x, y: rectangle.from.y },
@@ -36,7 +36,7 @@ const getItemsInFreehandBounds = (
   });
 
   // Check all text boxes
-  scene.textBoxes.forEach((textBox: any) => {
+  scene.textBoxes.forEach((textBox) => {
     if (isPointInPolygon(textBox.tile, pathTiles)) {
       items.push({ type: 'TEXTBOX', id: textBox.id });
     }

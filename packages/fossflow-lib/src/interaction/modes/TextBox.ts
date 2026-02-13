@@ -15,12 +15,13 @@ export const TextBox: ModeActions = {
       tile: uiState.mouse.position.tile
     });
   },
-  mouseup: ({ uiState, scene, isRendererInteraction }) => {
+  mouseup: ({ uiState, scene, isRendererInteraction, history }) => {
     if (uiState.mode.type !== 'TEXTBOX' || !uiState.mode.id) return;
 
     if (!isRendererInteraction) {
-      scene.deleteTextBox(uiState.mode.id);
+      history.cancelGesture();
     } else {
+      history.endGesture();
       uiState.actions.setItemControls({
         type: 'TEXTBOX',
         id: uiState.mode.id

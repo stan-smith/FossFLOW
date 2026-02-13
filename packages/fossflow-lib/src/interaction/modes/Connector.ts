@@ -61,7 +61,7 @@ export const Connector: ModeActions = {
       }
     }
   },
-  mousedown: ({ uiState, scene, isRendererInteraction }) => {
+  mousedown: ({ uiState, scene, isRendererInteraction, history }) => {
     if (uiState.mode.type !== 'CONNECTOR' || !isRendererInteraction) return;
 
     const itemAtTile = getItemAtTile({
@@ -72,8 +72,9 @@ export const Connector: ModeActions = {
     if (uiState.connectorInteractionMode === 'click') {
       // Click mode: handle first and second clicks
       if (!uiState.mode.startAnchor) {
-        // First click: store the start position
-        const startAnchor = itemAtTile?.type === 'ITEM' 
+        // First click: begin gesture and store the start position
+        history.beginGesture();
+        const startAnchor = itemAtTile?.type === 'ITEM'
           ? { itemId: itemAtTile.id }
           : { tile: uiState.mouse.position.tile };
 
@@ -144,7 +145,8 @@ export const Connector: ModeActions = {
           // Don't delete connectors to empty space - they're valid
           // Only validate minimum path length will be handled by the update
 
-          // Reset for next connection
+          // End gesture and reset for next connection
+          history.endGesture();
           uiState.actions.setMode({
             type: 'CONNECTOR',
             showCursor: true,
@@ -155,7 +157,8 @@ export const Connector: ModeActions = {
         }
       }
     } else {
-      // Drag mode: original behavior
+      // Drag mode: begin gesture before creating
+      history.beginGesture();
       const newConnector: ConnectorI = {
         id: generateId(),
         color: scene.colors[0].id,
@@ -183,7 +186,7 @@ export const Connector: ModeActions = {
       });
     }
   },
-  mouseup: ({ uiState, scene }) => {
+  mouseup: ({ uiState, scene, history }) => {
     if (uiState.mode.type !== 'CONNECTOR' || !uiState.mode.id) return;
 
     // Only handle mouseup for drag mode
@@ -191,6 +194,7 @@ export const Connector: ModeActions = {
       // Don't delete connectors to empty space - they're valid
       // Validation is handled in the reducer layer
 
+      history.endGesture();
       uiState.actions.setMode({
         type: 'CONNECTOR',
         showCursor: true,

@@ -22,3 +22,5 @@ export const Cursor = memo(() => {
     />
   );
 });
+
+Cursor.displayName = 'Cursor';

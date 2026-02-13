@@ -4,6 +4,7 @@ import { useSceneStore } from 'src/stores/sceneStore';
 import * as reducers from 'src/stores/reducers';
 import { Model } from 'src/types';
 import { INITIAL_SCENE_STATE } from 'src/config';
+import { useHistory } from 'src/hooks/useHistory';
 
 export const useView = () => {
   const uiStateActions = useUiStateStore((state) => {
@@ -13,6 +14,8 @@ export const useView = () => {
   const sceneActions = useSceneStore((state) => {
     return state.actions;
   });
+
+  const { clearHistory } = useHistory();
 
   const changeView = useCallback(
     (viewId: string, model: Model) => {
@@ -24,8 +27,9 @@ export const useView = () => {
 
       sceneActions.set(newState.scene);
       uiStateActions.setView(viewId);
+      clearHistory();
     },
-    [uiStateActions, sceneActions]
+    [uiStateActions, sceneActions, clearHistory]
   );
 
   return {

@@ -55,3 +55,5 @@ export const IsoTileArea = memo(({
     </Svg>
   );
 });
+
+IsoTileArea.displayName = 'IsoTileArea';
