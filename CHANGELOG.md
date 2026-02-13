@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.5](https://github.com/stan-smith/FossFLOW/compare/v1.10.4...v1.10.5) (2026-02-13)
+
+### Bug Fixes
+
+* replace dual-store undo/redo with unified history store ([c3f5df2](https://github.com/stan-smith/FossFLOW/commit/c3f5df23ca451ce5d00759946eec7343d67a4332))
+
 ## [1.10.4](https://github.com/stan-smith/FossFLOW/compare/v1.10.3...v1.10.4) (2026-02-06)
 
 ### Performance
