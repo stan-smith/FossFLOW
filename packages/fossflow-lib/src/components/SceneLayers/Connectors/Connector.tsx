@@ -327,5 +327,3 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
     </Box>
   );
 });
-
-Connector.displayName = 'Connector';

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Box } from '@mui/material';
-import { shallow } from 'zustand/shallow';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
@@ -10,8 +9,7 @@ export const DebugUtils = () => {
   const uiState = useUiStateStore(
     ({ scroll, mouse, zoom, mode, rendererEl }) => {
       return { scroll, mouse, zoom, mode, rendererEl };
-    },
-    shallow
+    }
   );
   const scene = useScene();
   const { size: rendererSize } = useResizeObserver(uiState.rendererEl);

@@ -106,7 +106,7 @@ export const useInteractionManager = () => {
   const modelStoreApi = useModelStoreApi();
   const scene = useScene();
   const { size: rendererSize } = useResizeObserver(rendererEl);
-  const { undo, redo, canUndo, canRedo, beginGesture, endGesture, cancelGesture, isGestureInProgress } = useHistory();
+  const { undo, redo, canUndo, canRedo } = useHistory();
   const { createTextBox } = scene;
   const { handleMouseDown: handlePanMouseDown, handleMouseUp: handlePanMouseUp } = usePanHandlers();
   const { scheduleUpdate, flushUpdate, cleanup } = useRAFThrottle();
@@ -131,7 +131,7 @@ export const useInteractionManager = () => {
             (uiState.connectorInteractionMode === 'drag' && connectorMode.id !== null);
 
           if (isConnectionInProgress && connectorMode.id) {
-            cancelGesture();
+            scene.deleteConnector(connectorMode.id);
 
             uiState.actions.setMode({
               type: 'CONNECTOR',
@@ -158,13 +158,9 @@ export const useInteractionManager = () => {
 
       const isCtrlOrCmd = e.ctrlKey || e.metaKey;
 
-      // Block undo/redo during active interactions or gestures
-      const blockingModes = ['CONNECTOR', 'RECTANGLE.DRAW', 'RECTANGLE.TRANSFORM', 'TEXTBOX', 'DRAG_ITEMS'];
-      const isUndoBlocked = blockingModes.includes(uiState.mode.type) || isGestureInProgress();
-
       if (isCtrlOrCmd && e.key.toLowerCase() === 'z' && !e.shiftKey) {
         e.preventDefault();
-        if (canUndo && !isUndoBlocked) {
+        if (canUndo) {
           undo();
         }
       }
@@ -175,7 +171,7 @@ export const useInteractionManager = () => {
           (e.key.toLowerCase() === 'z' && e.shiftKey))
       ) {
         e.preventDefault();
-        if (canRedo && !isUndoBlocked) {
+        if (canRedo) {
           redo();
         }
       }
@@ -234,7 +230,6 @@ export const useInteractionManager = () => {
         });
       } else if (hotkeyMapping.text && key === hotkeyMapping.text) {
         e.preventDefault();
-        beginGesture();
         const textBoxId = generateId();
         createTextBox({
           ...TEXTBOX_DEFAULTS,
@@ -270,7 +265,7 @@ export const useInteractionManager = () => {
     return () => {
       return window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [undo, redo, canUndo, canRedo, uiStateApi, createTextBox, scene, beginGesture, cancelGesture, isGestureInProgress]);
+  }, [undo, redo, canUndo, canRedo, uiStateApi, createTextBox, scene]);
 
   const processMouseUpdate = useCallback(
     (nextMouse: Mouse, e: SlimMouseEvent) => {
@@ -289,7 +284,6 @@ export const useInteractionManager = () => {
       const baseState: State = {
         model,
         scene,
-        history: { beginGesture, endGesture, cancelGesture, isGestureInProgress },
         uiState,
         rendererRef: rendererRef.current,
         rendererSize,
@@ -313,7 +307,7 @@ export const useInteractionManager = () => {
       modeFunction(baseState);
       reducerTypeRef.current = uiState.mode.type;
     },
-    [uiStateApi, modelStoreApi, scene, rendererSize, beginGesture, endGesture, cancelGesture, isGestureInProgress]
+    [uiStateApi, modelStoreApi, scene, rendererSize]
   );
 
   const onMouseEvent = useCallback(

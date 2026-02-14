@@ -4,7 +4,6 @@ import { ModelItem, ViewItem } from 'src/types';
 import { RichTextEditor } from 'src/components/RichTextEditor/RichTextEditor';
 import { useModelItem } from 'src/hooks/useModelItem';
 import { useModelStore } from 'src/stores/modelStore';
-import { useHistory } from 'src/hooks/useHistory';
 import { DeleteButton } from '../../components/DeleteButton';
 import { Section } from '../../components/Section';
 
@@ -29,7 +28,6 @@ export const NodeSettings = ({
   const modelItem = useModelItem(node.id);
   const modelActions = useModelStore((state) => state.actions);
   const icons = useModelStore((state) => state.icons);
-  const { beginGesture, endGesture, isGestureInProgress } = useHistory();
   
   // Local state for smooth slider interaction
   const currentIcon = icons.find(icon => icon.id === modelItem?.icon);
@@ -59,13 +57,10 @@ export const NodeSettings = ({
 
   // Handle slider change with local state + debounced store update
   const handleScaleChange = useCallback((e: Event, newScale: number | number[]) => {
-    if (!isGestureInProgress()) {
-      beginGesture();
-    }
     const scale = newScale as number;
     setLocalScale(scale); // Immediate UI update
     updateIconScale(scale); // Debounced store update
-  }, [updateIconScale, beginGesture, isGestureInProgress]);
+  }, [updateIconScale]);
 
   // Cleanup timeout on unmount
   useEffect(() => {
@@ -85,8 +80,6 @@ export const NodeSettings = ({
       <Section title="Name">
         <TextField
           value={modelItem.name}
-          onFocus={() => beginGesture()}
-          onBlur={() => endGesture()}
           onChange={(e) => {
             const text = e.target.value as string;
             if (modelItem.name !== text) onModelItemUpdated({ name: text });
@@ -96,8 +89,6 @@ export const NodeSettings = ({
       <Section title="Description">
         <RichTextEditor
           value={modelItem.description}
-          onFocus={() => beginGesture()}
-          onBlur={() => endGesture()}
           onChange={(text) => {
             if (modelItem.description !== text)
               onModelItemUpdated({ description: text });
@@ -128,7 +119,6 @@ export const NodeSettings = ({
           max={2.5}
           value={localScale}
           onChange={handleScaleChange}
-          onChangeCommitted={endGesture}
         />
       </Section>
       <Section>

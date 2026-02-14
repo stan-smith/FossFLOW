@@ -44,7 +44,7 @@ export interface DragItemsMode {
   type: 'DRAG_ITEMS';
   showCursor: boolean;
   items: ItemReference[];
-  isInitialMovement: boolean;
+  isInitialMovement: Boolean;
 }
 
 export interface PanMode {

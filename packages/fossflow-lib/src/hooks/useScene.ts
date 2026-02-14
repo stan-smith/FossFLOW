@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
 import { shallow } from 'zustand/shallow';
 import {
   ModelItem,
@@ -18,7 +18,6 @@ import {
   RECTANGLE_DEFAULTS,
   TEXTBOX_DEFAULTS
 } from 'src/config';
-import { useHistory } from 'src/hooks/useHistory';
 
 export const useScene = () => {
   const { views, colors, icons, items, version, title, description } =
@@ -43,10 +42,10 @@ export const useScene = () => {
       shallow
     );
   const currentViewId = useUiStateStore((state) => state.view);
+  const transactionInProgress = useRef(false);
 
   const modelStoreApi = useModelStoreApi();
   const sceneStoreApi = useSceneStoreApi();
-  const { saveSnapshot, beginGesture, endGesture } = useHistory();
 
   const currentView = useMemo(() => {
     if (!views || !currentViewId) {
@@ -139,45 +138,59 @@ export const useScene = () => {
 
   const setState = useCallback(
     (newState: State) => {
-      modelStoreApi.getState().actions.set(newState.model);
-      sceneStoreApi.getState().actions.set(newState.scene);
+      modelStoreApi.getState().actions.set(newState.model, true);
+      sceneStoreApi.getState().actions.set(newState.scene, true);
     },
     [modelStoreApi, sceneStoreApi]
   );
 
+  const saveToHistoryBeforeChange = useCallback(() => {
+    if (transactionInProgress.current) {
+      return;
+    }
+
+    modelStoreApi.getState().actions.saveToHistory();
+    sceneStoreApi.getState().actions.saveToHistory();
+  }, [modelStoreApi, sceneStoreApi]);
+
   const createModelItem = useCallback(
     (newModelItem: ModelItem) => {
-      saveSnapshot();
+      if (!transactionInProgress.current) {
+        saveToHistoryBeforeChange();
+      }
+
       const newState = reducers.createModelItem(newModelItem, getState());
       setState(newState);
       return newState;
     },
-    [getState, setState, saveSnapshot]
+    [getState, setState, saveToHistoryBeforeChange]
   );
 
   const updateModelItem = useCallback(
     (id: string, updates: Partial<ModelItem>) => {
-      saveSnapshot();
+      saveToHistoryBeforeChange();
       const newState = reducers.updateModelItem(id, updates, getState());
       setState(newState);
     },
-    [getState, setState, saveSnapshot]
+    [getState, setState, saveToHistoryBeforeChange]
   );
 
   const deleteModelItem = useCallback(
     (id: string) => {
-      saveSnapshot();
+      saveToHistoryBeforeChange();
       const newState = reducers.deleteModelItem(id, getState());
       setState(newState);
     },
-    [getState, setState, saveSnapshot]
+    [getState, setState, saveToHistoryBeforeChange]
   );
 
   const createViewItem = useCallback(
     (newViewItem: ViewItem, currentState?: State) => {
       if (!currentViewId) return;
 
-      saveSnapshot();
+      if (!transactionInProgress.current) {
+        saveToHistoryBeforeChange();
+      }
 
       const stateToUse = currentState || getState();
 
@@ -189,14 +202,16 @@ export const useScene = () => {
       setState(newState);
       return newState;
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const updateViewItem = useCallback(
     (id: string, updates: Partial<ViewItem>, currentState?: State) => {
       if (!currentViewId) return getState();
 
-      saveSnapshot();
+      if (!transactionInProgress.current) {
+        saveToHistoryBeforeChange();
+      }
 
       const stateToUse = currentState || getState();
       const newState = reducers.view({
@@ -207,14 +222,14 @@ export const useScene = () => {
       setState(newState);
       return newState;
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const deleteViewItem = useCallback(
     (id: string) => {
       if (!currentViewId) return;
 
-      saveSnapshot();
+      saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'DELETE_VIEWITEM',
         payload: id,
@@ -222,14 +237,14 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const createConnector = useCallback(
     (newConnector: Connector) => {
       if (!currentViewId) return;
 
-      saveSnapshot();
+      saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'CREATE_CONNECTOR',
         payload: newConnector,
@@ -237,14 +252,14 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const updateConnector = useCallback(
     (id: string, updates: Partial<Connector>) => {
       if (!currentViewId) return;
 
-      saveSnapshot();
+      saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'UPDATE_CONNECTOR',
         payload: { id, ...updates },
@@ -252,14 +267,14 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const deleteConnector = useCallback(
     (id: string) => {
       if (!currentViewId) return;
 
-      saveSnapshot();
+      saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'DELETE_CONNECTOR',
         payload: id,
@@ -267,14 +282,14 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const createTextBox = useCallback(
     (newTextBox: TextBox) => {
       if (!currentViewId) return;
 
-      saveSnapshot();
+      saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'CREATE_TEXTBOX',
         payload: newTextBox,
@@ -282,14 +297,16 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const updateTextBox = useCallback(
     (id: string, updates: Partial<TextBox>, currentState?: State) => {
       if (!currentViewId) return currentState || getState();
 
-      saveSnapshot();
+      if (!transactionInProgress.current) {
+        saveToHistoryBeforeChange();
+      }
 
       const stateToUse = currentState || getState();
       const newState = reducers.view({
@@ -300,14 +317,14 @@ export const useScene = () => {
       setState(newState);
       return newState;
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const deleteTextBox = useCallback(
     (id: string) => {
       if (!currentViewId) return;
 
-      saveSnapshot();
+      saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'DELETE_TEXTBOX',
         payload: id,
@@ -315,14 +332,14 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const createRectangle = useCallback(
     (newRectangle: Rectangle) => {
       if (!currentViewId) return;
 
-      saveSnapshot();
+      saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'CREATE_RECTANGLE',
         payload: newRectangle,
@@ -330,14 +347,16 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const updateRectangle = useCallback(
     (id: string, updates: Partial<Rectangle>, currentState?: State) => {
       if (!currentViewId) return currentState || getState();
 
-      saveSnapshot();
+      if (!transactionInProgress.current) {
+        saveToHistoryBeforeChange();
+      }
 
       const stateToUse = currentState || getState();
       const newState = reducers.view({
@@ -348,14 +367,14 @@ export const useScene = () => {
       setState(newState);
       return newState;
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const deleteRectangle = useCallback(
     (id: string) => {
       if (!currentViewId) return;
 
-      saveSnapshot();
+      saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'DELETE_RECTANGLE',
         payload: id,
@@ -363,24 +382,32 @@ export const useScene = () => {
       });
       setState(newState);
     },
-    [getState, setState, currentViewId, saveSnapshot]
+    [getState, setState, currentViewId, saveToHistoryBeforeChange]
   );
 
   const transaction = useCallback(
     (operations: () => void) => {
-      beginGesture();
+      if (transactionInProgress.current) {
+        operations();
+        return;
+      }
+
+      saveToHistoryBeforeChange();
+      transactionInProgress.current = true;
+
       try {
         operations();
       } finally {
-        endGesture();
+        transactionInProgress.current = false;
       }
     },
-    [beginGesture, endGesture]
+    [saveToHistoryBeforeChange]
   );
 
   const placeIcon = useCallback(
     (params: { modelItem: ModelItem; viewItem: ViewItem }) => {
-      beginGesture();
+      saveToHistoryBeforeChange();
+      transactionInProgress.current = true;
 
       try {
         const stateAfterModelItem = createModelItem(params.modelItem);
@@ -389,10 +416,10 @@ export const useScene = () => {
           createViewItem(params.viewItem, stateAfterModelItem);
         }
       } finally {
-        endGesture();
+        transactionInProgress.current = false;
       }
     },
-    [createModelItem, createViewItem, beginGesture, endGesture]
+    [createModelItem, createViewItem, saveToHistoryBeforeChange]
   );
 
   return {

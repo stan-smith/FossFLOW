@@ -50,5 +50,3 @@ export const TextBox = memo(({ textBox }: Props) => {
     </Box>
   );
 });
-
-TextBox.displayName = 'TextBox';

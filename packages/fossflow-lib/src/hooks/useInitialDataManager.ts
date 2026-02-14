@@ -1,5 +1,4 @@
 import { useCallback, useState, useRef } from 'react';
-import { shallow } from 'zustand/shallow';
 import { InitialData, IconCollectionState } from 'src/types';
 import { INITIAL_DATA, INITIAL_SCENE_STATE } from 'src/config';
 import {
@@ -10,7 +9,7 @@ import {
   getItemByIdOrThrow
 } from 'src/utils';
 import * as reducers from 'src/stores/reducers';
-import { useModelStore, useModelStoreApi } from 'src/stores/modelStore';
+import { useModelStore } from 'src/stores/modelStore';
 import { useView } from 'src/hooks/useView';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { modelSchema } from 'src/schemas/model';
@@ -18,12 +17,9 @@ import { modelSchema } from 'src/schemas/model';
 export const useInitialDataManager = () => {
   const [isReady, setIsReady] = useState(false);
   const prevInitialData = useRef<InitialData | undefined>(undefined);
-  const modelActions = useModelStore((state) => state.actions);
-  const { icons, colors } = useModelStore(
-    (state) => ({ icons: state.icons, colors: state.colors }),
-    shallow
-  );
-  const modelStoreApi = useModelStoreApi();
+  const model = useModelStore((state) => {
+    return state;
+  });
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
@@ -109,7 +105,7 @@ export const useInitialDataManager = () => {
       }
 
       prevInitialData.current = initialData;
-      modelActions.set(initialData);
+      model.actions.set(initialData);
 
       const view = getItemByIdOrThrow(
         initialData.views,
@@ -147,13 +143,13 @@ export const useInitialDataManager = () => {
 
       setIsReady(true);
     },
-    [changeView, modelActions, rendererEl, uiStateActions, editorMode]
+    [changeView, model.actions, rendererEl, uiStateActions, editorMode]
   );
 
   const clear = useCallback(() => {
-    load({ ...INITIAL_DATA, icons, colors });
+    load({ ...INITIAL_DATA, icons: model.icons, colors: model.colors });
     uiStateActions.resetUiState();
-  }, [load, icons, colors, uiStateActions]);
+  }, [load, model.icons, model.colors, uiStateActions]);
 
   return {
     load,

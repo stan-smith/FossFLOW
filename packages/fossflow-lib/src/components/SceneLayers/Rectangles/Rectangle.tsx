@@ -31,5 +31,3 @@ export const Rectangle = memo(({ from, to, color: colorId, customColor }: Props)
     />
   );
 });
-
-Rectangle.displayName = 'Rectangle';

@@ -4,7 +4,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import { theme } from 'src/styles/theme';
 import { ModelProvider } from 'src/stores/modelStore';
 import { SceneProvider } from 'src/stores/sceneStore';
-import { HistoryProvider } from 'src/stores/historyStore';
 import { UiStateProvider } from 'src/stores/uiStateStore';
 import { DebugUtils } from '../DebugUtils';
 
@@ -14,9 +13,7 @@ describe('DebugUtils', () => {
       <ThemeProvider theme={theme}>
         <ModelProvider>
           <SceneProvider>
-            <HistoryProvider>
-              <UiStateProvider>{children}</UiStateProvider>
-            </HistoryProvider>
+            <UiStateProvider>{children}</UiStateProvider>
           </SceneProvider>
         </ModelProvider>
       </ThemeProvider>

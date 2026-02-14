@@ -1,11 +1,5 @@
+import { StoreApi } from 'zustand';
 import type { Coords, Rect, Size } from './common';
-import type { ViewItem, Rectangle, TextBox } from './model';
-
-export interface SceneItemsSnapshot {
-  items: Pick<ViewItem, 'tile' | 'id'>[];
-  rectangles: Pick<Rectangle, 'from' | 'to' | 'id'>[];
-  textBoxes: Pick<TextBox, 'tile' | 'id'>[];
-}
 
 export const tileOriginOptions = {
   CENTER: 'CENTER',
@@ -56,7 +50,7 @@ export interface Scene {
 
 export type SceneStore = Scene & {
   actions: {
-    get: () => SceneStore;
-    set: (updates: Partial<Scene>) => void;
+    get: StoreApi<SceneStore>['getState'];
+    set: StoreApi<SceneStore>['setState'];
   };
 };

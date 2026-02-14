@@ -1,4 +1,4 @@
-import { useMemo, memo } from 'react';
+import React, { useMemo } from 'react';
 import type { useScene } from 'src/hooks/useScene';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { Connector } from './Connector';
@@ -7,7 +7,7 @@ interface Props {
   connectors: ReturnType<typeof useScene>['connectors'];
 }
 
-export const Connectors = memo(({ connectors }: Props) => {
+export const Connectors = ({ connectors }: Props) => {
   const itemControls = useUiStateStore((state) => {
     return state.itemControls;
   });
@@ -27,11 +27,9 @@ export const Connectors = memo(({ connectors }: Props) => {
     return null;
   }, [mode, itemControls]);
 
-  const reversedConnectors = useMemo(() => [...connectors].reverse(), [connectors]);
-
   return (
     <>
-      {reversedConnectors.map((connector) => {
+      {[...connectors].reverse().map((connector) => {
         return (
           <Connector
             key={connector.id}
@@ -42,6 +40,4 @@ export const Connectors = memo(({ connectors }: Props) => {
       })}
     </>
   );
-});
-
-Connectors.displayName = 'Connectors';
+};

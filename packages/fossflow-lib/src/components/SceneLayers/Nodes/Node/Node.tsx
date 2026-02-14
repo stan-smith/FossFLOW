@@ -94,5 +94,3 @@ export const Node = memo(({ node, order }: Props) => {
     </Box>
   );
 });
-
-Node.displayName = 'Node';

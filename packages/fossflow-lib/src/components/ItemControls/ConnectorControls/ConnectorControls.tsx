@@ -24,7 +24,6 @@ import { ColorPicker } from 'src/components/ColorSelector/ColorPicker';
 import { CustomColorInput } from 'src/components/ColorSelector/CustomColorInput';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useScene } from 'src/hooks/useScene';
-import { useHistory } from 'src/hooks/useHistory';
 import {
   Close as CloseIcon,
   Add as AddIcon,
@@ -45,7 +44,6 @@ export const ConnectorControls = ({ id }: Props) => {
   });
   const connector = useConnector(id);
   const { updateConnector, deleteConnector } = useScene();
-  const { beginGesture, endGesture } = useHistory();
   const [useCustomColor, setUseCustomColor] = useState(
     !!connector?.customColor
   );
@@ -209,8 +207,6 @@ export const ConnectorControls = ({ id }: Props) => {
                   <TextField
                     label="Text"
                     value={label.text}
-                    onFocus={beginGesture}
-                    onBlur={endGesture}
                     onChange={(e) => {
                       return handleUpdateLabel(label.id, {
                         text: e.target.value

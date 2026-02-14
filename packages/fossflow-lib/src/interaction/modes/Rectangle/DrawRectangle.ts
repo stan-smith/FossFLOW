@@ -22,11 +22,10 @@ export const DrawRectangle: ModeActions = {
       to: uiState.mouse.position.tile
     });
   },
-  mousedown: ({ uiState, scene, isRendererInteraction, history }) => {
+  mousedown: ({ uiState, scene, isRendererInteraction }) => {
     if (uiState.mode.type !== 'RECTANGLE.DRAW' || !isRendererInteraction)
       return;
 
-    history.beginGesture();
     const newRectangleId = generateId();
 
     scene.createRectangle({
@@ -42,10 +41,9 @@ export const DrawRectangle: ModeActions = {
 
     uiState.actions.setMode(newMode);
   },
-  mouseup: ({ uiState, history }) => {
+  mouseup: ({ uiState }) => {
     if (uiState.mode.type !== 'RECTANGLE.DRAW' || !uiState.mode.id) return;
 
-    history.endGesture();
     uiState.actions.setMode({
       type: 'CURSOR',
       showCursor: true,
