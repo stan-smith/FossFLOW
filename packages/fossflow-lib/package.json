@@ -1,6 +1,6 @@
 {
   "name": "fossflow",
-  "version": "1.10.5",
+  "version": "1.10.6",
   "private": false,
   "description": "An open-source React component for drawing network diagrams - forked from isoflow.",
   "license": "MIT",
