@@ -67,10 +67,28 @@ def count_canvas_images(driver):
 
 
 def get_model_items_count(driver):
+    """Get model items count via React fiber store discovery."""
     return driver.execute_script("""
-        if (!window.__modelStore__) return -1;
-        var m = window.__modelStore__.getState();
-        return (m.items || []).length;
+        var root = document.getElementById("root");
+        var ck = Object.keys(root).find(function(k) { return k.startsWith("__reactContainer"); });
+        if (!ck) return -1;
+        var fiber = root[ck], queue = [fiber], v = 0;
+        while (queue.length > 0 && v < 3000) {
+            var n = queue.shift(); if (!n) continue; v++;
+            if (n.pendingProps && n.pendingProps.value &&
+                typeof n.pendingProps.value === "object" && n.pendingProps.value !== null &&
+                typeof n.pendingProps.value.getState === "function") {
+                try {
+                    var st = n.pendingProps.value.getState();
+                    if (st && st.views !== undefined && st.items !== undefined) {
+                        return (st.items || []).length;
+                    }
+                } catch(e) {}
+            }
+            if (n.child) queue.push(n.child);
+            if (n.sibling) queue.push(n.sibling);
+        }
+        return -1;
     """)
 
 
@@ -211,8 +229,26 @@ def test_multi_node_undo_redo(driver):
 
     # Check redo is available before fork
     can_redo = driver.execute_script("""
-        if (!window.__modelStore__) return null;
-        return window.__modelStore__.getState().actions.canRedo();
+        var root = document.getElementById("root");
+        var ck = Object.keys(root).find(function(k) { return k.startsWith("__reactContainer"); });
+        if (!ck) return null;
+        var fiber = root[ck], queue = [fiber], v = 0;
+        while (queue.length > 0 && v < 3000) {
+            var n = queue.shift(); if (!n) continue; v++;
+            if (n.pendingProps && n.pendingProps.value &&
+                typeof n.pendingProps.value === "object" && n.pendingProps.value !== null &&
+                typeof n.pendingProps.value.getState === "function") {
+                try {
+                    var st = n.pendingProps.value.getState();
+                    if (st && st.views !== undefined && st.items !== undefined && st.history) {
+                        return st.history.future.length > 0;
+                    }
+                } catch(e) {}
+            }
+            if (n.child) queue.push(n.child);
+            if (n.sibling) queue.push(n.sibling);
+        }
+        return null;
     """)
     print(f"   canRedo before fork: {can_redo}")
     assert can_redo, "Should be able to redo before forking"
@@ -225,8 +261,26 @@ def test_multi_node_undo_redo(driver):
 
     # Redo should now be impossible (future was cleared by new action)
     can_redo = driver.execute_script("""
-        if (!window.__modelStore__) return null;
-        return window.__modelStore__.getState().actions.canRedo();
+        var root = document.getElementById("root");
+        var ck = Object.keys(root).find(function(k) { return k.startsWith("__reactContainer"); });
+        if (!ck) return null;
+        var fiber = root[ck], queue = [fiber], v = 0;
+        while (queue.length > 0 && v < 3000) {
+            var n = queue.shift(); if (!n) continue; v++;
+            if (n.pendingProps && n.pendingProps.value &&
+                typeof n.pendingProps.value === "object" && n.pendingProps.value !== null &&
+                typeof n.pendingProps.value.getState === "function") {
+                try {
+                    var st = n.pendingProps.value.getState();
+                    if (st && st.views !== undefined && st.items !== undefined && st.history) {
+                        return st.history.future.length > 0;
+                    }
+                } catch(e) {}
+            }
+            if (n.child) queue.push(n.child);
+            if (n.sibling) queue.push(n.sibling);
+        }
+        return null;
     """)
     print(f"   canRedo after fork: {can_redo}")
     assert not can_redo, "Should NOT be able to redo after forking history"
