@@ -54,7 +54,7 @@ const initialState = () => {
     const saveToHistory = () => {
       set((state) => {
         const currentModel = extractModelData(state);
-        const newPast = [...state.history.past, state.history.present];
+        const newPast = [...state.history.past, currentModel];
 
         // Limit history size to prevent memory issues
         if (newPast.length > state.history.maxHistorySize) {
@@ -81,13 +81,15 @@ const initialState = () => {
       const newPast = history.past.slice(0, history.past.length - 1);
 
       set((state) => {
+        // Capture the actual live state (not stale history.present)
+        const currentModel = extractModelData(state);
         return {
           ...previous,
           history: {
             ...state.history,
             past: newPast,
             present: previous,
-            future: [state.history.present, ...state.history.future]
+            future: [currentModel, ...state.history.future]
           }
         };
       });
@@ -103,11 +105,13 @@ const initialState = () => {
       const newFuture = history.future.slice(1);
 
       set((state) => {
+        // Capture the actual live state (not stale history.present)
+        const currentModel = extractModelData(state);
         return {
           ...next,
           history: {
             ...state.history,
-            past: [...state.history.past, state.history.present],
+            past: [...state.history.past, currentModel],
             present: next,
             future: newFuture
           }

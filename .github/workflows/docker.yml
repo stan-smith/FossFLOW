@@ -6,14 +6,11 @@ on:
     types:
       - completed
     branches: ["main", "master"]
-  push:
-    tags:
-      - 'v*.*.*'
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout code

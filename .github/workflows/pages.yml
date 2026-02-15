@@ -2,9 +2,9 @@
 name: Deploy static content to Pages
 
 on:
-  # Runs after unit tests complete successfully (skipping E2E tests)
+  # Runs after E2E tests complete successfully
   workflow_run:
-    workflows: ["Run Tests"]
+    workflows: ["E2E Tests"]
     types:
       - completed
     branches: ["main", "master"]
