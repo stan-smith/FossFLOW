@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.7](https://github.com/stan-smith/FossFLOW/compare/v1.10.6...v1.10.7) (2026-02-15)
+
+### Bug Fixes
+
+* Fixed issues with history not fully working, undo/redo was hit or miss. Additionally added a huge amount of CI/CD testing using selenium so that we can simulate creating a diagram, placing nodes, connceting them, undo/redo, and rectangles/text as well, with love, Stan ([047df92](https://github.com/stan-smith/FossFLOW/commit/047df927858417ec068a749a3f6a0c6dd8741fec))
+
 ## [1.10.6](https://github.com/stan-smith/FossFLOW/compare/v1.10.5...v1.10.6) (2026-02-14)
 
 ### Reverts
