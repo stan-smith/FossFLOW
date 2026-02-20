@@ -45,115 +45,136 @@ Each view contains:
 
 ## Available Icons
 
-### Basic Icons (ISOFLOW Collection)
-Common icons for general use:
-- `storage` - Database/storage
+### Basic Icons (ISOFLOW Collection — 37 icons)
+Common isometric icons for general use. For the complete list, see `icon-list-generation-guide.md`.
 - `server` - Generic server
-- `user` - User/person
-- `cloud` - Cloud services
-- `network` - Network component
-- `security` - Security/firewall
-- `api` - API/interface
-- `queue` - Message queue
+- `storage` - Database/storage
 - `cache` - Caching system
-- `function` - Function/lambda
-- `mobile` - Mobile device
-- `web` - Web application
-- `email` - Email service
-- `analytics` - Analytics/monitoring
-- `backup` - Backup system
-- `load-balancer` - Load balancer
-- `cdn` - Content delivery network
-- `vpn` - VPN connection
-- `firewall` - Firewall/security
-- `monitor` - Monitoring system
+- `cloud` - Cloud services, external APIs
+- `cube` - Generic service, application
+- `block` - Generic component, module
+- `desktop` - Client, browser, workstation
+- `laptop` - Client device, developer
+- `mobiledevice` - Mobile device
+- `diamond` - Decision point, router, gateway
+- `firewall` - Firewall, security, validation
+- `lock` - Authentication, encryption
+- `function-module` - Function, Lambda, API handler
+- `package-module` - Package, library, dependency
+- `switch-module` - Switch, toggle, routing
+- `loadbalancer` - Load balancer, traffic distribution
+- `queue` - Message queue (SQS, RabbitMQ)
+- `router` - Network router, API router
+- `dns` - DNS, domain resolution, search
+- `user` - User, person, identity
+- `mail` - Email, notifications
+- `mailmultiple` - Batch email, message queue
+- `document` - File, document, config
+- `sphere` - Global, CDN, distribution
+- `vm` - Virtual machine, container
+- `cronjob` - Scheduled tasks, background jobs
+- `speech` - Chat, webhook, communication
+- `tower` - Infrastructure, broadcast
+- `truck` - CI/CD, delivery pipeline
+- `pyramid` - Hierarchy, aggregation
+- `image` - Media, image processing
+- `office` - Organization, company
+- `printer` - Output, reporting
+- `cardterminal` - Payment processing
+- `paymentcard` - Payment, billing
+- `plane` - Deployment, delivery
 
 ### AWS Icons (320 available)
-Use `aws-` prefix for AWS services:
+Use `aws-` prefix for AWS services. For the full list, see `icon-list-generation-guide.md`.
 - `aws-ec2` - EC2 instances
-- `aws-s3` - S3 storage
+- `aws-simple-storage-service` - S3 storage
 - `aws-rds` - RDS database
 - `aws-lambda` - Lambda functions
 - `aws-api-gateway` - API Gateway
 - `aws-cloudfront` - CloudFront CDN
 - `aws-route-53` - Route 53 DNS
-- `aws-vpc` - Virtual Private Cloud
-- `aws-elb` - Load balancer
-- `aws-iam` - Identity management
+- `aws-elastic-load-balancing` - Load balancer
+- `aws-identity-and-access-management` - IAM
 - `aws-cloudwatch` - Monitoring
-- `aws-sns` - Simple notification
-- `aws-sqs` - Simple queue
+- `aws-simple-notification-service` - SNS notifications
+- `aws-simple-queue-service` - SQS queues
 - `aws-dynamodb` - DynamoDB database
-- `aws-elasticsearch` - Elasticsearch
+- `aws-opensearch-service` - OpenSearch (Elasticsearch)
 - `aws-redshift` - Data warehouse
 - `aws-kinesis` - Data streaming
-- `aws-eks` - Kubernetes service
+- `aws-elastic-kubernetes-service` - EKS
 - `aws-fargate` - Container service
 - `aws-cognito` - User authentication
+- `aws-elasticache` - ElastiCache
+- `aws-aurora` - Aurora database
+- `aws-step-functions` - Step Functions
+- `aws-secrets-manager` - Secrets Manager
 
 ### Azure Icons (369 available)
-Use `azure-` prefix for Azure services:
+Use `azure-` prefix for Azure services. For the full list, see `icon-list-generation-guide.md`.
 - `azure-virtual-machine` - Virtual machines
-- `azure-storage-account` - Storage
+- `azure-storage-accounts` - Storage
 - `azure-sql-database` - SQL database
-- `azure-app-service` - Web apps
-- `azure-function-app` - Functions
-- `azure-api-management` - API management
-- `azure-cdn` - Content delivery
-- `azure-dns` - DNS service
-- `azure-load-balancer` - Load balancer
+- `azure-app-services` - Web apps
+- `azure-function-apps` - Functions
+- `azure-api-management-services` - API management
+- `azure-cdn-profiles` - Content delivery
+- `azure-dns-zones` - DNS service
+- `azure-load-balancers` - Load balancer
 - `azure-active-directory` - Identity
 - `azure-monitor` - Monitoring
 - `azure-service-bus` - Message bus
 - `azure-cosmos-db` - NoSQL database
-- `azure-redis-cache` - Redis cache
-- `azure-kubernetes-service` - Kubernetes
+- `azure-cache-redis` - Redis cache
+- `azure-kubernetes-services` - Kubernetes
 - `azure-container-instances` - Containers
 - `azure-logic-apps` - Logic apps
 - `azure-data-factory` - Data pipeline
-- `azure-key-vault` - Key management
+- `azure-key-vaults` - Key management
 - `azure-cognitive-services` - AI services
 
 ### GCP Icons (280 available)
-Use `gcp-` prefix for Google Cloud services:
+Use `gcp-` prefix for Google Cloud services. For the full list, see `icon-list-generation-guide.md`.
 - `gcp-compute-engine` - Virtual machines
 - `gcp-cloud-storage` - Storage
 - `gcp-cloud-sql` - SQL database
 - `gcp-app-engine` - Web apps
 - `gcp-cloud-functions` - Functions
-- `gcp-api-gateway` - API gateway
+- `gcp-cloud-api-gateway` - API gateway
 - `gcp-cloud-cdn` - Content delivery
 - `gcp-cloud-dns` - DNS service
 - `gcp-cloud-load-balancing` - Load balancer
-- `gcp-identity-access-management` - IAM
+- `gcp-identity-and-access-management` - IAM
 - `gcp-cloud-monitoring` - Monitoring
-- `gcp-cloud-pub-sub` - Message queue
-- `gcp-cloud-firestore` - NoSQL database
+- `gcp-pubsub` - Message queue (Pub/Sub)
+- `gcp-firestore` - NoSQL database
 - `gcp-memorystore` - Redis cache
-- `gcp-kubernetes-engine` - Kubernetes
+- `gcp-google-kubernetes-engine` - GKE
 - `gcp-cloud-run` - Container service
-- `gcp-cloud-workflows` - Workflows
-- `gcp-cloud-dataflow` - Data pipeline
+- `gcp-workflows` - Workflows
+- `gcp-dataflow` - Data pipeline
 - `gcp-secret-manager` - Secret management
 - `gcp-ai-platform` - AI/ML platform
 
 ### Kubernetes Icons (56 available)
-Use `k8s-` prefix for Kubernetes resources:
+Use `k8s-` prefix for Kubernetes resources. For the full list, see `icon-list-generation-guide.md`.
 - `k8s-pod` - Pods
-- `k8s-service` - Services
-- `k8s-deployment` - Deployments
-- `k8s-configmap` - ConfigMaps
+- `k8s-svc` - Services
+- `k8s-deploy` - Deployments
+- `k8s-cm` - ConfigMaps
 - `k8s-secret` - Secrets
-- `k8s-ingress` - Ingress
-- `k8s-namespace` - Namespaces
+- `k8s-ing` - Ingress
+- `k8s-ns` - Namespaces
 - `k8s-node` - Nodes
-- `k8s-persistent-volume` - Storage
-- `k8s-daemonset` - DaemonSets
-- `k8s-statefulset` - StatefulSets
+- `k8s-pv` - Persistent Volumes
+- `k8s-pvc` - Persistent Volume Claims
+- `k8s-ds` - DaemonSets
+- `k8s-sts` - StatefulSets
 - `k8s-job` - Jobs
 - `k8s-cronjob` - CronJobs
-- `k8s-hpa` - Auto-scaling
-- `k8s-rbac` - Role-based access
+- `k8s-hpa` - Horizontal Pod Autoscaler
+- `k8s-role` - Roles
+- `k8s-sa` - Service Accounts
 
 ## Positioning System
 
@@ -166,8 +187,40 @@ The positioning system uses a grid-based coordinate system:
 ### Positioning Guidelines:
 - Start with main components around (0, 0)
 - Place related components close together
-- Use consistent spacing (3-5 units between components)
-- Arrange in logical flow (left to right, top to bottom)
+- Use consistent spacing (3-5 units between connected nodes, 5+ between parallel branches)
+- Arrange in logical flow (top to bottom for pipelines, left to right for horizontal architectures)
+- Avoid placing two items at the same coordinates
+
+### Common Layout Patterns:
+
+**Linear Pipeline (vertical):**
+```
+[Source]      (0, -8)
+   |
+[Process]     (0, -4)
+   |
+[Output]      (0, 0)
+```
+
+**Fan-out (branching):**
+```
+           [Source]              (0, -4)
+         /    |    \
+[Branch A] [Branch B] [Branch C]
+(-6, 0)    (0, 0)     (6, 0)
+```
+
+**Layered Architecture:**
+```
+[Client]              (-6, -6)  [Client 2]    (6, -6)
+            \         /
+          [Load Balancer]        (0, -2)
+          /           \
+[Service A]          [Service B]
+(-4, 2)               (4, 2)
+          \           /
+          [Database]              (0, 6)
+```
 
 ## Connection Guidelines
 
@@ -190,8 +243,8 @@ Connections are defined as `[fromIndex, toIndex]` pairs:
 {
   "t": "Simple Web App Architecture",
   "i": [
-    ["Web App", "web", "Frontend application"],
-    ["API Gateway", "api", "API management layer"],
+    ["Web App", "desktop", "Frontend application"],
+    ["API Gateway", "diamond", "API management layer"],
     ["Database", "storage", "User data storage"],
     ["Cache", "cache", "Redis caching layer"]
   ],
@@ -215,7 +268,7 @@ Connections are defined as `[fromIndex, toIndex]` pairs:
     ["API Gateway", "aws-api-gateway", "API management"],
     ["Lambda", "aws-lambda", "Serverless functions"],
     ["DynamoDB", "aws-dynamodb", "NoSQL database"],
-    ["S3", "aws-s3", "Static file storage"]
+    ["S3", "aws-simple-storage-service", "Static file storage"]
   ],
   "v": [
     [
@@ -233,11 +286,11 @@ Connections are defined as `[fromIndex, toIndex]` pairs:
 {
   "t": "Kubernetes Application",
   "i": [
-    ["Ingress", "k8s-ingress", "Traffic routing"],
+    ["Ingress", "k8s-ing", "Traffic routing"],
     ["Frontend", "k8s-pod", "React application"],
-    ["API Service", "k8s-service", "Backend API"],
+    ["API Service", "k8s-svc", "Backend API"],
     ["Database", "k8s-pod", "PostgreSQL database"],
-    ["ConfigMap", "k8s-configmap", "Configuration data"]
+    ["ConfigMap", "k8s-cm", "Configuration data"]
   ],
   "v": [
     [
