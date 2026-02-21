@@ -32,7 +32,11 @@ function App() {
   // Get base path from PUBLIC_URL, ensure no trailing slash for React Router
   const publicUrl = process.env.PUBLIC_URL || '';
   // React Router basename should not have trailing slash
-  const basename = publicUrl ? (publicUrl.endsWith('/') ? publicUrl.slice(0, -1) : publicUrl) : '/';
+  const basename = publicUrl
+    ? publicUrl.endsWith('/')
+      ? publicUrl.slice(0, -1)
+      : publicUrl
+    : '/';
 
   return (
     <BrowserRouter basename={basename}>
@@ -50,7 +54,8 @@ function EditorPage() {
   const { readonlyDiagramId } = useParams<{ readonlyDiagramId: string }>();
 
   const [diagrams, setDiagrams] = useState<SavedDiagram[]>([]);
-  const [isDiagramsInitialized, setIsDiagramsInitialized] = useState<boolean>(false);
+  const [isDiagramsInitialized, setIsDiagramsInitialized] =
+    useState<boolean>(false);
   const [currentDiagram, setCurrentDiagram] = useState<SavedDiagram | null>(
     null
   );
@@ -585,9 +590,10 @@ function EditorPage() {
 
   // i18n
   const { t, i18n } = useTranslation('app');
-  
+
   // Get locale with fallback to en-US if not found
-  const currentLocale = allLocales[i18n.language as keyof typeof allLocales] || allLocales['en-US'];
+  const currentLocale =
+    allLocales[i18n.language as keyof typeof allLocales] || allLocales['en-US'];
 
   // Auto-save functionality
   useEffect(() => {
@@ -691,6 +697,39 @@ function EditorPage() {
     };
   }, [currentDiagram, hasUnsavedChanges]);
 
+  // File input ref for adding custom icon packs
+  const iconPackFileRef = useRef<HTMLInputElement | null>(null);
+
+  const handleAddIconPackClick = () => {
+    iconPackFileRef.current?.click();
+  };
+
+  const handleIconPackFile = async (e: any) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      const parsed = JSON.parse(text);
+      // Accept either an array of icons or an object { name, displayName, icons }
+      const icons = Array.isArray(parsed) ? parsed : parsed.icons || [];
+      const name =
+        (parsed && parsed.name) || file.name.replace(/\.[^/.]+$/, '');
+      const displayName = (parsed && parsed.displayName) || name;
+      if (!Array.isArray(icons) || icons.length === 0) {
+        alert('No icons found in the uploaded file.');
+        return;
+      }
+      iconPackManager.addCustomPack(name, displayName, icons);
+      alert('Icon pack added: ' + displayName);
+    } catch (err) {
+      console.error('Failed to import icon pack', err);
+      alert('Failed to import icon pack. See console for details.');
+    } finally {
+      // Reset input so same file can be uploaded again
+      if (iconPackFileRef.current) iconPackFileRef.current.value = '';
+    }
+  };
+
   return (
     <div className="App">
       <div className="toolbar">
@@ -765,6 +804,16 @@ function EditorPage() {
           </div>
         )}
         <ChangeLanguage />
+        <input
+          ref={iconPackFileRef}
+          type="file"
+          accept=".json"
+          style={{ display: 'none' }}
+          onChange={handleIconPackFile}
+        />
+        <button onClick={handleAddIconPackClick}>
+          ➕ {t('nav.addIconPack')}
+        </button>
         <span className="current-diagram">
           {isReadonlyUrl ? (
             <span>
