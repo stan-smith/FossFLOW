@@ -187,6 +187,26 @@ const locale: LocaleProps = {
     configPath2: "sol üstteki Hamburger simgesine tıklayın.",
     canDisable: "İsterseniz bu davranışı devre dışı bırakabilirsiniz.",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "Ayarlar",
+    close: "Kapat",
+    tabZoom: "Zoom",
+    tabLabels: "Etiketler"
+  },
+  labelSettings: {
+    description: "Etiket görüntüleme ayarlarını yapılandır",
+    expandButtonPadding: "Genişlet düğmesi dolgusu",
+    expandButtonPaddingDesc: "Genişlet düğmesi görünür olduğunda alt dolgu (metin çakışmasını önler)",
+    current: "Mevcut: {{value}} tema birimi"
+  },
+  diagramViewStatus: {
+    untitledDiagram: "Adsız Diyagram",
+    untitledView: "Adsız görünüm"
+  },
+  addMenu: {
+    addNode: "Düğüm ekle",
+    addRectangle: "Dikdörtgen ekle"
   }
 };
 

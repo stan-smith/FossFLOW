@@ -187,6 +187,26 @@ const locale: LocaleProps = {
     configPath2: "в верхнем левом углу, чтобы получить доступ к Конфигурации.",
     canDisable: "Вы можете отключить это поведение, если хотите.",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "Настройки",
+    close: "Закрыть",
+    tabZoom: "Масштаб",
+    tabLabels: "Метки"
+  },
+  labelSettings: {
+    description: "Настройка параметров отображения меток",
+    expandButtonPadding: "Отступ кнопки «Развернуть»",
+    expandButtonPaddingDesc: "Нижний отступ при видимой кнопке «Развернуть» (предотвращает перекрытие текста)",
+    current: "Текущее: {{value}} единиц темы"
+  },
+  diagramViewStatus: {
+    untitledDiagram: "Диаграмма без названия",
+    untitledView: "Вид без названия"
+  },
+  addMenu: {
+    addNode: "Добавить узел",
+    addRectangle: "Добавить прямоугольник"
   }
 };
 

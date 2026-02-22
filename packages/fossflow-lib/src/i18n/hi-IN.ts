@@ -187,6 +187,26 @@ const locale: LocaleProps = {
     configPath2: "कॉन्फ़िगरेशन तक पहुंचने के लिए ऊपरी बाएं में।",
     canDisable: "यदि आप चाहें तो आप इस व्यवहार को अक्षम कर सकते हैं।",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "सेटिंग्स",
+    close: "बंद करें",
+    tabZoom: "ज़ूम",
+    tabLabels: "लेबल"
+  },
+  labelSettings: {
+    description: "लेबल प्रदर्शन सेटिंग्स कॉन्फ़िगर करें",
+    expandButtonPadding: "विस्तार बटन पैडिंग",
+    expandButtonPaddingDesc: "विस्तार बटन दृश्यमान होने पर नीचे की पैडिंग (टेक्स्ट ओवरलैप रोकती है)",
+    current: "वर्तमान: {{value}} थीम इकाइयाँ"
+  },
+  diagramViewStatus: {
+    untitledDiagram: "शीर्षकहीन आरेख",
+    untitledView: "शीर्षकहीन दृश्य"
+  },
+  addMenu: {
+    addNode: "नोड जोड़ें",
+    addRectangle: "आयत जोड़ें"
   }
 };
 

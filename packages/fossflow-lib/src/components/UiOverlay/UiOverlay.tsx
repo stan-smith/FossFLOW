@@ -25,6 +25,8 @@ import { ImportHintTooltip } from '../ImportHintTooltip/ImportHintTooltip';
 import { LassoHintTooltip } from '../LassoHintTooltip/LassoHintTooltip';
 import { LazyLoadingWelcomeNotification } from '../LazyLoadingWelcomeNotification/LazyLoadingWelcomeNotification';
 import { CoordsUtils, getTilePosition } from 'src/utils';
+import { useTranslation } from 'src/stores/localeStore';
+import { INITIAL_DATA, VIEW_DEFAULTS } from 'src/config';
 
 const ToolsEnum = {
   MAIN_MENU: 'MAIN_MENU',
@@ -98,6 +100,7 @@ export const UiOverlay = () => {
   const title = useModelStore((state) => {
     return state.title;
   });
+  const { t } = useTranslation('diagramViewStatus');
   const iconPackManager = useUiStateStore((state) => {
     return state.iconPackManager;
   });
@@ -208,11 +211,11 @@ export const UiOverlay = () => {
             >
               <Stack direction="row" alignItems="center">
                 <Typography fontWeight={600} color="text.secondary">
-                  {title}
+                  {(title === INITIAL_DATA.title || title === 'Untitled Diagram') ? t('untitledDiagram') : title}
                 </Typography>
                 <ChevronRight />
                 <Typography fontWeight={600} color="text.secondary">
-                  {currentView.name}
+                  {currentView.name === VIEW_DEFAULTS.name ? t('untitledView') : currentView.name}
                 </Typography>
               </Stack>
             </UiElement>

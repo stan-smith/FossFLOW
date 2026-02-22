@@ -187,6 +187,26 @@ const locale: LocaleProps = {
     configPath2: "no canto superior esquerdo para acessar a Configuração.",
     canDisable: "Você pode desativar esse comportamento se desejar.",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "Configurações",
+    close: "Fechar",
+    tabZoom: "Zoom",
+    tabLabels: "Rótulos"
+  },
+  labelSettings: {
+    description: "Configurar definições de exibição de rótulos",
+    expandButtonPadding: "Espaçamento do botão expandir",
+    expandButtonPaddingDesc: "Espaçamento inferior quando o botão expandir está visível (evita sobreposição de texto)",
+    current: "Atual: {{value}} unidades de tema"
+  },
+  diagramViewStatus: {
+    untitledDiagram: "Diagrama sem título",
+    untitledView: "Vista sem título"
+  },
+  addMenu: {
+    addNode: "Adicionar nó",
+    addRectangle: "Adicionar retângulo"
   }
 };
 

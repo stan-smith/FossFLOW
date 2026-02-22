@@ -187,6 +187,26 @@ const locale: LocaleProps = {
     configPath2: "in alto a sinistra per accedere alla Configurazione.",
     canDisable: "Puoi disattivare questo comportamento se lo desideri.",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "Impostazioni",
+    close: "Chiudi",
+    tabZoom: "Zoom",
+    tabLabels: "Etichette"
+  },
+  labelSettings: {
+    description: "Configura le impostazioni di visualizzazione delle etichette",
+    expandButtonPadding: "Spaziatura del pulsante espandi",
+    expandButtonPaddingDesc: "Spaziatura inferiore quando il pulsante espandi è visibile (evita la sovrapposizione del testo)",
+    current: "Attuale: {{value}} unità tema"
+  },
+  diagramViewStatus: {
+    untitledDiagram: "Diagramma senza titolo",
+    untitledView: "Vista senza titolo"
+  },
+  addMenu: {
+    addNode: "Aggiungi nodo",
+    addRectangle: "Aggiungi rettangolo"
   }
 };
 
