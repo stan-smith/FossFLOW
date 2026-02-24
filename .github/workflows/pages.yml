@@ -32,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
       - name: Build
         uses: docker://node:22-alpine
         with:
@@ -42,7 +42,7 @@ jobs:
           CI: false
           PUBLIC_URL: /FossFLOW/
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           # Upload from the app's build directory in monorepo
           path: './packages/fossflow-app/build/'
