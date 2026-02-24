@@ -14,6 +14,8 @@ import { storageManager } from './services/storageService';
 import ChangeLanguage from './components/ChangeLanguage';
 import { allLocales } from 'fossflow';
 import { useIconPackManager, IconPackName } from './services/iconPackManager';
+import { TEMPLATES, DiagramTemplate } from './templates';
+import { telecomIcons } from './assets/telecom-icons';
 import './App.css';
 import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 
@@ -64,6 +66,7 @@ function EditorPage() {
   const [lastAutoSave, setLastAutoSave] = useState<Date | null>(null);
   const [showStorageManager, setShowStorageManager] = useState(false);
   const [showDiagramManager, setShowDiagramManager] = useState(false);
+  const [showTemplateDialog, setShowTemplateDialog] = useState(false);
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
   const isReadonlyUrl =
     window.location.pathname.startsWith('/display/') && readonlyDiagramId;
@@ -583,6 +586,39 @@ function EditorPage() {
     );
   };
 
+  // Load a diagram template
+  const loadTemplateData = (template: DiagramTemplate) => {
+    if (
+      hasUnsavedChanges &&
+      !window.confirm(t('alert.unsavedChanges'))
+    ) {
+      return;
+    }
+
+    // Merge telecom icons with currently loaded icons
+    const mergedIcons = [...iconPackManager.loadedIcons, ...telecomIcons];
+
+    const templateData: DiagramData = {
+      ...template.data,
+      icons: mergedIcons,
+      colors: template.data.colors?.length ? template.data.colors : defaultColors,
+      fitToScreen: true
+    };
+
+    setCurrentDiagram(null);
+    setDiagramName(template.data.title || template.name);
+    setDiagramData(templateData);
+    setCurrentModel(templateData);
+    setFossflowKey((prev) => prev + 1);
+    setShowTemplateDialog(false);
+    setHasUnsavedChanges(false);
+
+    // Also enable the telecom icon pack so icons appear in the sidebar
+    if (!iconPackManager.enabledPacks.includes('telecom' as IconPackName)) {
+      iconPackManager.togglePack('telecom' as IconPackName, true);
+    }
+  };
+
   // i18n
   const { t, i18n } = useTranslation('app');
   
@@ -697,6 +733,14 @@ function EditorPage() {
         {!isReadonlyUrl && (
           <>
             <button onClick={newDiagram}>{t('nav.newDiagram')}</button>
+            <button
+              onClick={() => {
+                return setShowTemplateDialog(true);
+              }}
+              style={{ backgroundColor: '#00695c', color: 'white' }}
+            >
+              {t('nav.templates')}
+            </button>
             {serverStorageAvailable && (
               <button
                 onClick={() => {
@@ -981,6 +1025,89 @@ function EditorPage() {
             return setShowDiagramManager(false);
           }}
         />
+      )}
+
+      {/* Template Dialog */}
+      {showTemplateDialog && (
+        <div className="dialog-overlay">
+          <div className="dialog" style={{ maxWidth: '600px' }}>
+            <h2>{t('dialog.templates.title')}</h2>
+            <p style={{ color: '#666', marginBottom: '20px' }}>
+              {t('dialog.templates.description')}
+            </p>
+            <div className="diagram-list">
+              {TEMPLATES.length === 0 ? (
+                <p>{t('dialog.templates.noTemplates')}</p>
+              ) : (
+                TEMPLATES.map((template) => {
+                  return (
+                    <div
+                      key={template.id}
+                      className="diagram-item"
+                      style={{
+                        border: '1px solid #e0e0e0',
+                        borderRadius: '8px',
+                        padding: '15px',
+                        marginBottom: '10px'
+                      }}
+                    >
+                      <div style={{ flex: 1 }}>
+                        <strong style={{ fontSize: '16px' }}>
+                          {template.name}
+                        </strong>
+                        <br />
+                        <span
+                          style={{
+                            display: 'inline-block',
+                            backgroundColor: '#00695c',
+                            color: 'white',
+                            padding: '2px 8px',
+                            borderRadius: '4px',
+                            fontSize: '11px',
+                            marginTop: '4px',
+                            marginBottom: '6px'
+                          }}
+                        >
+                          {template.category}
+                        </span>
+                        <br />
+                        <small style={{ color: '#666' }}>
+                          {template.description}
+                        </small>
+                      </div>
+                      <div className="diagram-actions" style={{ marginTop: '10px' }}>
+                        <button
+                          onClick={() => {
+                            return loadTemplateData(template);
+                          }}
+                          style={{
+                            backgroundColor: '#00695c',
+                            color: 'white',
+                            border: 'none',
+                            padding: '8px 16px',
+                            borderRadius: '4px',
+                            cursor: 'pointer'
+                          }}
+                        >
+                          {t('dialog.templates.btnUse')}
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+            <div className="dialog-buttons">
+              <button
+                onClick={() => {
+                  return setShowTemplateDialog(false);
+                }}
+              >
+                {t('dialog.templates.btnClose')}
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

@@ -1,0 +1,422 @@
+{
+  "title": "MDL Beast - Event Capacity Plan",
+  "icons": [],
+  "colors": [
+    { "id": "fiber-blue", "value": "#1565c0" },
+    { "id": "mw-orange", "value": "#ef6c00" },
+    { "id": "coverage-green", "value": "#2e7d32" },
+    { "id": "vip-purple", "value": "#7b1fa2" },
+    { "id": "stage-red", "value": "#c62828" },
+    { "id": "ga-blue", "value": "#1976d2" },
+    { "id": "capacity-amber", "value": "#f57f17" },
+    { "id": "backhaul-teal", "value": "#00695c" }
+  ],
+  "items": [
+    {
+      "id": "main-stage",
+      "name": "Main Stage",
+      "icon": "telecom__stage",
+      "description": "MDL Beast Main Stage - Primary performance area"
+    },
+    {
+      "id": "cow-tribeam-1",
+      "name": "Tri-Beam COW #1",
+      "icon": "telecom__cow",
+      "description": "Tri-Beam COW Site\nL1800 4T4R x3 beams\nL2100 4T4R x3 beams\nN78 64T64R mMIMO\n3 Sectors | ~35,000 users"
+    },
+    {
+      "id": "cow-tribeam-2",
+      "name": "Tri-Beam COW #2",
+      "icon": "telecom__cow",
+      "description": "Tri-Beam COW Site\nL1800 4T4R x3 beams\nL2100 4T4R x3 beams\nN78 64T64R mMIMO\n3 Sectors | ~35,000 users"
+    },
+    {
+      "id": "cow-tribeam-3",
+      "name": "Tri-Beam COW #3",
+      "icon": "telecom__cow",
+      "description": "Tri-Beam COW Site\nL1800 4T4R x3 beams\nL2100 4T4R x3 beams\nN78 64T64R mMIMO\n3 Sectors | ~35,000 users"
+    },
+    {
+      "id": "macro-site-1",
+      "name": "Macro Site Alpha",
+      "icon": "telecom__macro_tower",
+      "description": "Standard Macro Site\nG900 2T2R + L800 2T2R\nL1800 4T4R + L2100 4T4R\nL2600 4T4R + N78 64T64R\n3 Sectors | ~18,500 users"
+    },
+    {
+      "id": "macro-site-2",
+      "name": "Macro Site Bravo",
+      "icon": "telecom__macro_tower",
+      "description": "Standard Macro Site\nG900 2T2R + L800 2T2R\nL1800 4T4R + L2100 4T4R\nL2600 4T4R + N78 64T64R\n3 Sectors | ~18,500 users"
+    },
+    {
+      "id": "macro-site-3",
+      "name": "Macro Site Charlie",
+      "icon": "telecom__macro_tower",
+      "description": "Standard Macro Site\nG900 2T2R + L800 2T2R\nL1800 4T4R + L2100 4T4R\nL2600 4T4R + N78 64T64R\n3 Sectors | ~18,500 users"
+    },
+    {
+      "id": "crowd-main",
+      "name": "Main GA Crowd",
+      "icon": "telecom__crowd_zone",
+      "description": "General Admission\n~120,000 attendees\nPeak data demand zone"
+    },
+    {
+      "id": "crowd-vip",
+      "name": "VIP Zone",
+      "icon": "telecom__crowd_zone",
+      "description": "VIP Area\n~15,000 attendees\nHigh per-user throughput required"
+    },
+    {
+      "id": "agg-router",
+      "name": "Aggregation Point",
+      "icon": "telecom__aggregation_router",
+      "description": "Core Aggregation Router\nBackhaul to Mobily Core\n10 Gbps fiber uplink"
+    },
+    {
+      "id": "generator-1",
+      "name": "Power Gen #1",
+      "icon": "telecom__generator",
+      "description": "Diesel Generator\n200 kVA\nPowers COW #1 + #2"
+    },
+    {
+      "id": "generator-2",
+      "name": "Power Gen #2",
+      "icon": "telecom__generator",
+      "description": "Diesel Generator\n100 kVA\nPowers COW #3"
+    },
+    {
+      "id": "mw-dish-1",
+      "name": "MW Link A",
+      "icon": "telecom__microwave_dish",
+      "description": "Microwave Backhaul\n18 GHz | 500 Mbps\nCOW #1 -> Macro Alpha"
+    },
+    {
+      "id": "mw-dish-2",
+      "name": "MW Link B",
+      "icon": "telecom__microwave_dish",
+      "description": "Microwave Backhaul\n18 GHz | 500 Mbps\nCOW #2 -> Macro Bravo"
+    },
+    {
+      "id": "fiber-node-1",
+      "name": "Fiber Splice",
+      "icon": "telecom__fiber_node",
+      "description": "Fiber Distribution Point\n10G aggregation\nCOW #3 direct fiber"
+    },
+    {
+      "id": "small-cell-1",
+      "name": "VIP Small Cell #1",
+      "icon": "telecom__small_cell",
+      "description": "Indoor Small Cell\nL2100 2T2R + N78 4T4R\nVIP tent coverage"
+    },
+    {
+      "id": "small-cell-2",
+      "name": "VIP Small Cell #2",
+      "icon": "telecom__small_cell",
+      "description": "Indoor Small Cell\nL2100 2T2R + N78 4T4R\nVIP tent coverage"
+    },
+    {
+      "id": "vsat-backup",
+      "name": "VSAT Backup",
+      "icon": "telecom__satellite_dish",
+      "description": "Satellite Backhaul Backup\nKu-band | 50 Mbps\nEmergency fallback link"
+    }
+  ],
+  "views": [
+    {
+      "id": "site-layout",
+      "name": "Event Site Layout",
+      "description": "MDL Beast Festival - RF Coverage & Capacity Plan",
+      "items": [
+        { "id": "main-stage", "tile": { "x": 6, "y": 6 } },
+        { "id": "cow-tribeam-1", "tile": { "x": 1, "y": 2 } },
+        { "id": "cow-tribeam-2", "tile": { "x": 11, "y": 2 } },
+        { "id": "cow-tribeam-3", "tile": { "x": 6, "y": 12 } },
+        { "id": "macro-site-1", "tile": { "x": -3, "y": -1 } },
+        { "id": "macro-site-2", "tile": { "x": 15, "y": -1 } },
+        { "id": "macro-site-3", "tile": { "x": 6, "y": 17 } },
+        { "id": "crowd-main", "tile": { "x": 6, "y": 4 } },
+        { "id": "crowd-vip", "tile": { "x": 10, "y": 8 } },
+        { "id": "agg-router", "tile": { "x": 6, "y": -4 } },
+        { "id": "generator-1", "tile": { "x": -1, "y": 4 } },
+        { "id": "generator-2", "tile": { "x": 8, "y": 14 } },
+        { "id": "mw-dish-1", "tile": { "x": -1, "y": 0 } },
+        { "id": "mw-dish-2", "tile": { "x": 13, "y": 0 } },
+        { "id": "fiber-node-1", "tile": { "x": 6, "y": 15 } },
+        { "id": "small-cell-1", "tile": { "x": 9, "y": 7 } },
+        { "id": "small-cell-2", "tile": { "x": 11, "y": 9 } },
+        { "id": "vsat-backup", "tile": { "x": -3, "y": 6 } }
+      ],
+      "rectangles": [
+        {
+          "id": "rect-stage-area",
+          "customColor": "#c62828",
+          "from": { "x": 4, "y": 5 },
+          "to": { "x": 8, "y": 7 }
+        },
+        {
+          "id": "rect-ga-north",
+          "customColor": "#1976d2",
+          "from": { "x": 2, "y": 1 },
+          "to": { "x": 10, "y": 4 }
+        },
+        {
+          "id": "rect-ga-south",
+          "customColor": "#2e7d32",
+          "from": { "x": 3, "y": 8 },
+          "to": { "x": 8, "y": 13 }
+        },
+        {
+          "id": "rect-vip",
+          "customColor": "#7b1fa2",
+          "from": { "x": 9, "y": 6 },
+          "to": { "x": 12, "y": 10 }
+        },
+        {
+          "id": "rect-backhaul-zone",
+          "customColor": "#00695c",
+          "from": { "x": -4, "y": -5 },
+          "to": { "x": 16, "y": -3 }
+        }
+      ],
+      "connectors": [
+        {
+          "id": "conn-cow1-mw",
+          "description": "MW 18GHz 500Mbps",
+          "customColor": "#ef6c00",
+          "style": "DASHED",
+          "width": 8,
+          "showArrow": true,
+          "anchors": [
+            { "id": "a1", "ref": { "item": "cow-tribeam-1" } },
+            { "id": "a2", "ref": { "item": "mw-dish-1" } }
+          ],
+          "labels": [
+            { "id": "lbl-mw1", "text": "MW 18GHz | 500 Mbps", "position": 50 }
+          ]
+        },
+        {
+          "id": "conn-mw1-macro",
+          "description": "MW to Macro Alpha",
+          "customColor": "#ef6c00",
+          "style": "DASHED",
+          "width": 8,
+          "showArrow": true,
+          "anchors": [
+            { "id": "a3", "ref": { "item": "mw-dish-1" } },
+            { "id": "a4", "ref": { "item": "macro-site-1" } }
+          ]
+        },
+        {
+          "id": "conn-cow2-mw",
+          "description": "MW 18GHz 500Mbps",
+          "customColor": "#ef6c00",
+          "style": "DASHED",
+          "width": 8,
+          "showArrow": true,
+          "anchors": [
+            { "id": "a5", "ref": { "item": "cow-tribeam-2" } },
+            { "id": "a6", "ref": { "item": "mw-dish-2" } }
+          ],
+          "labels": [
+            { "id": "lbl-mw2", "text": "MW 18GHz | 500 Mbps", "position": 50 }
+          ]
+        },
+        {
+          "id": "conn-mw2-macro",
+          "description": "MW to Macro Bravo",
+          "customColor": "#ef6c00",
+          "style": "DASHED",
+          "width": 8,
+          "showArrow": true,
+          "anchors": [
+            { "id": "a7", "ref": { "item": "mw-dish-2" } },
+            { "id": "a8", "ref": { "item": "macro-site-2" } }
+          ]
+        },
+        {
+          "id": "conn-cow3-fiber",
+          "description": "Fiber 10G",
+          "customColor": "#1565c0",
+          "style": "SOLID",
+          "width": 10,
+          "showArrow": true,
+          "anchors": [
+            { "id": "a9", "ref": { "item": "cow-tribeam-3" } },
+            { "id": "a10", "ref": { "item": "fiber-node-1" } }
+          ],
+          "labels": [
+            { "id": "lbl-f1", "text": "Fiber 10G Direct", "position": 50 }
+          ]
+        },
+        {
+          "id": "conn-fiber-macro3",
+          "description": "Fiber to Macro Charlie",
+          "customColor": "#1565c0",
+          "style": "SOLID",
+          "width": 10,
+          "showArrow": true,
+          "anchors": [
+            { "id": "a11", "ref": { "item": "fiber-node-1" } },
+            { "id": "a12", "ref": { "item": "macro-site-3" } }
+          ]
+        },
+        {
+          "id": "conn-macro1-agg",
+          "description": "Fiber to Aggregation",
+          "customColor": "#1565c0",
+          "style": "SOLID",
+          "lineType": "DOUBLE",
+          "width": 12,
+          "showArrow": true,
+          "anchors": [
+            { "id": "a13", "ref": { "item": "macro-site-1" } },
+            { "id": "a14", "ref": { "item": "agg-router" } }
+          ],
+          "labels": [
+            { "id": "lbl-agg1", "text": "10G Fiber to Core", "position": 50 }
+          ]
+        },
+        {
+          "id": "conn-macro2-agg",
+          "description": "Fiber to Aggregation",
+          "customColor": "#1565c0",
+          "style": "SOLID",
+          "lineType": "DOUBLE",
+          "width": 12,
+          "showArrow": true,
+          "anchors": [
+            { "id": "a15", "ref": { "item": "macro-site-2" } },
+            { "id": "a16", "ref": { "item": "agg-router" } }
+          ],
+          "labels": [
+            { "id": "lbl-agg2", "text": "10G Fiber to Core", "position": 50 }
+          ]
+        },
+        {
+          "id": "conn-macro3-agg",
+          "description": "Fiber to Aggregation",
+          "customColor": "#1565c0",
+          "style": "SOLID",
+          "lineType": "DOUBLE",
+          "width": 12,
+          "showArrow": true,
+          "anchors": [
+            { "id": "a17", "ref": { "item": "macro-site-3" } },
+            { "id": "a18", "ref": { "item": "agg-router" } }
+          ]
+        },
+        {
+          "id": "conn-gen1-cow1",
+          "description": "Power",
+          "customColor": "#f57f17",
+          "style": "DOTTED",
+          "width": 5,
+          "anchors": [
+            { "id": "a19", "ref": { "item": "generator-1" } },
+            { "id": "a20", "ref": { "item": "cow-tribeam-1" } }
+          ]
+        },
+        {
+          "id": "conn-gen2-cow3",
+          "description": "Power",
+          "customColor": "#f57f17",
+          "style": "DOTTED",
+          "width": 5,
+          "anchors": [
+            { "id": "a21", "ref": { "item": "generator-2" } },
+            { "id": "a22", "ref": { "item": "cow-tribeam-3" } }
+          ]
+        },
+        {
+          "id": "conn-vsat-agg",
+          "description": "Satellite Backup",
+          "customColor": "#7b1fa2",
+          "style": "DOTTED",
+          "width": 6,
+          "showArrow": true,
+          "anchors": [
+            { "id": "a23", "ref": { "item": "vsat-backup" } },
+            { "id": "a24", "ref": { "item": "agg-router" } }
+          ],
+          "labels": [
+            { "id": "lbl-vsat", "text": "VSAT Ku-band 50Mbps (Backup)", "position": 50 }
+          ]
+        }
+      ],
+      "textBoxes": [
+        {
+          "id": "txt-title",
+          "tile": { "x": 3, "y": -6 },
+          "content": "MDL Beast 2025 - RF Capacity Plan",
+          "fontSize": 0.9
+        },
+        {
+          "id": "txt-capacity",
+          "tile": { "x": -5, "y": -2 },
+          "content": "Total Capacity: ~233K users",
+          "fontSize": 0.5
+        },
+        {
+          "id": "txt-tribeam-info",
+          "tile": { "x": -4, "y": 2 },
+          "content": "8x Tri-Beam Sectors",
+          "fontSize": 0.45
+        },
+        {
+          "id": "txt-standard-info",
+          "tile": { "x": -4, "y": 3 },
+          "content": "9x Standard Sectors",
+          "fontSize": 0.45
+        },
+        {
+          "id": "txt-ga-label",
+          "tile": { "x": 5, "y": 1 },
+          "content": "General Admission North",
+          "fontSize": 0.4
+        },
+        {
+          "id": "txt-ga-south",
+          "tile": { "x": 5, "y": 9 },
+          "content": "General Admission South",
+          "fontSize": 0.4
+        },
+        {
+          "id": "txt-vip-label",
+          "tile": { "x": 10, "y": 6 },
+          "content": "VIP Zone",
+          "fontSize": 0.45
+        },
+        {
+          "id": "txt-stage-label",
+          "tile": { "x": 5, "y": 5 },
+          "content": "MAIN STAGE",
+          "fontSize": 0.5
+        },
+        {
+          "id": "txt-backhaul-zone",
+          "tile": { "x": 3, "y": -4 },
+          "content": "Backhaul & Aggregation Zone",
+          "fontSize": 0.4
+        },
+        {
+          "id": "txt-legend-mw",
+          "tile": { "x": 15, "y": 12 },
+          "content": "--- MW Backhaul",
+          "fontSize": 0.35
+        },
+        {
+          "id": "txt-legend-fiber",
+          "tile": { "x": 15, "y": 13 },
+          "content": "=== Fiber Backhaul",
+          "fontSize": 0.35
+        },
+        {
+          "id": "txt-legend-power",
+          "tile": { "x": 15, "y": 14 },
+          "content": "... Power Feed",
+          "fontSize": 0.35
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 {
     "nav": {
         "newDiagram": "New Diagram",
+        "templates": "Templates",
         "saveSessionOnly": "Save (Session Only)",
         "loadSessionOnly": "Load (Session Only)",
         "importFile": "Import File",
@@ -45,6 +46,14 @@
         "readOnly": {
             "mode": "View-Only Mode",
             "failed": "Failed to load diagram"
+        },
+        "templates": {
+            "title": "Diagram Templates",
+            "description": "Start with a pre-built template for common use cases",
+            "category": "Category",
+            "btnUse": "Use Template",
+            "btnClose": "Close",
+            "noTemplates": "No templates available"
         }
     },
     "alert": {

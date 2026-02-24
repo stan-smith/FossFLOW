@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { flattenCollections } from '@isoflow/isopacks/dist/utils';
 
 // Available icon packs (excluding core isoflow which is always loaded)
-export type IconPackName = 'aws' | 'gcp' | 'azure' | 'kubernetes';
+export type IconPackName = 'aws' | 'gcp' | 'azure' | 'kubernetes' | 'telecom';
 
 export interface IconPackInfo {
   name: IconPackName;
@@ -26,6 +26,7 @@ const ENABLED_PACKS_KEY = 'fossflow-enabled-icon-packs';
 
 // Pack metadata
 const PACK_METADATA: Record<IconPackName, string> = {
+  telecom: 'Telecom / RF Engineering',
   aws: 'AWS Icons',
   gcp: 'Google Cloud Icons',
   azure: 'Azure Icons',
@@ -59,6 +60,8 @@ export const saveEnabledPacks = (packs: IconPackName[]): void => {
 // Dynamic pack loader
 export const loadIconPack = async (packName: IconPackName): Promise<any> => {
   switch (packName) {
+    case 'telecom':
+      return (await import('../assets/telecom-icons')).default;
     case 'aws':
       return (await import('@isoflow/isopacks/dist/aws')).default;
     case 'gcp':
@@ -84,7 +87,7 @@ export const useIconPackManager = (coreIcons: any[]) => {
 
   const [packInfo, setPackInfo] = useState<Record<IconPackName, IconPackInfo>>(() => {
     const info: Record<string, IconPackInfo> = {};
-    const packNames: IconPackName[] = ['aws', 'gcp', 'azure', 'kubernetes'];
+    const packNames: IconPackName[] = ['telecom', 'aws', 'gcp', 'azure', 'kubernetes'];
     packNames.forEach(name => {
       info[name] = {
         name,
@@ -190,7 +193,7 @@ export const useIconPackManager = (coreIcons: any[]) => {
 
   // Load all packs (for when lazy loading is disabled)
   const loadAllPacks = useCallback(async () => {
-    const allPacks: IconPackName[] = ['aws', 'gcp', 'azure', 'kubernetes'];
+    const allPacks: IconPackName[] = ['telecom', 'aws', 'gcp', 'azure', 'kubernetes'];
     for (const pack of allPacks) {
       if (!packInfo[pack].loaded && !packInfo[pack].loading) {
         await loadPack(pack);
@@ -215,7 +218,7 @@ export const useIconPackManager = (coreIcons: any[]) => {
     collections.forEach(collection => {
       if (collection !== 'isoflow' && collection !== 'imported') {
         const packName = collection as IconPackName;
-        if (['aws', 'gcp', 'azure', 'kubernetes'].includes(packName)) {
+        if (['telecom', 'aws', 'gcp', 'azure', 'kubernetes'].includes(packName)) {
           if (!packInfo[packName].loaded && !packInfo[packName].loading) {
             packsToLoad.push(packName);
           }
