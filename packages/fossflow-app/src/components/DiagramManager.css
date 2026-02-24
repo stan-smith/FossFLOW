@@ -1,225 +1,283 @@
+/* ============================================
+   FossFLOW – Diagram Manager Styles
+   ============================================ */
+
 .diagram-manager-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
+  animation: ff-fade-in 200ms ease-out;
 }
 
 .diagram-manager {
-  background: white;
-  border-radius: 8px;
+  background: var(--ff-surface);
+  border-radius: var(--ff-radius-xl);
   width: 90%;
   max-width: 800px;
   max-height: 80vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--ff-shadow-xl);
+  animation: ff-slide-up 250ms ease-out;
+  overflow: hidden;
 }
 
+/* ----- Header ----- */
 .diagram-manager-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--ff-border);
 }
 
 .diagram-manager-header h2 {
   margin: 0;
-  font-size: 24px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ff-text);
+  letter-spacing: -0.01em;
 }
 
 .close-button {
   background: none;
   border: none;
-  font-size: 28px;
+  font-size: 24px;
   cursor: pointer;
-  color: #666;
+  color: var(--ff-text-muted);
   padding: 0;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: var(--ff-radius-sm);
+  transition: background var(--ff-transition), color var(--ff-transition);
 }
 
 .close-button:hover {
-  color: #000;
+  background: var(--ff-bg);
+  color: var(--ff-text);
 }
 
+/* ----- Storage Info Bar ----- */
 .storage-info {
-  padding: 15px 20px;
-  background: #f5f5f5;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 12px 24px;
+  background: var(--ff-bg);
+  border-bottom: 1px solid var(--ff-border);
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .storage-badge {
-  padding: 5px 12px;
+  padding: 4px 12px;
   border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.storage-badge.server {
+  background: var(--ff-primary-light);
+  color: var(--ff-primary-dark);
+}
+
+.storage-badge.local {
+  background: var(--ff-warning-light);
+  color: #92400e;
+}
+
+.storage-note {
+  font-size: 13px;
+  color: var(--ff-text-muted);
+}
+
+/* ----- Error Message ----- */
+.error-message {
+  background: var(--ff-danger-light);
+  color: var(--ff-danger-hover);
+  padding: 10px 24px;
+  border-left: 4px solid var(--ff-danger);
   font-size: 14px;
   font-weight: 500;
 }
 
-.storage-badge.server {
-  background: #e3f2fd;
-  color: #1976d2;
-}
-
-.storage-badge.local {
-  background: #fff3e0;
-  color: #f57c00;
-}
-
-.storage-note {
-  font-size: 14px;
-  color: #666;
-}
-
-.error-message {
-  background: #ffebee;
-  color: #c62828;
-  padding: 10px 20px;
-  border-left: 4px solid #c62828;
-}
-
+/* ----- Actions Bar ----- */
 .diagram-manager-actions {
-  padding: 20px;
-  border-bottom: 1px solid #e0e0e0;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--ff-border);
 }
 
 .action-button {
-  padding: 10px 20px;
+  padding: 9px 18px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--ff-radius-sm);
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  background: #f5f5f5;
-  color: #333;
-  transition: background 0.2s;
+  background: var(--ff-bg);
+  color: var(--ff-text);
+  transition: background var(--ff-transition), box-shadow var(--ff-transition), transform var(--ff-transition);
 }
 
 .action-button:hover {
-  background: #e0e0e0;
+  background: var(--ff-border);
+  box-shadow: var(--ff-shadow-sm);
+}
+
+.action-button:active {
+  transform: scale(0.97);
 }
 
 .action-button.primary {
-  background: #4caf50;
-  color: white;
+  background: var(--ff-success);
+  color: #fff;
 }
 
 .action-button.primary:hover {
-  background: #45a049;
+  background: var(--ff-success-hover);
+  box-shadow: var(--ff-shadow);
 }
 
 .action-button.danger {
-  background: #f44336;
-  color: white;
+  background: var(--ff-danger);
+  color: #fff;
 }
 
 .action-button.danger:hover {
-  background: #da190b;
+  background: var(--ff-danger-hover);
 }
 
 .action-button.share {
-  background: #2196f3;
-  color: white;
+  background: var(--ff-primary);
+  color: #fff;
 }
 
 .action-button.share:hover {
-  background: #0b7dda;
+  background: var(--ff-primary-hover);
 }
 
+/* ----- Loading State ----- */
 .loading {
-  padding: 40px;
+  padding: 48px;
   text-align: center;
-  color: #666;
+  color: var(--ff-text-muted);
+  font-size: 14px;
+  animation: ff-pulse 1.5s ease-in-out infinite;
 }
 
+/* ----- Diagram List ----- */
 .diagram-list {
   flex: 1;
   overflow-y: auto;
-  padding: 20px;
+  padding: 16px 24px;
 }
 
 .empty-state {
   text-align: center;
-  padding: 40px;
-  color: #666;
+  padding: 48px 24px;
+  color: var(--ff-text-secondary);
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .empty-state .hint {
-  font-size: 14px;
-  color: #999;
-  margin-top: 10px;
+  font-size: 13px;
+  color: var(--ff-text-muted);
+  margin-top: 8px;
 }
 
+/* ----- Diagram Item Card ----- */
 .diagram-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  transition: background 0.2s;
+  padding: 14px 16px;
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius);
+  margin-bottom: 8px;
+  transition: background var(--ff-transition), border-color var(--ff-transition), box-shadow var(--ff-transition);
 }
 
 .diagram-item:hover {
-  background: #f5f5f5;
+  background: var(--ff-primary-light);
+  border-color: var(--ff-primary);
+  box-shadow: var(--ff-shadow-sm);
 }
 
 .diagram-info h3 {
-  margin: 0 0 5px 0;
-  font-size: 16px;
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ff-text);
 }
 
 .diagram-meta {
-  font-size: 13px;
-  color: #666;
+  font-size: 12px;
+  color: var(--ff-text-muted);
 }
 
 .diagram-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .diagram-actions .action-button {
-  padding: 6px 12px;
-  font-size: 13px;
+  padding: 6px 14px;
+  font-size: 12px;
 }
 
+/* ----- Inline Save Dialog ----- */
 .save-dialog {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  min-width: 300px;
+  background: var(--ff-surface);
+  padding: 24px;
+  border-radius: var(--ff-radius-lg);
+  box-shadow: var(--ff-shadow-xl);
+  min-width: 340px;
+  animation: ff-slide-up 200ms ease-out;
 }
 
 .save-dialog h3 {
-  margin: 0 0 15px 0;
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ff-text);
 }
 
 .save-dialog input {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  margin-bottom: 15px;
+  padding: 10px 14px;
+  border: 1.5px solid var(--ff-border);
+  border-radius: var(--ff-radius-sm);
+  margin-bottom: 16px;
   font-size: 14px;
+  color: var(--ff-text);
+  outline: none;
+  transition: border-color var(--ff-transition), box-shadow var(--ff-transition);
+  box-sizing: border-box;
+}
+
+.save-dialog input:focus {
+  border-color: var(--ff-primary);
+  box-shadow: 0 0 0 3px var(--ff-primary-light);
 }
 
 .dialog-buttons {
@@ -229,18 +287,34 @@
 }
 
 .dialog-buttons button {
-  padding: 8px 16px;
+  padding: 9px 18px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--ff-radius-sm);
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
+  transition: background var(--ff-transition), transform var(--ff-transition);
+}
+
+.dialog-buttons button:active {
+  transform: scale(0.97);
 }
 
 .dialog-buttons button:first-child {
-  background: #4caf50;
-  color: white;
+  background: var(--ff-success);
+  color: #fff;
+}
+
+.dialog-buttons button:first-child:hover {
+  background: var(--ff-success-hover);
 }
 
 .dialog-buttons button:last-child {
-  background: #f5f5f5;
+  background: var(--ff-bg);
+  color: var(--ff-text-secondary);
+  border: 1px solid var(--ff-border);
+}
+
+.dialog-buttons button:last-child:hover {
+  background: var(--ff-border);
 }

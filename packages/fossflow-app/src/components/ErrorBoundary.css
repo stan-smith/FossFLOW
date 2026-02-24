@@ -1,3 +1,7 @@
+/* ============================================
+   FossFLOW – Error Boundary Styles
+   ============================================ */
+
 .error-page-container {
   width: 100%;
   height: 100vh;
@@ -5,74 +9,89 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  animation: ff-fade-in 200ms ease-out;
 }
 
 .error-container {
-  min-height: 300px;
-  width: 400px;
-  background-color: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ddd;
+  min-height: 280px;
+  width: 440px;
+  max-width: 90vw;
+  background: var(--ff-surface);
+  padding: 36px;
+  border-radius: var(--ff-radius-xl);
+  box-shadow: var(--ff-shadow-xl);
+  border: 1px solid var(--ff-border);
+  animation: ff-slide-up 250ms ease-out;
 }
 
 .error-header {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   text-align: center;
 }
 
 .error-header p {
   margin: 0;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ff-text);
+  letter-spacing: -0.01em;
 }
 
 .error-content {
-  margin-bottom: 30px;
-  padding: 15px;
-  background-color: #fff3cd;
-  border: 1px solid #ffeeba;
-  border-radius: 4px;
+  margin-bottom: 28px;
+  padding: 16px;
+  background: var(--ff-warning-light);
+  border: 1px solid #fde68a;
+  border-radius: var(--ff-radius);
+  border-left: 4px solid var(--ff-warning);
 }
 
 .error-content p {
   margin: 0;
   font-size: 14px;
-  color: #856404;
+  color: #92400e;
   word-break: break-word;
-  line-height: 1.4;
+  line-height: 1.6;
 }
 
 .error-footer {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   justify-content: center;
 }
 
 .error-button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   text-decoration: none;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  transition: background-color 0.2s ease;
+  border-radius: var(--ff-radius-sm);
+  background: var(--ff-primary);
+  color: #fff;
+  transition: background var(--ff-transition), box-shadow var(--ff-transition), transform var(--ff-transition);
 }
 
 .error-button:hover {
-  background-color: #0056b3;
+  background: var(--ff-primary-hover);
+  box-shadow: var(--ff-shadow);
+}
+
+.error-button:active {
+  transform: scale(0.97);
 }
 
 .error-button.refresh-button {
-  background-color: #28a745;
+  background: var(--ff-success);
 }
 
 .error-button.refresh-button:hover {
-  background-color: #218838;
+  background: var(--ff-success-hover);
 }

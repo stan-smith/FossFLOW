@@ -1,13 +1,123 @@
+/* ============================================
+   FossFLOW Design System - Global Styles
+   ============================================ */
+
+:root {
+  /* Primary palette */
+  --ff-primary: #2563eb;
+  --ff-primary-hover: #1d4ed8;
+  --ff-primary-light: #dbeafe;
+  --ff-primary-dark: #1e40af;
+
+  /* Accent palette */
+  --ff-accent: #8b5cf6;
+  --ff-accent-hover: #7c3aed;
+
+  /* Success / Warning / Danger */
+  --ff-success: #10b981;
+  --ff-success-hover: #059669;
+  --ff-success-light: #d1fae5;
+  --ff-warning: #f59e0b;
+  --ff-warning-light: #fef3c7;
+  --ff-danger: #ef4444;
+  --ff-danger-hover: #dc2626;
+  --ff-danger-light: #fee2e2;
+
+  /* Neutrals */
+  --ff-bg: #f8fafc;
+  --ff-surface: #ffffff;
+  --ff-border: #e2e8f0;
+  --ff-border-hover: #cbd5e1;
+  --ff-text: #1e293b;
+  --ff-text-secondary: #64748b;
+  --ff-text-muted: #94a3b8;
+
+  /* Shadows */
+  --ff-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --ff-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --ff-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --ff-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --ff-shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+
+  /* Radii */
+  --ff-radius-sm: 6px;
+  --ff-radius: 8px;
+  --ff-radius-lg: 12px;
+  --ff-radius-xl: 16px;
+
+  /* Transitions */
+  --ff-transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --ff-transition-slow: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: var(--ff-text);
+  background-color: var(--ff-bg);
+  line-height: 1.5;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: 'JetBrains Mono', source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Smooth scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--ff-border-hover);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ff-text-muted);
+}
+
+/* Dialog entrance animation */
+@keyframes ff-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ff-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ff-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
 }

@@ -1,92 +1,186 @@
+/* ============================================
+   FossFLOW – App Layout & Component Styles
+   ============================================ */
+
+/* ----- App Shell ----- */
 .App {
   height: 100vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: var(--ff-bg);
 }
 
+/* ----- Toolbar ----- */
 .toolbar {
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #ddd;
-  padding: 10px;
+  background: var(--ff-surface);
+  border-bottom: 1px solid var(--ff-border);
+  padding: 8px 16px;
   display: flex;
-  gap: 10px;
+  gap: 8px;
   align-items: center;
+  box-shadow: var(--ff-shadow-sm);
+  z-index: 10;
+  flex-wrap: wrap;
 }
 
 .toolbar button {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
+  padding: 7px 14px;
+  background: var(--ff-primary);
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--ff-radius-sm);
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition: background var(--ff-transition), box-shadow var(--ff-transition), transform var(--ff-transition);
+  white-space: nowrap;
 }
 
 .toolbar button:hover {
-  background-color: #0056b3;
+  background: var(--ff-primary-hover);
+  box-shadow: var(--ff-shadow);
+}
+
+.toolbar button:active {
+  transform: scale(0.97);
+}
+
+.toolbar button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.toolbar-separator {
+  width: 1px;
+  height: 24px;
+  background: var(--ff-border);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
+.toolbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.diagram-info {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ff-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 260px;
+}
+
+.auto-save-info {
+  font-size: 11px;
+  color: var(--ff-text-muted);
+  white-space: nowrap;
+}
+
+.readonly-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--ff-radius-sm);
+  background: var(--ff-primary-light);
+  color: var(--ff-primary-dark);
+  font-weight: 600;
+  font-size: 13px;
+  border: 1px solid var(--ff-primary);
 }
 
 .current-diagram {
   margin-left: auto;
-  font-size: 14px;
-  color: #666;
+  font-size: 13px;
+  color: var(--ff-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
-.fossflow-container {
+/* ----- Main Content (Isoflow Canvas) ----- */
+.fossflow-container,
+.main-content {
   flex: 1;
   width: 100%;
   position: relative;
-  /* Remove background color to let Isoflow's grid show through */
-  /* background-color: #f9f9f9; */
 }
 
-/* Ensure Isoflow takes full height */
-.fossflow-container > div {
+.fossflow-container > div,
+.main-content > div {
   height: 100%;
 }
 
+/* ----- Dialog Overlay ----- */
 .dialog-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  animation: ff-fade-in 200ms ease-out;
 }
 
+/* ----- Dialog Card ----- */
 .dialog {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  min-width: 400px;
+  background: var(--ff-surface);
+  padding: 28px;
+  border-radius: var(--ff-radius-lg);
+  box-shadow: var(--ff-shadow-xl);
+  min-width: 420px;
   max-width: 600px;
   max-height: 80vh;
   overflow-y: auto;
+  animation: ff-slide-up 250ms ease-out;
 }
 
 .dialog h2 {
-  margin-top: 0;
-  margin-bottom: 20px;
-  color: #333;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ff-text);
+  letter-spacing: -0.01em;
 }
 
 .dialog input[type="text"] {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 15px;
+  border: 1.5px solid var(--ff-border);
+  border-radius: var(--ff-radius-sm);
   margin-bottom: 20px;
   box-sizing: border-box;
+  transition: border-color var(--ff-transition), box-shadow var(--ff-transition);
+  outline: none;
+  color: var(--ff-text);
 }
 
+.dialog input[type="text"]:focus {
+  border-color: var(--ff-primary);
+  box-shadow: 0 0 0 3px var(--ff-primary-light);
+}
+
+.dialog input[type="text"]::placeholder {
+  color: var(--ff-text-muted);
+}
+
+/* ----- Dialog Buttons ----- */
 .dialog-buttons {
   display: flex;
   gap: 10px;
@@ -94,31 +188,41 @@
 }
 
 .dialog-buttons button {
-  padding: 8px 16px;
+  padding: 9px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--ff-radius-sm);
   cursor: pointer;
   font-size: 14px;
+  font-weight: 500;
+  transition: background var(--ff-transition), box-shadow var(--ff-transition), transform var(--ff-transition);
+}
+
+.dialog-buttons button:active {
+  transform: scale(0.97);
 }
 
 .dialog-buttons button:first-child {
-  background-color: #007bff;
-  color: white;
+  background: var(--ff-primary);
+  color: #fff;
 }
 
 .dialog-buttons button:first-child:hover {
-  background-color: #0056b3;
+  background: var(--ff-primary-hover);
+  box-shadow: var(--ff-shadow);
 }
 
 .dialog-buttons button:last-child {
-  background-color: #6c757d;
-  color: white;
+  background: var(--ff-bg);
+  color: var(--ff-text-secondary);
+  border: 1px solid var(--ff-border);
 }
 
 .dialog-buttons button:last-child:hover {
-  background-color: #5a6268;
+  background: var(--ff-border);
+  color: var(--ff-text);
 }
 
+/* ----- Diagram List (in dialogs) ----- */
 .diagram-list {
   margin-bottom: 20px;
   max-height: 400px;
@@ -129,43 +233,52 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  border: 1px solid #eee;
-  border-radius: 4px;
-  margin-bottom: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--ff-border);
+  border-radius: var(--ff-radius-sm);
+  margin-bottom: 8px;
+  transition: background var(--ff-transition), border-color var(--ff-transition), box-shadow var(--ff-transition);
 }
 
 .diagram-item:hover {
-  background-color: #f8f9fa;
+  background: var(--ff-primary-light);
+  border-color: var(--ff-primary);
+  box-shadow: var(--ff-shadow-sm);
 }
 
 .diagram-actions {
   display: flex;
-  gap: 5px;
+  gap: 6px;
 }
 
 .diagram-actions button {
-  padding: 4px 12px;
+  padding: 5px 12px;
   font-size: 12px;
+  font-weight: 500;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--ff-radius-sm);
   cursor: pointer;
+  transition: background var(--ff-transition), transform var(--ff-transition);
+}
+
+.diagram-actions button:active {
+  transform: scale(0.95);
 }
 
 .diagram-actions button:first-child {
-  background-color: #28a745;
-  color: white;
+  background: var(--ff-success);
+  color: #fff;
 }
 
 .diagram-actions button:first-child:hover {
-  background-color: #218838;
+  background: var(--ff-success-hover);
 }
 
 .diagram-actions button:last-child {
-  background-color: #dc3545;
-  color: white;
+  background: var(--ff-danger);
+  color: #fff;
 }
 
 .diagram-actions button:last-child:hover {
-  background-color: #c82333;
+  background: var(--ff-danger-hover);
 }
