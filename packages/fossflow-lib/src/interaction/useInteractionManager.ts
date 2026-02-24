@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { ModeActions, State, SlimMouseEvent, Mouse, ItemReference } from 'src/types';
+import { ModeActions, State, SlimMouseEvent, Mouse, ItemReference, ViewItem, ModelItem } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
 import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom, copyObject, getPastedObject, getItemById, findNearestUnoccupiedTile } from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
@@ -186,35 +186,61 @@ export const useInteractionManager = () => {
 
       if (isCtrlOrCmd && (e.key.toLowerCase() === 'c')) {
         e.preventDefault();
-        
-        const currentNode = (uiState.itemControls as ItemReference);
-        
-        const modelItem = getItemById(model.items, currentNode.id)?.value;
-        const viewItem = getItemById(scene.currentView.items, currentNode.id)?.value;
-        if (!viewItem || !modelItem) return;
-        
-        copyObject({ modelItem, viewItem });
-        
+        const selectedNodes = (
+          uiState.mode.type === 'LASSO' ||
+          uiState.mode.type === 'FREEHAND_LASSO'
+        ) && uiState.mode.selection ?
+          uiState.mode.selection.items
+          :
+          [(uiState.itemControls as ItemReference)];
+
+
+        copyObject(selectedNodes.map(currentNode => {
+          const modelItem = getItemById(model.items, currentNode.id)?.value;
+          const viewItem = getItemById(scene.currentView.items, currentNode.id)?.value;
+          if (!viewItem || !modelItem) return;
+
+          return { modelItem, viewItem }
+        }));
+
         return;
       }
 
       if (isCtrlOrCmd && (e.key.toLowerCase() === 'v')) {
-        const pastedObject = await getPastedObject();
-        if (!pastedObject || !pastedObject.viewItem || !pastedObject.modelItem) return;
         e.preventDefault();
 
-        const newId = generateId();
-        scene.placeIcon({
-          modelItem: {
+        const pastedArray: Array<{ viewItem: ViewItem, modelItem: ModelItem }> = await getPastedObject();
+
+        const mouseX = uiState.mouse.position.tile.x;
+        const mouseY = uiState.mouse.position.tile.y;
+        
+        let stateWithNewModels: any;
+        let stateWithNewViews: any;
+        
+        pastedArray?.forEach(pastedObject => {
+          if (!pastedObject || !pastedObject.viewItem || !pastedObject.modelItem) return;
+
+          const { tile: pastedItemTile } = pastedObject.viewItem;
+          const availableNearestTile = findNearestUnoccupiedTile({
+            x: mouseX + pastedItemTile.x,
+            y: mouseY + pastedItemTile.y 
+          }, scene);
+          
+          if (!availableNearestTile) return; // Pasted in an area filled with items
+
+          const newId = generateId()
+
+          stateWithNewModels = scene.createModelItem({
             ...pastedObject.modelItem,
             id: newId
-          },
-          viewItem: {
+          }, stateWithNewViews)
+          
+          stateWithNewViews = scene.createViewItem({
             ...pastedObject.viewItem,
             id: newId,
-            tile: findNearestUnoccupiedTile(uiState.mouse.position.tile, scene)
-          }
-        });
+            tile: availableNearestTile
+          }, stateWithNewModels)
+        })
 
         return;
       }

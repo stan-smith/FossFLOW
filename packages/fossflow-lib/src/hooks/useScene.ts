@@ -141,14 +141,14 @@ export const useScene = () => {
   }, [model?.actions, scene?.actions]);
 
   const createModelItem = useCallback(
-    (newModelItem: ModelItem) => {
+    (newModelItem: ModelItem, state?: State) => {
       if (!model?.actions || !scene?.actions) return getState();
 
       if (!transactionInProgress.current) {
         saveToHistoryBeforeChange();
       }
 
-      const newState = reducers.createModelItem(newModelItem, getState());
+      const newState = reducers.createModelItem(newModelItem, state || getState());
       setState(newState);
       return newState; // Return the new state for chaining
     },
