@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { ModeActions, State, SlimMouseEvent, Mouse, ItemReference, ViewItem, ModelItem } from 'src/types';
+import { ModeActions, State, SlimMouseEvent, Mouse, ItemReference } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
-import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom, copyObject, getPastedObject, getItemById, findNearestUnoccupiedTile } from 'src/utils';
+import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom, copyObject, getPastedObject, getItemById, findNearestUnoccupiedTile, isPastedValid } from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
@@ -209,37 +209,32 @@ export const useInteractionManager = () => {
       if (isCtrlOrCmd && (e.key.toLowerCase() === 'v')) {
         e.preventDefault();
 
-        const pastedArray: Array<{ viewItem: ViewItem, modelItem: ModelItem }> = await getPastedObject();
+        const pastedArray = await getPastedObject();
+        if (!isPastedValid(pastedArray)) return;
 
         const mouseX = uiState.mouse.position.tile.x;
         const mouseY = uiState.mouse.position.tile.y;
         
-        let stateWithNewModels: any;
-        let stateWithNewViews: any;
+        let state: any;
         
-        pastedArray?.forEach(pastedObject => {
-          if (!pastedObject || !pastedObject.viewItem || !pastedObject.modelItem) return;
-
-          const { tile: pastedItemTile } = pastedObject.viewItem;
+        pastedArray.forEach(pastedObject => {
+          const pastedItemTile = pastedObject.viewItem.tile;
           const availableNearestTile = findNearestUnoccupiedTile({
             x: mouseX + pastedItemTile.x,
             y: mouseY + pastedItemTile.y 
-          }, scene);
+          }, scene) || { x: 0, y: 0 };
           
-          if (!availableNearestTile) return; // Pasted in an area filled with items
-
           const newId = generateId()
 
-          stateWithNewModels = scene.createModelItem({
-            ...pastedObject.modelItem,
-            id: newId
-          }, stateWithNewViews)
-          
-          stateWithNewViews = scene.createViewItem({
+          // Chain updated state from each iteration
+          state = scene.createViewItem({
             ...pastedObject.viewItem,
             id: newId,
             tile: availableNearestTile
-          }, stateWithNewModels)
+          }, scene.createModelItem({
+            ...pastedObject.modelItem,
+            id: newId
+          }, state))
         })
 
         return;
