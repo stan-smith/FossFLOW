@@ -215,26 +215,27 @@ export const useInteractionManager = () => {
         const mouseX = uiState.mouse.position.tile.x;
         const mouseY = uiState.mouse.position.tile.y;
         
-        let state: any;
+        let state: any; // type any since no way to get the base state before using createModelItem/createViewItem
         
         pastedArray.forEach(pastedObject => {
           const pastedItemTile = pastedObject.viewItem.tile;
           const availableNearestTile = findNearestUnoccupiedTile({
             x: mouseX + pastedItemTile.x,
             y: mouseY + pastedItemTile.y 
-          }, scene) || { x: 0, y: 0 };
-          
+          }, scene) ?? { x: 0, y: 0 };
           const newId = generateId()
 
           // Chain updated state from each iteration
+          const stateWithNewModel = scene.createModelItem({
+            ...pastedObject.modelItem,
+            id: newId
+          }, state)
+
           state = scene.createViewItem({
             ...pastedObject.viewItem,
             id: newId,
             tile: availableNearestTile
-          }, scene.createModelItem({
-            ...pastedObject.modelItem,
-            id: newId
-          }, state))
+          }, stateWithNewModel)
         })
 
         return;
