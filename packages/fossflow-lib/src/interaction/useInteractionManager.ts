@@ -222,8 +222,11 @@ export const useInteractionManager = () => {
           const availableNearestTile = findNearestUnoccupiedTile({
             x: mouseX + pastedItemTile.x,
             y: mouseY + pastedItemTile.y 
-          }, scene) ?? { x: 0, y: 0 };
-          const newId = generateId()
+          }, scene);
+
+          if (!availableNearestTile) return;
+
+          const newId = generateId();
 
           // Chain updated state from each iteration
           const stateWithNewModel = scene.createModelItem({
