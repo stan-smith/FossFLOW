@@ -1,0 +1,7 @@
+node_modules
+.git
+.devcontainer
+*.md
+.env
+diagrams
+e2e-tests

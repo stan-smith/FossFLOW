@@ -24,8 +24,8 @@ RUN npm run build:lib && npm run build:app
 # Use Node with nginx for production
 FROM node:22-alpine
 
-# Install nginx
-RUN apk add --no-cache nginx
+# Install nginx and openssl (for HTTP Basic Auth)
+RUN apk add --no-cache nginx openssl
 
 # Copy backend code
 COPY --from=build /app/packages/fossflow-backend /app/packages/fossflow-backend
