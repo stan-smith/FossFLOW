@@ -81,7 +81,7 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
           onChange={handleTabChange}
           variant="scrollable"
           scrollButtons="auto"
-          allowScrollButtonsMobile  
+          allowScrollButtonsMobile
           sx={{ borderBottom: 1, borderColor: 'divider' }}
         >
           <Tab label={t('settings.hotkeys.title')} />
