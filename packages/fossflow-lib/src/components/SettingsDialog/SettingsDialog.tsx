@@ -76,7 +76,14 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
         </IconButton>
       </DialogTitle>
       <DialogContent dividers>
-        <Tabs value={tabValue} onChange={handleTabChange} sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs
+          value={tabValue}
+          onChange={handleTabChange}
+          variant="scrollable"
+          scrollButtons="auto"
+          allowScrollButtonsMobile  
+          sx={{ borderBottom: 1, borderColor: 'divider' }}
+        >
           <Tab label={t('settings.hotkeys.title')} />
           <Tab label={t('settings.pan.title')} />
           <Tab label="Zoom" />
