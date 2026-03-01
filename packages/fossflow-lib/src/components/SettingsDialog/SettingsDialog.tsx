@@ -61,7 +61,7 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
       fullWidth
     >
       <DialogTitle>
-        Settings
+        {t('settingsDialog.title')}
         <IconButton
           aria-label="close"
           onClick={handleClose}
@@ -86,8 +86,8 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
         >
           <Tab label={t('settings.hotkeys.title')} />
           <Tab label={t('settings.pan.title')} />
-          <Tab label="Zoom" />
-          <Tab label="Labels" />
+          <Tab label={t('settingsDialog.tabZoom')} />
+          <Tab label={t('settingsDialog.tabLabels')} />
           <Tab label={t('settings.connector.title')} />
           {iconPackManager && <Tab label={t('settings.iconPacks.title')} />}
         </Tabs>
@@ -110,7 +110,7 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
+        <Button onClick={handleClose}>{t('settingsDialog.close')}</Button>
       </DialogActions>
     </Dialog>
   );

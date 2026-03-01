@@ -187,6 +187,27 @@ const locale: LocaleProps = {
     configPath2: "in the top left to access Configuration.",
     canDisable: "You can disable this behaviour if you wish.",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "Settings",
+    close: "Close",
+    tabZoom: "Zoom",
+    tabLabels: "Labels"
+  },
+  labelSettings: {
+    description: "Configure label display settings",
+    expandButtonPadding: "Expand Button Padding",
+    expandButtonPaddingDesc: "Bottom padding when expand button is visible (prevents text overlap)",
+    current: "Current: {{value}} theme units"
+  }
+,
+  diagramViewStatus: {
+    untitledDiagram: "Untitled Diagram",
+    untitledView: "Untitled view"
+  },
+  addMenu: {
+    addNode: "Add Node",
+    addRectangle: "Add Rectangle"
   }
 };
 
