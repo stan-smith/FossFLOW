@@ -5,6 +5,12 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.8](https://github.com/stan-smith/FossFLOW/compare/v1.10.7...v1.10.8) (2026-03-01)
+
+### Bug Fixes
+
+* **ui:** make settings tabs scrollable to prevent hiding ([#238](https://github.com/stan-smith/FossFLOW/issues/238)) [@0x-la1n](https://github.com/0x-la1n) ([42835fe](https://github.com/stan-smith/FossFLOW/commit/42835fe0b77458fdff7f32f884ae2ee6506efdc7))
+
 ## [1.10.7](https://github.com/stan-smith/FossFLOW/compare/v1.10.6...v1.10.7) (2026-02-15)
 
 ### Bug Fixes
