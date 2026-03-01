@@ -13,17 +13,21 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en-US',
-    debug: process.env.NODE_ENV === 'development',
+    debug: false,
     interpolation: {
       escapeValue: false
     },
     ns: ['app'],
+    defaultNS: 'app',
     backend: {
       loadPath: `${basePath}i18n/{{ns}}/{{lng}}.json`
     },
     detection: {
       order: ['localStorage'],
       caches: ['localStorage']
+    },
+    react: {
+      useSuspense: false
     }
   });
 

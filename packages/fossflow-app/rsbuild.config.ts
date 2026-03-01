@@ -7,14 +7,45 @@ const assetPrefix = publicUrl ? (publicUrl.endsWith('/') ? publicUrl : publicUrl
 
 // Resolve React from root node_modules to avoid duplicate instances
 const rootNodeModules = path.resolve(__dirname, '../../node_modules');
+const fossflowLib = path.resolve(__dirname, '../fossflow-lib');
+
+const isDev = process.env.NODE_ENV === 'development';
 
 export default defineConfig({
     plugins: [pluginReact()],
+    server: isDev
+        ? {
+              proxy: {
+                  '/api/ai-proxy/gemini': {
+                      target: 'https://generativelanguage.googleapis.com',
+                      changeOrigin: true,
+                      pathRewrite: { '^/api/ai-proxy/gemini': '/' },
+                  },
+                  '/api/ai-proxy/openai': {
+                      target: 'https://api.openai.com',
+                      changeOrigin: true,
+                      pathRewrite: { '^/api/ai-proxy/openai': '/' },
+                  },
+                  '/api/ai-proxy/anthropic': {
+                      target: 'https://api.anthropic.com',
+                      changeOrigin: true,
+                      pathRewrite: { '^/api/ai-proxy/anthropic': '/' },
+                  },
+                  '/api/ai-proxy/openrouter': {
+                      target: 'https://openrouter.ai',
+                      changeOrigin: true,
+                      pathRewrite: { '^/api/ai-proxy/openrouter': '/' },
+                  },
+              },
+          }
+        : undefined,
     resolve: {
         alias: {
             // Force React to resolve from root node_modules
             'react': path.join(rootNodeModules, 'react'),
             'react-dom': path.join(rootNodeModules, 'react-dom'),
+            // Resolve fossflow to workspace package (app may not have it in its own node_modules)
+            'fossflow': fossflowLib,
         },
     },
     html: {
