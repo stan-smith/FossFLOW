@@ -1,6 +1,7 @@
 {
     "nav": {
         "newDiagram": "New Diagram",
+        "aiGenerate": "AI Generate",
         "saveSessionOnly": "Save (Session Only)",
         "loadSessionOnly": "Load (Session Only)",
         "importFile": "Import File",
@@ -15,6 +16,26 @@
         "sessionStorageNote": "Session storage only - export to save permanently"
     },
     "dialog": {
+        "ai": {
+            "title": "Generate diagram with AI",
+            "description": "Paste your API key here and describe the diagram you want. Keys are only used from this screen and kept in this browser session.",
+            "apiKey": "Your API key (paste here)",
+            "apiKeyPlaceholder": "sk-...",
+            "apiKeyRequired": "Enter your API key above to generate.",
+            "provider": "Provider",
+            "model": "Model",
+            "loadModels": "Load models",
+            "loadingModels": "Loading…",
+            "modelCustom": "Custom (type below)",
+            "modelCustomPlaceholder": "Type model ID",
+            "customUrl": "Custom API base URL",
+            "prompt": "Prompt",
+            "promptPlaceholder": "e.g. A simple 3-tier web app: load balancer, 2 app servers, database",
+            "generate": "Generate",
+            "generating": "Generating…",
+            "cancel": "Cancel",
+            "invalidResponse": "Could not parse a valid diagram from the response."
+        },
         "save": {
             "title": "Save Diagram (Current Session Only)",
             "warningTitle": "Important",

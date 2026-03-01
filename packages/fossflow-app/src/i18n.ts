@@ -18,6 +18,7 @@ i18n
       escapeValue: false
     },
     ns: ['app'],
+    defaultNS: 'app',
     backend: {
       loadPath: `${basePath}i18n/{{ns}}/{{lng}}.json`
     },

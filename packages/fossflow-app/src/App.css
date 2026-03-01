@@ -169,3 +169,79 @@
 .diagram-actions button:last-child:hover {
   background-color: #c82333;
 }
+
+/* AI Generate dialog */
+.ai-generate-dialog .dialog-ai-description {
+  font-size: 14px;
+  color: #555;
+  margin: 0 0 16px 0;
+}
+.ai-generate-dialog .dialog-ai-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+.ai-generate-dialog .dialog-input,
+.ai-generate-dialog .dialog-select {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+}
+.ai-generate-dialog .dialog-textarea {
+  width: 100%;
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  box-sizing: border-box;
+  resize: vertical;
+  min-height: 80px;
+}
+.ai-generate-dialog .dialog-ai-hint {
+  font-size: 12px;
+  color: #e65100;
+  margin: -8px 0 12px 0;
+}
+.ai-generate-dialog .dialog-ai-error {
+  font-size: 13px;
+  color: #c62828;
+  background: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+.ai-generate-dialog .dialog-buttons button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.ai-generate-dialog .dialog-ai-model-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.ai-generate-dialog .dialog-ai-load-models {
+  flex-shrink: 0;
+  padding: 8px 12px;
+  font-size: 13px;
+  border: 1px solid #007bff;
+  background: #fff;
+  color: #007bff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.ai-generate-dialog .dialog-ai-load-models:hover:not(:disabled) {
+  background: #e7f1ff;
+}
+.ai-generate-dialog .dialog-input-flex,
+.ai-generate-dialog .dialog-select-flex {
+  flex: 1;
+  margin-bottom: 0;
+}
