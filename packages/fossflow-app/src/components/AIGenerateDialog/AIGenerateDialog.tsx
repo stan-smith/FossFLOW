@@ -66,29 +66,44 @@ export function AIGenerateDialog({
   const currentProvider = AI_PROVIDERS.find((p) => p.id === providerId) ?? AI_PROVIDERS[0];
   const canGenerate = apiKey.trim().length > 0 && prompt.trim().length > 0 && !loading;
 
-  // When provider changes, clear model list and selection so user loads models for the new provider
-  useEffect(() => {
-    setModelList([]);
-    setModel('');
-    setListModelsError(null);
-  }, [providerId]);
+  // Auto-load models when provider (and API key when required) changes
+  const canListModels = providerId === 'custom' || providerId === 'anthropic' || apiKey.trim().length > 0;
 
-  const handleLoadModels = useCallback(async () => {
-    if (!apiKey.trim()) return;
+  useEffect(() => {
+    if (!canListModels) {
+      setModelList([]);
+      setModel('');
+      setListModelsError(null);
+      return;
+    }
+    let cancelled = false;
     setListModelsError(null);
     setLoadingModels(true);
-    try {
-      const baseUrl = providerId === 'custom' ? customBaseUrl.trim() || undefined : undefined;
-      const list = await listModelsForProvider(providerId, apiKey.trim(), baseUrl);
-      setModelList(list);
-      if (list.length > 0 && !model.trim()) setModel(list[0].id);
-    } catch (e) {
-      setListModelsError(e instanceof Error ? e.message : String(e));
-      setModelList([]);
-    } finally {
-      setLoadingModels(false);
-    }
-  }, [apiKey, providerId, customBaseUrl, model]);
+    const baseUrl = providerId === 'custom' ? customBaseUrl.trim() || undefined : undefined;
+    listModelsForProvider(providerId, apiKey.trim(), baseUrl)
+      .then((list) => {
+        if (cancelled) return;
+        setModelList(list);
+        setListModelsError(null);
+        setModel((prev) => {
+          if (list.length === 0) return prev;
+          const inList = list.some((m) => m.id === prev);
+          return inList ? prev : list[0].id;
+        });
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setListModelsError(e instanceof Error ? e.message : String(e));
+          setModelList([]);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingModels(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [providerId, apiKey, customBaseUrl, canListModels]);
 
   const handleGenerate = useCallback(async () => {
     if (!canGenerate) return;
@@ -243,15 +258,9 @@ export function AIGenerateDialog({
 
         <label className="dialog-ai-label">{tx('dialog.ai.model', 'Model')}</label>
         <div className="dialog-ai-model-row">
-          <button
-            type="button"
-            className="dialog-ai-load-models"
-            onClick={handleLoadModels}
-            disabled={!apiKey.trim() || loadingModels}
-          >
-            {loadingModels ? tx('dialog.ai.loadingModels', 'Loading…') : tx('dialog.ai.loadModels', 'Load models')}
-          </button>
-          {modelList.length > 0 ? (
+          {loadingModels ? (
+            <span className="dialog-ai-hint">{tx('dialog.ai.loadingModels', 'Loading models…')}</span>
+          ) : modelList.length > 0 ? (
             <select
               className="dialog-select dialog-select-flex"
               value={modelList.some((m) => m.id === model) ? model : ''}
