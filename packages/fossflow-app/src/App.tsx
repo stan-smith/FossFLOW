@@ -10,6 +10,7 @@ import {
 } from './diagramUtils';
 import { StorageManager } from './StorageManager';
 import { DiagramManager } from './components/DiagramManager';
+import { AIGenerateDialog } from './components/AIGenerateDialog';
 import { storageManager } from './services/storageService';
 import ChangeLanguage from './components/ChangeLanguage';
 import { allLocales } from 'fossflow';
@@ -64,6 +65,7 @@ function EditorPage() {
   const [lastAutoSave, setLastAutoSave] = useState<Date | null>(null);
   const [showStorageManager, setShowStorageManager] = useState(false);
   const [showDiagramManager, setShowDiagramManager] = useState(false);
+  const [showAIGenerateDialog, setShowAIGenerateDialog] = useState(false);
   const [serverStorageAvailable, setServerStorageAvailable] = useState(false);
   const isReadonlyUrl =
     window.location.pathname.startsWith('/display/') && readonlyDiagramId;
@@ -431,6 +433,66 @@ function EditorPage() {
     }
   };
 
+  const handleAIGenerated = (generatedData: DiagramData) => {
+    // Resolve icons so every icon has a valid URL for rendering. The lib's transformFromCompactFormat
+    // may leave url: '' for icon ids not in its bundled set; resolve against the app's loaded icons.
+    const appIconSet = iconPackManager.loadedIcons?.length
+      ? iconPackManager.loadedIcons
+      : diagramData.icons?.length
+        ? diagramData.icons
+        : coreIcons;
+    const defaultIcon = appIconSet[0];
+    const resolveIcon = (genIcon: any) => {
+      if (genIcon?.url) return genIcon;
+      const idOrName = genIcon?.id ?? genIcon?.name;
+      const found = appIconSet.find(
+        (i: any) =>
+          i.id === idOrName ||
+          i.name === idOrName ||
+          (genIcon?.name && i.name === genIcon.name)
+      );
+      const resolved = found
+        ? {
+            ...genIcon,
+            id: genIcon?.id ?? found.id,
+            name: found.name ?? genIcon?.name,
+            url: found.url,
+            collection: found.collection,
+            isIsometric: found.isIsometric ?? true
+          }
+        : genIcon;
+      // If still no URL (e.g. unknown icon id), use default so something renders
+      if (!resolved?.url && defaultIcon?.url) {
+        return {
+          ...resolved,
+          id: resolved?.id ?? defaultIcon.id,
+          name: resolved?.name ?? defaultIcon.name,
+          url: defaultIcon.url,
+          collection: defaultIcon.collection,
+          isIsometric: defaultIcon.isIsometric ?? true
+        };
+      }
+      return resolved;
+    };
+    const resolvedIcons =
+      generatedData.icons?.length > 0
+        ? generatedData.icons.map(resolveIcon)
+        : appIconSet;
+    const mergedData = mergeDiagramData(diagramData, {
+      ...generatedData,
+      icons: resolvedIcons,
+      fitToScreen: true
+    });
+    // Lib expects fitToView to zoom/pan so the new diagram is visible
+    const dataForLib = { ...mergedData, fitToView: true, fitToScreen: true };
+    setDiagramData(dataForLib);
+    setCurrentModel(dataForLib);
+    setDiagramName(generatedData.title || 'AI Generated');
+    setHasUnsavedChanges(true);
+    setShowAIGenerateDialog(false);
+    // Don't remount Isoflow: same instance will get new initialData and run load() in its useEffect, updating the canvas (like import does).
+  };
+
   const exportDiagram = () => {
     // Use the most recent model data - prefer currentModel as it gets updated by handleModelUpdated
     const modelToExport = currentModel || diagramData;
@@ -723,6 +785,15 @@ function EditorPage() {
             </button>
             <button
               onClick={() => {
+                return setShowAIGenerateDialog(true);
+              }}
+              style={{ backgroundColor: '#6f42c1' }}
+              title="Generate diagram from AI prompt"
+            >
+              ✨ {t('nav.aiGenerate')}
+            </button>
+            <button
+              onClick={() => {
                 return setShowExportDialog(true);
               }}
               style={{ backgroundColor: '#007bff' }}
@@ -793,7 +864,11 @@ function EditorPage() {
       <div className="fossflow-container">
         <Isoflow
           key={`${fossflowKey}-${i18n.language}`}
-          initialData={diagramData}
+          initialData={{
+            ...diagramData,
+            // Lib uses fitToView to zoom/pan so the diagram is visible; app uses fitToScreen
+            fitToView: diagramData.fitToScreen !== false
+          }}
           onModelUpdated={handleModelUpdated}
           editorMode={isReadonlyUrl ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
           locale={currentLocale}
@@ -968,6 +1043,15 @@ function EditorPage() {
           onClose={() => {
             return setShowStorageManager(false);
           }}
+        />
+      )}
+
+      {/* AI Generate Dialog */}
+      {showAIGenerateDialog && (
+        <AIGenerateDialog
+          onClose={() => setShowAIGenerateDialog(false)}
+          onGenerated={handleAIGenerated}
+          defaultColors={defaultColors}
         />
       )}
 
