@@ -13,7 +13,7 @@ i18n
   .use(initReactI18next)
   .init({
     fallbackLng: 'en-US',
-    debug: false,
+    debug: process.env.NODE_ENV === 'development',
     interpolation: {
       escapeValue: false
     },
@@ -25,9 +25,6 @@ i18n
     detection: {
       order: ['localStorage'],
       caches: ['localStorage']
-    },
-    react: {
-      useSuspense: false
     }
   });
 

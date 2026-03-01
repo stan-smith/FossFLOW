@@ -36,10 +36,8 @@ Rules:
  */
 export function extractJsonFromResponse(response: string): unknown {
   const trimmed = response.trim();
-  // Try to find JSON in a code block first
   const codeBlockMatch = trimmed.match(/```(?:json)?\s*([\s\S]*?)```/);
   const raw = codeBlockMatch ? codeBlockMatch[1].trim() : trimmed;
-  // Find first { and last } to get a single JSON object
   const start = raw.indexOf('{');
   if (start === -1) throw new Error('No JSON object found in response');
   let depth = 0;

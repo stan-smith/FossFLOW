@@ -434,8 +434,6 @@ function EditorPage() {
   };
 
   const handleAIGenerated = (generatedData: DiagramData) => {
-    // Resolve icons so every icon has a valid URL for rendering. The lib's transformFromCompactFormat
-    // may leave url: '' for icon ids not in its bundled set; resolve against the app's loaded icons.
     const appIconSet = iconPackManager.loadedIcons?.length
       ? iconPackManager.loadedIcons
       : diagramData.icons?.length
@@ -461,7 +459,6 @@ function EditorPage() {
             isIsometric: found.isIsometric ?? true
           }
         : genIcon;
-      // If still no URL (e.g. unknown icon id), use default so something renders
       if (!resolved?.url && defaultIcon?.url) {
         return {
           ...resolved,
@@ -483,14 +480,12 @@ function EditorPage() {
       icons: resolvedIcons,
       fitToScreen: true
     });
-    // Lib expects fitToView to zoom/pan so the new diagram is visible
     const dataForLib = { ...mergedData, fitToView: true, fitToScreen: true };
     setDiagramData(dataForLib);
     setCurrentModel(dataForLib);
     setDiagramName(generatedData.title || 'AI Generated');
     setHasUnsavedChanges(true);
     setShowAIGenerateDialog(false);
-    // Don't remount Isoflow: same instance will get new initialData and run load() in its useEffect, updating the canvas (like import does).
   };
 
   const exportDiagram = () => {
@@ -866,7 +861,6 @@ function EditorPage() {
           key={`${fossflowKey}-${i18n.language}`}
           initialData={{
             ...diagramData,
-            // Lib uses fitToView to zoom/pan so the diagram is visible; app uses fitToScreen
             fitToView: diagramData.fitToScreen !== false
           }}
           onModelUpdated={handleModelUpdated}

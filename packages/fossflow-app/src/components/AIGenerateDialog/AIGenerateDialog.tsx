@@ -66,7 +66,6 @@ export function AIGenerateDialog({
   const currentProvider = AI_PROVIDERS.find((p) => p.id === providerId) ?? AI_PROVIDERS[0];
   const canGenerate = apiKey.trim().length > 0 && prompt.trim().length > 0 && !loading;
 
-  // Auto-load models when provider (and API key when required) changes
   const canListModels = providerId === 'custom' || providerId === 'anthropic' || apiKey.trim().length > 0;
 
   useEffect(() => {

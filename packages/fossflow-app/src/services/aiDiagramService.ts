@@ -181,9 +181,7 @@ async function readGeminiStream(res: Response): Promise<{ content: string; error
         firstError = `Gemini blocked: ${promptFeedback.blockReason}`;
       }
       fullText += extractTextFromGeminiResponse(data);
-    } catch {
-      // Skip malformed chunk
-    }
+    } catch {}
   };
 
   try {
@@ -311,17 +309,13 @@ async function geminiAdapter(request: AIGenerateRequest, config: AIProviderConfi
             try {
               const data = JSON.parse(j) as Record<string, unknown>;
               buffered += extractTextFromGeminiResponse(data);
-            } catch {
-              // skip
-            }
+            } catch {}
           }
         } else if (t.startsWith('{')) {
           try {
             const data = JSON.parse(t) as Record<string, unknown>;
             buffered += extractTextFromGeminiResponse(data);
-          } catch {
-            // skip
-          }
+          } catch {}
         }
       }
       if (buffered.trim()) return { content: buffered.trim() };
@@ -330,9 +324,7 @@ async function geminiAdapter(request: AIGenerateRequest, config: AIProviderConfi
         const data = JSON.parse(text) as Record<string, unknown>;
         const out = extractTextFromGeminiResponse(data);
         if (out) return { content: out };
-      } catch {
-        // Not JSON
-      }
+      } catch {}
     }
     return geminiNonStreaming(request, baseUrl);
   }
