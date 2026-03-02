@@ -199,8 +199,7 @@ const locale: LocaleProps = {
     expandButtonPadding: "Expand Button Padding",
     expandButtonPaddingDesc: "Bottom padding when expand button is visible (prevents text overlap)",
     current: "Current: {{value}} theme units"
-  }
-,
+  },
   diagramViewStatus: {
     untitledDiagram: "Untitled Diagram",
     untitledView: "Untitled view"

@@ -14,7 +14,6 @@ import { DebugUtils } from 'src/components/DebugUtils/DebugUtils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { ContextMenuManager } from 'src/components/ContextMenu/ContextMenuManager';
 import { useScene } from 'src/hooks/useScene';
-import { useModelStore } from 'src/stores/modelStore';
 import { ExportImageDialog } from '../ExportImageDialog/ExportImageDialog';
 import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
@@ -25,8 +24,6 @@ import { ImportHintTooltip } from '../ImportHintTooltip/ImportHintTooltip';
 import { LassoHintTooltip } from '../LassoHintTooltip/LassoHintTooltip';
 import { LazyLoadingWelcomeNotification } from '../LazyLoadingWelcomeNotification/LazyLoadingWelcomeNotification';
 import { CoordsUtils, getTilePosition } from 'src/utils';
-import { useTranslation } from 'src/stores/localeStore';
-import { INITIAL_DATA, VIEW_DEFAULTS } from 'src/config';
 
 const ToolsEnum = {
   MAIN_MENU: 'MAIN_MENU',
@@ -87,7 +84,7 @@ export const UiOverlay = () => {
   const itemControls = useUiStateStore((state) => {
     return state.itemControls;
   });
-  const { currentView } = useScene();
+  const { currentView, title } = useScene();
   const editorMode = useUiStateStore((state) => {
     return state.editorMode;
   });
@@ -97,10 +94,6 @@ export const UiOverlay = () => {
   const rendererEl = useUiStateStore((state) => {
     return state.rendererEl;
   });
-  const title = useModelStore((state) => {
-    return state.title;
-  });
-  const { t } = useTranslation('diagramViewStatus');
   const iconPackManager = useUiStateStore((state) => {
     return state.iconPackManager;
   });
@@ -211,11 +204,11 @@ export const UiOverlay = () => {
             >
               <Stack direction="row" alignItems="center">
                 <Typography fontWeight={600} color="text.secondary">
-                  {(title === INITIAL_DATA.title || title === 'Untitled Diagram') ? t('untitledDiagram') : title}
+                  {title}
                 </Typography>
                 <ChevronRight />
                 <Typography fontWeight={600} color="text.secondary">
-                  {currentView.name === VIEW_DEFAULTS.name ? t('untitledView') : currentView.name}
+                  {currentView.name}
                 </Typography>
               </Stack>
             </UiElement>

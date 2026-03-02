@@ -199,8 +199,7 @@ const locale: LocaleProps = {
     expandButtonPadding: "Erweiter-Schaltflächen-Abstand",
     expandButtonPaddingDesc: "Untenabstand wenn Erweiter-Schaltfläche sichtbar ist (verhindert Textüberlappung)",
     current: "Aktuell: {{value}} Theme-Einheiten"
-  }
-,
+  },
   diagramViewStatus: {
     untitledDiagram: "Unbenanntes Diagramm",
     untitledView: "Unbenannte Ansicht"
