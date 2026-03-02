@@ -5,6 +5,7 @@
         "loadSessionOnly": "Cargar (Solo sesión)",
         "importFile": "Importar archivo",
         "exportFile": "Exportar archivo",
+        "exportFileNoImages": "Exportar archivo (sin imágenes)",
         "quickSaveSession": "Guardado rápido (Sesión)",
         "serverStorage": "Almacenamiento en servidor"
     },
@@ -40,6 +41,7 @@
             "recommendedMessage": "Esta es la mejor forma de guardar tu trabajo de forma permanente.",
             "noteMessage": "Los archivos JSON exportados pueden importarse posteriormente o compartirse con otros.",
             "btnDownload": "Descargar JSON",
+            "btnDownloadNoImages": "Descargar JSON (sin imágenes)",
             "btnCancel": "Cancelar"
         },
         "readOnly": {
@@ -57,6 +59,7 @@
         "storageFull": "¡Almacenamiento lleno! Abriendo el gestor de almacenamiento...",
         "autoSaveFailed": "¡Almacenamiento lleno! Por favor usa el gestor de almacenamiento para liberar espacio.",
         "beforeUnload": "Tienes cambios sin guardar. ¿Estás seguro de que deseas salir?",
-        "quotaExceeded": "Cuota de almacenamiento excedida. Por favor exporta los diagramas importantes y libera espacio."
+        "quotaExceeded": "Cuota de almacenamiento excedida. Por favor exporta los diagramas importantes y libera espacio.",
+        "exportNoImagesUnsupported": "No se puede exportar sin imágenes porque algunos íconos no son compatibles: {{icons}}"
     }
 }

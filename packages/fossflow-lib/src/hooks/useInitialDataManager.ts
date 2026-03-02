@@ -6,7 +6,8 @@ import {
   CoordsUtils,
   categoriseIcons,
   generateId,
-  getItemByIdOrThrow
+  getItemByIdOrThrow,
+  hydrateIconsFromIconIds
 } from 'src/utils';
 import * as reducers from 'src/stores/reducers';
 import { useModelStore } from 'src/stores/modelStore';
@@ -32,7 +33,7 @@ export const useInitialDataManager = () => {
   const { changeView } = useView();
 
   const load = useCallback(
-    (_initialData: InitialData) => {
+    async (_initialData: InitialData) => {
       if (!_initialData || prevInitialData.current === _initialData) return;
 
       // Deep comparison to prevent unnecessary reloads when data hasn't actually changed
@@ -56,7 +57,16 @@ export const useInitialDataManager = () => {
 
       setIsReady(false);
 
-      const validationResult = modelSchema.safeParse(_initialData);
+      const hydratedIcons = await hydrateIconsFromIconIds(
+        _initialData.icons || []
+      ) as InitialData['icons'];
+
+      const hydratedInitialData = {
+        ..._initialData,
+        icons: hydratedIcons
+      };
+
+      const validationResult = modelSchema.safeParse(hydratedInitialData);
 
       if (!validationResult.success) {
         // TODO: let's get better at reporting error messages here (starting with how we present them to users)
@@ -67,7 +77,7 @@ export const useInitialDataManager = () => {
       }
 
       // Clean up invalid connector references before loading
-      const initialData = { ..._initialData };
+      const initialData = { ...hydratedInitialData };
       initialData.views = initialData.views.map(view => {
         if (!view.connectors) return view;
 

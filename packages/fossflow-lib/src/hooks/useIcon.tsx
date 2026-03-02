@@ -30,7 +30,7 @@ export const useIcon = (id: string | undefined) => {
 
     return (
       <IsometricIcon
-        url={icon.url}
+        url={icon.url || ''}
         scale={icon.scale || 1}
         onImageLoaded={() => {
           setHasLoaded(true);

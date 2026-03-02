@@ -2,6 +2,7 @@ import domtoimage from 'dom-to-image-more';
 import FileSaver from 'file-saver';
 import { Model, Size } from '../types';
 import { icons as availableIcons } from '../examples/initialData';
+import { serializeModelWithoutImages } from './iconIdSerialization';
 
 export const generateGenericFilename = (extension: string) => {
   return `fossflow-export-${new Date().toISOString()}.${extension}`;
@@ -164,6 +165,29 @@ export const exportAsJSON = (model: Model) => {
   });
 
   downloadFile(data, generateGenericFilename('json'));
+};
+
+export const exportAsJSONNoImages = (model: Model) => {
+  const { data: serializedData, unsupportedIcons } =
+    serializeModelWithoutImages(model);
+
+  if (unsupportedIcons.length > 0) {
+    return {
+      success: false as const,
+      unsupportedIcons
+    };
+  }
+
+  const data = new Blob([JSON.stringify(serializedData)], {
+    type: 'application/json;charset=utf-8'
+  });
+
+  downloadFile(data, generateGenericFilename('json'));
+
+  return {
+    success: true as const,
+    unsupportedIcons: []
+  };
 };
 
 export const exportAsCompactJSON = (model: Model) => {

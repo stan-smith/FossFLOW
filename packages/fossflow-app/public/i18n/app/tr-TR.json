@@ -5,6 +5,7 @@
         "loadSessionOnly": "Yükle (Yalnızca Oturum)",
         "importFile": "Dosya İçe Aktar",
         "exportFile": "Dosya Dışa Aktar",
+        "exportFileNoImages": "Dosya Dışa Aktar (resimsiz)",
         "quickSaveSession": "Hızlı Kaydet (Oturum)",
         "serverStorage": "Sunucu Depolama"
     },
@@ -40,6 +41,7 @@
             "recommendedMessage": "Bu, çalışmanızı kalıcı olarak kaydetmenin en iyi yoludur.",
             "noteMessage": "Dışa aktarılan JSON dosyaları daha sonra içe aktarılabilir veya başkalarıyla paylaşılabilir.",
             "btnDownload": "JSON İndir",
+            "btnDownloadNoImages": "JSON İndir (resimsiz)",
             "btnCancel": "İptal"
         },
         "readOnly": {
@@ -57,6 +59,7 @@
         "storageFull": "Depolama dolu! Depolama Yöneticisi açılıyor...",
         "autoSaveFailed": "Depolama dolu! Lütfen alan açmak için Depolama Yöneticisi'ni kullanın.",
         "beforeUnload": "Kaydedilmemiş değişiklikleriniz var. Ayrılmak istediğinizden emin misiniz?",
-        "quotaExceeded": "Depolama kotası aşıldı. Lütfen önemli diyagramları dışa aktarın ve biraz alan açın."
+        "quotaExceeded": "Depolama kotası aşıldı. Lütfen önemli diyagramları dışa aktarın ve biraz alan açın.",
+        "exportNoImagesUnsupported": "Resimsiz dışa aktarmak mümkün değil çünkü bazı simgeler desteklenmiyor: {{icons}}"
     }
 }

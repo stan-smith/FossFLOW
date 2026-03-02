@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Isoflow } from 'fossflow';
+import { Isoflow, serializeModelWithoutImages } from 'fossflow';
 import { flattenCollections } from '@isoflow/isopacks/dist/utils';
 import isoflowIsopack from '@isoflow/isopacks/dist/isoflow';
 import { useTranslation } from 'react-i18next';
@@ -485,6 +485,66 @@ function EditorPage() {
     setHasUnsavedChanges(false); // Mark as saved after export
   };
 
+  const exportDiagramNoImages = () => {
+    const modelToExport = currentModel || diagramData;
+
+    const allModelIcons = modelToExport.icons || [];
+
+    const diagramImportedIcons = (diagramData.icons || []).filter((icon) => {
+      return icon.collection === 'imported';
+    });
+
+    const iconMap = new Map();
+
+    allModelIcons.forEach((icon) => {
+      iconMap.set(icon.id, icon);
+    });
+
+    diagramImportedIcons.forEach((icon) => {
+      if (!iconMap.has(icon.id)) {
+        iconMap.set(icon.id, icon);
+      }
+    });
+
+    const allIcons = Array.from(iconMap.values());
+
+    const exportData = {
+      title: diagramName || modelToExport.title || 'Exported Diagram',
+      icons: allIcons,
+      colors: modelToExport.colors || [],
+      items: modelToExport.items || [],
+      views: modelToExport.views || [],
+      fitToScreen: true
+    };
+
+    const serializationResult = serializeModelWithoutImages(exportData as any);
+
+    if (serializationResult.unsupportedIcons.length > 0) {
+      alert(
+        t('alert.exportNoImagesUnsupported', {
+          defaultValue:
+            'Cannot export without images because some icons are unsupported: {{icons}}',
+          icons: serializationResult.unsupportedIcons.join(', ')
+        })
+      );
+      return;
+    }
+
+    const jsonString = JSON.stringify(serializationResult.data, null, 2);
+
+    // Create a blob and download link
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${diagramName || 'diagram'}-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    setShowExportDialog(false);
+    setHasUnsavedChanges(false); // Mark as saved after export
+  };
+
   const handleDiagramManagerLoad = async (id: string, data: any) => {
     console.log(`App: handleDiagramManagerLoad called for diagram ${id}`);
 
@@ -730,6 +790,12 @@ function EditorPage() {
               💾 {t('nav.exportFile')}
             </button>
             <button
+              onClick={exportDiagramNoImages}
+              style={{ backgroundColor: '#17a2b8' }}
+            >
+              🗜️ {t('nav.exportFileNoImages', { defaultValue: 'Export File (no images)' })}
+            </button>
+            <button
               onClick={() => {
                 if (currentDiagram && hasUnsavedChanges) {
                   saveDiagram();
@@ -949,6 +1015,11 @@ function EditorPage() {
             <div className="dialog-buttons">
               <button onClick={exportDiagram}>
                 {t('dialog.export.btnDownload')}
+              </button>
+              <button onClick={exportDiagramNoImages}>
+                {t('dialog.export.btnDownloadNoImages', {
+                  defaultValue: 'Download JSON (no images)'
+                })}
               </button>
               <button
                 onClick={() => {

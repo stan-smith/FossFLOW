@@ -5,6 +5,7 @@
         "loadSessionOnly": "Load (Session Only)",
         "importFile": "Import File",
         "exportFile": "Export File",
+        "exportFileNoImages": "Export File (no images)",
         "quickSaveSession": "Quick Save (Session)",
         "serverStorage": "Server Storage"
     },
@@ -40,6 +41,7 @@
             "recommendedMessage": "This is the best way to save your work permanently.",
             "noteMessage": "Exported JSON files can be imported later or shared with others.",
             "btnDownload": "Download JSON",
+            "btnDownloadNoImages": "Download JSON (no images)",
             "btnCancel": "Cancel"
         },
         "readOnly": {
@@ -57,6 +59,7 @@
         "storageFull": "Storage full! Opening Storage Manager...",
         "autoSaveFailed": "Storage full! Please use Storage Manager to free up space.",
         "beforeUnload": "You have unsaved changes. Are you sure you want to leave?",
-        "quotaExceeded": "Storage quota exceeded. Please export important diagrams and clear some space."
+        "quotaExceeded": "Storage quota exceeded. Please export important diagrams and clear some space.",
+        "exportNoImagesUnsupported": "Cannot export without images because some icons are unsupported: {{icons}}"
     }
 }

@@ -10,6 +10,7 @@ const locale: LocaleProps = {
     open: "খুলুন",
     exportJson: "JSON হিসাবে রপ্তানি করুন",
     exportCompactJson: "কমপ্যাক্ট JSON হিসাবে রপ্তানি করুন",
+    exportJsonNoImages: "JSON হিসাবে রপ্তানি করুন (ছবি ছাড়া)",
     exportImage: "ছবি হিসাবে রপ্তানি করুন",
     clearCanvas: "ক্যানভাস পরিষ্কার করুন",
     settings: "সেটিংস",

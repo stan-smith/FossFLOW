@@ -17,6 +17,7 @@ import { IconButton } from 'src/components/IconButton/IconButton';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import {
   exportAsJSON,
+  exportAsJSONNoImages,
   exportAsCompactJSON,
   transformFromCompactFormat
 } from 'src/utils/exportOptions';
@@ -98,6 +99,19 @@ export const MainMenu = () => {
 
   const onExportAsJSON = useCallback(async () => {
     exportAsJSON(model);
+    uiStateActions.setIsMainMenuOpen(false);
+  }, [model, uiStateActions]);
+
+  const onExportAsJSONNoImages = useCallback(async () => {
+    const result = exportAsJSONNoImages(model);
+
+    if (!result.success) {
+      window.alert(
+        `Cannot export without images. Unsupported icons: ${result.unsupportedIcons.join(', ')}`
+      );
+      return;
+    }
+
     uiStateActions.setIsMainMenuOpen(false);
   }, [model, uiStateActions]);
 
@@ -220,6 +234,12 @@ export const MainMenu = () => {
           {mainMenuOptions.includes('EXPORT.JSON') && (
             <MenuItem onClick={onExportAsCompactJSON} Icon={<ExportJsonIcon />}>
               {t('exportCompactJson')}
+            </MenuItem>
+          )}
+
+          {mainMenuOptions.includes('EXPORT.JSON') && (
+            <MenuItem onClick={onExportAsJSONNoImages} Icon={<ExportJsonIcon />}>
+              {t('exportJsonNoImages')}
             </MenuItem>
           )}
 

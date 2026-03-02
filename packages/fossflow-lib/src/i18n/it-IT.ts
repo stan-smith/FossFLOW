@@ -10,6 +10,7 @@ const locale: LocaleProps = {
     open: "Apri",
     exportJson: "Esporta come JSON",
     exportCompactJson: "Esporta come JSON compatto",
+    exportJsonNoImages: "Esporta come JSON (senza immagini)",
     exportImage: "Esporta come immagine",
     clearCanvas: "Pulisci la tela",
     settings: "Impostazioni",

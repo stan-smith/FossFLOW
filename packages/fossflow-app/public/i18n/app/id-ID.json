@@ -5,6 +5,7 @@
         "loadSessionOnly": "Muat (Hanya Sesi)",
         "importFile": "Impor File",
         "exportFile": "Ekspor File",
+        "exportFileNoImages": "Ekspor File (tanpa gambar)",
         "quickSaveSession": "Simpan Cepat (Sesi)",
         "serverStorage": "Penyimpanan Server"
     },
@@ -40,6 +41,7 @@
             "recommendedMessage": "Ini adalah cara terbaik untuk menyimpan pekerjaan Anda secara permanen.",
             "noteMessage": "File JSON yang diekspor dapat diimpor nanti atau dibagikan dengan orang lain.",
             "btnDownload": "Unduh JSON",
+            "btnDownloadNoImages": "Unduh JSON (tanpa gambar)",
             "btnCancel": "Batal"
         },
         "readOnly": {
@@ -57,7 +59,8 @@
         "storageFull": "Penyimpanan penuh! Membuka Manajer Penyimpanan...",
         "autoSaveFailed": "Penyimpanan penuh! Silakan gunakan Manajer Penyimpanan untuk membebaskan ruang.",
         "beforeUnload": "Anda memiliki perubahan yang belum disimpan. Apakah Anda yakin ingin keluar?",
-        "quotaExceeded": "Kuota penyimpanan terlampaui. Silakan ekspor diagram penting dan kosongkan beberapa ruang."
+        "quotaExceeded": "Kuota penyimpanan terlampaui. Silakan ekspor diagram penting dan kosongkan beberapa ruang.",
+        "exportNoImagesUnsupported": "Tidak dapat mengekspor tanpa gambar karena beberapa ikon tidak didukung: {{icons}}"
     }
 }
 

@@ -5,6 +5,7 @@
         "loadSessionOnly": "加载（仅会话）",
         "importFile": "导入文件",
         "exportFile": "导出文件",
+        "exportFileNoImages": "导出文件（无图像）",
         "quickSaveSession": "快速保存（会话）",
         "serverStorage": "服务端存储"
     },
@@ -40,6 +41,7 @@
             "recommendedMessage": "这是永久保存工作的最佳方式。",
             "noteMessage": "导出的 JSON 文件可以稍后导入或与他人共享。",
             "btnDownload": "下载 JSON",
+            "btnDownloadNoImages": "下载 JSON（无图像）",
             "btnCancel": "取消"
         },
         "readOnly": {
@@ -57,6 +59,7 @@
         "storageFull": "存储空间已满！正在打开存储管理器...",
         "autoSaveFailed": "存储空间已满！请使用存储管理器释放空间。",
         "beforeUnload": "您有未保存的更改。您确定要离开吗？",
-        "quotaExceeded": "存储配额已超出。请导出重要图表并清理一些空间。"
+        "quotaExceeded": "存储配额已超出。请导出重要图表并清理一些空间。",
+        "exportNoImagesUnsupported": "无法在没有图像的情况下导出，因为某些图标不受支持：{{icons}}"
     }
 }

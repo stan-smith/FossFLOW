@@ -10,6 +10,7 @@ const locale: LocaleProps = {
     open: "Buka",
     exportJson: "Ekspor sebagai JSON",
     exportCompactJson: "Ekspor sebagai JSON Ringkas",
+    exportJsonNoImages: "Ekspor sebagai JSON (tanpa gambar)",
     exportImage: "Ekspor sebagai gambar",
     clearCanvas: "Bersihkan kanvas",
     settings: "Pengaturan",
