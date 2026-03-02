@@ -5,6 +5,18 @@ describe('iconSchema', () => {
     const valid = { id: 'icon1', name: 'Icon', url: 'http://test.com' };
     expect(iconSchema.safeParse(valid).success).toBe(true);
   });
+
+  it('validates an icon with icon_id and no url', () => {
+    const valid = { id: 'icon1', name: 'Icon', icon_id: 'isoflow_block' };
+    expect(iconSchema.safeParse(valid).success).toBe(true);
+  });
+
+  it('fails when both url and icon_id are missing', () => {
+    const invalid = { id: 'icon1', name: 'Icon' };
+    const result = iconSchema.safeParse(invalid);
+    expect(result.success).toBe(false);
+  });
+
   it('fails if required fields are missing', () => {
     const invalid = { name: 'Icon' };
     const result = iconSchema.safeParse(invalid);

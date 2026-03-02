@@ -18,6 +18,7 @@ export interface LocaleProps {
     exportJson: string;
     exportCompactJson: string;
     exportJsonNoImages: string;
+    exportJsonNoImagesError: string;
     exportImage: string;
     clearCanvas: string;
     settings: string;

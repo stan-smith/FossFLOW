@@ -11,6 +11,7 @@ const locale: LocaleProps = {
     exportJson: "JSON হিসাবে রপ্তানি করুন",
     exportCompactJson: "কমপ্যাক্ট JSON হিসাবে রপ্তানি করুন",
     exportJsonNoImages: "JSON হিসাবে রপ্তানি করুন (ছবি ছাড়া)",
+    exportJsonNoImagesError: "Cannot export without images. Unsupported icons: {{unsupportedIcons}}",
     exportImage: "ছবি হিসাবে রপ্তানি করুন",
     clearCanvas: "ক্যানভাস পরিষ্কার করুন",
     settings: "সেটিংস",

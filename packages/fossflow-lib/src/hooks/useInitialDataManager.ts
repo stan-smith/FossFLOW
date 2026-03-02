@@ -18,6 +18,7 @@ import { modelSchema } from 'src/schemas/model';
 export const useInitialDataManager = () => {
   const [isReady, setIsReady] = useState(false);
   const prevInitialData = useRef<InitialData | undefined>(undefined);
+  const loadRequestIdRef = useRef(0);
   const model = useModelStore((state) => {
     return state;
   });
@@ -35,6 +36,7 @@ export const useInitialDataManager = () => {
   const load = useCallback(
     async (_initialData: InitialData) => {
       if (!_initialData || prevInitialData.current === _initialData) return;
+      const requestId = ++loadRequestIdRef.current;
 
       // Deep comparison to prevent unnecessary reloads when data hasn't actually changed
       // Skip this check for NON_INTERACTIVE mode (used by export) to ensure proper initialization
@@ -57,9 +59,19 @@ export const useInitialDataManager = () => {
 
       setIsReady(false);
 
-      const hydratedIcons = await hydrateIconsFromIconIds(
-        _initialData.icons || []
-      ) as InitialData['icons'];
+      let hydratedIcons = (_initialData.icons || []) as InitialData['icons'];
+
+      try {
+        hydratedIcons = await hydrateIconsFromIconIds(
+          _initialData.icons || []
+        ) as InitialData['icons'];
+      } catch (error) {
+        console.error('Failed to hydrate icons from icon_id values:', error);
+      }
+
+      if (requestId !== loadRequestIdRef.current) {
+        return;
+      }
 
       const hydratedInitialData = {
         ..._initialData,

@@ -11,6 +11,7 @@ const locale: LocaleProps = {
     exportJson: "Exporter en JSON",
     exportCompactJson: "Exporter en JSON compact",
     exportJsonNoImages: "Exporter en JSON (sans images)",
+    exportJsonNoImagesError: "Cannot export without images. Unsupported icons: {{unsupportedIcons}}",
     exportImage: "Exporter en image",
     clearCanvas: "Effacer le canevas",
     settings: "Paramètres",

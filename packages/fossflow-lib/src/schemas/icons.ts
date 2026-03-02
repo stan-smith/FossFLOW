@@ -9,6 +9,11 @@ export const iconSchema = z.object({
   collection: constrainedStrings.name.optional(),
   isIsometric: z.boolean().optional(),
   scale: z.number().min(0.1).max(3).optional()
+}).refine((icon) => {
+  return Boolean(icon.url || icon.icon_id);
+}, {
+  message: 'Either "url" or "icon_id" is required',
+  path: ['url']
 });
 
 export const iconsSchema = z.array(iconSchema);

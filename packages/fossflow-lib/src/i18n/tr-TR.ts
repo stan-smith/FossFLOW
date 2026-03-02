@@ -11,6 +11,7 @@ const locale: LocaleProps = {
     exportJson: "JSON olarak dışa aktar",
     exportCompactJson: "Kompakt JSON olarak dışa aktar",
     exportJsonNoImages: "JSON olarak dışa aktar (görselsiz)",
+    exportJsonNoImagesError: "Cannot export without images. Unsupported icons: {{unsupportedIcons}}",
     exportImage: "Görüntü olarak dışa aktar",
     clearCanvas: "Tuvali temizle",
     settings: "Ayarlar",

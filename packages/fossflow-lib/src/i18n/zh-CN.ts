@@ -11,6 +11,7 @@ const locale: LocaleProps = {
     exportJson: "导出为 JSON",
     exportCompactJson: "导出为紧凑 JSON",
     exportJsonNoImages: "导出为 JSON（不含图片）",
+    exportJsonNoImagesError: "Cannot export without images. Unsupported icons: {{unsupportedIcons}}",
     exportImage: "导出为图片",
     clearCanvas: "清空画布",
     settings: "设置",

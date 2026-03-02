@@ -128,11 +128,6 @@ export const serializeModelWithoutImages = (
       return icon;
     }
 
-    if (getCollectionKey(collection) === 'imported') {
-      unsupportedIcons.push(iconLabel);
-      return icon;
-    }
-
     const { url, icon_id, ...rest } = icon as GenericIcon;
 
     return {

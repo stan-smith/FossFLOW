@@ -7,10 +7,10 @@ export * from 'src/schemas';
 export type { IsoflowProps, InitialData } from 'src/types';
 export * from 'src/types/model';
 export {
-	serializeModelWithoutImages,
-	hydrateIconsFromIconIds,
-	createIconId,
-	parseIconId
+  serializeModelWithoutImages,
+  hydrateIconsFromIconIds,
+  createIconId,
+  parseIconId
 } from 'src/utils/iconIdSerialization';
 
 // Export i18n locales

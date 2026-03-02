@@ -106,14 +106,18 @@ export const MainMenu = () => {
     const result = exportAsJSONNoImages(model);
 
     if (!result.success) {
+      const unsupportedIcons = result.unsupportedIcons.join(', ');
       window.alert(
-        `Cannot export without images. Unsupported icons: ${result.unsupportedIcons.join(', ')}`
+        t('exportJsonNoImagesError').replace(
+          '{{unsupportedIcons}}',
+          unsupportedIcons
+        )
       );
       return;
     }
 
     uiStateActions.setIsMainMenuOpen(false);
-  }, [model, uiStateActions]);
+  }, [model, t, uiStateActions]);
 
   const onExportAsCompactJSON = useCallback(async () => {
     exportAsCompactJSON(model);

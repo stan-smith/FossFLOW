@@ -28,9 +28,16 @@ export const useIcon = (id: string | undefined) => {
       return <NonIsometricIcon icon={icon} />;
     }
 
+    const iconUrl = icon.url || DEFAULT_ICON.url;
+
+    if (!iconUrl) {
+      setHasLoaded(true);
+      return null;
+    }
+
     return (
       <IsometricIcon
-        url={icon.url || ''}
+        url={iconUrl}
         scale={icon.scale || 1}
         onImageLoaded={() => {
           setHasLoaded(true);

@@ -11,6 +11,7 @@ const locale: LocaleProps = {
     exportJson: "Ekspor sebagai JSON",
     exportCompactJson: "Ekspor sebagai JSON Ringkas",
     exportJsonNoImages: "Ekspor sebagai JSON (tanpa gambar)",
+    exportJsonNoImagesError: "Cannot export without images. Unsupported icons: {{unsupportedIcons}}",
     exportImage: "Ekspor sebagai gambar",
     clearCanvas: "Bersihkan kanvas",
     settings: "Pengaturan",
