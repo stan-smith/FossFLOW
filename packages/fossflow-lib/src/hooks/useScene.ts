@@ -340,16 +340,17 @@ export const useScene = () => {
   );
 
   const createTextBox = useCallback(
-    (newTextBox: TextBox) => {
+    (newTextBox: TextBox, state?: State) => {
       if (!model?.actions || !scene?.actions || !currentViewId) return;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'CREATE_TEXTBOX',
         payload: newTextBox,
-        ctx: { viewId: currentViewId, state: getState() }
+        ctx: { viewId: currentViewId, state: state || getState() }
       });
       setState(newState);
+      return newState;
     },
     [
       getState,
@@ -406,16 +407,17 @@ export const useScene = () => {
   );
 
   const createRectangle = useCallback(
-    (newRectangle: Rectangle) => {
+    (newRectangle: Rectangle, state?: State) => {
       if (!model?.actions || !scene?.actions || !currentViewId) return;
 
       saveToHistoryBeforeChange();
       const newState = reducers.view({
         action: 'CREATE_RECTANGLE',
         payload: newRectangle,
-        ctx: { viewId: currentViewId, state: getState() }
+        ctx: { viewId: currentViewId, state: state || getState() }
       });
       setState(newState);
+      return newState;
     },
     [
       getState,

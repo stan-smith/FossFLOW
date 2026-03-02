@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { ModeActions, State, SlimMouseEvent, Mouse, ItemReference } from 'src/types';
+import { ModeActions, State, SlimMouseEvent, Mouse, ItemReference, Coords } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
-import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom, copyObject, getPastedObject, getItemById, findNearestUnoccupiedTile, isPastedValid } from 'src/utils';
+import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom, copyObject, getPastedObject, getItemById, findNearestUnoccupiedTile, isPastedValid, CoordsUtils, PastedObject } from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
@@ -195,16 +195,45 @@ export const useInteractionManager = () => {
           [(uiState.itemControls as ItemReference)];
 
 
-        copyObject(selectedNodes.map(currentNode => {
-          const modelItem = getItemById(model.items, currentNode.id)?.value;
-          const viewItem = getItemById(scene.currentView.items, currentNode.id)?.value;
-          if (!viewItem || !modelItem) return;
-
-          return { modelItem, viewItem }
+        copyObject(selectedNodes.map((currentItem) => {
+          if (!currentItem) return;
+          switch (currentItem.type) {
+            case 'ITEM': {
+              const modelItem = getItemById(model.items, currentItem.id)?.value;
+              const viewItem = getItemById(scene.currentView.items, currentItem.id)?.value;
+              if (!viewItem || !modelItem) return;
+    
+              return { type: currentItem.type, item: { modelItem, viewItem } }
+            }
+            case 'RECTANGLE': {
+              if (!scene.currentView.rectangles) return;
+              const item = getItemById(scene.currentView.rectangles, currentItem.id)?.value;
+              return { type: currentItem.type, item }
+            }
+            case 'TEXTBOX': {
+              if (!scene.currentView.textBoxes) return;
+              const item = getItemById(scene.currentView.textBoxes, currentItem.id)?.value;
+              return { type: currentItem.type, item }
+            }
+          }
         }));
 
         return;
       }
+
+      const getTargetTileFunction = (firstPastedObject: PastedObject, mouseTile: Coords) => 
+        (currentItemTile: Coords) => {
+          const { type, item } = firstPastedObject;
+          const firstTile = type === "ITEM" ? 
+            item.viewItem.tile 
+            : 
+            type === "RECTANGLE" ?
+              item.from
+              :
+              item.tile;
+          const tileDelta =  CoordsUtils.subtract(mouseTile, firstTile);
+          return findNearestUnoccupiedTile(CoordsUtils.add(currentItemTile, tileDelta), scene) || { x: 0, y: 0 };
+        }
 
       if (isCtrlOrCmd && (e.key.toLowerCase() === 'v')) {
         e.preventDefault();
@@ -212,33 +241,40 @@ export const useInteractionManager = () => {
         const pastedArray = await getPastedObject();
         if (!isPastedValid(pastedArray)) return;
 
-        const mouseX = uiState.mouse.position.tile.x;
-        const mouseY = uiState.mouse.position.tile.y;
-        
+        const mouseTile = uiState.mouse.position.tile;
+        const getTargetTile = getTargetTileFunction(pastedArray[0], mouseTile);
         let state: any; // type any since no way to get the base state before using createModelItem/createViewItem
-        
-        pastedArray.forEach(pastedObject => {
-          const pastedItemTile = pastedObject.viewItem.tile;
-          const availableNearestTile = findNearestUnoccupiedTile({
-            x: mouseX + pastedItemTile.x,
-            y: mouseY + pastedItemTile.y 
-          }, scene);
 
-          if (!availableNearestTile) return;
-
+        pastedArray.forEach((pastedObject, index) => {
           const newId = generateId();
+          if (pastedObject.type === 'ITEM') {
+            const { viewItem, modelItem } = pastedObject.item;
 
-          // Chain updated state from each iteration
-          const stateWithNewModel = scene.createModelItem({
-            ...pastedObject.modelItem,
-            id: newId
-          }, state)
-
-          state = scene.createViewItem({
-            ...pastedObject.viewItem,
-            id: newId,
-            tile: availableNearestTile
-          }, stateWithNewModel)
+            // Chain updated state from each iteration
+            const stateWithNewModel = scene.createModelItem({
+              ...modelItem,
+              id: newId
+            }, state)
+  
+            state = scene.createViewItem({
+              ...viewItem,
+              id: newId,
+              tile: getTargetTile(viewItem.tile)
+            }, stateWithNewModel)
+          } else if (pastedObject.type === 'RECTANGLE') {
+            state = scene.createRectangle({
+              ...pastedObject.item, 
+              id: newId,
+              from: getTargetTile(pastedObject.item.from),
+              to: getTargetTile(pastedObject.item.to)
+            }, state)
+          } else if (pastedObject.type === "TEXTBOX") {
+            state = scene.createTextBox({
+              ...pastedObject.item, 
+              id: newId,
+              tile: getTargetTile(pastedObject.item.tile)
+            }, state);
+          }
         })
 
         return;
