@@ -1,7 +1,10 @@
 name: E2E Tests
 
 on:
-  # Runs after unit tests complete successfully
+  # Runs on PRs so we can gate merges on E2E results
+  pull_request:
+    branches: ["main", "master"]
+  # Runs after unit tests complete successfully on push
   workflow_run:
     workflows: ["Run Tests"]
     types:
@@ -11,7 +14,7 @@ on:
 jobs:
   e2e-tests:
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'pull_request' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Checkout code
