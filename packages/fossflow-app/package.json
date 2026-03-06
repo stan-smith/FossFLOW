@@ -14,7 +14,7 @@
     "react-error-boundary": "^6.0.0",
     "react-i18next": "^15.7.4",
     "react-router-dom": "^7.9.6",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^5.1.0"
   },
   "scripts": {
     "start": "rsbuild dev",
