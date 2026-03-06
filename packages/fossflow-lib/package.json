@@ -40,7 +40,7 @@
     "react-hook-form": "^7.71.2",
     "react-quill-new": "^3.8.3",
     "react-router-dom": "^6.30.2",
-    "uuid": "^9.0.1",
+    "uuid": "^13.0.0",
     "zod": "^3.25.76",
     "zustand": "^4.5.7"
   },
