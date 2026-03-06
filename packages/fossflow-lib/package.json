@@ -71,7 +71,7 @@
     "prettier": "^3.6.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "recharts": "^2.15.4",
+    "recharts": "^3.7.0",
     "style-loader": "^3.3.4",
     "ts-jest": "^29.4.4",
     "tsc-alias": "^1.8.16"
