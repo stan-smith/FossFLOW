@@ -16,7 +16,7 @@ fi
 # Configure HTTP Basic Auth
 if [ -n "$HTTP_AUTH_USER" ] && [ -n "$HTTP_AUTH_PASSWORD" ]; then
     echo "Setup HTTP Basic Auth..."
-    echo "$HTTP_AUTH_USER:$(openssl passwd -apr1 $HTTP_AUTH_PASSWORD)" > /etc/nginx/.htpasswd
+    echo "$HTTP_AUTH_USER:$(printf '%s' "$HTTP_AUTH_PASSWORD" | openssl passwd -apr1 -stdin)" > /etc/nginx/.htpasswd
     sed -i 's/AUTH_BASIC_SETTING/"Restricted"/g' /etc/nginx/http.d/default.conf
 else
     echo "No HTTP Basic Auth configured"
