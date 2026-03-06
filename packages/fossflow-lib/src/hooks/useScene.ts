@@ -4,14 +4,17 @@ import {
   ViewItem,
   Connector,
   TextBox,
-  Rectangle
+  Rectangle,
+  Coords,
+  UiStateStore,
+  ItemReference
 } from 'src/types';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useModelStore } from 'src/stores/modelStore';
 import { useSceneStore } from 'src/stores/sceneStore';
 import * as reducers from 'src/stores/reducers';
 import type { State } from 'src/stores/reducers/types';
-import { getItemByIdOrThrow } from 'src/utils';
+import { copyObject, generateId, getItemById, getItemByIdOrThrow, getPastedObject, getTargetTileFunction, isPastedValid } from 'src/utils';
 import {
   CONNECTOR_DEFAULTS,
   RECTANGLE_DEFAULTS,
@@ -532,6 +535,81 @@ export const useScene = () => {
     ]
   );
 
+  const copyObjectsToClipboard = (uiState: UiStateStore) => {
+    const selectedObjects = (
+      uiState.mode.type === 'LASSO' ||
+      uiState.mode.type === 'FREEHAND_LASSO'
+    ) && uiState.mode.selection ?
+      uiState.mode.selection.items
+      :
+      [(uiState.itemControls as ItemReference)];
+
+    copyObject(selectedObjects.map((currentItem) => {
+      if (!currentItem) return;
+      switch (currentItem.type) {
+        case 'ITEM': {
+          const modelItem = getItemById(model.items, currentItem.id)?.value;
+          const viewItem = getItemById(currentView.items, currentItem.id)?.value;
+          if (!viewItem || !modelItem) return;
+
+          return { type: currentItem.type, item: { modelItem, viewItem } }
+        }
+        case 'RECTANGLE': {
+          if (!currentView.rectangles) return;
+          const item = getItemById(currentView.rectangles, currentItem.id)?.value;
+          return { type: currentItem.type, item }
+        }
+        case 'TEXTBOX': {
+          if (!currentView.textBoxes) return;
+          const item = getItemById(currentView.textBoxes, currentItem.id)?.value;
+          return { type: currentItem.type, item }
+        }
+      }
+    }));
+  }
+
+  const pastObjectsFromClipboard: (uiState: UiStateStore, activeScene: ReturnType<typeof useScene>) => Promise<void> = 
+  async (uiState, activeScene) => {
+    const pastedArray = await getPastedObject();
+    if (!isPastedValid(pastedArray)) return;
+
+    const mouseTile = uiState.mouse.position.tile;
+    const getTargetTile = getTargetTileFunction(pastedArray[0], mouseTile, activeScene);
+    let state: State | undefined;
+
+    pastedArray.forEach(pastedObject => {
+      const newId = generateId();
+
+      if (pastedObject.type === 'ITEM') {
+        const { viewItem, modelItem } = pastedObject.item;
+        const stateWithNewModel = createModelItem({
+          ...modelItem,
+          id: newId
+        }, state)
+        
+        // Chain updated state from each iteration
+        state = createViewItem({
+          ...viewItem,
+          id: newId,
+          tile: getTargetTile(viewItem.tile)
+        }, stateWithNewModel)
+      } else if (pastedObject.type === 'RECTANGLE') {
+        state = createRectangle({
+          ...pastedObject.item, 
+          id: newId,
+          from: getTargetTile(pastedObject.item.from),
+          to: getTargetTile(pastedObject.item.to)
+        }, state)
+      } else if (pastedObject.type === "TEXTBOX") {
+        state = createTextBox({
+          ...pastedObject.item, 
+          id: newId,
+          tile: getTargetTile(pastedObject.item.tile)
+        }, state);
+      }
+    })
+  }
+
   return {
     items,
     connectors,
@@ -555,6 +633,8 @@ export const useScene = () => {
     updateRectangle,
     deleteRectangle,
     transaction,
-    placeIcon
+    placeIcon,
+    copyObjectsToClipboard,
+    pastObjectsFromClipboard,
   };
 };

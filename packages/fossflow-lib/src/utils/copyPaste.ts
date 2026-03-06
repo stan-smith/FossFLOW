@@ -1,4 +1,8 @@
+import { useScene } from "src/hooks/useScene";
 import { ModelItem, Rectangle, TextBox, ViewItem } from "src/standaloneExports";
+import { Coords } from "src/types";
+import { CoordsUtils } from "./CoordsUtils";
+import { findNearestUnoccupiedTile } from "./findNearestUnoccupiedTile";
 
 export const copyObject = async (obj: Object) => {
   await navigator.clipboard.writeText(JSON.stringify(obj));
@@ -11,6 +15,20 @@ export const getPastedObject = async () => {
     console.error(error)
   }
 }
+
+export const getTargetTileFunction = (firstPastedObject: PastedObject, mouseTile: Coords, scene: ReturnType<typeof useScene>) => 
+    (currentItemTile: Coords) => {
+      const { type, item } = firstPastedObject;
+      const firstTile = type === "ITEM" ? 
+        item.viewItem.tile 
+        : 
+        type === "RECTANGLE" ?
+          item.from
+          :
+          item.tile;
+      const tileDelta =  CoordsUtils.subtract(mouseTile, firstTile);
+      return findNearestUnoccupiedTile(CoordsUtils.add(currentItemTile, tileDelta), scene) || { x: 0, y: 0 };
+    }
 
 interface PastedItem {
   type: "ITEM";
@@ -95,8 +113,6 @@ function isPastedTextBox(value: unknown): value is PastedTextBox {
       item.orientation === "Y")
   );
 }
-
-// ---------- Main validator ----------
 
 export function isPastedValid(
   value: unknown

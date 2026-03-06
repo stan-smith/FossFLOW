@@ -186,97 +186,13 @@ export const useInteractionManager = () => {
 
       if (isCtrlOrCmd && (e.key.toLowerCase() === 'c')) {
         e.preventDefault();
-        const selectedNodes = (
-          uiState.mode.type === 'LASSO' ||
-          uiState.mode.type === 'FREEHAND_LASSO'
-        ) && uiState.mode.selection ?
-          uiState.mode.selection.items
-          :
-          [(uiState.itemControls as ItemReference)];
-
-
-        copyObject(selectedNodes.map((currentItem) => {
-          if (!currentItem) return;
-          switch (currentItem.type) {
-            case 'ITEM': {
-              const modelItem = getItemById(model.items, currentItem.id)?.value;
-              const viewItem = getItemById(scene.currentView.items, currentItem.id)?.value;
-              if (!viewItem || !modelItem) return;
-    
-              return { type: currentItem.type, item: { modelItem, viewItem } }
-            }
-            case 'RECTANGLE': {
-              if (!scene.currentView.rectangles) return;
-              const item = getItemById(scene.currentView.rectangles, currentItem.id)?.value;
-              return { type: currentItem.type, item }
-            }
-            case 'TEXTBOX': {
-              if (!scene.currentView.textBoxes) return;
-              const item = getItemById(scene.currentView.textBoxes, currentItem.id)?.value;
-              return { type: currentItem.type, item }
-            }
-          }
-        }));
-
+        scene.copyObjectsToClipboard(uiState)
         return;
       }
 
-      const getTargetTileFunction = (firstPastedObject: PastedObject, mouseTile: Coords) => 
-        (currentItemTile: Coords) => {
-          const { type, item } = firstPastedObject;
-          const firstTile = type === "ITEM" ? 
-            item.viewItem.tile 
-            : 
-            type === "RECTANGLE" ?
-              item.from
-              :
-              item.tile;
-          const tileDelta =  CoordsUtils.subtract(mouseTile, firstTile);
-          return findNearestUnoccupiedTile(CoordsUtils.add(currentItemTile, tileDelta), scene) || { x: 0, y: 0 };
-        }
-
       if (isCtrlOrCmd && (e.key.toLowerCase() === 'v')) {
         e.preventDefault();
-
-        const pastedArray = await getPastedObject();
-        if (!isPastedValid(pastedArray)) return;
-
-        const mouseTile = uiState.mouse.position.tile;
-        const getTargetTile = getTargetTileFunction(pastedArray[0], mouseTile);
-        let state: any; // type any since no way to get the base state before using createModelItem/createViewItem
-
-        pastedArray.forEach((pastedObject, index) => {
-          const newId = generateId();
-          if (pastedObject.type === 'ITEM') {
-            const { viewItem, modelItem } = pastedObject.item;
-
-            // Chain updated state from each iteration
-            const stateWithNewModel = scene.createModelItem({
-              ...modelItem,
-              id: newId
-            }, state)
-  
-            state = scene.createViewItem({
-              ...viewItem,
-              id: newId,
-              tile: getTargetTile(viewItem.tile)
-            }, stateWithNewModel)
-          } else if (pastedObject.type === 'RECTANGLE') {
-            state = scene.createRectangle({
-              ...pastedObject.item, 
-              id: newId,
-              from: getTargetTile(pastedObject.item.from),
-              to: getTargetTile(pastedObject.item.to)
-            }, state)
-          } else if (pastedObject.type === "TEXTBOX") {
-            state = scene.createTextBox({
-              ...pastedObject.item, 
-              id: newId,
-              tile: getTargetTile(pastedObject.item.tile)
-            }, state);
-          }
-        })
-
+        scene.pastObjectsFromClipboard(uiState, scene);
         return;
       }
 
