@@ -5,7 +5,6 @@ import {
   Connector,
   TextBox,
   Rectangle,
-  Coords,
   UiStateStore,
   ItemReference
 } from 'src/types';
@@ -568,7 +567,7 @@ export const useScene = () => {
     }));
   }
 
-  const pastObjectsFromClipboard: (uiState: UiStateStore, activeScene: ReturnType<typeof useScene>) => Promise<void> = 
+  const pasteObjectsFromClipboard: (uiState: UiStateStore, activeScene: ReturnType<typeof useScene>) => Promise<void> = 
   async (uiState, activeScene) => {
     const pastedArray = await getPastedObject();
     if (!isPastedValid(pastedArray)) return;
@@ -635,6 +634,6 @@ export const useScene = () => {
     transaction,
     placeIcon,
     copyObjectsToClipboard,
-    pastObjectsFromClipboard,
+    pasteObjectsFromClipboard,
   };
 };

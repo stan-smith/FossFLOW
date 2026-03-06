@@ -1,8 +1,8 @@
 import { useScene } from "src/hooks/useScene";
-import { ModelItem, Rectangle, TextBox, ViewItem } from "src/standaloneExports";
 import { Coords } from "src/types";
 import { CoordsUtils } from "./CoordsUtils";
 import { findNearestUnoccupiedTile } from "./findNearestUnoccupiedTile";
+import { PastedItem, PastedObject, PastedRectangle, PastedTextBox } from "src/types/copyPaste";
 
 export const copyObject = async (obj: Object) => {
   await navigator.clipboard.writeText(JSON.stringify(obj));
@@ -29,26 +29,6 @@ export const getTargetTileFunction = (firstPastedObject: PastedObject, mouseTile
       const tileDelta =  CoordsUtils.subtract(mouseTile, firstTile);
       return findNearestUnoccupiedTile(CoordsUtils.add(currentItemTile, tileDelta), scene) || { x: 0, y: 0 };
     }
-
-interface PastedItem {
-  type: "ITEM";
-  item: {
-    viewItem: ViewItem;
-    modelItem: ModelItem;
-  }
-}
-
-interface PastedRectangle {
-  type: "RECTANGLE";
-  item: Rectangle
-}
-
-interface PastedTextBox {
-  type: "TEXTBOX";
-  item: TextBox
-}
-
-export type PastedObject = PastedItem | PastedRectangle | PastedTextBox; 
 
 const isObject = (value: unknown): value is Record<string, unknown> => typeof value === "object" && value !== null;
 const isString = (value: unknown): value is string => typeof value === "string";

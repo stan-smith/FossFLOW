@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useModelStore } from 'src/stores/modelStore';
 import { useUiStateStore } from 'src/stores/uiStateStore';
-import { ModeActions, State, SlimMouseEvent, Mouse, ItemReference, Coords } from 'src/types';
+import { ModeActions, State, SlimMouseEvent, Mouse } from 'src/types';
 import { DialogTypeEnum } from 'src/types/ui';
-import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom, copyObject, getPastedObject, getItemById, findNearestUnoccupiedTile, isPastedValid, CoordsUtils, PastedObject } from 'src/utils';
+import { getMouse, getItemAtTile, generateId, incrementZoom, decrementZoom } from 'src/utils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { useScene } from 'src/hooks/useScene';
 import { useHistory } from 'src/hooks/useHistory';
@@ -192,7 +192,7 @@ export const useInteractionManager = () => {
 
       if (isCtrlOrCmd && (e.key.toLowerCase() === 'v')) {
         e.preventDefault();
-        scene.pastObjectsFromClipboard(uiState, scene);
+        scene.pasteObjectsFromClipboard(uiState, scene);
         return;
       }
 
