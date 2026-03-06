@@ -187,6 +187,26 @@ const locale: LocaleProps = {
     configPath2: "di kiri atas untuk mengakses Konfigurasi.",
     canDisable: "Anda dapat menonaktifkan perilaku ini jika diinginkan.",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "Pengaturan",
+    close: "Tutup",
+    tabZoom: "Zoom",
+    tabLabels: "Label"
+  },
+  labelSettings: {
+    description: "Konfigurasi pengaturan tampilan label",
+    expandButtonPadding: "Padding tombol perluas",
+    expandButtonPaddingDesc: "Padding bawah saat tombol perluas terlihat (mencegah tumpang tindih teks)",
+    current: "Saat ini: {{value}} unit tema"
+  },
+  diagramViewStatus: {
+    untitledDiagram: "Diagram tanpa judul",
+    untitledView: "Tampilan tanpa judul"
+  },
+  addMenu: {
+    addNode: "Tambah Node",
+    addRectangle: "Tambah Persegi Panjang"
   }
 };
 

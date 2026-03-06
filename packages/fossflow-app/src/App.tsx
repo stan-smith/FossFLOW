@@ -103,7 +103,7 @@ function EditorPage() {
 
     // Default state if no saved data
     return {
-      title: 'Untitled Diagram',
+      title: '',
       icons: coreIcons,
       colors: defaultColors,
       items: [],
@@ -387,7 +387,7 @@ function EditorPage() {
 
     if (window.confirm(message)) {
       const emptyDiagram: DiagramData = {
-        title: 'Untitled Diagram',
+        title: '',
         icons: iconPackManager.loadedIcons, // Use currently loaded icons
         colors: defaultColors,
         items: [],
