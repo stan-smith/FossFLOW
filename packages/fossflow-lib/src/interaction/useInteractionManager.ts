@@ -115,7 +115,7 @@ export const useInteractionManager = () => {
 
   // Keyboard shortcuts for undo/redo
   useEffect(() => {
-    const handleKeyDown = async (e: KeyboardEvent) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       // ESC key handling - should work even in input fields
       if (e.key === 'Escape') {
         e.preventDefault();
@@ -186,7 +186,7 @@ export const useInteractionManager = () => {
 
       if (isCtrlOrCmd && (e.key.toLowerCase() === 'c')) {
         e.preventDefault();
-        scene.copyObjectsToClipboard(uiState)
+        scene.copyObjectsToClipboard(uiState);
         return;
       }
 
