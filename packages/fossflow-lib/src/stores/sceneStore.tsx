@@ -51,7 +51,7 @@ const initialState = () => {
     const saveToHistory = () => {
       set((state) => {
         const currentScene = extractSceneData(state);
-        const newPast = [...state.history.past, state.history.present];
+        const newPast = [...state.history.past, currentScene];
 
         // Limit history size
         if (newPast.length > state.history.maxHistorySize) {
@@ -78,13 +78,15 @@ const initialState = () => {
       const newPast = history.past.slice(0, history.past.length - 1);
 
       set((state) => {
+        // Capture the actual live state (not stale history.present)
+        const currentScene = extractSceneData(state);
         return {
           ...previous,
           history: {
             ...state.history,
             past: newPast,
             present: previous,
-            future: [state.history.present, ...state.history.future]
+            future: [currentScene, ...state.history.future]
           }
         };
       });
@@ -100,11 +102,13 @@ const initialState = () => {
       const newFuture = history.future.slice(1);
 
       set((state) => {
+        // Capture the actual live state (not stale history.present)
+        const currentScene = extractSceneData(state);
         return {
           ...next,
           history: {
             ...state.history,
-            past: [...state.history.past, state.history.present],
+            past: [...state.history.past, currentScene],
             present: next,
             future: newFuture
           }
@@ -191,4 +195,14 @@ export function useSceneStore<T>(
 
   const value = useStore(store, selector, equalityFn);
   return value;
+}
+
+export function useSceneStoreApi() {
+  const store = useContext(SceneContext);
+
+  if (store === null) {
+    throw new Error('Missing provider in the tree');
+  }
+
+  return store;
 }

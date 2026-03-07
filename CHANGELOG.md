@@ -5,6 +5,47 @@ All notable changes to FossFLOW will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.10.8](https://github.com/stan-smith/FossFLOW/compare/v1.10.7...v1.10.8) (2026-03-01)
+
+### Bug Fixes
+
+* **ui:** make settings tabs scrollable to prevent hiding ([#238](https://github.com/stan-smith/FossFLOW/issues/238)) [@0x-la1n](https://github.com/0x-la1n) ([42835fe](https://github.com/stan-smith/FossFLOW/commit/42835fe0b77458fdff7f32f884ae2ee6506efdc7))
+
+## [1.10.7](https://github.com/stan-smith/FossFLOW/compare/v1.10.6...v1.10.7) (2026-02-15)
+
+### Bug Fixes
+
+* Fixed issues with history not fully working, undo/redo was hit or miss. Additionally added a huge amount of CI/CD testing using selenium so that we can simulate creating a diagram, placing nodes, connceting them, undo/redo, and rectangles/text as well, with love, Stan ([047df92](https://github.com/stan-smith/FossFLOW/commit/047df927858417ec068a749a3f6a0c6dd8741fec))
+
+## [1.10.6](https://github.com/stan-smith/FossFLOW/compare/v1.10.5...v1.10.6) (2026-02-14)
+
+### Reverts
+
+* Revert "fix: replace dual-store undo/redo with unified history store" ([0c67bad](https://github.com/stan-smith/FossFLOW/commit/0c67bad5c5e433821cd9f5cd40ef9d0d0cd1f6ee))
+
+## [1.10.5](https://github.com/stan-smith/FossFLOW/compare/v1.10.4...v1.10.5) (2026-02-13)
+
+### Bug Fixes
+
+* replace dual-store undo/redo with unified history store ([c3f5df2](https://github.com/stan-smith/FossFLOW/commit/c3f5df23ca451ce5d00759946eec7343d67a4332))
+
+## [1.10.4](https://github.com/stan-smith/FossFLOW/compare/v1.10.3...v1.10.4) (2026-02-06)
+
+### Performance
+
+* refactored useScene and store subscriptions for performance gains ([7f97e07](https://github.com/stan-smith/FossFLOW/commit/7f97e074bb436fe237195af136bac53791608baa))
+
+### Documentation
+
+* removed cruft from readmes ([daa0dd3](https://github.com/stan-smith/FossFLOW/commit/daa0dd3b76162278f79f1a2c1b063df1505c8ce1))
+* update contributing.md ([011f0af](https://github.com/stan-smith/FossFLOW/commit/011f0aff1d8cc38ac54eb4934a8ec775c1915b53))
+
+## [1.10.3](https://github.com/stan-smith/FossFLOW/compare/v1.10.2...v1.10.3) (2026-02-02)
+
+### Bug Fixes
+
+* lasso wasnt moving nodes if there was also a text item in the selection, now it works ([f5ce168](https://github.com/stan-smith/FossFLOW/commit/f5ce1689c9c3ceaa0b180d4c165914c64f3252ec))
+
 ## [1.10.2](https://github.com/stan-smith/FossFLOW/compare/v1.10.1...v1.10.2) (2026-01-31)
 
 ### Bug Fixes

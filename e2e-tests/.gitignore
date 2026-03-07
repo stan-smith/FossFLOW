@@ -6,3 +6,4 @@ htmlcov/
 *.log
 venv/
 env/
+screenshots/

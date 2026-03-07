@@ -22,7 +22,7 @@ export const useView = () => {
         ctx: { viewId, state: { model, scene: INITIAL_SCENE_STATE } }
       });
 
-      sceneActions.set(newState.scene);
+      sceneActions.set(newState.scene, true);
       uiStateActions.setView(viewId);
     },
     [uiStateActions, sceneActions]

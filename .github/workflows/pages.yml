@@ -2,9 +2,9 @@
 name: Deploy static content to Pages
 
 on:
-  # Runs after unit tests complete successfully (skipping E2E tests)
+  # Runs after E2E tests complete successfully
   workflow_run:
-    workflows: ["Run Tests"]
+    workflows: ["E2E Tests"]
     types:
       - completed
     branches: ["main", "master"]
@@ -30,9 +30,9 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
       - name: Build
         uses: docker://node:22-alpine
         with:
@@ -42,10 +42,10 @@ jobs:
           CI: false
           PUBLIC_URL: /FossFLOW/
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           # Upload from the app's build directory in monorepo
           path: './packages/fossflow-app/build/'
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@main
+        uses: actions/deploy-pages@v4

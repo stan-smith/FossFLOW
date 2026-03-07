@@ -1,0 +1,113 @@
+name: 🐛 Bug Report
+description: Something isn't working as expected. Please provide enough detail that I can actually reproduce it.
+title: "Bug: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report a bug. Please fill in **all** the required fields below.
+        Issues missing required information will be closed without comment.
+
+  - type: checkboxes
+    id: existing-issues
+    attributes:
+      label: Pre-flight checks
+      description: Please confirm the following before submitting.
+      options:
+        - label: I have searched existing issues and this hasn't been reported before
+          required: true
+        - label: I am running the latest version of FossFLOW
+          required: true
+        - label: I have read the README and checked if this is expected behaviour
+          required: true
+
+  - type: dropdown
+    id: deployment
+    attributes:
+      label: Deployment method
+      description: How are you running FossFLOW?
+      options:
+        - Docker (docker run)
+        - Docker Compose
+        - Built from source (npm run dev)
+        - Built from source (npm run build)
+        - Online demo
+      default: 0
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: FossFLOW version / Docker image tag
+      description: "e.g. latest, v1.2.0, commit hash"
+      placeholder: "latest"
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      description: "e.g. Chrome 131, Firefox 134, Safari 18.2"
+      placeholder: "Chrome 131"
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "e.g. macOS 15.2, Windows 11, Ubuntu 24.04"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug. What did you expect to happen vs what actually happened?
+      placeholder: |
+        Expected: ...
+        Actual: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Minimum steps to reproduce the issue. If I can't reproduce it, I can't fix it.
+      placeholder: |
+        1. Open FossFLOW
+        2. Click on '...'
+        3. Observe '...'
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots / screen recordings
+      description: If applicable, add screenshots or a screen recording. Drag and drop images here.
+    validations:
+      required: false
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Browser console output / Docker logs
+      description: Open browser DevTools (F12) → Console tab, or run `docker logs <container>`. Paste any errors here.
+      render: shell
+    validations:
+      required: false
+
+  - type: textarea
+    id: diagram-json
+    attributes:
+      label: Diagram JSON (if relevant)
+      description: Export your diagram and paste the JSON here if the bug is diagram-specific. Remove anything sensitive first.
+      render: json
+    validations:
+      required: false

@@ -29,25 +29,9 @@ FossFLOW adalah aplikasi web progresif (PWA) open-source yang powerful untuk mem
 
 ![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)
 
-- **📝 [FOSSFLOW_TODO.md](https://github.com/stan-smith/FossFLOW/blob/master/FOSSFLOW_TODO.md)** - Masalah saat ini dan roadmap dengan pemetaan codebase, sebagian besar keluhan adalah dengan library isoflow itu sendiri.
 - **🤝 [CONTRIBUTORS.md](https://github.com/stan-smith/FossFLOW/blob/master/CONTRIBUTORS.md)** - Cara berkontribusi pada proyek.
 
 ## Pembaruan Terbaru (Oktober 2025)
-
-### Pembaruan Performa
- - **Mengurangi delay refresh frame, seharusnya terlihat lebih halus sekarang**
-
-### Dukungan Multibahasa
-- **9 Bahasa Didukung** - Terjemahan antarmuka lengkap dalam Bahasa Inggris, Cina (Sederhana), Spanyol, Portugis (Brasil), Prancis, Hindi, Bengali, Rusia, dan Bahasa Indonesia
-- **Pemilih Bahasa** - Pengganti bahasa yang mudah digunakan di header aplikasi
-- **Terjemahan Lengkap** - Semua menu, dialog, pengaturan, tooltip, dan konten bantuan diterjemahkan
-- **Sadar Lokal** - Secara otomatis mendeteksi dan mengingat preferensi bahasa Anda
-
-### Alat Konektor yang Ditingkatkan
-- **Pembuatan Berbasis Klik** - Mode default baru: klik node pertama, lalu klik node kedua untuk terhubung
-- **Opsi Mode Seret** - Drag-and-drop asli masih tersedia melalui pengaturan
-- **Pemilihan Mode** - Beralih antara mode klik dan seret di Pengaturan → tab Konektor
-- **Keandalan Lebih Baik** - Mode klik memberikan pembuatan koneksi yang lebih dapat diprediksi
 
 ### Impor Ikon Kustom
 - **Impor Ikon Anda Sendiri** - Unggah ikon kustom (PNG, JPG, SVG) untuk digunakan dalam diagram Anda
@@ -200,7 +184,6 @@ Kami menyambut kontribusi! Silakan lihat [CONTRIBUTORS.md](../CONTRIBUTORS.md) u
 ## Dokumentasi
 
 - [FOSSFLOW_ENCYCLOPEDIA.md](../FOSSFLOW_ENCYCLOPEDIA.md) - Panduan lengkap untuk codebase
-- [FOSSFLOW_TODO.md](../FOSSFLOW_TODO.md) - Masalah saat ini dan roadmap
 - [CONTRIBUTORS.md](../CONTRIBUTORS.md) - Panduan kontribusi
 
 ## Lisensi

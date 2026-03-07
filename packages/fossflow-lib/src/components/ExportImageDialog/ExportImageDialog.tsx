@@ -37,6 +37,7 @@ import { Isoflow } from 'src/Isoflow';
 import { Loader } from 'src/components/Loader/Loader';
 import { customVars } from 'src/styles/theme';
 import { ColorPicker } from 'src/components/ColorSelector/ColorPicker';
+import { DOMErrorBoundary } from 'src/components/DOMErrorBoundary';
 
 interface Props {
   quality?: number;
@@ -89,12 +90,8 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
     return getUnprojectedBounds();
   }, [getUnprojectedBounds]);
 
-  useEffect(() => {
-    uiStateActions.setMode({
-      type: 'INTERACTIONS_DISABLED',
-      showCursor: false
-    });
-  }, [uiStateActions]);
+  // Note: No need to manually set mode here - the hidden Isoflow component
+  // with editorMode="NON_INTERACTIVE" will handle its own mode state
 
   const [transparentBackground, setTransparentBackground] = useState(false);
 
@@ -473,19 +470,22 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                     height: bounds.height
                   }}
                 >
-                  <Isoflow
-                    editorMode="NON_INTERACTIVE"
-                    initialData={{
-                      ...model,
-                      fitToView: true,
-                      view: currentView
-                    }}
-                    renderer={{
-                      showGrid,
-                      backgroundColor,
-                      expandLabels
-                    }}
-                  />
+                  <DOMErrorBoundary>
+                    <Isoflow
+                      key="export-dialog-isoflow"
+                      editorMode="NON_INTERACTIVE"
+                      initialData={{
+                        ...model,
+                        fitToView: true,
+                        view: currentView
+                      }}
+                      renderer={{
+                        showGrid,
+                        backgroundColor,
+                        expandLabels
+                      }}
+                    />
+                  </DOMErrorBoundary>
                 </Box>
               </Box>
               <Box

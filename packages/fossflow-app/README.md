@@ -6,7 +6,6 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 
 
 
-- **📝 [FOSSFLOW_TODO.md](https://github.com/stan-smith/fossflow-lib/blob/main/ISOFLOW_TODO.md)** - Current issues and roadmap with codebase mappings, most gripes are with the isoflow library itself.
 - **🤝 [CONTRIBUTORS.md](https://github.com/stan-smith/fossflow-lib/blob/main/CONTRIBUTORS.md)** - How to contribute to the project.
 
 

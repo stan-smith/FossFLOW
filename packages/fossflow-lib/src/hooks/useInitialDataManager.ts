@@ -105,7 +105,7 @@ export const useInitialDataManager = () => {
       }
 
       prevInitialData.current = initialData;
-      model.actions.set(initialData);
+      model.actions.set(initialData, true);
 
       const view = getItemByIdOrThrow(
         initialData.views,

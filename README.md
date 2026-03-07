@@ -39,24 +39,7 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 
 ![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)
 
-- **📝 [FOSSFLOW_TODO.md](https://github.com/stan-smith/FossFLOW/blob/master/FOSSFLOW_TODO.md)** - Current issues and roadmap with codebase mappings, most gripes are with the isoflow library itself.
 - **🤝 [CONTRIBUTING.md](https://github.com/stan-smith/FossFLOW/blob/master/CONTRIBUTING.md)** - How to contribute to the project.
-
-### Performance updates
- - **Reduced frame refresh delay, should look much smoother now**
-
-### Multilingual Support
-- **9 Languages Supported** - Full interface translation in English, Chinese (Simplified), Spanish, Portuguese (Brazilian), French, Hindi, Bengali, Russian, and Indonesian
-- **Language Selector** - Easy-to-use language switcher in the app header
-- **Complete Translation** - All menus, dialogs, settings, tooltips, and help content translated
-- **Locale-Aware** - Automatically detects and remembers your language preference
-
-### Improved Connector Tool
-- **Click-based Creation** - New default mode: click first node, then second node to connect
-- **Drag Mode Option** - Original drag-and-drop still available via settings
-- **Mode Selection** - Switch between click and drag modes in Settings → Connectors tab
-- **Better Reliability** - Click mode provides more predictable connection creation
-
 
 ## 🐳 Quick Deploy with Docker
 
@@ -158,7 +141,6 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 ## Documentation
 
 - [FOSSFLOW_ENCYCLOPEDIA.md](FOSSFLOW_ENCYCLOPEDIA.md) - Comprehensive guide to the codebase
-- [FOSSFLOW_TODO.md](FOSSFLOW_TODO.md) - Current issues and roadmap
 - [CONTRIBUTING.md](CONTRIBUTING.md) - Contributing guidelines
 
 ## License
