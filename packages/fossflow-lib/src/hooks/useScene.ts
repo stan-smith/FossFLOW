@@ -464,41 +464,48 @@ export const useScene = () => {
     const pastedArray = await getPastedObject();
     if (!isPastedValid(pastedArray)) return;
 
-    const mouseTile = uiState.mouse.position.tile;
-    const getTargetTile = getTargetTileFunction(pastedArray[0], mouseTile, activeScene);
-    let state: State | undefined;
+    saveToHistoryBeforeChange();
+    transactionInProgress.current = true;
 
-    pastedArray.forEach(pastedObject => {
-      const newId = generateId();
-
-      if (pastedObject.type === 'ITEM') {
-        const { viewItem, modelItem } = pastedObject.item;
-        const stateWithNewModel = createModelItem({
-          ...modelItem,
-          id: newId
-        }, state)
-        
-        // Chain updated state from each iteration
-        state = createViewItem({
-          ...viewItem,
-          id: newId,
-          tile: getTargetTile(viewItem.tile)
-        }, stateWithNewModel)
-      } else if (pastedObject.type === 'RECTANGLE') {
-        state = createRectangle({
-          ...pastedObject.item, 
-          id: newId,
-          from: getTargetTile(pastedObject.item.from),
-          to: getTargetTile(pastedObject.item.to)
-        }, state)
-      } else if (pastedObject.type === "TEXTBOX") {
-        state = createTextBox({
-          ...pastedObject.item, 
-          id: newId,
-          tile: getTargetTile(pastedObject.item.tile)
-        }, state);
-      }
-    })
+    try {
+      const mouseTile = uiState.mouse.position.tile;
+      const getTargetTile = getTargetTileFunction(pastedArray[0], mouseTile, activeScene);
+      let state: State | undefined;
+  
+      pastedArray.forEach(pastedObject => {
+        const newId = generateId();
+  
+        if (pastedObject.type === 'ITEM') {
+          const { viewItem, modelItem } = pastedObject.item;
+          const stateWithNewModel = createModelItem({
+            ...modelItem,
+            id: newId
+          }, state)
+          
+          // Chain updated state from each iteration
+          state = createViewItem({
+            ...viewItem,
+            id: newId,
+            tile: getTargetTile(viewItem.tile)
+          }, stateWithNewModel)
+        } else if (pastedObject.type === 'RECTANGLE') {
+          state = createRectangle({
+            ...pastedObject.item, 
+            id: newId,
+            from: getTargetTile(pastedObject.item.from),
+            to: getTargetTile(pastedObject.item.to)
+          }, state)
+        } else if (pastedObject.type === "TEXTBOX") {
+          state = createTextBox({
+            ...pastedObject.item, 
+            id: newId,
+            tile: getTargetTile(pastedObject.item.tile)
+          }, state);
+        }
+      })
+    } finally {
+      transactionInProgress.current = false;
+    }
   }
 
   return {
