@@ -58,6 +58,23 @@ To disable server storage, set `ENABLE_SERVER_STORAGE=false`:
 docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false stnsmith/fossflow:latest
 ```
 
+### HTTP Basic Authentication (Optional)
+
+Protect your FossFLOW instance with HTTP Basic Auth:
+
+```bash
+# With Docker Compose
+HTTP_AUTH_USER=admin HTTP_AUTH_PASSWORD=secret docker compose up
+
+# Or with docker run
+docker run -p 80:80 \
+  -e HTTP_AUTH_USER=admin \
+  -e HTTP_AUTH_PASSWORD=secret \
+  stnsmith/fossflow:latest
+```
+
+> **Note**: Both variables must be set to enable authentication. If either is empty, the app is accessible without login.
+
 ## Quick Start (Local Development)
 
 ```bash
