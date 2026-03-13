@@ -187,6 +187,26 @@ const locale: LocaleProps = {
     configPath2: "以访问配置。",
     canDisable: "如果您愿意，可以禁用此行为。",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "设置",
+    close: "关闭",
+    tabZoom: "缩放",
+    tabLabels: "标签"
+  },
+  labelSettings: {
+    description: "配置标签显示设置",
+    expandButtonPadding: "展开按钮内边距",
+    expandButtonPaddingDesc: "展开按钮可见时的底部内边距（防止文字重叠）",
+    current: "当前：{{value}} 主题单位"
+  },
+  diagramViewStatus: {
+    untitledDiagram: "未命名图表",
+    untitledView: "未命名视图"
+  },
+  addMenu: {
+    addNode: "添加节点",
+    addRectangle: "添加矩形"
   }
 };
 

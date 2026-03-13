@@ -187,6 +187,26 @@ const locale: LocaleProps = {
     configPath2: "w lewym górnym rogu, aby uzyskać dostęp do ustawień.",
     canDisable: "Jeśli chcesz, możesz wyłączyć tę funkcję..",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "Ustawienia",
+    close: "Zamknij",
+    tabZoom: "Zoom",
+    tabLabels: "Etykiety"
+  },
+  labelSettings: {
+    description: "Konfiguruj ustawienia wyświetlania etykiet",
+    expandButtonPadding: "Wypełnienie przycisku rozwijania",
+    expandButtonPaddingDesc: "Dolne wypełnienie gdy przycisk rozwijania jest widoczny (zapobiega nakładaniu tekstu)",
+    current: "Obecny: {{value}} jednostek motywu"
+  },
+  diagramViewStatus: {
+    untitledDiagram: "Diagram bez tytułu",
+    untitledView: "Widok bez tytułu"
+  },
+  addMenu: {
+    addNode: "Dodaj węzeł",
+    addRectangle: "Dodaj prostokąt"
   }
 };
 

@@ -187,6 +187,26 @@ const locale: LocaleProps = {
     configPath2: "কনফিগারেশন অ্যাক্সেস করতে উপরের বাম দিকে।",
     canDisable: "আপনি চাইলে এই আচরণ নিষ্ক্রিয় করতে পারেন।",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "সেটিংস",
+    close: "বন্ধ করুন",
+    tabZoom: "জুম",
+    tabLabels: "লেবেল"
+  },
+  labelSettings: {
+    description: "লেবেল প্রদর্শন সেটিংস কনফিগার করুন",
+    expandButtonPadding: "প্রসারিত বোতামের প্যাডিং",
+    expandButtonPaddingDesc: "প্রসারিত বোতাম দৃশ্যমান হলে নিচের প্যাডিং (টেক্সট ওভারল্যাপ রোধ করে)",
+    current: "বর্তমান: {{value}} থিম ইউনিট"
+  },
+  diagramViewStatus: {
+    untitledDiagram: "শিরোনামহীন ডায়াগ্রাম",
+    untitledView: "শিরোনামহীন দৃশ্য"
+  },
+  addMenu: {
+    addNode: "নোড যোগ করুন",
+    addRectangle: "আয়তক্ষেত্র যোগ করুন"
   }
 };
 

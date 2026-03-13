@@ -195,6 +195,26 @@ export interface LocaleProps {
     canDisable: string;
     signature: string;
   };
+  settingsDialog: {
+    title: string;
+    close: string;
+    tabZoom: string;
+    tabLabels: string;
+  };
+  labelSettings: {
+    description: string;
+    expandButtonPadding: string;
+    expandButtonPaddingDesc: string;
+    current: string;
+  };
+  diagramViewStatus: {
+    untitledDiagram: string;
+    untitledView: string;
+  };
+  addMenu: {
+    addNode: string;
+    addRectangle: string;
+  };
   // other namespaces can be added here
 }
 

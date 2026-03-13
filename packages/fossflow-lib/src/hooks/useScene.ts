@@ -16,8 +16,11 @@ import { getItemByIdOrThrow } from 'src/utils';
 import {
   CONNECTOR_DEFAULTS,
   RECTANGLE_DEFAULTS,
-  TEXTBOX_DEFAULTS
+  TEXTBOX_DEFAULTS,
+  VIEW_DEFAULTS,
+  INITIAL_DATA
 } from 'src/config';
+import { useTranslation } from 'src/stores/localeStore';
 
 export const useScene = () => {
   const { views, colors, icons, items, version, title, description } =
@@ -32,7 +35,7 @@ export const useScene = () => {
         description: state.description
       }),
       shallow
-    );
+    ); 
   const { connectors: sceneConnectors, textBoxes: sceneTextBoxes } =
     useSceneStore(
       (state) => ({
@@ -42,6 +45,7 @@ export const useScene = () => {
       shallow
     );
   const currentViewId = useUiStateStore((state) => state.view);
+  const { t } = useTranslation('diagramViewStatus');
   const transactionInProgress = useRef(false);
 
   const modelStoreApi = useModelStoreApi();
@@ -422,13 +426,26 @@ export const useScene = () => {
     [createModelItem, createViewItem, saveToHistoryBeforeChange]
   );
 
+  const translatedTitle = useMemo(() => {
+    if (!title || title === INITIAL_DATA.title) return t('untitledDiagram');
+    return title;
+  }, [title, t]);
+
+  const translatedCurrentView = useMemo(() => {
+    return {
+      ...currentView,
+      name: currentView.name === VIEW_DEFAULTS.name ? t('untitledView') : currentView.name
+    };
+  }, [currentView, t]);
+
   return {
+    title: translatedTitle,
     items: itemsList,
     connectors: connectorsList,
     colors: colorsList,
     rectangles: rectanglesList,
     textBoxes: textBoxesList,
-    currentView,
+    currentView: translatedCurrentView,
     createModelItem,
     updateModelItem,
     deleteModelItem,
