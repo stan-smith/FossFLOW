@@ -11,7 +11,7 @@ interface Props {
 
 export const IsometricIcon = ({ url, scale = 1, onImageLoaded }: Props) => {
   const ref = useRef<HTMLImageElement>(null);
-  const { size, observe, disconnect } = useResizeObserver();
+  const { observe, disconnect } = useResizeObserver();
 
   useEffect(() => {
     if (!ref.current) return;
@@ -30,8 +30,6 @@ export const IsometricIcon = ({ url, scale = 1, onImageLoaded }: Props) => {
       sx={{
         position: 'absolute',
         width: PROJECTED_TILE_SIZE.width * 0.8 * scale,
-        top: -size.height,
-        left: -size.width / 2,
         pointerEvents: 'none'
       }}
     />
