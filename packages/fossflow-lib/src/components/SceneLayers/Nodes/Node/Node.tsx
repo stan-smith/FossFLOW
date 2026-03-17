@@ -52,17 +52,17 @@ export const Node = memo(({ node, order }: Props) => {
       }}
     >
       <Box
-        sx={{ position: 'absolute' }}
-        style={{
+        sx={{ 
+          position: 'absolute',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
           left: position.x,
-          top: position.y
+          top: position.y - (PROJECTED_TILE_SIZE.height / 2),
         }}
       >
         {(modelItem?.name || description) && (
-          <Box
-            sx={{ position: 'absolute' }}
-            style={{ bottom: PROJECTED_TILE_SIZE.height / 2 }}
-          >
+          <Box>
             <ExpandableLabel
               maxWidth={250}
               expandDirection="BOTTOM"
@@ -83,8 +83,10 @@ export const Node = memo(({ node, order }: Props) => {
         {iconComponent && (
           <Box
             sx={{
-              position: 'absolute',
-              pointerEvents: 'none'
+              pointerEvents: 'none',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
           >
             {iconComponent}
