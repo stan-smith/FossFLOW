@@ -14,7 +14,6 @@ import { DebugUtils } from 'src/components/DebugUtils/DebugUtils';
 import { useResizeObserver } from 'src/hooks/useResizeObserver';
 import { ContextMenuManager } from 'src/components/ContextMenu/ContextMenuManager';
 import { useScene } from 'src/hooks/useScene';
-import { useModelStore } from 'src/stores/modelStore';
 import { ExportImageDialog } from '../ExportImageDialog/ExportImageDialog';
 import { HelpDialog } from '../HelpDialog/HelpDialog';
 import { SettingsDialog } from '../SettingsDialog/SettingsDialog';
@@ -85,7 +84,7 @@ export const UiOverlay = () => {
   const itemControls = useUiStateStore((state) => {
     return state.itemControls;
   });
-  const { currentView } = useScene();
+  const { currentView, title } = useScene();
   const editorMode = useUiStateStore((state) => {
     return state.editorMode;
   });
@@ -94,9 +93,6 @@ export const UiOverlay = () => {
   }, [editorMode]);
   const rendererEl = useUiStateStore((state) => {
     return state.rendererEl;
-  });
-  const title = useModelStore((state) => {
-    return state.title;
   });
   const iconPackManager = useUiStateStore((state) => {
     return state.iconPackManager;
