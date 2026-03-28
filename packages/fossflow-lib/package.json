@@ -39,7 +39,7 @@
     "pathfinding": "^0.4.18",
     "react-hook-form": "^7.72.0",
     "react-quill-new": "^3.8.3",
-    "react-router-dom": "^6.30.2",
+    "react-router-dom": "^7.13.2",
     "uuid": "^9.0.1",
     "zod": "^3.25.76",
     "zustand": "^4.5.7"
