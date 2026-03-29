@@ -79,10 +79,10 @@ class RichTextEditorErrorBoundary extends Component<ErrorBoundaryProps, ErrorBou
       return this.props.fallback || (
         <div style={{
           padding: '10px',
-          border: '1px solid #ccc',
-          borderRadius: '4px',
-          backgroundColor: '#f9f9f9',
-          color: '#666'
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: '8px',
+          backgroundColor: 'rgba(255,255,255,0.04)',
+          color: 'rgba(255,255,255,0.5)'
         }}>
           Rich text editor temporarily unavailable
         </div>

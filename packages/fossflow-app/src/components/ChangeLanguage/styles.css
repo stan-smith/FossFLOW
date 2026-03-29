@@ -1,46 +1,62 @@
 .language-selector {
   position: relative;
   display: inline-block;
-  font-size: 14px;
+  font-size: 13px;
   cursor: pointer;
 }
 
 .language-display {
-  padding: 8px 12px;
-  border-radius: 4px;
-  background-color: #f5f5f5;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 60px;
+  min-width: 56px;
   text-align: center;
+  transition: all 0.15s ease;
+  font-weight: 500;
+}
+
+.language-display:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 .language-dropdown {
   position: absolute;
   top: 100%;
   left: 0;
-  background-color: white;
-  border-radius: 4px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: rgba(26, 27, 35, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
   min-width: 120px;
   z-index: 1000;
-  margin-top: 4px;
+  margin-top: 6px;
   overflow: hidden;
   white-space: nowrap;
 }
 
 .language-option {
-  padding: 8px 12px;
-  transition: background-color 0.2s;
+  padding: 8px 14px;
+  transition: all 0.12s ease;
   text-align: center;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
 }
 
 .language-option:hover {
-  background-color: #f0f0f0;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .language-option.active {
-  background-color: #e6f7ff;
-  color: #1890ff;
+  background-color: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
 }

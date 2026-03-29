@@ -702,7 +702,7 @@ function EditorPage() {
                 onClick={() => {
                   return setShowDiagramManager(true);
                 }}
-                style={{ backgroundColor: '#2196F3', color: 'white' }}
+                style={{ backgroundColor: 'rgba(59,130,246,0.2)', color: '#60a5fa', borderColor: 'rgba(59,130,246,0.3)' }}
               >
                 🌐 {t('nav.serverStorage')}
               </button>
@@ -725,7 +725,7 @@ function EditorPage() {
               onClick={() => {
                 return setShowExportDialog(true);
               }}
-              style={{ backgroundColor: '#007bff' }}
+              style={{ backgroundColor: 'rgba(59,130,246,0.2)', color: '#60a5fa', borderColor: 'rgba(59,130,246,0.3)' }}
             >
               💾 {t('nav.exportFile')}
             </button>
@@ -738,8 +738,10 @@ function EditorPage() {
               disabled={!currentDiagram || !hasUnsavedChanges}
               style={{
                 backgroundColor:
-                  currentDiagram && hasUnsavedChanges ? '#ffc107' : '#6c757d',
-                opacity: currentDiagram && hasUnsavedChanges ? 1 : 0.5,
+                  currentDiagram && hasUnsavedChanges ? 'rgba(250,204,21,0.15)' : 'rgba(255,255,255,0.03)',
+                color: currentDiagram && hasUnsavedChanges ? '#fbbf24' : 'rgba(255,255,255,0.3)',
+                borderColor: currentDiagram && hasUnsavedChanges ? 'rgba(250,204,21,0.25)' : 'rgba(255,255,255,0.05)',
+                opacity: 1,
                 cursor:
                   currentDiagram && hasUnsavedChanges
                     ? 'pointer'
@@ -754,11 +756,13 @@ function EditorPage() {
         {isReadonlyUrl && (
           <div
             style={{
-              color: 'black',
-              padding: '8px 16px',
-              borderRadius: '4px',
-              fontWeight: 'bold',
-              border: '2px solid #000000'
+              color: '#f87171',
+              padding: '6px 14px',
+              borderRadius: '8px',
+              fontWeight: 600,
+              fontSize: '13px',
+              border: '1px solid rgba(239,68,68,0.3)',
+              backgroundColor: 'rgba(239,68,68,0.1)'
             }}
           >
             {t('dialog.readOnly.mode')}
@@ -776,12 +780,12 @@ function EditorPage() {
                 ? `${t('status.current')}: ${currentDiagram.name}`
                 : diagramName || t('status.untitled')}
               {hasUnsavedChanges && (
-                <span style={{ color: '#ff9800', marginLeft: '10px' }}>
+                <span style={{ color: '#fbbf24', marginLeft: '8px' }}>
                   • {t('status.modified')}
                 </span>
               )}
               <span
-                style={{ fontSize: '12px', color: '#666', marginLeft: '10px' }}
+                style={{ fontSize: '11px', color: 'rgba(255,255,255,0.25)', marginLeft: '8px' }}
               >
                 ({t('status.sessionStorageNote')})
               </span>
@@ -816,14 +820,17 @@ function EditorPage() {
             <h2>{t('dialog.save.title')}</h2>
             <div
               style={{
-                backgroundColor: '#fff3cd',
-                border: '1px solid #ffeeba',
-                padding: '15px',
-                borderRadius: '4px',
-                marginBottom: '20px'
+                backgroundColor: 'rgba(250,204,21,0.08)',
+                border: '1px solid rgba(250,204,21,0.2)',
+                padding: '14px',
+                borderRadius: '10px',
+                marginBottom: '20px',
+                color: 'rgba(255,255,255,0.75)',
+                fontSize: '13px',
+                lineHeight: 1.5
               }}
             >
-              <strong>⚠️ {t('dialog.save.warningTitle')}:</strong>{' '}
+              <strong style={{ color: '#fbbf24' }}>⚠️ {t('dialog.save.warningTitle')}:</strong>{' '}
               {t('dialog.save.warningMessage')}
               <br />
               <span
@@ -865,14 +872,17 @@ function EditorPage() {
             <h2>{t('dialog.load.title')}</h2>
             <div
               style={{
-                backgroundColor: '#fff3cd',
-                border: '1px solid #ffeeba',
-                padding: '15px',
-                borderRadius: '4px',
-                marginBottom: '20px'
+                backgroundColor: 'rgba(250,204,21,0.08)',
+                border: '1px solid rgba(250,204,21,0.2)',
+                padding: '14px',
+                borderRadius: '10px',
+                marginBottom: '20px',
+                color: 'rgba(255,255,255,0.75)',
+                fontSize: '13px',
+                lineHeight: 1.5
               }}
             >
-              <strong>⚠️ {t('dialog.load.noteTitle')}:</strong>{' '}
+              <strong style={{ color: '#fbbf24' }}>⚠️ {t('dialog.load.noteTitle')}:</strong>{' '}
               {t('dialog.load.noteMessage')}
             </div>
             <div className="diagram-list">
@@ -931,18 +941,21 @@ function EditorPage() {
             <h2>{t('dialog.export.title')}</h2>
             <div
               style={{
-                backgroundColor: '#d4edda',
-                border: '1px solid #c3e6cb',
-                padding: '15px',
-                borderRadius: '8px',
-                marginBottom: '20px'
+                backgroundColor: 'rgba(34,197,94,0.08)',
+                border: '1px solid rgba(34,197,94,0.2)',
+                padding: '14px',
+                borderRadius: '10px',
+                marginBottom: '20px',
+                color: 'rgba(255,255,255,0.75)',
+                fontSize: '13px',
+                lineHeight: 1.5
               }}
             >
-              <p style={{ margin: '0 0 10px 0' }}>
-                <strong>✅ {t('dialog.export.recommendedTitle')}:</strong>{' '}
+              <p style={{ margin: '0 0 8px 0' }}>
+                <strong style={{ color: '#4ade80' }}>✅ {t('dialog.export.recommendedTitle')}:</strong>{' '}
                 {t('dialog.export.recommendedMessage')}
               </p>
-              <p style={{ margin: 0, fontSize: '14px', color: '#155724' }}>
+              <p style={{ margin: 0, fontSize: '13px', color: 'rgba(255,255,255,0.5)' }}>
                 {t('dialog.export.noteMessage')}
               </p>
             </div>

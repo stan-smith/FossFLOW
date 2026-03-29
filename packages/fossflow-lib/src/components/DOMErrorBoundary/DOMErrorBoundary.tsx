@@ -95,10 +95,10 @@ class DOMErrorBoundary extends Component<DOMErrorBoundaryProps, DOMErrorBoundary
           <div
             style={{
               padding: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '4px',
-              backgroundColor: '#f9f9f9',
-              color: '#666'
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '8px',
+              backgroundColor: 'rgba(255,255,255,0.04)',
+              color: 'rgba(255,255,255,0.5)'
             }}
           >
             Component temporarily unavailable due to rendering errors

@@ -21,38 +21,47 @@ export const IconButton = ({
 }: Props) => {
   const theme = useTheme();
   const iconColor = useMemo(() => {
-    if (isActive) {
-      return 'grey.200';
-    }
-
     if (disabled) {
-      return 'grey.800';
+      return 'rgba(255,255,255,0.2)';
     }
 
-    return 'grey.500';
-  }, [disabled, isActive]);
+    if (isActive) {
+      return theme.palette.primary.main;
+    }
+
+    return 'rgba(255,255,255,0.56)';
+  }, [disabled, isActive, theme]);
 
   return (
     <Tooltip
       title={name}
       placement={tooltipPosition}
-      enterDelay={1000}
-      enterNextDelay={1000}
+      enterDelay={600}
+      enterNextDelay={400}
       arrow
-      sx={{ bgcolor: 'primary.main' }}
     >
       <Button
         variant="text"
         onClick={onClick}
+        disabled={disabled}
         sx={{
-          borderRadius: 0,
+          borderRadius: 1.5,
           height: theme.customVars.toolMenu.height,
           width: theme.customVars.toolMenu.height,
           maxWidth: '100%',
           minWidth: 'auto',
-          bgcolor: isActive ? 'primary.light' : undefined,
+          bgcolor: isActive ? 'rgba(59,130,246,0.14)' : 'transparent',
           p: 0,
-          m: 0
+          m: 0,
+          transition: 'all 0.15s ease',
+          '&:hover': {
+            bgcolor: isActive
+              ? 'rgba(59,130,246,0.2)'
+              : 'rgba(255,255,255,0.06)'
+          },
+          '&.Mui-disabled': {
+            opacity: 0.4
+          }
         }}
       >
         <Box
@@ -61,7 +70,10 @@ export const IconButton = ({
             justifyContent: 'center',
             alignItems: 'center',
             svg: {
-              color: iconColor
+              color: iconColor,
+              transition: 'color 0.15s ease',
+              width: 18,
+              height: 18
             }
           }}
         >
