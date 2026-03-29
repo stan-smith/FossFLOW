@@ -297,14 +297,14 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
               <Circle
                 tile={anchor}
                 radius={18}
-                fill={theme.palette.common.white}
+                fill={theme.palette.background.paper}
                 fillOpacity={0.7}
               />
               <Circle
                 tile={anchor}
                 radius={12}
-                stroke={theme.palette.common.black}
-                fill={theme.palette.common.white}
+                stroke={theme.palette.text.primary}
+                fill={theme.palette.background.paper}
                 strokeWidth={6}
               />
             </g>
@@ -315,8 +315,8 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
           <g transform={`translate(${directionIcon.x}, ${directionIcon.y})`}>
             <g transform={`rotate(${directionIcon.rotation})`}>
               <polygon
-                fill="black"
-                stroke={theme.palette.common.white}
+                fill={theme.palette.text.primary}
+                stroke={theme.palette.background.paper}
                 strokeWidth={4}
                 points="17.58,17.01 0,-17.01 -17.58,17.01"
               />

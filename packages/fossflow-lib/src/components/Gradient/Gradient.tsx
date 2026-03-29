@@ -10,7 +10,7 @@ export const Gradient = ({ sx }: Props) => {
     <Box
       sx={{
         background:
-          'linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 5%, rgba(255,255,255,0) 100%)',
+          'linear-gradient(0deg, rgba(26,27,35,1) 0%, rgba(26,27,35,1) 5%, rgba(26,27,35,0) 100%)',
         ...sx
       }}
     />
