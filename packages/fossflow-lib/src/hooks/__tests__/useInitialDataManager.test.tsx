@@ -107,22 +107,22 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'item1' }, face: 'right' },
-                { id: 'anchor2', ref: { item: 'item2' }, face: 'left' }
+                { id: 'anchor1', ref: { item: 'item1' } },
+                { id: 'anchor2', ref: { item: 'item2' } }
               ]
             },
             {
               id: 'connector2',
               anchors: [
-                { id: 'anchor3', ref: { item: 'item1' }, face: 'top' },
-                { id: 'anchor4', ref: { item: 'nonexistent' }, face: 'bottom' } // Invalid reference
+                { id: 'anchor3', ref: { item: 'item1' } },
+                { id: 'anchor4', ref: { item: 'nonexistent' } } // Invalid reference
               ]
             },
             {
               id: 'connector3',
               anchors: [
-                { id: 'anchor5', ref: { item: 'nonexistent1' }, face: 'right' }, // Invalid reference
-                { id: 'anchor6', ref: { item: 'nonexistent2' }, face: 'left' } // Invalid reference
+                { id: 'anchor5', ref: { item: 'nonexistent1' } }, // Invalid reference
+                { id: 'anchor6', ref: { item: 'nonexistent2' } } // Invalid reference
               ]
             }
           ],
@@ -167,8 +167,8 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'item1' }, face: 'right' },
-                { id: 'anchor2', ref: { anchor: 'anchor3' }, face: 'left' } // References another anchor
+                { id: 'anchor1', ref: { item: 'item1' } },
+                { id: 'anchor2', ref: { anchor: 'anchor3' } } // References another anchor
               ]
             }
           ],
@@ -237,15 +237,15 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'nonexistent1' }, face: 'right' },
-                { id: 'anchor2', ref: { item: 'nonexistent2' }, face: 'left' }
+                { id: 'anchor1', ref: { item: 'nonexistent1' } },
+                { id: 'anchor2', ref: { item: 'nonexistent2' } }
               ]
             },
             {
               id: 'connector2',
               anchors: [
-                { id: 'anchor3', ref: { item: 'deleted1' }, face: 'top' },
-                { id: 'anchor4', ref: { item: 'deleted2' }, face: 'bottom' }
+                { id: 'anchor3', ref: { item: 'deleted1' } },
+                { id: 'anchor4', ref: { item: 'deleted2' } }
               ]
             }
           ],
@@ -287,9 +287,9 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'item1' }, face: 'right' }, // Valid
-                { id: 'anchor2', ref: { item: 'item2' }, face: 'left' }, // Valid
-                { id: 'anchor3', ref: { item: 'nonexistent' }, face: 'top' } // Invalid
+                { id: 'anchor1', ref: { item: 'item1' } }, // Valid
+                { id: 'anchor2', ref: { item: 'item2' } }, // Valid
+                { id: 'anchor3', ref: { item: 'nonexistent' } } // Invalid
               ]
             }
           ],
@@ -328,8 +328,8 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'nonexistent' }, face: 'right' },
-                { id: 'anchor2', ref: { item: 'item1' }, face: 'left' }
+                { id: 'anchor1', ref: { item: 'nonexistent' } },
+                { id: 'anchor2', ref: { item: 'item1' } }
               ]
             }
           ],
@@ -401,15 +401,15 @@ describe('useInitialDataManager - Orphaned Connector Handling', () => {
             {
               id: 'connector1',
               anchors: [
-                { id: 'anchor1', ref: { item: 'item1' }, face: 'right' },
-                { id: 'anchor2', ref: { item: 'item2' }, face: 'left' }
+                { id: 'anchor1', ref: { item: 'item1' } },
+                { id: 'anchor2', ref: { item: 'item2' } }
               ]
             },
             {
               id: 'connector2',
               anchors: [
-                { id: 'anchor3', ref: { item: 'item2' }, face: 'right' },
-                { id: 'anchor4', ref: { item: 'item3' }, face: 'left' }
+                { id: 'anchor3', ref: { item: 'item2' } },
+                { id: 'anchor4', ref: { item: 'item3' } }
               ]
             }
           ],
