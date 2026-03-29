@@ -49,7 +49,7 @@ export const Label = ({
             x2={CONNECTOR_DOT_SIZE / 2}
             y2={labelHeight}
             strokeDasharray={`0, ${CONNECTOR_DOT_SIZE * 2}`}
-            stroke="black"
+            stroke="rgba(255,255,255,0.4)"
             strokeWidth={CONNECTOR_DOT_SIZE}
             strokeLinecap="round"
           />
@@ -61,9 +61,9 @@ export const Label = ({
         sx={{
           position: 'absolute',
           display: 'inline-block',
-          bgcolor: 'common.white',
+          bgcolor: 'background.paper',
           border: '1px solid',
-          borderColor: 'grey.400',
+          borderColor: 'divider',
           borderRadius: 2,
           py: 1,
           px: 1.5,
