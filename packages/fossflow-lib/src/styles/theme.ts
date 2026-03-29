@@ -23,13 +23,16 @@ declare module '@mui/material/styles' {
   }
 }
 
+// Check if mobile at theme creation time (used for initial values)
+const isMobileViewport = typeof window !== 'undefined' && window.innerWidth <= 768;
+
 export const customVars: CustomThemeVars = {
   appPadding: {
-    x: 24,
-    y: 24
+    x: isMobileViewport ? 8 : 24,
+    y: isMobileViewport ? 8 : 24
   },
   toolMenu: {
-    height: 38
+    height: isMobileViewport ? 44 : 38
   },
   customPalette: {
     diagramBg: '#0f1117',

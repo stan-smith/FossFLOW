@@ -83,3 +83,22 @@
 .error-button.refresh-button:hover {
   background-color: rgba(34, 197, 94, 0.25);
 }
+
+@media (max-width: 768px) {
+  .error-container {
+    width: calc(100% - 32px);
+    min-height: auto;
+    padding: 24px 16px;
+  }
+
+  .error-footer {
+    flex-direction: column;
+  }
+
+  .error-button {
+    width: 100%;
+    text-align: center;
+    padding: 14px;
+    min-height: 48px;
+  }
+}

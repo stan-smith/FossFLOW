@@ -60,3 +60,39 @@
   background-color: rgba(59, 130, 246, 0.12);
   color: #60a5fa;
 }
+
+/* ── Language Selector Mobile ──────────────────────────── */
+@media (max-width: 768px) {
+  .language-selector {
+    width: 100%;
+  }
+
+  .language-display {
+    width: 100%;
+    padding: 14px 16px;
+    min-height: 48px;
+    border-radius: 12px;
+    font-size: 15px;
+    justify-content: flex-start;
+  }
+
+  .language-dropdown {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin-top: 8px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    border-radius: 12px;
+  }
+
+  .language-option {
+    padding: 12px 16px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    font-size: 15px;
+    text-align: left;
+  }
+}

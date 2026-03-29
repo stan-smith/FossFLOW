@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Button, Box, useTheme } from '@mui/material';
+import { Button, Box, useTheme, useMediaQuery } from '@mui/material';
 import Tooltip, { TooltipProps } from '@mui/material/Tooltip';
 
 interface Props {
@@ -20,6 +20,12 @@ export const IconButton = ({
   tooltipPosition = 'bottom'
 }: Props) => {
   const theme = useTheme();
+  const isMobile = useMediaQuery('(max-width:768px)');
+
+  // Mobile: 44px minimum touch target (WCAG), Desktop: theme default (38px)
+  const buttonSize = isMobile ? 44 : theme.customVars.toolMenu.height;
+  const iconSize = isMobile ? 22 : 18;
+
   const iconColor = useMemo(() => {
     if (disabled) {
       return 'rgba(255,255,255,0.2)';
@@ -34,7 +40,7 @@ export const IconButton = ({
 
   return (
     <Tooltip
-      title={name}
+      title={isMobile ? '' : name}
       placement={tooltipPosition}
       enterDelay={600}
       enterNextDelay={400}
@@ -45,19 +51,27 @@ export const IconButton = ({
         onClick={onClick}
         disabled={disabled}
         sx={{
-          borderRadius: 1.5,
-          height: theme.customVars.toolMenu.height,
-          width: theme.customVars.toolMenu.height,
+          borderRadius: isMobile ? 2 : 1.5,
+          height: buttonSize,
+          width: buttonSize,
           maxWidth: '100%',
           minWidth: 'auto',
           bgcolor: isActive ? 'rgba(59,130,246,0.14)' : 'transparent',
           p: 0,
           m: 0,
           transition: 'all 0.15s ease',
+          // Larger active indicator on mobile
+          ...(isMobile && isActive && {
+            bgcolor: 'rgba(59,130,246,0.2)',
+            boxShadow: 'inset 0 -2px 0 0 #3b82f6'
+          }),
           '&:hover': {
             bgcolor: isActive
               ? 'rgba(59,130,246,0.2)'
               : 'rgba(255,255,255,0.06)'
+          },
+          '&:active': {
+            bgcolor: 'rgba(255,255,255,0.1)'
           },
           '&.Mui-disabled': {
             opacity: 0.4
@@ -72,8 +86,8 @@ export const IconButton = ({
             svg: {
               color: iconColor,
               transition: 'color 0.15s ease',
-              width: 18,
-              height: 18
+              width: iconSize,
+              height: iconSize
             }
           }}
         >

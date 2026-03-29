@@ -264,3 +264,192 @@
 .diagram-actions button:last-child:hover {
   background-color: rgba(239, 68, 68, 0.22);
 }
+
+/* ── Mobile Bottom Sheet Buttons ───────────────────────── */
+
+.mobile-sheet-btn {
+  width: 100%;
+  padding: 14px 16px;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  min-height: 48px;
+  text-align: left;
+  transition: background-color 0.15s ease;
+}
+
+.mobile-sheet-btn:active {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ══════════════════════════════════════════════════════════
+   MOBILE RESPONSIVE — max-width: 768px
+   ══════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+  /* ── App Layout: canvas fills screen, toolbar at bottom ── */
+  .App {
+    height: 100vh;
+    height: 100dvh; /* dynamic viewport height for mobile browsers */
+    flex-direction: column;
+  }
+
+  /* ── Top Toolbar → Bottom Navigation ─────────────────── */
+  .toolbar {
+    order: 2; /* push below canvas */
+    border-bottom: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding: 6px 8px;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+    gap: 4px;
+    min-height: 56px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative;
+    z-index: 200;
+  }
+
+  .toolbar button {
+    padding: 10px 12px;
+    font-size: 11px;
+    min-height: 44px;
+    min-width: 44px;
+    border-radius: 10px;
+    flex: 1 1 auto;
+    max-width: 120px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .current-diagram {
+    display: none; /* hide diagram name on mobile to save space */
+  }
+
+  /* ── Canvas fills remaining space ────────────────────── */
+  .fossflow-container {
+    order: 1;
+    flex: 1;
+    min-height: 0;
+  }
+
+  /* ── Dialogs: full-width bottom sheet style ──────────── */
+  .dialog-overlay {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  @keyframes mobileSlideUp {
+    from { opacity: 0; transform: translateY(100%); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .dialog {
+    min-width: unset;
+    max-width: unset;
+    width: 100%;
+    max-height: 85vh;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 16px;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    animation: mobileSlideUp 0.25s ease;
+    margin: 0;
+  }
+
+  .dialog h2 {
+    font-size: 1.1em;
+    margin-bottom: 16px;
+  }
+
+  .dialog input[type="text"] {
+    padding: 12px 14px;
+    font-size: 16px; /* prevents iOS auto-zoom on focus */
+    border-radius: 12px;
+  }
+
+  /* ── Dialog Buttons: full-width stacked ──────────────── */
+  .dialog-buttons {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .dialog-buttons button {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 15px;
+    min-height: 48px;
+    border-radius: 12px;
+  }
+
+  /* ── Diagram List: touch-friendly items ──────────────── */
+  .diagram-list {
+    max-height: 50vh;
+  }
+
+  .diagram-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .diagram-actions {
+    gap: 8px;
+  }
+
+  .diagram-actions button {
+    padding: 10px 16px;
+    font-size: 13px;
+    min-height: 44px;
+    flex: 1;
+    border-radius: 8px;
+  }
+}
+
+/* ── Extra small screens (< 400px) ─────────────────────── */
+@media (max-width: 400px) {
+  .toolbar {
+    padding: 4px 4px;
+    padding-bottom: calc(4px + env(safe-area-inset-bottom, 0px));
+    gap: 3px;
+  }
+
+  .toolbar button {
+    padding: 8px 6px;
+    font-size: 10px;
+    min-height: 44px;
+  }
+
+  .dialog {
+    padding: 16px 12px;
+    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+/* ── Touch device hover fix ────────────────────────────── */
+@media (hover: none) and (pointer: coarse) {
+  .toolbar button:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .diagram-item:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .diagram-actions button:first-child:hover {
+    background-color: rgba(34, 197, 94, 0.15);
+  }
+
+  .diagram-actions button:last-child:hover {
+    background-color: rgba(239, 68, 68, 0.12);
+  }
+}

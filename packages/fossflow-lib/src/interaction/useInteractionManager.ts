@@ -375,12 +375,67 @@ export const useInteractionManager = () => {
     [uiStateApi, scene]
   );
 
+  // ── Touch gesture state for pinch-to-zoom & two-finger pan ──
+  const touchStateRef = useRef<{
+    isPinching: boolean;
+    initialDistance: number;
+    initialZoom: number;
+    lastTouchCenter: { x: number; y: number } | null;
+    lastSingleTouch: { x: number; y: number } | null;
+    touchStartTime: number;
+    hasMoved: boolean;
+    prePinchMode: string | null;
+  }>({
+    isPinching: false,
+    initialDistance: 0,
+    initialZoom: 1,
+    lastTouchCenter: null,
+    lastSingleTouch: null,
+    touchStartTime: 0,
+    hasMoved: false,
+    prePinchMode: null
+  });
+
   useEffect(() => {
     if (modeType === 'INTERACTIONS_DISABLED') return;
 
     const el = window;
 
+    const getTouchDistance = (t1: Touch, t2: Touch) => {
+      const dx = t1.clientX - t2.clientX;
+      const dy = t1.clientY - t2.clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    };
+
+    const getTouchCenter = (t1: Touch, t2: Touch) => ({
+      x: (t1.clientX + t2.clientX) / 2,
+      y: (t1.clientY + t2.clientY) / 2
+    });
+
     const onTouchStart = (e: TouchEvent) => {
+      const ts = touchStateRef.current;
+
+      if (e.touches.length === 2) {
+        // ── Two-finger: start pinch-to-zoom + pan ──
+        e.preventDefault();
+        const uiState = uiStateApi.getState();
+
+        ts.isPinching = true;
+        ts.initialDistance = getTouchDistance(e.touches[0], e.touches[1]);
+        ts.initialZoom = uiState.zoom;
+        ts.lastTouchCenter = getTouchCenter(e.touches[0], e.touches[1]);
+        ts.prePinchMode = uiState.mode.type;
+        return;
+      }
+
+      // ── Single finger: normal interaction ──
+      ts.touchStartTime = Date.now();
+      ts.hasMoved = false;
+      ts.lastSingleTouch = {
+        x: Math.floor(e.touches[0].clientX),
+        y: Math.floor(e.touches[0].clientY)
+      };
+
       onMouseEvent({
         ...e,
         clientX: Math.floor(e.touches[0].clientX),
@@ -391,16 +446,89 @@ export const useInteractionManager = () => {
     };
 
     const onTouchMove = (e: TouchEvent) => {
-      onMouseEvent({
-        ...e,
-        clientX: Math.floor(e.touches[0].clientX),
-        clientY: Math.floor(e.touches[0].clientY),
-        type: 'mousemove',
-        button: 0
-      });
+      const ts = touchStateRef.current;
+
+      if (e.touches.length === 2 && ts.isPinching) {
+        // ── Pinch-to-zoom + two-finger pan ──
+        e.preventDefault();
+        const uiState = uiStateApi.getState();
+        const currentDistance = getTouchDistance(e.touches[0], e.touches[1]);
+        const currentCenter = getTouchCenter(e.touches[0], e.touches[1]);
+
+        // Calculate zoom
+        const scale = currentDistance / ts.initialDistance;
+        const MIN_ZOOM = 0.1;
+        const MAX_ZOOM = 3;
+        const newZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, ts.initialZoom * scale));
+
+        // Calculate pan delta from center movement
+        const panDx = ts.lastTouchCenter ? currentCenter.x - ts.lastTouchCenter.x : 0;
+        const panDy = ts.lastTouchCenter ? currentCenter.y - ts.lastTouchCenter.y : 0;
+
+        // Apply zoom centered on pinch midpoint
+        if (rendererRef.current && rendererSize) {
+          const rect = rendererRef.current.getBoundingClientRect();
+          const midX = currentCenter.x - rect.left;
+          const midY = currentCenter.y - rect.top;
+
+          const midRelX = midX - rendererSize.width / 2;
+          const midRelY = midY - rendererSize.height / 2;
+
+          const oldZoom = uiState.zoom;
+          const worldX = (midRelX - uiState.scroll.position.x) / oldZoom;
+          const worldY = (midRelY - uiState.scroll.position.y) / oldZoom;
+
+          const newScrollX = midRelX - worldX * newZoom + panDx;
+          const newScrollY = midRelY - worldY * newZoom + panDy;
+
+          uiState.actions.setZoom(newZoom);
+          uiState.actions.setScroll({
+            position: { x: newScrollX, y: newScrollY },
+            offset: uiState.scroll.offset
+          });
+        }
+
+        ts.lastTouchCenter = currentCenter;
+        return;
+      }
+
+      // ── Single finger: track movement for drag threshold ──
+      if (e.touches.length === 1) {
+        const touch = e.touches[0];
+        if (ts.lastSingleTouch) {
+          const dx = touch.clientX - ts.lastSingleTouch.x;
+          const dy = touch.clientY - ts.lastSingleTouch.y;
+          if (Math.abs(dx) > 4 || Math.abs(dy) > 4) {
+            ts.hasMoved = true;
+          }
+        }
+
+        onMouseEvent({
+          ...e,
+          clientX: Math.floor(touch.clientX),
+          clientY: Math.floor(touch.clientY),
+          type: 'mousemove',
+          button: 0
+        });
+      }
     };
 
     const onTouchEnd = (e: TouchEvent) => {
+      const ts = touchStateRef.current;
+
+      if (ts.isPinching) {
+        // End pinch gesture
+        ts.isPinching = false;
+        ts.lastTouchCenter = null;
+        ts.initialDistance = 0;
+        ts.prePinchMode = null;
+
+        // If still one finger down, don't fire mouseup
+        if (e.touches.length > 0) return;
+      }
+
+      ts.lastSingleTouch = null;
+
       onMouseEvent({
         ...e,
         clientX: 0,
@@ -457,8 +585,8 @@ export const useInteractionManager = () => {
     el.addEventListener('mousedown', onMouseEvent);
     el.addEventListener('mouseup', onMouseEvent);
     el.addEventListener('contextmenu', onContextMenu);
-    el.addEventListener('touchstart', onTouchStart);
-    el.addEventListener('touchmove', onTouchMove);
+    el.addEventListener('touchstart', onTouchStart, { passive: false });
+    el.addEventListener('touchmove', onTouchMove, { passive: false });
     el.addEventListener('touchend', onTouchEnd);
     rendererEl?.addEventListener('wheel', onScroll, { passive: true });
 

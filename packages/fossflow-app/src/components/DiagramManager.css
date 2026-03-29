@@ -308,3 +308,98 @@
 .dialog-buttons button:last-child:hover {
   background: rgba(255, 255, 255, 0.1);
 }
+
+/* ── DiagramManager Mobile Responsive ──────────────────── */
+@media (max-width: 768px) {
+  .diagram-manager-overlay {
+    align-items: flex-end;
+  }
+
+  .diagram-manager {
+    width: 100%;
+    max-width: unset;
+    max-height: 90vh;
+    border-radius: 20px 20px 0 0;
+    animation: dmMobileSlideUp 0.25s ease;
+  }
+
+  @keyframes dmMobileSlideUp {
+    from { opacity: 0; transform: translateY(100%); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .diagram-manager-header {
+    padding: 16px;
+  }
+
+  .diagram-manager-header h2 {
+    font-size: 17px;
+  }
+
+  .close-button {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+
+  .storage-info {
+    padding: 12px 16px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .diagram-manager-actions {
+    padding: 12px 16px;
+  }
+
+  .action-button {
+    padding: 12px 16px;
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .diagram-list {
+    padding: 12px 16px;
+  }
+
+  .diagram-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px;
+  }
+
+  .diagram-actions {
+    flex-wrap: wrap;
+  }
+
+  .diagram-actions .action-button {
+    padding: 10px 14px;
+    font-size: 13px;
+    min-height: 44px;
+    flex: 1;
+    text-align: center;
+  }
+
+  .save-dialog {
+    min-width: unset;
+    width: calc(100% - 32px);
+    padding: 20px 16px;
+  }
+
+  .save-dialog input {
+    font-size: 16px; /* prevents iOS auto-zoom */
+    padding: 12px 14px;
+  }
+
+  .dialog-buttons {
+    flex-direction: column;
+  }
+
+  .dialog-buttons button {
+    width: 100%;
+    padding: 14px;
+    min-height: 48px;
+    font-size: 15px;
+  }
+}

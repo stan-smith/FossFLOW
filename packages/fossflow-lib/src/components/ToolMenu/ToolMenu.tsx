@@ -1,5 +1,5 @@
-import React, { useCallback } from 'react';
-import { Stack, Divider } from '@mui/material';
+import React, { useCallback, useState } from 'react';
+import { Stack, Divider, useMediaQuery, Box } from '@mui/material';
 import {
   PanToolOutlined as PanToolIcon,
   NearMeOutlined as NearMeIcon,
@@ -11,7 +11,8 @@ import {
   Redo as RedoIcon,
   Help as HelpIcon,
   HighlightAltOutlined as LassoIcon,
-  GestureOutlined as FreehandLassoIcon
+  GestureOutlined as FreehandLassoIcon,
+  MoreHoriz as MoreIcon
 } from '@mui/icons-material';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { IconButton } from 'src/components/IconButton/IconButton';
@@ -25,6 +26,8 @@ import { HOTKEY_PROFILES } from 'src/config/hotkeys';
 export const ToolMenu = () => {
   const { createTextBox } = useScene();
   const { undo, redo, canUndo, canRedo } = useHistory();
+  const isMobile = useMediaQuery('(max-width:768px)');
+  const [showMoreTools, setShowMoreTools] = useState(false);
   const mode = useUiStateStore((state) => {
     return state.mode;
   });
@@ -64,6 +67,132 @@ export const ToolMenu = () => {
     });
   }, [uiStateStoreActions, createTextBox, mousePosition]);
 
+  // On mobile: show essential tools in primary bar, advanced in overflow
+  if (isMobile) {
+    return (
+      <Box sx={{ position: 'relative' }}>
+        <UiElement>
+          <Stack direction="row" spacing={0.25} alignItems="center">
+            <IconButton
+              name="Undo"
+              Icon={<UndoIcon />}
+              onClick={handleUndo}
+              disabled={!canUndo}
+            />
+            <IconButton
+              name="Redo"
+              Icon={<RedoIcon />}
+              onClick={handleRedo}
+              disabled={!canRedo}
+            />
+            <IconButton
+              name="Select"
+              Icon={<NearMeIcon />}
+              onClick={() => {
+                uiStateStoreActions.setMode({
+                  type: 'CURSOR',
+                  showCursor: true,
+                  mousedownItem: null
+                });
+                setShowMoreTools(false);
+              }}
+              isActive={mode.type === 'CURSOR' || mode.type === 'DRAG_ITEMS'}
+            />
+            <IconButton
+              name="Pan"
+              Icon={<PanToolIcon />}
+              onClick={() => {
+                uiStateStoreActions.setMode({ type: 'PAN', showCursor: false });
+                uiStateStoreActions.setItemControls(null);
+                setShowMoreTools(false);
+              }}
+              isActive={mode.type === 'PAN'}
+            />
+            <IconButton
+              name="Add"
+              Icon={<AddIcon />}
+              onClick={() => {
+                uiStateStoreActions.setItemControls({ type: 'ADD_ITEM' });
+                uiStateStoreActions.setMode({ type: 'PLACE_ICON', showCursor: true, id: null });
+                setShowMoreTools(false);
+              }}
+              isActive={mode.type === 'PLACE_ICON'}
+            />
+            <IconButton
+              name="Connector"
+              Icon={<ConnectorIcon />}
+              onClick={() => {
+                uiStateStoreActions.setMode({ type: 'CONNECTOR', id: null, showCursor: true });
+                setShowMoreTools(false);
+              }}
+              isActive={mode.type === 'CONNECTOR'}
+            />
+            {/* More tools overflow button */}
+            <IconButton
+              name="More tools"
+              Icon={<MoreIcon />}
+              onClick={() => setShowMoreTools(!showMoreTools)}
+              isActive={showMoreTools}
+            />
+          </Stack>
+        </UiElement>
+
+        {/* Overflow tools popover */}
+        {showMoreTools && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: '100%',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              mt: 1,
+              zIndex: 20,
+            }}
+          >
+            <UiElement>
+              <Stack direction="row" spacing={0.25} alignItems="center">
+                <IconButton
+                  name="Rectangle"
+                  Icon={<CropSquareIcon />}
+                  onClick={() => {
+                    uiStateStoreActions.setMode({ type: 'RECTANGLE.DRAW', showCursor: true, id: null });
+                    setShowMoreTools(false);
+                  }}
+                  isActive={mode.type === 'RECTANGLE.DRAW'}
+                />
+                <IconButton
+                  name="Text"
+                  Icon={<TitleIcon />}
+                  onClick={() => { createTextBoxProxy(); setShowMoreTools(false); }}
+                  isActive={mode.type === 'TEXTBOX'}
+                />
+                <IconButton
+                  name="Lasso"
+                  Icon={<LassoIcon />}
+                  onClick={() => {
+                    uiStateStoreActions.setMode({ type: 'LASSO', showCursor: true, selection: null, isDragging: false });
+                    setShowMoreTools(false);
+                  }}
+                  isActive={mode.type === 'LASSO'}
+                />
+                <IconButton
+                  name="Freehand"
+                  Icon={<FreehandLassoIcon />}
+                  onClick={() => {
+                    uiStateStoreActions.setMode({ type: 'FREEHAND_LASSO', showCursor: true, path: [], selection: null, isDragging: false });
+                    setShowMoreTools(false);
+                  }}
+                  isActive={mode.type === 'FREEHAND_LASSO'}
+                />
+              </Stack>
+            </UiElement>
+          </Box>
+        )}
+      </Box>
+    );
+  }
+
+  // Desktop: full toolbar (unchanged)
   return (
     <UiElement>
       <Stack direction="row" spacing={0.5} alignItems="center">

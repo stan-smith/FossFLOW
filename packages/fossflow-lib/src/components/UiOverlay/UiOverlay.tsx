@@ -1,6 +1,6 @@
-import React, { useCallback, useMemo, useRef } from 'react';
-import { Box, useTheme, Typography, Stack } from '@mui/material';
-import { ChevronRight } from '@mui/icons-material';
+import React, { useCallback, useMemo, useRef, useState, useEffect } from 'react';
+import { Box, useTheme, useMediaQuery, Typography, Stack } from '@mui/material';
+import { ChevronRight, Close as CloseIcon } from '@mui/icons-material';
 import { EditorModeEnum, DialogTypeEnum } from 'src/types';
 import { UiElement } from 'components/UiElement/UiElement';
 import { SceneLayer } from 'src/components/SceneLayer/SceneLayer';
@@ -58,9 +58,18 @@ const getEditorModeMapping = (editorMode: keyof typeof EditorModeEnum) => {
 
 export const UiOverlay = () => {
   const theme = useTheme();
+  const isMobile = useMediaQuery('(max-width:768px)');
   const contextMenuAnchorRef = useRef<HTMLDivElement>(null);
   const toolMenuRef = useRef<HTMLDivElement>(null);
-  const { appPadding } = theme.customVars;
+  const { appPadding: desktopPadding } = theme.customVars;
+  const [mobileItemControlsOpen, setMobileItemControlsOpen] = useState(false);
+
+  // Reduced padding on mobile
+  const appPadding = useMemo(() => {
+    if (isMobile) return { x: 8, y: 8 };
+    return desktopPadding;
+  }, [isMobile, desktopPadding]);
+
   const spacing = useCallback(
     (multiplier: number) => {
       return parseInt(theme.spacing(multiplier), 10);
@@ -106,6 +115,13 @@ export const UiOverlay = () => {
   });
   const { size: rendererSize } = useResizeObserver(rendererEl);
 
+  // Auto-open mobile item controls bottom sheet when item is selected
+  useEffect(() => {
+    if (isMobile && itemControls) {
+      setMobileItemControlsOpen(true);
+    }
+  }, [isMobile, itemControls]);
+
   return (
     <>
       <Box
@@ -117,7 +133,8 @@ export const UiOverlay = () => {
           left: 0
         }}
       >
-        {availableTools.includes('ITEM_CONTROLS') && itemControls && (
+        {/* ── Item Controls: bottom sheet on mobile, sidebar on desktop ── */}
+        {availableTools.includes('ITEM_CONTROLS') && itemControls && !isMobile && (
           <UiElement
             sx={{
               position: 'absolute',
@@ -137,37 +154,61 @@ export const UiOverlay = () => {
           </UiElement>
         )}
 
+        {/* ── Tool Menu ── */}
         {availableTools.includes('TOOL_MENU') && (
           <Box
             ref={toolMenuRef}
             sx={{
               position: 'absolute',
-              transform: 'translateX(-100%)'
+              ...(isMobile
+                ? {
+                    // Top-center on mobile
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    top: appPadding.y,
+                    zIndex: 10,
+                  }
+                : {
+                    // Top-right on desktop
+                    transform: 'translateX(-100%)',
+                  })
             }}
-            style={{
-              left: rendererSize.width - appPadding.x,
-              top: appPadding.y
-            }}
+            style={
+              isMobile
+                ? { left: rendererSize.width / 2, top: appPadding.y }
+                : { left: rendererSize.width - appPadding.x, top: appPadding.y }
+            }
           >
             <ToolMenu />
           </Box>
         )}
 
+        {/* ── Zoom Controls ── */}
         {availableTools.includes('ZOOM_CONTROLS') && (
           <Box
             sx={{
               position: 'absolute',
               transformOrigin: 'bottom left'
             }}
-            style={{
-              top: rendererSize.height - appPadding.y * 2,
-              left: appPadding.x
-            }}
+            style={
+              isMobile
+                ? {
+                    // Bottom-right on mobile (above bottom nav)
+                    top: rendererSize.height - 12,
+                    left: rendererSize.width - appPadding.x,
+                    transform: 'translate(-100%, -100%)',
+                  }
+                : {
+                    top: rendererSize.height - appPadding.y * 2,
+                    left: appPadding.x,
+                  }
+            }
           >
             <ZoomControls />
           </Box>
         )}
 
+        {/* ── Main Menu ── */}
         {availableTools.includes('MAIN_MENU') && (
           <Box
             sx={{
@@ -182,7 +223,8 @@ export const UiOverlay = () => {
           </Box>
         )}
 
-        {availableTools.includes('VIEW_TITLE') && (
+        {/* ── View Title: hidden on mobile for space ── */}
+        {availableTools.includes('VIEW_TITLE') && !isMobile && (
           <Box
             sx={{
               position: 'absolute',
@@ -219,7 +261,7 @@ export const UiOverlay = () => {
           </Box>
         )}
 
-        {enableDebugTools && (
+        {enableDebugTools && !isMobile && (
           <UiElement
             sx={{
               position: 'absolute',
@@ -236,6 +278,73 @@ export const UiOverlay = () => {
           </UiElement>
         )}
       </Box>
+
+      {/* ── Mobile Item Controls Bottom Sheet ── */}
+      {isMobile && availableTools.includes('ITEM_CONTROLS') && itemControls && mobileItemControlsOpen && (
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            zIndex: 50,
+            maxHeight: '50vh',
+            overflowY: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            borderRadius: '16px 16px 0 0',
+            backgroundColor: 'rgba(26, 27, 35, 0.95)',
+            backdropFilter: 'blur(20px) saturate(1.4)',
+            WebkitBackdropFilter: 'blur(20px) saturate(1.4)',
+            border: '1px solid rgba(255,255,255,0.08)',
+            borderBottom: 'none',
+            boxShadow: '0 -8px 32px rgba(0,0,0,0.4)',
+            animation: 'slideUpSheet 0.25s ease',
+            '@keyframes slideUpSheet': {
+              from: { transform: 'translateY(100%)' },
+              to: { transform: 'translateY(0)' }
+            }
+          }}
+        >
+          {/* Drag handle + close */}
+          <Box sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            pt: 1,
+            pb: 0.5,
+            position: 'relative'
+          }}>
+            <Box sx={{
+              width: 36, height: 4, borderRadius: 2,
+              backgroundColor: 'rgba(255,255,255,0.2)'
+            }} />
+            <Box
+              onClick={() => {
+                setMobileItemControlsOpen(false);
+                uiStateActions.setItemControls(null);
+              }}
+              sx={{
+                position: 'absolute',
+                right: 12,
+                top: 8,
+                width: 32,
+                height: 32,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                borderRadius: '50%',
+                '&:active': { backgroundColor: 'rgba(255,255,255,0.1)' }
+              }}
+            >
+              <CloseIcon sx={{ width: 18, height: 18, color: 'rgba(255,255,255,0.5)' }} />
+            </Box>
+          </Box>
+          <Box sx={{ px: 2, pb: 2 }}>
+            <ItemControlsManager />
+          </Box>
+        </Box>
+      )}
 
       {mode.type === 'PLACE_ICON' && mode.id && (
         <SceneLayer disableAnimation>
@@ -255,20 +364,20 @@ export const UiOverlay = () => {
 
       {dialog === DialogTypeEnum.SETTINGS && <SettingsDialog iconPackManager={iconPackManager || undefined} />}
 
-      {/* Show hint tooltips only in editable mode */}
-      {editorMode === EditorModeEnum.EDITABLE && <ConnectorHintTooltip toolMenuRef={toolMenuRef} />}
-      {editorMode === EditorModeEnum.EDITABLE && <ConnectorEmptySpaceTooltip />}
-      {editorMode === EditorModeEnum.EDITABLE && <ConnectorRerouteTooltip />}
-      {editorMode === EditorModeEnum.EDITABLE && <ImportHintTooltip />}
-      {editorMode === EditorModeEnum.EDITABLE && <LassoHintTooltip toolMenuRef={toolMenuRef} />}
+      {/* Show hint tooltips only in editable mode (desktop only to avoid clutter) */}
+      {editorMode === EditorModeEnum.EDITABLE && !isMobile && <ConnectorHintTooltip toolMenuRef={toolMenuRef} />}
+      {editorMode === EditorModeEnum.EDITABLE && !isMobile && <ConnectorEmptySpaceTooltip />}
+      {editorMode === EditorModeEnum.EDITABLE && !isMobile && <ConnectorRerouteTooltip />}
+      {editorMode === EditorModeEnum.EDITABLE && !isMobile && <ImportHintTooltip />}
+      {editorMode === EditorModeEnum.EDITABLE && !isMobile && <LassoHintTooltip toolMenuRef={toolMenuRef} />}
 
       {/* Show lazy loading welcome notification if icon pack manager is provided */}
       {iconPackManager && <LazyLoadingWelcomeNotification />}
 
       <SceneLayer>
         {contextMenu && (
-          <Box 
-            ref={contextMenuAnchorRef} 
+          <Box
+            ref={contextMenuAnchorRef}
             sx={{
               position: 'absolute',
               left: getTilePosition({ tile: contextMenu.tile }).x,

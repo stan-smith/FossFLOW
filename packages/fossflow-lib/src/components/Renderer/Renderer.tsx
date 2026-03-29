@@ -53,6 +53,11 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
         width: '100%',
         height: '100%',
         zIndex: 0,
+        /* Prevent native touch gestures on the canvas so our custom
+           pinch-to-zoom and drag-and-drop work without conflict */
+        touchAction: 'none',
+        WebkitUserSelect: 'none',
+        userSelect: 'none',
         bgcolor: (theme) => backgroundColor === 'transparent' ? 'transparent' : (backgroundColor ?? theme.customVars.customPalette.diagramBg)
       }}
     >
@@ -101,7 +106,8 @@ export const Renderer = ({ showGrid, backgroundColor }: RendererProps) => {
           left: 0,
           top: 0,
           width: '100%',
-          height: '100%'
+          height: '100%',
+          touchAction: 'none'
         }}
       />
       <SceneLayer>
