@@ -59,7 +59,12 @@ export const Grid = () => {
           position: 'absolute',
           width: '100%',
           height: '100%',
-          background: `repeat url("${gridTileSvg}")`
+          background: `repeat url("${gridTileSvg}")`,
+          animation: 'gridFadeIn 0.8s ease-out',
+          '@keyframes gridFadeIn': {
+            from: { opacity: 0 },
+            to: { opacity: 1 },
+          },
         }}
       />
     </Box>

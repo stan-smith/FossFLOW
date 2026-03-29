@@ -111,7 +111,12 @@ export const ConnectorLabel = memo(({ connector: sceneConnector }: Props) => {
                 px: 1,
                 borderRadius: 2,
                 backgroundColor: 'background.paper',
-                opacity: 0.95
+                opacity: 0.95,
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease',
+                '&:hover': {
+                  transform: 'scale(1.08)',
+                  boxShadow: '0 2px 12px rgba(0,0,0,0.15)',
+                },
               }}
             >
               <Typography color="text.secondary" variant="body2">

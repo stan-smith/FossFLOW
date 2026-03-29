@@ -1,4 +1,4 @@
-import React, { useMemo, memo } from 'react';
+import React, { useMemo, memo, useId } from 'react';
 import { useTheme, Box } from '@mui/material';
 import { UNPROJECTED_TILE_SIZE } from 'src/config';
 import {
@@ -23,6 +23,7 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
   const predefinedColor = useColor(_connector.color);
   const { currentView } = useScene();
   const connector = useConnector(_connector.id);
+  const uniqueId = useId();
 
   if (!connector) {
     return null;
@@ -167,6 +168,15 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
 
   const lineType = connector.lineType || 'SINGLE';
 
+  // Flow animation parameters
+  const flowDashSize = connectorWidthPx * 3;
+  const flowGapSize = connectorWidthPx * 6;
+  const flowAnimationName = `flow-${uniqueId.replace(/:/g, '')}`;
+  const glowAnimationName = `glow-${uniqueId.replace(/:/g, '')}`;
+  const arrowPulseAnimationName = `arrow-pulse-${uniqueId.replace(/:/g, '')}`;
+
+  const connectorColor = getColorVariant(color.value, 'dark', { grade: 1 });
+
   return (
     <Box style={css}>
       <Svg
@@ -178,72 +188,145 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
         }}
         viewboxSize={pxSize}
       >
-        {lineType === 'SINGLE' ? (
-          <>
-            <polyline
-              points={pathString}
-              stroke={theme.palette.common.white}
-              strokeWidth={connectorWidthPx * 1.4}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeOpacity={0.7}
-              strokeDasharray={strokeDashArray}
-              fill="none"
-            />
-            <polyline
-              points={pathString}
-              stroke={getColorVariant(color.value, 'dark', { grade: 1 })}
-              strokeWidth={connectorWidthPx}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray={strokeDashArray}
-              fill="none"
-            />
-          </>
-        ) : offsetPaths ? (
-          <>
-            {/* First line of double */}
-            <polyline
-              points={offsetPaths.path1}
-              stroke={theme.palette.common.white}
-              strokeWidth={connectorWidthPx * 1.4}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeOpacity={0.7}
-              strokeDasharray={strokeDashArray}
-              fill="none"
-            />
-            <polyline
-              points={offsetPaths.path1}
-              stroke={getColorVariant(color.value, 'dark', { grade: 1 })}
-              strokeWidth={connectorWidthPx}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray={strokeDashArray}
-              fill="none"
-            />
-            {/* Second line of double */}
-            <polyline
-              points={offsetPaths.path2}
-              stroke={theme.palette.common.white}
-              strokeWidth={connectorWidthPx * 1.4}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeOpacity={0.7}
-              strokeDasharray={strokeDashArray}
-              fill="none"
-            />
-            <polyline
-              points={offsetPaths.path2}
-              stroke={getColorVariant(color.value, 'dark', { grade: 1 })}
-              strokeWidth={connectorWidthPx}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray={strokeDashArray}
-              fill="none"
-            />
-          </>
-        ) : null}
+        <defs>
+          {/* Flow animation keyframes */}
+          <style>{`
+            @keyframes ${flowAnimationName} {
+              from { stroke-dashoffset: ${flowDashSize + flowGapSize}; }
+              to { stroke-dashoffset: 0; }
+            }
+            @keyframes ${glowAnimationName} {
+              0%, 100% { filter: drop-shadow(0 0 ${connectorWidthPx * 0.5}px ${connectorColor}40); }
+              50% { filter: drop-shadow(0 0 ${connectorWidthPx * 1.5}px ${connectorColor}80); }
+            }
+            @keyframes ${arrowPulseAnimationName} {
+              0%, 100% { transform: scale(1); opacity: 1; }
+              50% { transform: scale(1.15); opacity: 0.85; }
+            }
+          `}</style>
+          {/* Glow filter */}
+          <filter id={`glow-filter-${uniqueId.replace(/:/g, '')}`}>
+            <feGaussianBlur stdDeviation={connectorWidthPx * 0.4} result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        {/* Animated flow overlay group */}
+        <g style={{ animation: `${glowAnimationName} 3s ease-in-out infinite` }}>
+          {lineType === 'SINGLE' ? (
+            <>
+              {/* Base white shadow line */}
+              <polyline
+                points={pathString}
+                stroke={theme.palette.common.white}
+                strokeWidth={connectorWidthPx * 1.4}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeOpacity={0.7}
+                strokeDasharray={strokeDashArray}
+                fill="none"
+              />
+              {/* Main connector line */}
+              <polyline
+                points={pathString}
+                stroke={connectorColor}
+                strokeWidth={connectorWidthPx}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray={strokeDashArray}
+                fill="none"
+              />
+              {/* Animated flow particles overlay */}
+              <polyline
+                points={pathString}
+                stroke={theme.palette.common.white}
+                strokeWidth={connectorWidthPx * 0.4}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeOpacity={0.6}
+                strokeDasharray={`${flowDashSize}, ${flowGapSize}`}
+                fill="none"
+                style={{
+                  animation: `${flowAnimationName} 1.5s linear infinite`
+                }}
+              />
+            </>
+          ) : offsetPaths ? (
+            <>
+              {/* First line of double */}
+              <polyline
+                points={offsetPaths.path1}
+                stroke={theme.palette.common.white}
+                strokeWidth={connectorWidthPx * 1.4}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeOpacity={0.7}
+                strokeDasharray={strokeDashArray}
+                fill="none"
+              />
+              <polyline
+                points={offsetPaths.path1}
+                stroke={connectorColor}
+                strokeWidth={connectorWidthPx}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray={strokeDashArray}
+                fill="none"
+              />
+              {/* Flow particles on first line */}
+              <polyline
+                points={offsetPaths.path1}
+                stroke={theme.palette.common.white}
+                strokeWidth={connectorWidthPx * 0.4}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeOpacity={0.6}
+                strokeDasharray={`${flowDashSize}, ${flowGapSize}`}
+                fill="none"
+                style={{
+                  animation: `${flowAnimationName} 1.5s linear infinite`
+                }}
+              />
+              {/* Second line of double */}
+              <polyline
+                points={offsetPaths.path2}
+                stroke={theme.palette.common.white}
+                strokeWidth={connectorWidthPx * 1.4}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeOpacity={0.7}
+                strokeDasharray={strokeDashArray}
+                fill="none"
+              />
+              <polyline
+                points={offsetPaths.path2}
+                stroke={connectorColor}
+                strokeWidth={connectorWidthPx}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray={strokeDashArray}
+                fill="none"
+              />
+              {/* Flow particles on second line (reverse direction) */}
+              <polyline
+                points={offsetPaths.path2}
+                stroke={theme.palette.common.white}
+                strokeWidth={connectorWidthPx * 0.4}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeOpacity={0.6}
+                strokeDasharray={`${flowDashSize}, ${flowGapSize}`}
+                fill="none"
+                style={{
+                  animation: `${flowAnimationName} 1.5s linear infinite reverse`
+                }}
+              />
+            </>
+          ) : null}
+        </g>
 
         {/* Circle for port-channel representation */}
         {lineType === 'DOUBLE_WITH_CIRCLE' && connector.path.tiles.length >= 2 && (() => {
@@ -251,7 +334,7 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
           const midTile = connector.path.tiles[midIndex];
           const x = midTile.x * UNPROJECTED_TILE_SIZE + drawOffset.x;
           const y = midTile.y * UNPROJECTED_TILE_SIZE + drawOffset.y;
-          
+
           // Calculate rotation based on line direction at middle point
           let rotation = 0;
           if (midIndex > 0 && midIndex < connector.path.tiles.length - 1) {
@@ -261,11 +344,11 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
             const dy = nextTile.y - prevTile.y;
             rotation = Math.atan2(dy, dx) * (180 / Math.PI);
           }
-          
+
           // Increased size to encompass both lines with the spacing
-          const circleRadiusX = connectorWidthPx * 5; // Wider to cover both lines
-          const circleRadiusY = connectorWidthPx * 4; // Height to encompass both lines
-          
+          const circleRadiusX = connectorWidthPx * 5;
+          const circleRadiusY = connectorWidthPx * 4;
+
           return (
             <g transform={`translate(${x}, ${y}) rotate(${rotation})`}>
               <ellipse
@@ -274,9 +357,22 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
                 rx={circleRadiusX}
                 ry={circleRadiusY}
                 fill="none"
-                stroke={getColorVariant(color.value, 'dark', { grade: 1 })}
+                stroke={connectorColor}
                 strokeWidth={connectorWidthPx * 0.8}
-              />
+              >
+                <animate
+                  attributeName="rx"
+                  values={`${circleRadiusX};${circleRadiusX * 1.05};${circleRadiusX}`}
+                  dur="2s"
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="ry"
+                  values={`${circleRadiusY};${circleRadiusY * 1.05};${circleRadiusY}`}
+                  dur="2s"
+                  repeatCount="indefinite"
+                />
+              </ellipse>
               <ellipse
                 cx={0}
                 cy={0}
@@ -313,7 +409,27 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
 
         {directionIcon && connector.showArrow !== false && (
           <g transform={`translate(${directionIcon.x}, ${directionIcon.y})`}>
-            <g transform={`rotate(${directionIcon.rotation})`}>
+            <g
+              transform={`rotate(${directionIcon.rotation})`}
+              style={{
+                transformOrigin: '0 0',
+                animation: `${arrowPulseAnimationName} 2s ease-in-out infinite`
+              }}
+            >
+              {/* Arrow glow shadow */}
+              <polygon
+                fill={connectorColor}
+                fillOpacity={0.3}
+                points="20,19 0,-19 -20,19"
+              >
+                <animate
+                  attributeName="fill-opacity"
+                  values="0.1;0.4;0.1"
+                  dur="2s"
+                  repeatCount="indefinite"
+                />
+              </polygon>
+              {/* Main arrow */}
               <polygon
                 fill={theme.palette.text.primary}
                 stroke={theme.palette.background.paper}

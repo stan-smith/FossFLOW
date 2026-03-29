@@ -45,12 +45,21 @@ export const IsoTileArea = memo(({
 
   return (
     <Svg viewboxSize={pxSize} style={css}>
+      <defs>
+        <style>{`
+          @keyframes rectBreath {
+            0%, 100% { opacity: 0.85; }
+            50% { opacity: 1; }
+          }
+        `}</style>
+      </defs>
       <rect
         width={pxSize.width}
         height={pxSize.height}
         fill={fill}
         rx={cornerRadius}
         {...strokeParams}
+        style={{ animation: 'rectBreath 5s ease-in-out infinite' }}
       />
     </Svg>
   );
