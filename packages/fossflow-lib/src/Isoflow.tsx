@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import { theme } from 'src/styles/theme';
@@ -68,7 +68,10 @@ const App = ({
     }
   }, [renderer?.expandLabels, uiStateActions]);
 
-  useEffect(() => {
+  // Use useLayoutEffect to set iconPackManager synchronously before paint
+  // This prevents a race condition where the Settings dialog could open
+  // before iconPackManager is set in the store (causing the Icon Pack tab to be hidden)
+  useLayoutEffect(() => {
     uiStateActions.setIconPackManager(iconPackManager || null);
   }, [iconPackManager, uiStateActions]);
 

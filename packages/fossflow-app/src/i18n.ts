@@ -61,6 +61,10 @@ export const supportedLanguages = [
     value: 'ru-RU'
   },
   {
+    label: 'Polski',
+    value: 'pl-PL'
+  },
+  {
     label: 'Italian',
     value: 'it-IT'
   },
