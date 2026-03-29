@@ -222,11 +222,11 @@ export const IconSelectionControls = () => {
       )}
       
       <Section>
-        <Box sx={{ 
-          border: '1px solid #e0e0e0', 
-          borderRadius: 1, 
+        <Box sx={{
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 1,
           p: 1.5,
-          backgroundColor: '#f5f5f5'
+          backgroundColor: 'rgba(255,255,255,0.03)'
         }}>
           <Button
             variant="outlined"

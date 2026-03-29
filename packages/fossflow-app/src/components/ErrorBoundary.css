@@ -5,17 +5,19 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(15, 17, 23, 0.95);
 }
 
 .error-container {
   min-height: 300px;
-  width: 400px;
-  background-color: white;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid #ddd;
+  width: 420px;
+  background-color: rgba(26, 27, 35, 0.95);
+  backdrop-filter: blur(24px);
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .error-header {
@@ -25,54 +27,59 @@
 
 .error-header p {
   margin: 0;
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 600;
-  color: #333;
+  color: rgba(255, 255, 255, 0.95);
+  letter-spacing: -0.02em;
 }
 
 .error-content {
-  margin-bottom: 30px;
-  padding: 15px;
-  background-color: #fff3cd;
-  border: 1px solid #ffeeba;
-  border-radius: 4px;
+  margin-bottom: 28px;
+  padding: 14px;
+  background-color: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 10px;
 }
 
 .error-content p {
   margin: 0;
-  font-size: 14px;
-  color: #856404;
+  font-size: 13px;
+  color: #f87171;
   word-break: break-word;
-  line-height: 1.4;
+  line-height: 1.5;
 }
 
 .error-footer {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   justify-content: center;
 }
 
 .error-button {
   display: inline-block;
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  background-color: #007bff;
-  color: white;
-  transition: background-color 0.2s ease;
+  padding: 8px 18px;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+  transition: all 0.15s ease;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .error-button:hover {
-  background-color: #0056b3;
+  background-color: rgba(59, 130, 246, 0.25);
 }
 
 .error-button.refresh-button {
-  background-color: #28a745;
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.2);
 }
 
 .error-button.refresh-button:hover {
-  background-color: #218838;
+  background-color: rgba(34, 197, 94, 0.25);
 }

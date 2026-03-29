@@ -539,7 +539,7 @@ export const ExportImageDialog = ({ onClose, quality = 1.5 }: Props) => {
                       maxWidth: '100%',
                       maxHeight: '300px',
                       objectFit: 'contain',
-                      backgroundImage: transparentBackground ? 'linear-gradient(45deg, #f0f0f0 25%, transparent 25%), linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #f0f0f0 75%), linear-gradient(-45deg, transparent 75%, #f0f0f0 75%)' : undefined,
+                      backgroundImage: transparentBackground ? 'linear-gradient(45deg, rgba(255,255,255,0.06) 25%, transparent 25%), linear-gradient(-45deg, rgba(255,255,255,0.06) 25%, transparent 25%), linear-gradient(45deg, transparent 75%, rgba(255,255,255,0.06) 75%), linear-gradient(-45deg, transparent 75%, rgba(255,255,255,0.06) 75%)' : undefined,
                       backgroundSize: transparentBackground ? '20px 20px' : undefined,
                       backgroundPosition: transparentBackground ? '0 0, 0 10px, 10px -10px, -10px 0px' : undefined
                     }}

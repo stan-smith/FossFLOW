@@ -175,7 +175,7 @@ export const HelpDialog = () => {
                       <TableCell>
                         <code
                           style={{
-                            backgroundColor: '#f5f5f5',
+                            backgroundColor: 'rgba(255,255,255,0.08)',
                             padding: '2px 6px',
                             borderRadius: '4px',
                             fontFamily: 'monospace'
@@ -216,7 +216,7 @@ export const HelpDialog = () => {
                       <TableCell>
                         <code
                           style={{
-                            backgroundColor: '#f5f5f5',
+                            backgroundColor: 'rgba(255,255,255,0.08)',
                             padding: '2px 6px',
                             borderRadius: '4px',
                             fontFamily: 'monospace'

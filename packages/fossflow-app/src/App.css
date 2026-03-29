@@ -3,49 +3,82 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background-color: #0f1117;
 }
 
+/* ── Toolbar / Navbar ──────────────────────────────────── */
+
 .toolbar {
-  background-color: #f5f5f5;
-  border-bottom: 1px solid #ddd;
-  padding: 10px;
+  background-color: rgba(26, 27, 35, 0.92);
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 8px 16px;
   display: flex;
-  gap: 10px;
+  gap: 6px;
   align-items: center;
+  z-index: 100;
+  min-height: 48px;
 }
 
 .toolbar button {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
+  padding: 6px 14px;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .toolbar button:hover {
-  background-color: #0056b3;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.toolbar button:active {
+  transform: scale(0.97);
+}
+
+.toolbar button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .current-diagram {
   margin-left: auto;
-  font-size: 14px;
-  color: #666;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+/* ── Canvas Container ──────────────────────────────────── */
 
 .fossflow-container {
   flex: 1;
   width: 100%;
   position: relative;
-  /* Remove background color to let Isoflow's grid show through */
-  /* background-color: #f9f9f9; */
 }
 
-/* Ensure Isoflow takes full height */
 .fossflow-container > div {
   height: 100%;
 }
+
+/* ── Dialog / Modal ────────────────────────────────────── */
 
 .dialog-overlay {
   position: fixed;
@@ -53,71 +86,117 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 .dialog {
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  background-color: rgba(26, 27, 35, 0.95);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 28px;
+  border-radius: 16px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.04) inset;
   min-width: 400px;
-  max-width: 600px;
+  max-width: 560px;
   max-height: 80vh;
   overflow-y: auto;
+  animation: slideUp 0.2s ease;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .dialog h2 {
   margin-top: 0;
   margin-bottom: 20px;
-  color: #333;
+  font-size: 1.25em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: rgba(255, 255, 255, 0.95);
 }
 
 .dialog input[type="text"] {
   width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 14px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
   margin-bottom: 20px;
   box-sizing: border-box;
+  color: rgba(255, 255, 255, 0.92);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
+
+.dialog input[type="text"]:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.dialog input[type="text"]::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* ── Dialog Buttons ────────────────────────────────────── */
 
 .dialog-buttons {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   justify-content: flex-end;
 }
 
 .dialog-buttons button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
+  padding: 8px 18px;
+  border: 1px solid transparent;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  transition: all 0.15s ease;
 }
 
 .dialog-buttons button:first-child {
-  background-color: #007bff;
+  background-color: #3b82f6;
   color: white;
+  border-color: transparent;
 }
 
 .dialog-buttons button:first-child:hover {
-  background-color: #0056b3;
+  background-color: #2563eb;
+  box-shadow: 0 2px 12px rgba(59, 130, 246, 0.3);
 }
 
 .dialog-buttons button:last-child {
-  background-color: #6c757d;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.7);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .dialog-buttons button:last-child:hover {
-  background-color: #5a6268;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.9);
 }
+
+/* ── Diagram List (Load Dialog) ────────────────────────── */
 
 .diagram-list {
   margin-bottom: 20px;
@@ -129,43 +208,59 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  border: 1px solid #eee;
-  border-radius: 4px;
-  margin-bottom: 10px;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  margin-bottom: 8px;
+  transition: all 0.15s ease;
+  background-color: rgba(255, 255, 255, 0.02);
 }
 
 .diagram-item:hover {
-  background-color: #f8f9fa;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.diagram-item strong {
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.diagram-item small {
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .diagram-actions {
   display: flex;
-  gap: 5px;
+  gap: 6px;
 }
 
 .diagram-actions button {
-  padding: 4px 12px;
+  padding: 5px 12px;
   font-size: 12px;
-  border: none;
-  border-radius: 4px;
+  border: 1px solid transparent;
+  border-radius: 6px;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.15s ease;
 }
 
 .diagram-actions button:first-child {
-  background-color: #28a745;
-  color: white;
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border-color: rgba(34, 197, 94, 0.2);
 }
 
 .diagram-actions button:first-child:hover {
-  background-color: #218838;
+  background-color: rgba(34, 197, 94, 0.25);
 }
 
 .diagram-actions button:last-child {
-  background-color: #dc3545;
-  color: white;
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
 .diagram-actions button:last-child:hover {
-  background-color: #c82333;
+  background-color: rgba(239, 68, 68, 0.22);
 }
