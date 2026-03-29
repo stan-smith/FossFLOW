@@ -1,7 +1,6 @@
 services:
   fossflow:
-    image: stnsmith/fossflow:latest
-    pull_policy: always
+    build : .
     ports:
       - 80:80
     environment:
