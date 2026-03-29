@@ -52,13 +52,18 @@ export const Node = memo(({ node, order }: Props) => {
       }}
     >
       <Box
-        sx={{ 
+        sx={{
           position: 'absolute',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           left: position.x,
           top: position.y - (PROJECTED_TILE_SIZE.height / 2),
+          transition: 'transform 0.3s ease, filter 0.3s ease',
+          '&:hover': {
+            transform: 'scale(1.05)',
+            filter: 'drop-shadow(0 4px 8px rgba(0,0,0,0.15))',
+          },
         }}
       >
         {(modelItem?.name || description || modelItem?.ipAddress || modelItem?.hostname || modelItem?.os) && (
@@ -101,7 +106,12 @@ export const Node = memo(({ node, order }: Props) => {
               pointerEvents: 'none',
               display: 'flex',
               justifyContent: 'center',
-              alignItems: 'center'
+              alignItems: 'center',
+              animation: 'nodeFloat 4s ease-in-out infinite',
+              '@keyframes nodeFloat': {
+                '0%, 100%': { transform: 'translateY(0px)' },
+                '50%': { transform: 'translateY(-3px)' },
+              },
             }}
           >
             {iconComponent}
