@@ -41,21 +41,27 @@ FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beaut
 
 - **🤝 [CONTRIBUTING.md](https://github.com/stan-smith/FossFLOW/blob/master/CONTRIBUTING.md)** - How to contribute to the project.
 
+## 🌟 What's New (Recent Updates)
+
+* **Inventory System Fields**: Added essential new fields to nodes (IP, hostname, OS) for better tracking and inventory management.
+* **Local Docker Build**: `compose.yml` updated to build directly from the local repository.
+
 ## 🐳 Quick Deploy with Docker
 
 ```bash
-# Using Docker Compose (recommended - includes persistent storage)
-docker compose up
+# Using Docker Compose (recommended - builds locally and includes persistent storage)
+docker compose up -d --build
 
-# Or run directly from Docker Hub with persistent storage
-docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams stnsmith/fossflow:latest
+# Or build and run directly with Docker
+docker build -t fossflow-local .
+docker run -p 80:80 -v $(pwd)/diagrams:/data/diagrams fossflow-local
 ```
 
 Server storage is enabled by default in Docker. Your diagrams will be saved to `./diagrams` on the host.
 
 To disable server storage, set `ENABLE_SERVER_STORAGE=false`:
 ```bash
-docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false stnsmith/fossflow:latest
+docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false fossflow-local
 ```
 
 ### HTTP Basic Authentication (Optional)
@@ -70,7 +76,7 @@ HTTP_AUTH_USER=admin HTTP_AUTH_PASSWORD=secret docker compose up
 docker run -p 80:80 \
   -e HTTP_AUTH_USER=admin \
   -e HTTP_AUTH_PASSWORD=secret \
-  stnsmith/fossflow:latest
+  fossflow-local
 ```
 
 > **Note**: Both variables must be set to enable authentication. If either is empty, the app is accessible without login.
