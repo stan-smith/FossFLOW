@@ -61,7 +61,7 @@ export const Node = memo(({ node, order }: Props) => {
           top: position.y - (PROJECTED_TILE_SIZE.height / 2),
         }}
       >
-        {(modelItem?.name || description) && (
+        {(modelItem?.name || description || modelItem?.ipAddress || modelItem?.hostname || modelItem?.os) && (
           <Box>
             <ExpandableLabel
               maxWidth={250}
@@ -71,6 +71,21 @@ export const Node = memo(({ node, order }: Props) => {
               <Stack spacing={1}>
                 {modelItem.name && (
                   <Typography fontWeight={600}>{modelItem.name}</Typography>
+                )}
+                {modelItem.ipAddress && (
+                  <Typography variant="caption" sx={{ fontFamily: 'monospace', color: 'primary.main', fontWeight: 'bold' }}>
+                    IP: {modelItem.ipAddress}
+                  </Typography>
+                )}
+                {modelItem.hostname && (
+                  <Typography variant="caption" sx={{ fontStyle: 'italic', color: 'text.secondary' }}>
+                    Host: {modelItem.hostname}
+                  </Typography>
+                )}
+                {modelItem.os && (
+                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                    OS: {modelItem.os}
+                  </Typography>
                 )}
                 {modelItem.description &&
                   modelItem.description !== MARKDOWN_EMPTY_VALUE && (
