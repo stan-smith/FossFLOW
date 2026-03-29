@@ -86,6 +86,36 @@ export const NodeSettings = ({
           }}
         />
       </Section>
+      <Section title="IP Address">
+        <TextField
+          value={modelItem.ipAddress || ''}
+          onChange={(e) => {
+            const text = e.target.value as string;
+            if (modelItem.ipAddress !== text) onModelItemUpdated({ ipAddress: text });
+          }}
+          placeholder="e.g. 192.168.1.1"
+        />
+      </Section>
+      <Section title="Hostname">
+        <TextField
+          value={modelItem.hostname || ''}
+          onChange={(e) => {
+            const text = e.target.value as string;
+            if (modelItem.hostname !== text) onModelItemUpdated({ hostname: text });
+          }}
+          placeholder="e.g. web-server-01"
+        />
+      </Section>
+      <Section title="OS">
+        <TextField
+          value={modelItem.os || ''}
+          onChange={(e) => {
+            const text = e.target.value as string;
+            if (modelItem.os !== text) onModelItemUpdated({ os: text });
+          }}
+          placeholder="e.g. Ubuntu 22.04"
+        />
+      </Section>
       <Section title="Description">
         <RichTextEditor
           value={modelItem.description}
