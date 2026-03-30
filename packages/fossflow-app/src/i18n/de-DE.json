@@ -1,0 +1,62 @@
+{
+  "nav": {
+    "newDiagram": "Neues Diagramm",
+    "saveSessionOnly": "Speichern (Nur Sitzung)",
+    "loadSessionOnly": "Laden (Nur Sitzung)",
+    "importFile": "Datei importieren",
+    "exportFile": "Datei exportieren",
+    "quickSaveSession": "Schnellspeichern (Sitzung)",
+    "serverStorage": "Serverspeicher"
+  },
+  "status": {
+    "current": "Aktuell",
+    "untitled": "Unbenanntes Diagramm",
+    "modified": "Geändert",
+    "sessionStorageNote": "Nur Sitzungsspeicher – exportieren, um dauerhaft zu speichern"
+  },
+  "dialog": {
+    "save": {
+      "title": "Diagramm speichern (Nur aktuelle Sitzung)",
+      "warningTitle": "Wichtig",
+      "warningMessage": "Diese Speicherung ist temporär und geht verloren, wenn du den Browser schließt.",
+      "warningExport": "Verwende <strong>Datei exportieren</strong>, um deine Arbeit dauerhaft zu speichern.",
+      "placeholder": "Diagrammnamen eingeben",
+      "btnSave": "Speichern",
+      "btnCancel": "Abbrechen"
+    },
+    "load": {
+      "title": "Diagramm laden (Nur aktuelle Sitzung)",
+      "noteTitle": "Hinweis",
+      "noteMessage": "Diese Speicherungen sind temporär. Exportiere deine Diagramme, um sie dauerhaft zu behalten.",
+      "noSavedDiagrams": "Keine gespeicherten Diagramme in dieser Sitzung gefunden",
+      "updated": "Aktualisiert",
+      "btnLoad": "Laden",
+      "btnDelete": "Löschen",
+      "btnClose": "Schließen"
+    },
+    "export": {
+      "title": "Diagramm exportieren",
+      "recommendedTitle": "Empfohlen",
+      "recommendedMessage": "Dies ist die beste Methode, um deine Arbeit dauerhaft zu speichern.",
+      "noteMessage": "Exportierte JSON-Dateien können später importiert oder mit anderen geteilt werden.",
+      "btnDownload": "JSON herunterladen",
+      "btnCancel": "Abbrechen"
+    },
+    "readOnly": {
+      "mode": "Nur-Lesen-Modus",
+      "failed": "Diagramm konnte nicht geladen werden"
+    }
+  },
+  "alert": {
+    "enterDiagramName": "Bitte einen Diagrammnamen eingeben",
+    "diagramExists": "Ein Diagramm mit dem Namen \"{{name}}\" existiert bereits in dieser Sitzung. Es wird überschrieben. Möchtest du wirklich fortfahren?",
+    "unsavedChanges": "Du hast ungespeicherte Änderungen. Trotzdem laden?",
+    "createNewDiagram": "Ein neues Diagramm erstellen?",
+    "unsavedChangesExport": "Du hast ungespeicherte Änderungen. Exportiere dein Diagramm zuerst, um es zu speichern. Trotzdem fortfahren?",
+    "confirmDelete": "Möchtest du dieses Diagramm wirklich löschen?",
+    "storageFull": "Speicher voll! Speicherverwaltung wird geöffnet...",
+    "autoSaveFailed": "Speicher voll! Bitte verwende die Speicherverwaltung, um Platz freizugeben.",
+    "beforeUnload": "Du hast ungespeicherte Änderungen. Möchtest du die Seite wirklich verlassen?",
+    "quotaExceeded": "Speicherkontingent überschritten. Bitte exportiere wichtige Diagramme und gib Speicherplatz frei."
+  }
+}

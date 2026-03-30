@@ -187,6 +187,26 @@ const locale: LocaleProps = {
     configPath2: "en haut à gauche pour accéder à la Configuration.",
     canDisable: "Vous pouvez désactiver ce comportement si vous le souhaitez.",
     signature: "-Stan"
+  },
+  settingsDialog: {
+    title: "Paramètres",
+    close: "Fermer",
+    tabZoom: "Zoom",
+    tabLabels: "Étiquettes"
+  },
+  labelSettings: {
+    description: "Configurer les paramètres d'affichage des étiquettes",
+    expandButtonPadding: "Rembourrage du bouton développer",
+    expandButtonPaddingDesc: "Rembourrage inférieur lorsque le bouton développer est visible (évite le chevauchement du texte)",
+    current: "Actuel : {{value}} unités de thème"
+  },
+  diagramViewStatus: {
+    untitledDiagram: "Diagramme sans titre",
+    untitledView: "Vue sans titre"
+  },
+  addMenu: {
+    addNode: "Ajouter un nœud",
+    addRectangle: "Ajouter un rectangle"
   }
 };
 
