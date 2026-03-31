@@ -12,7 +12,7 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-error-boundary": "^6.1.1",
-    "react-i18next": "^16.6.6",
+    "react-i18next": "^17.0.2",
     "react-router-dom": "^7.13.2",
     "web-vitals": "^5.2.0"
   },
