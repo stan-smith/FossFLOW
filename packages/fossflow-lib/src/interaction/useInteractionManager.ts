@@ -176,6 +176,19 @@ export const useInteractionManager = () => {
         }
       }
 
+      if (isCtrlOrCmd && (e.key.toLowerCase() === 'c')) {
+        e.preventDefault();
+        scene.copyObjectsToClipboard(uiState);
+        return;
+      }
+
+      if (isCtrlOrCmd && (e.key.toLowerCase() === 'v')) {
+        e.preventDefault();
+        scene.pasteObjectsFromClipboard(uiState, scene);
+        return;
+      }
+
+      // Help dialog shortcut
       if (e.key === 'F1') {
         e.preventDefault();
         uiState.actions.setDialog(DialogTypeEnum.HELP);
