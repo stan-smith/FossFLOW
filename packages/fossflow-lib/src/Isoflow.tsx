@@ -13,6 +13,7 @@ import { UiOverlay } from 'src/components/UiOverlay/UiOverlay';
 import { UiStateProvider, useUiStateStore } from 'src/stores/uiStateStore';
 import { INITIAL_DATA, MAIN_MENU_OPTIONS } from 'src/config';
 import { useInitialDataManager } from 'src/hooks/useInitialDataManager';
+import { McpBridge } from 'src/components/McpBridge';
 import enUS from 'src/i18n/en-US';
 
 const App = ({
@@ -80,6 +81,7 @@ const App = ({
   return (
     <>
       <GlobalStyles />
+      <McpBridge />
       <Box
         sx={{
           width,

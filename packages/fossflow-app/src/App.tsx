@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Isoflow } from 'fossflow';
 import { flattenCollections } from '@isoflow/isopacks/dist/utils';
 import isoflowIsopack from '@isoflow/isopacks/dist/isoflow';
@@ -14,6 +14,7 @@ import { storageManager } from './services/storageService';
 import ChangeLanguage from './components/ChangeLanguage';
 import { allLocales } from 'fossflow';
 import { useIconPackManager, IconPackName } from './services/iconPackManager';
+import { useWebSocketIntegration } from './hooks/useWebSocketIntegration';
 import './App.css';
 import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 
@@ -47,6 +48,8 @@ function App() {
 function EditorPage() {
   // Initialize icon pack manager with core icons
   const iconPackManager = useIconPackManager(coreIcons);
+
+
   const { readonlyDiagramId } = useParams<{ readonlyDiagramId: string }>();
 
   const [diagrams, setDiagrams] = useState<SavedDiagram[]>([]);
@@ -110,6 +113,12 @@ function EditorPage() {
       views: [],
       fitToScreen: true
     };
+  });
+
+  // WebSocket integration for MCP co-editing
+  useWebSocketIntegration({
+    currentModel,
+    enabled: !isReadonlyUrl,
   });
 
   // Check for server storage availability
@@ -424,7 +433,9 @@ function EditorPage() {
     };
 
     setCurrentModel(updatedModel);
-    setDiagramData(updatedModel);
+    // Don't update diagramData here — it's isoflow's initialData prop.
+    // Updating it triggers isoflow's load() which re-validates and can loop.
+    // diagramData should only change on explicit load/save operations.
 
     if (!isReadonlyUrl) {
       setHasUnsavedChanges(true);
