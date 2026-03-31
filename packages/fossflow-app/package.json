@@ -8,13 +8,13 @@
     "fossflow": "*",
     "i18next": "^25.10.9",
     "i18next-browser-languagedetector": "^8.2.1",
-    "i18next-http-backend": "^3.0.2",
+    "i18next-http-backend": "^3.0.4",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-error-boundary": "^6.1.1",
     "react-i18next": "^16.6.6",
     "react-router-dom": "^7.13.2",
-    "web-vitals": "^5.1.0"
+    "web-vitals": "^5.2.0"
   },
   "scripts": {
     "start": "rsbuild dev",
@@ -41,7 +41,7 @@
     ]
   },
   "devDependencies": {
-    "@rsbuild/core": "^1.7.3",
+    "@rsbuild/core": "^1.7.5",
     "@rsbuild/plugin-react": "^1.4.6",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
