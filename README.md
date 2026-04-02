@@ -35,6 +35,13 @@ Go to  <b> --> https://stan-smith.github.io/FossFLOW/ <-- </b>
 </p>
 
 ------------------------------------------------------------------------------------------------------------------------------
+
+## This just in: Connectors get multiplexed!
+
+<p align="center">
+<img src="demos/connectors.gif" alt="Multiplexed connectors demo" />
+</p>
+
 FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beautiful isometric diagrams. Built with React and the <a href="https://github.com/markmanx/isoflow">Isoflow</a> (Now forked and published to NPM as fossflow) library, it runs entirely in your browser with offline support.
 
 ![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)

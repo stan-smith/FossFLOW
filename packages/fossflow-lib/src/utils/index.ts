@@ -9,3 +9,4 @@ export * from './findNearestUnoccupiedTile';
 export * from './pointInPolygon';
 export * from './connectorLabels';
 export * from './copyPaste';
+export * from './connectorGroups';

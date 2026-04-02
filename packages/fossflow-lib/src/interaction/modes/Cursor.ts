@@ -9,6 +9,7 @@ import {
 } from 'src/types';
 import {
   getItemAtTile,
+  getConnectorsAtTile,
   hasMovedTile,
   getAnchorAtTile,
   getItemByIdOrThrow,
@@ -152,7 +153,7 @@ export const Cursor: ModeActions = {
     }
   },
   mousedown,
-  mouseup: ({ uiState, isRendererInteraction }) => {
+  mouseup: ({ uiState, scene, isRendererInteraction }) => {
     if (uiState.mode.type !== 'CURSOR' || !isRendererInteraction) return;
 
     const hasMoved = uiState.mouse.mousedown && hasMovedTile(uiState.mouse);
@@ -169,10 +170,16 @@ export const Cursor: ModeActions = {
           id: uiState.mode.mousedownItem.id
         });
       } else if (uiState.mode.mousedownItem.type === 'CONNECTOR') {
-        uiState.actions.setItemControls({
-          type: 'CONNECTOR',
-          id: uiState.mode.mousedownItem.id
-        });
+        const clickTile = uiState.mouse.mousedown?.tile ?? uiState.mouse.position.tile;
+        const connectorIds = getConnectorsAtTile({ tile: clickTile, scene });
+
+        if (connectorIds.length > 0) {
+          uiState.actions.setItemControls({
+            type: 'CONNECTOR_GROUP',
+            ids: connectorIds,
+            focusedId: connectorIds.length === 1 ? connectorIds[0] : null
+          });
+        }
       } else if (uiState.mode.mousedownItem.type === 'TEXTBOX') {
         uiState.actions.setItemControls({
           type: 'TEXTBOX',

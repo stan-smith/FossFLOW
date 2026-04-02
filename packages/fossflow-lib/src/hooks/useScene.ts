@@ -433,7 +433,7 @@ export const useScene = () => {
     ) && uiState.mode.selection ?
       uiState.mode.selection.items
       :
-      [(uiState.itemControls as ItemReference)];
+      [uiState.itemControls && 'id' in uiState.itemControls ? (uiState.itemControls as ItemReference) : null].filter(Boolean) as ItemReference[];
 
     copyObject(selectedObjects.map((currentItem) => {
       if (!currentItem) return;

@@ -2,8 +2,7 @@ import React, { useState, useMemo } from 'react';
 import {
   Connector,
   ConnectorLabel,
-  connectorStyleOptions,
-  connectorLineTypeOptions
+  connectorStyleOptions
 } from 'src/types';
 import {
   Box,
@@ -36,9 +35,10 @@ import { DeleteButton } from '../components/DeleteButton';
 
 interface Props {
   id: string;
+  embedded?: boolean;
 }
 
-export const ConnectorControls = ({ id }: Props) => {
+export const ConnectorControls = ({ id, embedded }: Props) => {
   const uiStateActions = useUiStateStore((state) => {
     return state.actions;
   });
@@ -58,10 +58,6 @@ export const ConnectorControls = ({ id }: Props) => {
   if (!connector) {
     return null;
   }
-
-  const isDoubleLineType =
-    connector.lineType === 'DOUBLE' ||
-    connector.lineType === 'DOUBLE_WITH_CIRCLE';
 
   const handleAddLabel = () => {
     if (labels.length >= 256) return;
@@ -124,28 +120,9 @@ export const ConnectorControls = ({ id }: Props) => {
     });
   };
 
-  return (
-    <ControlsContainer>
-      <Box
-        sx={{ position: 'relative', paddingTop: '24px', paddingBottom: '24px' }}
-      >
-        {/* Close button */}
-        <MUIIconButton
-          aria-label="Close"
-          onClick={() => {
-            return uiStateActions.setItemControls(null);
-          }}
-          sx={{
-            position: 'absolute',
-            top: 16,
-            right: 16,
-            zIndex: 2
-          }}
-          size="small"
-        >
-          <CloseIcon />
-        </MUIIconButton>
-        <Section title="Labels">
+  const sections = (
+    <>
+      <Section title="Labels">
           <Box sx={{ mb: 2 }}>
             <Box
               sx={{
@@ -247,20 +224,6 @@ export const ConnectorControls = ({ id }: Props) => {
                       sx={{ flex: 1 }}
                     />
 
-                    {isDoubleLineType && (
-                      <Select
-                        value={label.line || '1'}
-                        onChange={(e) => {
-                          return handleUpdateLabel(label.id, {
-                            line: e.target.value as '1' | '2'
-                          });
-                        }}
-                        sx={{ flex: 1 }}
-                      >
-                        <MenuItem value="1">Line 1</MenuItem>
-                        <MenuItem value="2">Line 2</MenuItem>
-                      </Select>
-                    )}
                   </Box>
 
                   <Box>
@@ -368,31 +331,6 @@ export const ConnectorControls = ({ id }: Props) => {
             })}
           </Select>
         </Section>
-        <Section title="Line Type">
-          <Select
-            value={connector.lineType || 'SINGLE'}
-            onChange={(e) => {
-              updateConnector(connector.id, {
-                lineType: e.target.value as Connector['lineType']
-              });
-            }}
-            fullWidth
-          >
-            {Object.values(connectorLineTypeOptions).map((type) => {
-              let displayName = 'Double Line with Circle';
-              if (type === 'SINGLE') {
-                displayName = 'Single Line';
-              } else if (type === 'DOUBLE') {
-                displayName = 'Double Line';
-              }
-              return (
-                <MenuItem key={type} value={type}>
-                  {displayName}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </Section>
         <Section>
           <FormControlLabel
             control={
@@ -408,16 +346,44 @@ export const ConnectorControls = ({ id }: Props) => {
             label="Show Arrow"
           />
         </Section>
-        <Section>
-          <Box>
-            <DeleteButton
-              onClick={() => {
-                uiStateActions.setItemControls(null);
-                deleteConnector(connector.id);
-              }}
-            />
-          </Box>
-        </Section>
+      <Section>
+        <Box>
+          <DeleteButton
+            onClick={() => {
+              uiStateActions.setItemControls(null);
+              deleteConnector(connector.id);
+            }}
+          />
+        </Box>
+      </Section>
+    </>
+  );
+
+  if (embedded) {
+    return <Box sx={{ pb: 2 }}>{sections}</Box>;
+  }
+
+  return (
+    <ControlsContainer>
+      <Box
+        sx={{ position: 'relative', paddingTop: '24px', paddingBottom: '24px' }}
+      >
+        <MUIIconButton
+          aria-label="Close"
+          onClick={() => {
+            return uiStateActions.setItemControls(null);
+          }}
+          sx={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
+            zIndex: 2
+          }}
+          size="small"
+        >
+          <CloseIcon />
+        </MUIIconButton>
+        {sections}
       </Box>
     </ControlsContainer>
   );

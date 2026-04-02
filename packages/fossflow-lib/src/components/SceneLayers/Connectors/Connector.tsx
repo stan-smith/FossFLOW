@@ -6,6 +6,7 @@ import {
   getColorVariant,
   getConnectorDirectionIcon
 } from 'src/utils';
+import { getGroupOffset } from 'src/utils/connectorGroups';
 import { Circle } from 'src/components/Circle/Circle';
 import { Svg } from 'src/components/Svg/Svg';
 import { useIsoProjection } from 'src/hooks/useIsoProjection';
@@ -16,9 +17,59 @@ import { useColor } from 'src/hooks/useColor';
 interface Props {
   connector: ReturnType<typeof useScene>['connectors'][0];
   isSelected?: boolean;
+  groupIndex?: number;
+  groupTotal?: number;
+  dimmed?: boolean;
 }
 
-export const Connector = memo(({ connector: _connector, isSelected }: Props) => {
+/**
+ * Calculate the perpendicular unit vector at a point along a tile path.
+ */
+const getPerpendicularAt = (
+  tiles: { x: number; y: number }[],
+  i: number
+): { dx: number; dy: number } => {
+  const curr = tiles[i];
+  let dirX = 0;
+  let dirY = 0;
+
+  if (i > 0 && i < tiles.length - 1) {
+    const prev = tiles[i - 1];
+    const next = tiles[i + 1];
+    dirX = ((curr.x - prev.x) + (next.x - curr.x)) / 2;
+    dirY = ((curr.y - prev.y) + (next.y - curr.y)) / 2;
+  } else if (i === 0 && tiles.length > 1) {
+    dirX = tiles[1].x - curr.x;
+    dirY = tiles[1].y - curr.y;
+  } else if (i === tiles.length - 1 && tiles.length > 1) {
+    const prev = tiles[i - 1];
+    dirX = curr.x - prev.x;
+    dirY = curr.y - prev.y;
+  }
+
+  const len = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
+  return { dx: -dirY / len, dy: dirX / len };
+};
+
+/**
+ * Build a polyline points string from tiles, applying a perpendicular pixel offset.
+ */
+const buildOffsetPolyline = (
+  tiles: { x: number; y: number }[],
+  drawOffset: { x: number; y: number },
+  perpOffset: number
+): string => {
+  const points: string[] = [];
+  for (let i = 0; i < tiles.length; i++) {
+    const { dx, dy } = getPerpendicularAt(tiles, i);
+    const x = tiles[i].x * UNPROJECTED_TILE_SIZE + drawOffset.x + dx * perpOffset;
+    const y = tiles[i].y * UNPROJECTED_TILE_SIZE + drawOffset.y + dy * perpOffset;
+    points.push(`${x},${y}`);
+  }
+  return points.join(' ');
+};
+
+export const Connector = memo(({ connector: _connector, isSelected, groupIndex = 0, groupTotal = 1, dimmed = false }: Props) => {
   const theme = useTheme();
   const predefinedColor = useColor(_connector.color);
   const { currentView } = useScene();
@@ -29,10 +80,10 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
   }
 
   // Use custom color if provided, otherwise use predefined color
-  const color = connector.customColor 
+  const color = connector.customColor
     ? { value: connector.customColor }
     : predefinedColor;
-    
+
   if (!color) {
     return null;
   }
@@ -52,76 +103,45 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
     return (UNPROJECTED_TILE_SIZE / 100) * connector.width;
   }, [connector.width]);
 
+  // Pixel offset to spread parallel connectors within one tile
+  const groupOffsetPx = useMemo(() => {
+    return getGroupOffset(groupIndex, groupTotal, UNPROJECTED_TILE_SIZE);
+  }, [groupIndex, groupTotal]);
+
   const pathString = useMemo(() => {
+    if (groupTotal > 1) {
+      return buildOffsetPolyline(connector.path.tiles, drawOffset, groupOffsetPx);
+    }
     return connector.path.tiles.reduce((acc, tile) => {
       return `${acc} ${tile.x * UNPROJECTED_TILE_SIZE + drawOffset.x},${
         tile.y * UNPROJECTED_TILE_SIZE + drawOffset.y
       }`;
     }, '');
-  }, [connector.path.tiles, drawOffset]);
+  }, [connector.path.tiles, drawOffset, groupTotal, groupOffsetPx]);
 
   // Create offset paths for double lines
   const offsetPaths = useMemo(() => {
     if (!connector.lineType || connector.lineType === 'SINGLE') return null;
-    
+
     const tiles = connector.path.tiles;
     if (tiles.length < 2) return null;
-    
-    const offset = connectorWidthPx * 3; // Larger spacing between double lines for visibility
-    const path1Points: string[] = [];
-    const path2Points: string[] = [];
-    
-    for (let i = 0; i < tiles.length; i++) {
-      const curr = tiles[i];
-      let dx = 0, dy = 0;
-      
-      // Calculate perpendicular offset based on line direction
-      if (i > 0 && i < tiles.length - 1) {
-        const prev = tiles[i - 1];
-        const next = tiles[i + 1];
-        const dx1 = curr.x - prev.x;
-        const dy1 = curr.y - prev.y;
-        const dx2 = next.x - curr.x;
-        const dy2 = next.y - curr.y;
-        
-        // Average direction for smooth corners
-        const avgDx = (dx1 + dx2) / 2;
-        const avgDy = (dy1 + dy2) / 2;
-        const len = Math.sqrt(avgDx * avgDx + avgDy * avgDy) || 1;
-        
-        // Perpendicular vector
-        dx = -avgDy / len;
-        dy = avgDx / len;
-      } else if (i === 0 && tiles.length > 1) {
-        // Start point
-        const next = tiles[1];
-        const dirX = next.x - curr.x;
-        const dirY = next.y - curr.y;
-        const len = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
-        dx = -dirY / len;
-        dy = dirX / len;
-      } else if (i === tiles.length - 1 && tiles.length > 1) {
-        // End point
-        const prev = tiles[i - 1];
-        const dirX = curr.x - prev.x;
-        const dirY = curr.y - prev.y;
-        const len = Math.sqrt(dirX * dirX + dirY * dirY) || 1;
-        dx = -dirY / len;
-        dy = dirX / len;
-      }
-      
-      const x = curr.x * UNPROJECTED_TILE_SIZE + drawOffset.x;
-      const y = curr.y * UNPROJECTED_TILE_SIZE + drawOffset.y;
-      
-      path1Points.push(`${x + dx * offset},${y + dy * offset}`);
-      path2Points.push(`${x - dx * offset},${y - dy * offset}`);
+
+    const doubleOffset = connectorWidthPx * 3;
+
+    if (groupTotal > 1) {
+      // For grouped double lines: apply group offset + double-line offset together
+      return {
+        path1: buildOffsetPolyline(tiles, drawOffset, groupOffsetPx + doubleOffset),
+        path2: buildOffsetPolyline(tiles, drawOffset, groupOffsetPx - doubleOffset)
+      };
     }
-    
+
+    // Non-grouped double lines: original behavior
     return {
-      path1: path1Points.join(' '),
-      path2: path2Points.join(' ')
+      path1: buildOffsetPolyline(tiles, drawOffset, doubleOffset),
+      path2: buildOffsetPolyline(tiles, drawOffset, -doubleOffset)
     };
-  }, [connector.path.tiles, connector.lineType, connectorWidthPx, drawOffset]);
+  }, [connector.path.tiles, connector.lineType, connectorWidthPx, drawOffset, groupTotal, groupOffsetPx]);
 
   const anchorPositions = useMemo(() => {
     if (!isSelected) return [];
@@ -168,7 +188,7 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
   const lineType = connector.lineType || 'SINGLE';
 
   return (
-    <Box style={css}>
+    <Box style={{ ...css, opacity: dimmed ? 0.25 : 1, transition: 'opacity 0.2s ease-in-out' }}>
       <Svg
         style={{
           // TODO: The original x coordinates of each tile seems to be calculated wrongly.
@@ -249,23 +269,24 @@ export const Connector = memo(({ connector: _connector, isSelected }: Props) => 
         {lineType === 'DOUBLE_WITH_CIRCLE' && connector.path.tiles.length >= 2 && (() => {
           const midIndex = Math.floor(connector.path.tiles.length / 2);
           const midTile = connector.path.tiles[midIndex];
-          const x = midTile.x * UNPROJECTED_TILE_SIZE + drawOffset.x;
-          const y = midTile.y * UNPROJECTED_TILE_SIZE + drawOffset.y;
-          
+          const { dx, dy } = getPerpendicularAt(connector.path.tiles, midIndex);
+          const x = midTile.x * UNPROJECTED_TILE_SIZE + drawOffset.x + dx * groupOffsetPx;
+          const y = midTile.y * UNPROJECTED_TILE_SIZE + drawOffset.y + dy * groupOffsetPx;
+
           // Calculate rotation based on line direction at middle point
           let rotation = 0;
           if (midIndex > 0 && midIndex < connector.path.tiles.length - 1) {
             const prevTile = connector.path.tiles[midIndex - 1];
             const nextTile = connector.path.tiles[midIndex + 1];
-            const dx = nextTile.x - prevTile.x;
-            const dy = nextTile.y - prevTile.y;
-            rotation = Math.atan2(dy, dx) * (180 / Math.PI);
+            const rdx = nextTile.x - prevTile.x;
+            const rdy = nextTile.y - prevTile.y;
+            rotation = Math.atan2(rdy, rdx) * (180 / Math.PI);
           }
-          
+
           // Increased size to encompass both lines with the spacing
-          const circleRadiusX = connectorWidthPx * 5; // Wider to cover both lines
-          const circleRadiusY = connectorWidthPx * 4; // Height to encompass both lines
-          
+          const circleRadiusX = connectorWidthPx * 5;
+          const circleRadiusY = connectorWidthPx * 4;
+
           return (
             <g transform={`translate(${x}, ${y}) rotate(${rotation})`}>
               <ellipse
