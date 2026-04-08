@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useScene } from 'src/hooks/useScene';
+import { getConnectorGroups } from 'src/utils/connectorGroups';
 import { ConnectorLabel } from './ConnectorLabel';
 
 interface Props {
@@ -7,6 +8,8 @@ interface Props {
 }
 
 export const ConnectorLabels = ({ connectors }: Props) => {
+  const groups = useMemo(() => getConnectorGroups(connectors), [connectors]);
+
   return (
     <>
       {connectors
@@ -19,7 +22,15 @@ export const ConnectorLabels = ({ connectors }: Props) => {
           );
         })
         .map((connector) => {
-          return <ConnectorLabel key={connector.id} connector={connector} />;
+          const group = groups.get(connector.id);
+          return (
+            <ConnectorLabel
+              key={connector.id}
+              connector={connector}
+              groupIndex={group?.index ?? 0}
+              groupTotal={group?.total ?? 1}
+            />
+          );
         })}
     </>
   );

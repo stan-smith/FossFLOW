@@ -35,13 +35,9 @@ describe('textBox reducer', () => {
     
     mockTextBox = {
       id: 'textbox1',
-      position: { x: 10, y: 20 },
+      tile: { x: 10, y: 20 },
       content: 'Test Content',
-      fontSize: 14,
-      color: 'color1',
-      backgroundColor: 'color2',
-      borderColor: 'color3',
-      alignment: 'left'
+      fontSize: 14
     };
 
     mockView = {
@@ -64,12 +60,7 @@ describe('textBox reducer', () => {
         views: [mockView]
       },
       scene: {
-        viewId: 'view1',
-        viewport: { x: 0, y: 0, zoom: 1 },
-        grid: { enabled: true, size: 10, style: 'dots' },
         connectors: {},
-        viewItems: {},
-        rectangles: {},
         textBoxes: {
           'textbox1': {
             size: { width: 120, height: 14 }
@@ -128,15 +119,13 @@ describe('textBox reducer', () => {
       const updates = {
         id: 'textbox1',
         content: 'Updated Content',
-        fontSize: 18,
-        color: 'color4'
+        fontSize: 18
       };
       
       const result = updateTextBox(updates, mockContext);
       
       expect(result.model.views[0].textBoxes![0].content).toBe('Updated Content');
       expect(result.model.views[0].textBoxes![0].fontSize).toBe(18);
-      expect(result.model.views[0].textBoxes![0].color).toBe('color4');
     });
 
     it('should sync when content is updated', () => {
@@ -169,22 +158,6 @@ describe('textBox reducer', () => {
       expect(getTextBoxDimensions).toHaveBeenCalled();
     });
 
-    it('should not sync when other properties are updated', () => {
-      const getTextBoxDimensions = require('src/utils').getTextBoxDimensions;
-      getTextBoxDimensions.mockClear();
-      
-      const updates = {
-        id: 'textbox1',
-        color: 'color5',
-        backgroundColor: 'color6'
-      };
-      
-      updateTextBox(updates, mockContext);
-      
-      // Should NOT trigger sync for non-size-affecting properties
-      expect(getTextBoxDimensions).not.toHaveBeenCalled();
-    });
-
     it('should handle undefined textBoxes array', () => {
       mockState.model.views[0].textBoxes = undefined;
       
@@ -204,8 +177,7 @@ describe('textBox reducer', () => {
       
       // Original properties should be preserved
       expect(result.model.views[0].textBoxes![0].fontSize).toBe(mockTextBox.fontSize);
-      expect(result.model.views[0].textBoxes![0].color).toBe(mockTextBox.color);
-      expect(result.model.views[0].textBoxes![0].position).toEqual(mockTextBox.position);
+      expect(result.model.views[0].textBoxes![0].tile).toEqual(mockTextBox.tile);
       // Updated property
       expect(result.model.views[0].textBoxes![0].content).toBe('Partial Update');
     });
@@ -221,7 +193,7 @@ describe('textBox reducer', () => {
     it('should create a new text box', () => {
       const newTextBox: TextBox = {
         id: 'textbox2',
-        position: { x: 30, y: 40 },
+        tile: { x: 30, y: 40 },
         content: 'New Text Box',
         fontSize: 16
       };
@@ -243,7 +215,7 @@ describe('textBox reducer', () => {
       
       const newTextBox: TextBox = {
         id: 'textbox2',
-        position: { x: 30, y: 40 },
+        tile: { x: 30, y: 40 },
         content: 'New Text Box'
       };
       
@@ -256,15 +228,9 @@ describe('textBox reducer', () => {
     it('should create text box with all properties', () => {
       const newTextBox: TextBox = {
         id: 'textbox2',
-        position: { x: 30, y: 40 },
+        tile: { x: 30, y: 40 },
         content: 'Full Text Box',
-        fontSize: 20,
-        color: 'color7',
-        backgroundColor: 'color8',
-        borderColor: 'color9',
-        alignment: 'center',
-        bold: true,
-        italic: true
+        fontSize: 20
       };
       
       const result = createTextBox(newTextBox, mockContext);
@@ -272,12 +238,6 @@ describe('textBox reducer', () => {
       const created = result.model.views[0].textBoxes![0];
       expect(created.content).toBe('Full Text Box');
       expect(created.fontSize).toBe(20);
-      expect(created.color).toBe('color7');
-      expect(created.backgroundColor).toBe('color8');
-      expect(created.borderColor).toBe('color9');
-      expect(created.alignment).toBe('center');
-      expect(created.bold).toBe(true);
-      expect(created.italic).toBe(true);
     });
 
     it('should throw error when view does not exist', () => {
@@ -285,7 +245,7 @@ describe('textBox reducer', () => {
       
       const newTextBox: TextBox = {
         id: 'textbox2',
-        position: { x: 30, y: 40 },
+        tile: { x: 30, y: 40 },
         content: 'New Text Box'
       };
       
@@ -331,7 +291,7 @@ describe('textBox reducer', () => {
     it('should not affect other text boxes when deleting one', () => {
       const textBox2: TextBox = {
         id: 'textbox2',
-        position: { x: 50, y: 60 },
+        tile: { x: 50, y: 60 },
         content: 'Second Text Box'
       };
       
@@ -364,7 +324,7 @@ describe('textBox reducer', () => {
       // Create
       let result = createTextBox({
         id: 'textbox2',
-        position: { x: 100, y: 100 },
+        tile: { x: 100, y: 100 },
         content: 'New Box'
       }, { ...mockContext, state: mockState });
       
@@ -387,7 +347,7 @@ describe('textBox reducer', () => {
     it('should handle view with multiple text boxes', () => {
       const textBoxes: TextBox[] = Array.from({ length: 5 }, (_, i) => ({
         id: `textbox${i}`,
-        position: { x: i * 10, y: i * 10 },
+        tile: { x: i * 10, y: i * 10 },
         content: `Text ${i}`
       }));
       

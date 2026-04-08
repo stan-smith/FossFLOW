@@ -1,6 +1,6 @@
 {
   "name": "fossflow-backend",
-  "version": "1.10.7",
+  "version": "1.10.8",
   "description": "Optional backend server for FossFLOW persistent storage",
   "main": "server.js",
   "type": "module",
@@ -9,12 +9,12 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
-    "express": "^4.21.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "nodemon": "^3.1.10"
+    "nodemon": "^3.1.14"
   }
 }

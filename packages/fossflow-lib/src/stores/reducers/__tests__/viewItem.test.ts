@@ -46,8 +46,7 @@ describe('viewItem reducer', () => {
 
     mockViewItem = {
       id: 'item1',
-      tile: { x: 0, y: 0 },
-      size: { width: 100, height: 100 }
+      tile: { x: 0, y: 0 }
     };
 
     mockConnector = {
@@ -55,15 +54,11 @@ describe('viewItem reducer', () => {
       anchors: [
         {
           id: 'anchor1',
-          ref: { item: 'item1' },
-          face: 'right',
-          offset: 0
+          ref: { item: 'item1' }
         },
         {
           id: 'anchor2',
-          ref: { item: 'item2' },
-          face: 'left',
-          offset: 0
+          ref: { item: 'item2' }
         }
       ]
     };
@@ -88,9 +83,6 @@ describe('viewItem reducer', () => {
         views: [mockView]
       },
       scene: {
-        viewId: 'view1',
-        viewport: { x: 0, y: 0, zoom: 1 },
-        grid: { enabled: true, size: 10, style: 'dots' },
         connectors: {
           'connector1': {
             path: {
@@ -99,8 +91,6 @@ describe('viewItem reducer', () => {
             }
           }
         },
-        viewItems: {},
-        rectangles: {},
         textBoxes: {}
       }
     };
@@ -130,13 +120,11 @@ describe('viewItem reducer', () => {
         anchors: [
           {
             id: 'anchor3',
-            ref: { item: 'item2' },
-            face: 'top'
+            ref: { item: 'item2' }
           },
           {
             id: 'anchor4',
-            ref: { item: 'item3' },
-            face: 'bottom'
+            ref: { item: 'item3' }
           }
         ]
       };
@@ -162,13 +150,11 @@ describe('viewItem reducer', () => {
         anchors: [
           {
             id: 'anchor3',
-            ref: { item: 'item2' },
-            face: 'top'
+            ref: { item: 'item2' }
           },
           {
             id: 'anchor4',
-            ref: { item: 'item3' },
-            face: 'bottom'
+            ref: { item: 'item3' }
           }
         ]
       }];
@@ -208,18 +194,15 @@ describe('viewItem reducer', () => {
         anchors: [
           {
             id: 'anchor5',
-            ref: { item: 'item1' },
-            face: 'top'
+            ref: { item: 'item1' }
           },
           {
             id: 'anchor6',
-            ref: { item: 'item1' },
-            face: 'bottom'
+            ref: { item: 'item1' }
           },
           {
             id: 'anchor7',
-            ref: { item: 'item2' },
-            face: 'left'
+            ref: { item: 'item2' }
           }
         ]
       };
@@ -237,15 +220,13 @@ describe('viewItem reducer', () => {
     it('should update view item properties', () => {
       const updates = {
         id: 'item1',
-        tile: { x: 2, y: 2 },
-        size: { width: 200, height: 200 }
+        tile: { x: 2, y: 2 }
       };
 
       const result = updateViewItem(updates, mockContext);
 
       const updatedItem = result.model.views[0].items.find(item => item.id === 'item1');
       expect(updatedItem?.tile).toEqual({ x: 2, y: 2 });
-      expect(updatedItem?.size).toEqual({ width: 200, height: 200 });
     });
 
     it('should update connectors when item tile position changes', () => {
@@ -280,8 +261,7 @@ describe('viewItem reducer', () => {
       view.mockClear();
 
       const updates = {
-        id: 'item1',
-        size: { width: 150, height: 150 }
+        id: 'item1'
       };
 
       updateViewItem(updates, mockContext);
@@ -301,8 +281,7 @@ describe('viewItem reducer', () => {
     it('should create a new view item', () => {
       const newItem: ViewItem = {
         id: 'item3',
-        tile: { x: 3, y: 3 },
-        size: { width: 100, height: 100 }
+        tile: { x: 3, y: 3 }
       };
 
       const result = createViewItem(newItem, mockContext);
@@ -359,14 +338,14 @@ describe('viewItem reducer', () => {
       // Update
       result = updateViewItem({
         id: 'item3',
-        size: { width: 150, height: 150 }
+        tile: { x: 5, y: 5 }
       }, { ...mockContext, state: result });
 
       // Delete original
       result = deleteViewItem('item1', { ...mockContext, state: result });
 
       expect(result.model.views[0].items.find(item => item.id === 'item3')).toBeDefined();
-      expect(result.model.views[0].items.find(item => item.id === 'item3')?.size).toEqual({ width: 150, height: 150 });
+      expect(result.model.views[0].items.find(item => item.id === 'item3')?.tile).toEqual({ x: 5, y: 5 });
       expect(result.model.views[0].items.find(item => item.id === 'item1')).toBeUndefined();
 
       // Connector referencing item1 should be removed

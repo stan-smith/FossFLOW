@@ -1,0 +1,62 @@
+{
+    "nav": {
+        "newDiagram": "Nowy Diagram",
+        "saveSessionOnly": "Zapisz (Tylko Sesja)",
+        "loadSessionOnly": "Wczytaj (Tylko Sesja)",
+        "importFile": "Importuj Plik",
+        "exportFile": "Eksportuj Plik",
+        "quickSaveSession": "Szybki Zapis (Sesja)",
+        "serverStorage": "Magazyn Serwera"
+    },
+    "status": {
+        "current": "Aktualny",
+        "untitled": "Diagram Bez Tytułu",
+        "modified": "Zmodyfikowany",
+        "sessionStorageNote": "Tylko magazyn sesji - eksportuj, aby zapisać trwale"
+    },
+    "dialog": {
+        "save": {
+            "title": "Zapisz Diagram (Tylko Bieżąca Sesja)",
+            "warningTitle": "Ważne",
+            "warningMessage": "Ten zapis jest tymczasowy i zostanie utracony po zamknięciu przeglądarki.",
+            "warningExport": "Użyj <strong>Eksportuj Plik</strong>, aby trwale zapisać swoją pracę.",
+            "placeholder": "Wprowadź nazwę diagramu",
+            "btnSave": "Zapisz",
+            "btnCancel": "Anuluj"
+        },
+        "load": {
+            "title": "Wczytaj Diagram (Tylko Bieżąca Sesja)",
+            "noteTitle": "Uwaga",
+            "noteMessage": "Te zapisy są tymczasowe. Eksportuj diagramy, aby zachować je trwale.",
+            "noSavedDiagrams": "Nie znaleziono zapisanych diagramów w tej sesji",
+            "updated": "Zaktualizowano",
+            "btnLoad": "Wczytaj",
+            "btnDelete": "Usuń",
+            "btnClose": "Zamknij"
+        },
+        "export": {
+            "title": "Eksportuj Diagram",
+            "recommendedTitle": "Zalecane",
+            "recommendedMessage": "To najlepszy sposób trwałego zapisania pracy.",
+            "noteMessage": "Eksportowane pliki JSON można później importować lub udostępniać innym.",
+            "btnDownload": "Pobierz JSON",
+            "btnCancel": "Anuluj"
+        },
+        "readOnly": {
+            "mode": "Tryb Tylko do Odczytu",
+            "failed": "Nie udało się wczytać diagramu"
+        }
+    },
+    "alert": {
+        "enterDiagramName": "Proszę wprowadzić nazwę diagramu",
+        "diagramExists": "Diagram o nazwie \"{{name}}\" już istnieje w tej sesji. Zostanie nadpisany. Czy na pewno chcesz kontynuować?",
+        "unsavedChanges": "Masz niezapisane zmiany. Kontynuować wczytywanie?",
+        "createNewDiagram": "Utworzyć nowy diagram?",
+        "unsavedChangesExport": "Masz niezapisane zmiany. Najpierw eksportuj diagram, aby go zapisać. Kontynuować?",
+        "confirmDelete": "Czy na pewno chcesz usunąć ten diagram?",
+        "storageFull": "Magazyn pełny! Otwieranie Menedżera Magazynu...",
+        "autoSaveFailed": "Magazyn pełny! Użyj Menedżera Magazynu, aby zwolnić miejsce.",
+        "beforeUnload": "Masz niezapisane zmiany. Czy na pewno chcesz opuścić stronę?",
+        "quotaExceeded": "Przekroczono limit magazynu. Proszę eksportować ważne diagramy i usunąć część danych."
+    }
+}

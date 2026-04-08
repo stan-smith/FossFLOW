@@ -21,8 +21,8 @@ jest.mock('src/utils', () => ({
   getConnectorPath: jest.fn(({ anchors }) => ({
     tiles: [{ x: 0, y: 0 }, { x: 1, y: 1 }],
     rectangle: {
-      from: { x: anchors.from.x || 0, y: anchors.from.y || 0 },
-      to: { x: anchors.to.x || 1, y: anchors.to.y || 1 }
+      from: { x: 0, y: 0 },
+      to: { x: 1, y: 1 }
     }
   }))
 }));
@@ -38,12 +38,12 @@ describe('connector reducer', () => {
     
     mockConnector = {
       id: 'connector1',
-      anchors: {
-        from: { id: 'item1', face: 'right', x: 0, y: 0 },
-        to: { id: 'item2', face: 'left', x: 2, y: 0 }
-      },
-      label: 'Test Connection',
-      lineType: 'solid',
+      anchors: [
+        { id: 'anchor1', ref: { item: 'item1' } },
+        { id: 'anchor2', ref: { item: 'item2' } }
+      ],
+      description: 'Test Connection',
+      style: 'SOLID',
       color: 'color1'
     };
 
@@ -67,9 +67,6 @@ describe('connector reducer', () => {
         views: [mockView]
       },
       scene: {
-        viewId: 'view1',
-        viewport: { x: 0, y: 0, zoom: 1 },
-        grid: { enabled: true, size: 10, style: 'dots' },
         connectors: {
           'connector1': {
             path: {
@@ -78,8 +75,6 @@ describe('connector reducer', () => {
             }
           }
         },
-        viewItems: {},
-        rectangles: {},
         textBoxes: {}
       }
     };
@@ -126,10 +121,10 @@ describe('connector reducer', () => {
     it('should not affect other connectors when deleting one', () => {
       const connector2: Connector = {
         id: 'connector2',
-        anchors: {
-          from: { id: 'item3', face: 'top' },
-          to: { id: 'item4', face: 'bottom' }
-        }
+        anchors: [
+          { id: 'anchor3', ref: { item: 'item3' } },
+          { id: 'anchor4', ref: { item: 'item4' } }
+        ]
       };
       
       mockState.model.views[0].connectors = [mockConnector, connector2];
@@ -198,10 +193,10 @@ describe('connector reducer', () => {
     });
 
     it('should handle connectors with partial anchor data', () => {
-      mockConnector.anchors = {
-        from: { id: 'item1', face: 'right' },
-        to: { id: 'item2', face: 'left' }
-      };
+      mockConnector.anchors = [
+        { id: 'anchor1', ref: { item: 'item1' } },
+        { id: 'anchor2', ref: { item: 'item2' } }
+      ];
       
       const result = syncConnector('connector1', mockContext);
       
@@ -213,25 +208,25 @@ describe('connector reducer', () => {
     it('should update connector properties', () => {
       const updates = {
         id: 'connector1',
-        label: 'Updated Connection',
+        description: 'Updated Connection',
         color: 'color2',
-        lineType: 'dashed' as const
+        style: 'DASHED' as const
       };
       
       const result = updateConnector(updates, mockContext);
       
-      expect(result.model.views[0].connectors![0].label).toBe('Updated Connection');
+      expect(result.model.views[0].connectors![0].description).toBe('Updated Connection');
       expect(result.model.views[0].connectors![0].color).toBe('color2');
-      expect(result.model.views[0].connectors![0].lineType).toBe('dashed');
+      expect(result.model.views[0].connectors![0].style).toBe('DASHED');
     });
 
     it('should sync connector when anchors are updated', () => {
       const updates = {
         id: 'connector1',
-        anchors: {
-          from: { id: 'item3', face: 'bottom' as const },
-          to: { id: 'item4', face: 'top' as const }
-        }
+        anchors: [
+          { id: 'anchor3', ref: { item: 'item3' } },
+          { id: 'anchor4', ref: { item: 'item4' } }
+        ]
       };
       
       const result = updateConnector(updates, mockContext);
@@ -247,7 +242,7 @@ describe('connector reducer', () => {
       
       const updates = {
         id: 'connector1',
-        label: 'Just a label update'
+        description: 'Just a description update'
       };
       
       updateConnector(updates, mockContext);
@@ -258,14 +253,14 @@ describe('connector reducer', () => {
 
     it('should throw error when connector does not exist', () => {
       expect(() => {
-        updateConnector({ id: 'nonexistent', label: 'test' }, mockContext);
+        updateConnector({ id: 'nonexistent', description: 'test' }, mockContext);
       }).toThrow('Item with id nonexistent not found');
     });
 
     it('should handle empty connectors array', () => {
       mockState.model.views[0].connectors = undefined;
       
-      const result = updateConnector({ id: 'connector1', label: 'test' }, mockContext);
+      const result = updateConnector({ id: 'connector1', description: 'test' }, mockContext);
       
       // Should return state unchanged when connectors is undefined
       expect(result).toEqual(mockState);
@@ -274,7 +269,7 @@ describe('connector reducer', () => {
     it('should preserve other connector properties when partially updating', () => {
       const updates = {
         id: 'connector1',
-        label: 'Partial Update'
+        description: 'Partial Update'
       };
       
       const result = updateConnector(updates, mockContext);
@@ -282,9 +277,9 @@ describe('connector reducer', () => {
       // Original properties should be preserved
       expect(result.model.views[0].connectors![0].anchors).toEqual(mockConnector.anchors);
       expect(result.model.views[0].connectors![0].color).toBe(mockConnector.color);
-      expect(result.model.views[0].connectors![0].lineType).toBe(mockConnector.lineType);
+      expect(result.model.views[0].connectors![0].style).toBe(mockConnector.style);
       // Updated property
-      expect(result.model.views[0].connectors![0].label).toBe('Partial Update');
+      expect(result.model.views[0].connectors![0].description).toBe('Partial Update');
     });
   });
 
@@ -292,11 +287,11 @@ describe('connector reducer', () => {
     it('should create a new connector', () => {
       const newConnector: Connector = {
         id: 'connector2',
-        anchors: {
-          from: { id: 'item5', face: 'right' },
-          to: { id: 'item6', face: 'left' }
-        },
-        label: 'New Connection'
+        anchors: [
+          { id: 'anchor5', ref: { item: 'item5' } },
+          { id: 'anchor6', ref: { item: 'item6' } }
+        ],
+        description: 'New Connection'
       };
       
       const result = createConnector(newConnector, mockContext);
@@ -316,10 +311,10 @@ describe('connector reducer', () => {
       
       const newConnector: Connector = {
         id: 'connector2',
-        anchors: {
-          from: { id: 'item5', face: 'right' },
-          to: { id: 'item6', face: 'left' }
-        }
+        anchors: [
+          { id: 'anchor5', ref: { item: 'item5' } },
+          { id: 'anchor6', ref: { item: 'item6' } }
+        ]
       };
       
       const result = createConnector(newConnector, mockContext);
@@ -336,10 +331,10 @@ describe('connector reducer', () => {
       
       const newConnector: Connector = {
         id: 'connector2',
-        anchors: {
-          from: { id: 'item5', face: 'right' },
-          to: { id: 'item6', face: 'left' }
-        }
+        anchors: [
+          { id: 'anchor5', ref: { item: 'item5' } },
+          { id: 'anchor6', ref: { item: 'item6' } }
+        ]
       };
       
       const result = createConnector(newConnector, mockContext);
@@ -362,10 +357,10 @@ describe('connector reducer', () => {
       
       const newConnector: Connector = {
         id: 'connector2',
-        anchors: {
-          from: { id: 'item5', face: 'right' },
-          to: { id: 'item6', face: 'left' }
-        }
+        anchors: [
+          { id: 'anchor5', ref: { item: 'item5' } },
+          { id: 'anchor6', ref: { item: 'item6' } }
+        ]
       };
       
       expect(() => {
@@ -376,23 +371,21 @@ describe('connector reducer', () => {
     it('should create connector with all optional properties', () => {
       const newConnector: Connector = {
         id: 'connector2',
-        anchors: {
-          from: { id: 'item5', face: 'right' },
-          to: { id: 'item6', face: 'left' }
-        },
-        label: 'Full Connector',
-        lineType: 'dotted',
-        color: 'color3',
-        labels: ['Label1', 'Label2']
+        anchors: [
+          { id: 'anchor5', ref: { item: 'item5' } },
+          { id: 'anchor6', ref: { item: 'item6' } }
+        ],
+        description: 'Full Connector',
+        style: 'DOTTED',
+        color: 'color3'
       };
       
       const result = createConnector(newConnector, mockContext);
       
       const created = result.model.views[0].connectors![0];
-      expect(created.label).toBe('Full Connector');
-      expect(created.lineType).toBe('dotted');
+      expect(created.description).toBe('Full Connector');
+      expect(created.style).toBe('DOTTED');
       expect(created.color).toBe('color3');
-      expect(created.labels).toEqual(['Label1', 'Label2']);
     });
   });
 
@@ -409,16 +402,16 @@ describe('connector reducer', () => {
       // Create
       let result = createConnector({
         id: 'connector2',
-        anchors: {
-          from: { id: 'item3', face: 'top' },
-          to: { id: 'item4', face: 'bottom' }
-        }
+        anchors: [
+          { id: 'anchor3', ref: { item: 'item3' } },
+          { id: 'anchor4', ref: { item: 'item4' } }
+        ]
       }, { ...mockContext, state: mockState });
       
       // Update
       result = updateConnector({
         id: 'connector2',
-        label: 'Updated'
+        description: 'Updated'
       }, { ...mockContext, state: result });
       
       // Delete original
@@ -426,16 +419,16 @@ describe('connector reducer', () => {
       
       expect(result.model.views[0].connectors).toHaveLength(1);
       expect(result.model.views[0].connectors![0].id).toBe('connector2');
-      expect(result.model.views[0].connectors![0].label).toBe('Updated');
+      expect(result.model.views[0].connectors![0].description).toBe('Updated');
     });
 
     it('should handle view with multiple connectors', () => {
       const connectors: Connector[] = Array.from({ length: 5 }, (_, i) => ({
         id: `connector${i}`,
-        anchors: {
-          from: { id: `item${i}`, face: 'right' },
-          to: { id: `item${i + 1}`, face: 'left' }
-        }
+        anchors: [
+          { id: `anchor${i * 2}`, ref: { item: `item${i}` } },
+          { id: `anchor${i * 2 + 1}`, ref: { item: `item${i + 1}` } }
+        ]
       }));
       
       mockState.model.views[0].connectors = connectors;

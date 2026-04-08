@@ -516,6 +516,23 @@ export const getItemAtTile = ({
   return null;
 };
 
+export const getConnectorsAtTile = ({
+  tile,
+  scene
+}: GetItemAtTile): string[] => {
+  return scene.connectors
+    .filter((con) => {
+      return con.path.tiles.some((pathTile) => {
+        const globalPathTile = connectorPathTileToGlobal(
+          pathTile,
+          con.path.rectangle.from
+        );
+        return CoordsUtils.isEqual(globalPathTile, tile);
+      });
+    })
+    .map((con) => con.id);
+};
+
 interface FontProps {
   fontWeight: number | string;
   fontSize: number;

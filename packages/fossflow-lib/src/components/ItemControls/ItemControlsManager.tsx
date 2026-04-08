@@ -4,6 +4,7 @@ import { useUiStateStore } from 'src/stores/uiStateStore';
 import { IconSelectionControls } from 'src/components/ItemControls/IconSelectionControls/IconSelectionControls';
 import { NodeControls } from './NodeControls/NodeControls';
 import { ConnectorControls } from './ConnectorControls/ConnectorControls';
+import { ConnectorGroupControls } from './ConnectorControls/ConnectorGroupControls';
 import { TextBoxControls } from './TextBoxControls/TextBoxControls';
 import { RectangleControls } from './RectangleControls/RectangleControls';
 
@@ -18,6 +19,8 @@ export const ItemControlsManager = () => {
         return <NodeControls key={itemControls.id} id={itemControls.id} />;
       case 'CONNECTOR':
         return <ConnectorControls key={itemControls.id} id={itemControls.id} />;
+      case 'CONNECTOR_GROUP':
+        return <ConnectorGroupControls key={itemControls.ids.join(',')} controls={itemControls} />;
       case 'TEXTBOX':
         return <TextBoxControls key={itemControls.id} id={itemControls.id} />;
       case 'RECTANGLE':

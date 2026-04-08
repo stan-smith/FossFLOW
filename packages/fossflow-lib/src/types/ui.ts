@@ -11,7 +11,13 @@ interface AddItemControls {
   type: 'ADD_ITEM';
 }
 
-export type ItemControls = ItemReference | AddItemControls;
+export interface ConnectorGroupControls {
+  type: 'CONNECTOR_GROUP';
+  ids: string[];
+  focusedId: string | null;
+}
+
+export type ItemControls = ItemReference | AddItemControls | ConnectorGroupControls;
 
 export interface Mouse {
   position: {

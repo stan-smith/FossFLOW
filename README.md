@@ -35,6 +35,13 @@ Go to  <b> --> https://stan-smith.github.io/FossFLOW/ <-- </b>
 </p>
 
 ------------------------------------------------------------------------------------------------------------------------------
+
+## This just in: Connectors get multiplexed!
+
+<p align="center">
+<img src="demos/connectors.gif" alt="Multiplexed connectors demo" />
+</p>
+
 FossFLOW is a powerful, open-source Progressive Web App (PWA) for creating beautiful isometric diagrams. Built with React and the <a href="https://github.com/markmanx/isoflow">Isoflow</a> (Now forked and published to NPM as fossflow) library, it runs entirely in your browser with offline support.
 
 ![Screenshot_20250630_160954](https://github.com/user-attachments/assets/e7f254ad-625f-4b8a-8efc-5293b5be9d55)
@@ -57,6 +64,23 @@ To disable server storage, set `ENABLE_SERVER_STORAGE=false`:
 ```bash
 docker run -p 80:80 -e ENABLE_SERVER_STORAGE=false stnsmith/fossflow:latest
 ```
+
+### HTTP Basic Authentication (Optional)
+
+Protect your FossFLOW instance with HTTP Basic Auth:
+
+```bash
+# With Docker Compose
+HTTP_AUTH_USER=admin HTTP_AUTH_PASSWORD=secret docker compose up
+
+# Or with docker run
+docker run -p 80:80 \
+  -e HTTP_AUTH_USER=admin \
+  -e HTTP_AUTH_PASSWORD=secret \
+  stnsmith/fossflow:latest
+```
+
+> **Note**: Both variables must be set to enable authentication. If either is empty, the app is accessible without login.
 
 ## Quick Start (Local Development)
 
