@@ -19,6 +19,7 @@ import { LabelSettings } from '../LabelSettings/LabelSettings';
 import { ConnectorSettings } from '../ConnectorSettings/ConnectorSettings';
 import { IconPackSettings } from '../IconPackSettings/IconPackSettings';
 import { useTranslation } from 'src/stores/localeStore';
+import { clickStopperProps } from 'src/utils';
 
 export interface SettingsDialogProps {
   iconPackManager?: {
@@ -59,6 +60,7 @@ export const SettingsDialog = ({ iconPackManager }: SettingsDialogProps) => {
       onClose={handleClose}
       maxWidth="md"
       fullWidth
+      {...clickStopperProps}
     >
       <DialogTitle>
         Settings

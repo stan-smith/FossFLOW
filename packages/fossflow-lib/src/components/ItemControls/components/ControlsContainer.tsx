@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Divider } from '@mui/material';
+import { clickStopperProps } from 'src/utils';
 
 interface Props {
   header?: React.ReactNode;
@@ -9,8 +10,7 @@ interface Props {
 export const ControlsContainer = ({ header, children }: Props) => {
   return (
     <Box
-      onMouseDown={e => e.stopPropagation()}
-      onContextMenu={e => e.stopPropagation()}
+      {...clickStopperProps}
       sx={{
         position: 'relative',
         height: '100%',
