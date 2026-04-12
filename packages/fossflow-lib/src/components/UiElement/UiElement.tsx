@@ -1,5 +1,6 @@
 import React from 'react';
 import { Card, SxProps } from '@mui/material';
+import { clickStopperProps } from 'src/utils';
 
 interface Props {
   children: React.ReactNode;
@@ -18,6 +19,7 @@ export const UiElement = ({ children, sx, style }: Props) => {
         ...sx
       }}
       style={style}
+      {...clickStopperProps}
     >
       {children}
     </Card>
