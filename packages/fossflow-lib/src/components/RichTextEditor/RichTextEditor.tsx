@@ -34,7 +34,6 @@ const formats = [
   'link',
   'header',
   'list',
-  'bullet',
   'blockquote',
   'code-block'
 ];
