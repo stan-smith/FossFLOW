@@ -42,7 +42,7 @@ jobs:
           CI: false
           PUBLIC_URL: /FossFLOW/
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           # Upload from the app's build directory in monorepo
           path: './packages/fossflow-app/build/'
