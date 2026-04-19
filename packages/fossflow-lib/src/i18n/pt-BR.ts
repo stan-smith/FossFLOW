@@ -119,7 +119,10 @@ const locale: LocaleProps = {
     zoom: {
       description: "Configurar o comportamento do zoom ao usar a roda do mouse.",
       zoomToCursor: "Zoom no cursor",
-      zoomToCursorDesc: "Quando habilitado, o zoom é centralizado na posição do cursor do mouse. Quando desabilitado, o zoom é centralizado na tela."
+      zoomToCursorDesc: "Quando habilitado, o zoom é centralizado na posição do cursor do mouse. Quando desabilitado, o zoom é centralizado na tela.",
+
+      trackpadMode: "Modo Trackpad",
+      trackpadModeDesc: "Quando ativado: rolagem com dois dedos move a tela, pinça com zoom sem afetar o navegador. Quando desativado: a roda do mouse amplia a tela (comportamento padrão do mouse)."
     },
     hotkeys: {
       title: "Configurações de atalhos",

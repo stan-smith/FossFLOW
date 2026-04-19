@@ -103,6 +103,7 @@ export const useInteractionManager = () => {
   const editorMode = useUiStateStore((state) => state.editorMode);
 
   const uiStateApi = useUiStateStoreApi();
+  const trackpadMode = useUiStateStore((state) => state.zoomSettings.trackpadMode);
   const modelStoreApi = useModelStoreApi();
   const scene = useScene();
   const { size: rendererSize } = useResizeObserver(rendererEl);
@@ -425,44 +426,54 @@ export const useInteractionManager = () => {
 
     const onScroll = (e: WheelEvent) => {
       const uiState = uiStateApi.getState();
-      const zoomToCursor = uiState.zoomSettings.zoomToCursor;
-      const oldZoom = uiState.zoom;
+      const isPinchGesture = e.ctrlKey;
 
-      let newZoom: number;
-      if (e.deltaY > 0) {
-        newZoom = decrementZoom(oldZoom);
+      const applyZoom = () => {
+        const oldZoom = uiState.zoom;
+        const newZoom = e.deltaY > 0 ? decrementZoom(oldZoom) : incrementZoom(oldZoom);
+
+        if (newZoom === oldZoom) return;
+
+        if (uiState.zoomSettings.zoomToCursor && rendererRef.current && rendererSize) {
+          const rect = rendererRef.current.getBoundingClientRect();
+          const mouseX = e.clientX - rect.left;
+          const mouseY = e.clientY - rect.top;
+
+          const mouseRelativeToCenterX = mouseX - rendererSize.width / 2;
+          const mouseRelativeToCenterY = mouseY - rendererSize.height / 2;
+
+          const worldX = (mouseRelativeToCenterX - uiState.scroll.position.x) / oldZoom;
+          const worldY = (mouseRelativeToCenterY - uiState.scroll.position.y) / oldZoom;
+
+          const newScrollX = mouseRelativeToCenterX - worldX * newZoom;
+          const newScrollY = mouseRelativeToCenterY - worldY * newZoom;
+
+          uiState.actions.setZoom(newZoom);
+          uiState.actions.setScroll({
+            position: { x: newScrollX, y: newScrollY },
+            offset: uiState.scroll.offset
+          });
+        } else {
+          uiState.actions.setZoom(newZoom);
+        }
+      };
+
+      if (trackpadMode) {
+        if (isPinchGesture) {
+          e.preventDefault();
+          applyZoom();
+        } else {
+          e.preventDefault();
+          uiState.actions.setScroll({
+            position: {
+              x: uiState.scroll.position.x - e.deltaX,
+              y: uiState.scroll.position.y - e.deltaY
+            },
+            offset: uiState.scroll.offset
+          });
+        }
       } else {
-        newZoom = incrementZoom(oldZoom);
-      }
-
-      if (newZoom === oldZoom) {
-        return;
-      }
-
-      if (zoomToCursor && rendererRef.current && rendererSize) {
-        const rect = rendererRef.current.getBoundingClientRect();
-        const mouseX = e.clientX - rect.left;
-        const mouseY = e.clientY - rect.top;
-
-        const mouseRelativeToCenterX = mouseX - rendererSize.width / 2;
-        const mouseRelativeToCenterY = mouseY - rendererSize.height / 2;
-
-        const worldX = (mouseRelativeToCenterX - uiState.scroll.position.x) / oldZoom;
-        const worldY = (mouseRelativeToCenterY - uiState.scroll.position.y) / oldZoom;
-
-        const newScrollX = mouseRelativeToCenterX - worldX * newZoom;
-        const newScrollY = mouseRelativeToCenterY - worldY * newZoom;
-
-        uiState.actions.setZoom(newZoom);
-        uiState.actions.setScroll({
-          position: {
-            x: newScrollX,
-            y: newScrollY
-          },
-          offset: uiState.scroll.offset
-        });
-      } else {
-        uiState.actions.setZoom(newZoom);
+        applyZoom();
       }
     };
 
@@ -473,7 +484,7 @@ export const useInteractionManager = () => {
     el.addEventListener('touchstart', onTouchStart);
     el.addEventListener('touchmove', onTouchMove);
     el.addEventListener('touchend', onTouchEnd);
-    rendererEl?.addEventListener('wheel', onScroll, { passive: true });
+    rendererEl?.addEventListener('wheel', onScroll, { passive: !trackpadMode });
 
     return () => {
       el.removeEventListener('mousemove', onMouseEvent);
@@ -494,6 +505,7 @@ export const useInteractionManager = () => {
     rendererEl,
     rendererSize,
     uiStateApi,
+    trackpadMode,
     cleanup
   ]);
 

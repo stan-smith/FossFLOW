@@ -119,7 +119,10 @@ const locale: LocaleProps = {
     zoom: {
       description: "Konfigurasi perilaku zoom saat menggunakan roda mouse.",
       zoomToCursor: "Zoom ke Kursor",
-      zoomToCursorDesc: "Saat diaktifkan, zoom masuk/keluar terpusat pada posisi kursor mouse. Saat dinonaktifkan, zoom terpusat pada kanvas."
+      zoomToCursorDesc: "Saat diaktifkan, zoom masuk/keluar terpusat pada posisi kursor mouse. Saat dinonaktifkan, zoom terpusat pada kanvas.",
+
+      trackpadMode: "Mode Trackpad",
+      trackpadModeDesc: "Saat diaktifkan: gulir dua jari menggeser kanvas, cubit untuk memperbesar tanpa mempengaruhi browser. Saat dinonaktifkan: roda gulir memperbesar kanvas (perilaku mouse default)."
     },
     hotkeys: {
       title: "Pengaturan Pintasan",

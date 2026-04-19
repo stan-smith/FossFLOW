@@ -119,7 +119,10 @@ const locale: LocaleProps = {
     zoom: {
       description: "Configura il comportamento dello zoom quando si usa la rotella del mouse.",
       zoomToCursor: "Zoom sul cursore",
-      zoomToCursorDesc: "Se abilitato, ingrandisci o riduci centrando sul cursore del mouse. Se disabilitato, lo zoom è centrato sulla tela."
+      zoomToCursorDesc: "Se abilitato, ingrandisci o riduci centrando sul cursore del mouse. Se disabilitato, lo zoom è centrato sulla tela.",
+
+      trackpadMode: "Modalità Trackpad",
+      trackpadModeDesc: "Quando abilitato: lo scorrimento con due dita sposta la tela, il pizzico ingrandisce senza influire sul browser. Quando disabilitato: la rotellina del mouse ingrandisce la tela (comportamento predefinito del mouse)."
     },
     hotkeys: {
       title: "Impostazioni scorciatoie",
