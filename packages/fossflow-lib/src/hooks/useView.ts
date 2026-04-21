@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useUiStateStore } from 'src/stores/uiStateStore';
 import { useSceneStore } from 'src/stores/sceneStore';
 import * as reducers from 'src/stores/reducers';
@@ -28,7 +28,10 @@ export const useView = () => {
     [uiStateActions, sceneActions]
   );
 
-  return {
-    changeView
-  };
+  return useMemo(
+    () => ({
+      changeView
+    }),
+    [changeView]
+  );
 };

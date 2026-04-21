@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Isoflow } from 'fossflow';
 import { flattenCollections } from '@isoflow/isopacks/dist/utils';
@@ -204,7 +204,7 @@ function EditorPage() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [hasUnsavedChanges, isReadonlyUrl]);
 
-  const handleModelUpdated = (model: any) => {
+  const handleModelUpdated = useCallback((model: any) => {
     const updatedData = {
       ...diagramData,
       ...model
@@ -215,7 +215,24 @@ function EditorPage() {
     if (!isReadonlyUrl) {
       setHasUnsavedChanges(true);
     }
-  };
+  }, [diagramData, isReadonlyUrl]);
+
+  // Memoize the iconPackManager prop so its reference is stable between renders.
+  // An unstable reference triggers setIconPackManager in Isoflow's useEffect every
+  // render, which causes the "Maximum update depth exceeded" infinite loop.
+  const iconPackManagerProp = useMemo(() => ({
+    lazyLoadingEnabled: iconPackManager.lazyLoadingEnabled,
+    packInfo: Object.values(iconPackManager.packInfo),
+    enabledPacks: iconPackManager.enabledPacks,
+    onToggleLazyLoading: iconPackManager.toggleLazyLoading,
+    onTogglePack: iconPackManager.togglePack
+  }), [
+    iconPackManager.lazyLoadingEnabled,
+    iconPackManager.packInfo,
+    iconPackManager.enabledPacks,
+    iconPackManager.toggleLazyLoading,
+    iconPackManager.togglePack
+  ]);
 
   const saveDiagram = () => {
     if (!diagramName.trim()) {
@@ -441,12 +458,7 @@ function EditorPage() {
           initialData={diagramData}
           onModelUpdated={handleModelUpdated}
           editorMode={isReadonlyUrl ? 'EXPLORABLE_READONLY' : 'EDITABLE'}
-          icons={iconPackManager.icons}
-          config={{
-            onTogglePack: (packName: string, enabled: boolean) => {
-              iconPackManager.togglePack(packName as any, enabled);
-            }
-          }}
+          iconPackManager={iconPackManagerProp}
         />
       </div>
 

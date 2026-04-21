@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { flattenCollections } from '@isoflow/isopacks/dist/utils';
 
 // Available icon packs (excluding core isoflow which is always loaded)
@@ -100,11 +100,22 @@ export const useIconPackManager = (coreIcons: any[]) => {
 
   const [loadedIcons, setLoadedIcons] = useState<any[]>(coreIcons);
   const [loadedPackData, setLoadedPackData] = useState<Record<IconPackName, any>>({} as Record<IconPackName, any>);
+  const loadedPackDataRef = useRef(loadedPackData);
+  useEffect(() => {
+    loadedPackDataRef.current = loadedPackData;
+  }, [loadedPackData]);
 
-  // Load a specific pack
+  // Keep a stable ref to packInfo so callbacks don't need it as a dep
+  const packInfoRef = useRef(packInfo);
+  useEffect(() => {
+    packInfoRef.current = packInfo;
+  }, [packInfo]);
+
+  // Load a specific pack — stable reference, reads packInfo via ref
   const loadPack = useCallback(async (packName: IconPackName) => {
     // Already loaded?
-    if (packInfo[packName].loaded || packInfo[packName].loading) {
+    const currentInfo = packInfoRef.current;
+    if (currentInfo[packName].loaded || currentInfo[packName].loading) {
       return;
     }
 
@@ -152,35 +163,40 @@ export const useIconPackManager = (coreIcons: any[]) => {
       }));
       throw error;
     }
-  }, [packInfo]);
+  }, []); // stable — reads packInfo via ref, writes via functional setters
 
-  // Enable/disable a pack
+  // Enable/disable a pack — stable ref, reads state via refs
   const togglePack = useCallback(async (packName: IconPackName, enabled: boolean) => {
     if (enabled) {
-      // Add to enabled packs
-      const newEnabledPacks = [...enabledPacks, packName];
-      setEnabledPacks(newEnabledPacks);
-      saveEnabledPacks(newEnabledPacks);
+      // Add to enabled packs (use functional setter to avoid stale closure)
+      setEnabledPacks(prev => {
+        const newEnabledPacks = [...prev, packName];
+        saveEnabledPacks(newEnabledPacks);
+        return newEnabledPacks;
+      });
 
       // Load the pack
       await loadPack(packName);
     } else {
       // Remove from enabled packs
-      const newEnabledPacks = enabledPacks.filter(p => p !== packName);
-      setEnabledPacks(newEnabledPacks);
-      saveEnabledPacks(newEnabledPacks);
+      setEnabledPacks(prev => {
+        const newEnabledPacks = prev.filter(p => p !== packName);
+        saveEnabledPacks(newEnabledPacks);
 
-      // Remove icons from loaded icons
-      // We need to rebuild the icons array from core + enabled packs
-      const newIcons = [coreIcons];
-      for (const pack of newEnabledPacks) {
-        if (loadedPackData[pack]) {
-          newIcons.push(flattenCollections([loadedPackData[pack]]));
+        // Rebuild icons from core + remaining enabled packs
+        const currentPackData = loadedPackDataRef.current;
+        const newIcons = [coreIcons];
+        for (const pack of newEnabledPacks) {
+          if (currentPackData[pack]) {
+            newIcons.push(flattenCollections([currentPackData[pack]]));
+          }
         }
-      }
-      setLoadedIcons(newIcons.flat());
+        setLoadedIcons(newIcons.flat());
+
+        return newEnabledPacks;
+      });
     }
-  }, [enabledPacks, loadPack, coreIcons, loadedPackData]);
+  }, [loadPack, coreIcons]);
 
   // Toggle lazy loading
   const toggleLazyLoading = useCallback((enabled: boolean) => {
@@ -192,11 +208,18 @@ export const useIconPackManager = (coreIcons: any[]) => {
   const loadAllPacks = useCallback(async () => {
     const allPacks: IconPackName[] = ['aws', 'gcp', 'azure', 'kubernetes'];
     for (const pack of allPacks) {
-      if (!packInfo[pack].loaded && !packInfo[pack].loading) {
+      const info = packInfoRef.current;
+      if (!info[pack].loaded && !info[pack].loading) {
         await loadPack(pack);
       }
     }
-  }, [packInfo, loadPack]);
+  }, [loadPack]);
+
+  // Keep a stable ref to enabledPacks so loadPacksForDiagram doesn't re-create on every pack toggle
+  const enabledPacksRef = useRef(enabledPacks);
+  useEffect(() => {
+    enabledPacksRef.current = enabledPacks;
+  }, [enabledPacks]);
 
   // Auto-detect required packs from diagram data
   const loadPacksForDiagram = useCallback(async (diagramItems: any[]) => {
@@ -216,7 +239,8 @@ export const useIconPackManager = (coreIcons: any[]) => {
       if (collection !== 'isoflow' && collection !== 'imported') {
         const packName = collection as IconPackName;
         if (['aws', 'gcp', 'azure', 'kubernetes'].includes(packName)) {
-          if (!packInfo[packName].loaded && !packInfo[packName].loading) {
+          const info = packInfoRef.current;
+          if (!info[packName].loaded && !info[packName].loading) {
             packsToLoad.push(packName);
           }
         }
@@ -227,13 +251,14 @@ export const useIconPackManager = (coreIcons: any[]) => {
     for (const pack of packsToLoad) {
       await loadPack(pack);
       // Also add to enabled packs
-      if (!enabledPacks.includes(pack)) {
-        const newEnabledPacks = [...enabledPacks, pack];
+      const currentEnabledPacks = enabledPacksRef.current;
+      if (!currentEnabledPacks.includes(pack)) {
+        const newEnabledPacks = [...currentEnabledPacks, pack];
         setEnabledPacks(newEnabledPacks);
         saveEnabledPacks(newEnabledPacks);
       }
     }
-  }, [packInfo, enabledPacks, loadPack]);
+  }, [loadPack]);
 
   // Initialize: Load enabled packs or all packs depending on lazy loading setting
   useEffect(() => {
@@ -242,15 +267,17 @@ export const useIconPackManager = (coreIcons: any[]) => {
         // Load all packs immediately
         await loadAllPacks();
       } else {
-        // Load only enabled packs
-        for (const pack of enabledPacks) {
-          if (!packInfo[pack].loaded && !packInfo[pack].loading) {
+        // Load only enabled packs (read from ref to avoid stale closure)
+        for (const pack of enabledPacksRef.current) {
+          const info = packInfoRef.current;
+          if (!info[pack].loaded && !info[pack].loading) {
             await loadPack(pack);
           }
         }
       }
     };
     initialize();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []); // Only run once on mount
 
   return {

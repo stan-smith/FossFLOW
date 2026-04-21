@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useMemo } from 'react';
 import { useModelStore } from 'src/stores/modelStore';
 import { useSceneStore } from 'src/stores/sceneStore';
 
@@ -114,16 +114,19 @@ export const useHistory = () => {
     sceneActions.clearHistory();
   }, [modelActions, sceneActions]);
 
-  return {
-    undo,
-    redo,
-    canUndo,
-    canRedo,
-    saveToHistory,
-    clearHistory,
-    transaction,
-    isInTransaction: () => {
-      return transactionInProgress.current;
-    }
-  };
+  return useMemo(
+    () => ({
+      undo,
+      redo,
+      canUndo,
+      canRedo,
+      saveToHistory,
+      clearHistory,
+      transaction,
+      isInTransaction: () => {
+        return transactionInProgress.current;
+      }
+    }),
+    [undo, redo, canUndo, canRedo, saveToHistory, clearHistory, transaction]
+  );
 };
