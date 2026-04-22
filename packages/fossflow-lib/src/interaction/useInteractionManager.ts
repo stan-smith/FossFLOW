@@ -282,16 +282,21 @@ export const useInteractionManager = () => {
   }, [undo, redo, canUndo, canRedo, uiStateApi, createTextBox, scene]);
 
   const processMouseUpdate = useCallback(
-    (nextMouse: Mouse, e: SlimMouseEvent) => {
+    (nextMouse: Mouse, e: SlimMouseEvent, skipModeUpdate?: boolean) => {
       if (!rendererRef.current) return;
 
       const uiState = uiStateApi.getState();
-      const model = modelStoreApi.getState();
+
+      if (skipModeUpdate) {
+        uiState.actions.setMouse(nextMouse);
+        return;
+      }
 
       const mode = modes[uiState.mode.type];
       const modeFunction = getModeFunction(mode, e);
-
       if (!modeFunction) return;
+      
+      const model = modelStoreApi.getState();
 
       uiState.actions.setMouse(nextMouse);
 
@@ -328,13 +333,6 @@ export const useInteractionManager = () => {
     (e: SlimMouseEvent) => {
       if (!rendererRef.current) return;
 
-      if (e.type === 'mousedown' && handlePanMouseDown(e)) {
-        return;
-      }
-      if (e.type === 'mouseup' && handlePanMouseUp(e)) {
-        return;
-      }
-
       const uiState = uiStateApi.getState();
 
       const nextMouse = getMouse({
@@ -352,7 +350,10 @@ export const useInteractionManager = () => {
         });
       } else {
         flushUpdate();
-        processMouseUpdate(nextMouse, e);
+        processMouseUpdate(nextMouse, e, 
+          (e.type === 'mousedown' && handlePanMouseDown(e)) ||
+          (e.type === 'mouseup' && handlePanMouseUp(e))
+        );
       }
     },
     [uiStateApi, rendererSize, handlePanMouseDown, handlePanMouseUp, scheduleUpdate, flushUpdate, processMouseUpdate]

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useUiStateStore, useUiStateStoreApi } from 'src/stores/uiStateStore';
 import { CoordsUtils, getItemAtTile } from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
