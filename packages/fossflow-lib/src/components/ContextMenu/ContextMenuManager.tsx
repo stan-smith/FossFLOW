@@ -4,6 +4,7 @@ import { generateId, findNearestUnoccupiedTile } from 'src/utils';
 import { useScene } from 'src/hooks/useScene';
 import { useModelStore } from 'src/stores/modelStore';
 import { VIEW_ITEM_DEFAULTS } from 'src/config';
+import { useTranslation } from 'src/stores/localeStore';
 import { ContextMenu } from './ContextMenu';
 
 interface Props {
@@ -23,6 +24,8 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
     return state.actions;
   });
 
+  const { t } = useTranslation('addMenu');
+
   const onClose = useCallback(() => {
     uiStateActions.setContextMenu(null);
   }, [uiStateActions]);
@@ -33,7 +36,7 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
       onClose={onClose}
       menuItems={[
         {
-          label: 'Add Node',
+          label: t('addNode'),
           onClick: () => {
             if (!contextMenu) return;
             if (model.icons.length > 0) {
@@ -60,7 +63,7 @@ export const ContextMenuManager = ({ anchorEl }: Props) => {
           }
         },
         {
-          label: 'Add Rectangle',
+          label: t('addRectangle'),
           onClick: () => {
             if (!contextMenu) return;
             if (model.colors.length > 0) {
