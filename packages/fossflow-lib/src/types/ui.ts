@@ -56,6 +56,7 @@ export interface DragItemsMode {
 export interface PanMode {
   type: 'PAN';
   showCursor: boolean;
+  temp?: boolean; // For panning temporarily from other modes
 }
 
 export interface PlaceIconMode {

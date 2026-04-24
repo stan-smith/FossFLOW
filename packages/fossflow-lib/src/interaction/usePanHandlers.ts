@@ -13,15 +13,16 @@ export const usePanHandlers = () => {
   const uiStateApi = useUiStateStoreApi();
   const scene = useScene();
   const isPanningRef = useRef(false);
-  const panMethodRef = useRef<string | null>(null);
+  const prevModeRef = useRef(uiStateApi.getState().mode);
 
-  const startPan = useCallback((method: string) => {
+  const startPan = useCallback(() => {
     if (modeType !== 'PAN') {
       isPanningRef.current = true;
-      panMethodRef.current = method;
+      prevModeRef.current = uiStateApi.getState().mode;
       actions.setMode({
         type: 'PAN',
-        showCursor: false
+        showCursor: false,
+        temp: true
       });
     }
   }, [modeType, actions]);
@@ -29,14 +30,9 @@ export const usePanHandlers = () => {
   const endPan = useCallback(() => {
     if (isPanningRef.current) {
       isPanningRef.current = false;
-      panMethodRef.current = null;
-      actions.setMode({
-        type: 'CURSOR',
-        showCursor: true,
-        mousedownItem: null
-      });
+      actions.setMode(prevModeRef.current);
     }
-  }, [actions]);
+  }, [modeType, actions]);
 
   const isEmptyArea = useCallback((e: SlimMouseEvent): boolean => {
     if (!rendererEl || e.target !== rendererEl) return false;
@@ -50,37 +46,18 @@ export const usePanHandlers = () => {
   }, [rendererEl, mouseTile, scene]);
 
   const handleMouseDown = useCallback((e: SlimMouseEvent): boolean => {
-    if (e.button === 1 && panSettings.middleClickPan) {
+    if (
+      (e.button === 1 && panSettings.middleClickPan) ||
+      (e.button === 2 && panSettings.rightClickPan) ||
+      (e.button === 0) && (
+        (panSettings.ctrlClickPan && e.ctrlKey) ||
+        (panSettings.altClickPan && e.altKey) ||
+        (panSettings.emptyAreaClickPan && isEmptyArea(e))
+      )) {
       e.preventDefault();
-      startPan('middle');
+      startPan();
       return true;
     }
-
-    if (e.button === 2 && panSettings.rightClickPan) {
-      e.preventDefault();
-      startPan('right');
-      return true;
-    }
-
-    if (e.button === 0) {
-      if (panSettings.ctrlClickPan && e.ctrlKey) {
-        e.preventDefault();
-        startPan('ctrl');
-        return true;
-      }
-
-      if (panSettings.altClickPan && e.altKey) {
-        e.preventDefault();
-        startPan('alt');
-        return true;
-      }
-
-      if (panSettings.emptyAreaClickPan && isEmptyArea(e)) {
-        startPan('empty');
-        return true;
-      }
-    }
-
     return false;
   }, [panSettings, startPan, isEmptyArea]);
 

@@ -3,8 +3,12 @@ import { CoordsUtils, setWindowCursor } from 'src/utils';
 import { ModeActions } from 'src/types';
 
 export const Pan: ModeActions = {
-  entry: () => {
-    setWindowCursor('grab');
+  entry: ({ uiState }) => {
+    if (uiState.mode.type === 'PAN' && uiState.mode.temp) {
+      setWindowCursor('grabbing');
+    } else {
+      setWindowCursor('grab');
+    }
   },
   exit: () => {
     setWindowCursor('default');
@@ -12,7 +16,7 @@ export const Pan: ModeActions = {
   mousemove: ({ uiState }) => {
     if (uiState.mode.type !== 'PAN') return;
 
-    if (uiState.mouse.mousedown !== null) {
+    if (uiState.mode.temp || uiState.mouse.mousedown !== null) {
       const newScroll = produce(uiState.scroll, (draft) => {
         draft.position = uiState.mouse.delta?.screen
           ? CoordsUtils.add(draft.position, uiState.mouse.delta.screen)
