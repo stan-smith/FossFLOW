@@ -34,7 +34,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v6
       - name: Build
-        uses: docker://node:22-alpine
+        uses: docker://node:24-alpine
         with:
           args: sh -c "npm install && npm run build:lib && npm run build:app"
         env:
