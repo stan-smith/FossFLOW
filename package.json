@@ -33,7 +33,7 @@
     "conventional-changelog-conventionalcommits": "^9.3.1",
     "cross-env": "^10.1.0",
     "semantic-release": "^25.0.3",
-    "typescript": "^5.9.3"
+    "typescript": "^6.0.3"
   },
   "engines": {
     "node": ">=24.0.0",
