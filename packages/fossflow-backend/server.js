@@ -4,8 +4,8 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import rateLimit from 'express-rate-limit';
 
-// Load environment variables
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -14,12 +14,22 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.BACKEND_PORT || 3001;
 
-// Configuration from environment variables
 const STORAGE_ENABLED = process.env.ENABLE_SERVER_STORAGE === 'true';
-const STORAGE_PATH = process.env.STORAGE_PATH || '/data/diagrams';
+const STORAGE_PATH = path.resolve(process.env.STORAGE_PATH || '/data/diagrams');
 const ENABLE_GIT_BACKUP = process.env.ENABLE_GIT_BACKUP === 'true';
 
-// Middleware
+const SAFE_ID = /^[a-zA-Z0-9._-]+$/;
+
+function safeDiagramPath(id) {
+  if (!SAFE_ID.test(id)) return null;
+  const resolved = path.resolve(STORAGE_PATH, `${id}.json`);
+  if (!resolved.startsWith(STORAGE_PATH + path.sep) && resolved !== STORAGE_PATH) return null;
+  return resolved;
+}
+
+const readLimiter = rateLimit({ windowMs: 60_000, max: 200, standardHeaders: true, legacyHeaders: false });
+const writeLimiter = rateLimit({ windowMs: 60_000, max: 50, standardHeaders: true, legacyHeaders: false });
+
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
@@ -58,157 +68,140 @@ if (STORAGE_ENABLED) {
     console.error('Failed to initialize storage:', err);
   });
 
-  // List all diagrams
-  app.get('/api/diagrams', async (req, res) => {
+  app.get('/api/diagrams', readLimiter, async (req, res) => {
     try {
-      // First check if storage directory exists
       try {
         await fs.access(STORAGE_PATH);
-      } catch (err) {
-        console.error(`Storage directory does not exist: ${STORAGE_PATH}`);
-        return res.json([]); // Return empty array if directory doesn't exist
+      } catch {
+        return res.json([]);
       }
 
       const files = await fs.readdir(STORAGE_PATH);
-      console.log(`Found ${files.length} files in ${STORAGE_PATH}:`, files);
       const diagrams = [];
 
       for (const file of files) {
         if (file.endsWith('.json') && file !== 'metadata.json') {
+          const diagramId = file.replace('.json', '');
+          const filePath = safeDiagramPath(diagramId);
+          if (!filePath) continue;
           try {
-            const filePath = path.join(STORAGE_PATH, file);
             const stats = await fs.stat(filePath);
             const content = await fs.readFile(filePath, 'utf-8');
             const data = JSON.parse(content);
-
-            // Extract name from various possible locations
             const name = data.name || data.title || 'Untitled Diagram';
-
-            console.log(`Successfully read diagram: ${file} (name: ${name})`);
-
             diagrams.push({
-              id: file.replace('.json', ''),
+              id: diagramId,
               name: name,
               lastModified: stats.mtime,
               size: stats.size
             });
-          } catch (fileError) {
-            console.error(`Error reading diagram file ${file}:`, fileError.message);
-            // Skip this file and continue with others
+          } catch {
             continue;
           }
         }
       }
 
-      console.log(`Returning ${diagrams.length} diagrams`);
       res.json(diagrams);
     } catch (error) {
       console.error('Error listing diagrams:', error);
-      res.status(500).json({ error: 'Failed to list diagrams', details: error.message });
+      res.status(500).json({ error: 'Failed to list diagrams' });
     }
   });
 
-  // Get specific diagram
-  app.get('/api/diagrams/:id', async (req, res) => {
+  app.get('/api/diagrams/:id', readLimiter, async (req, res) => {
     const diagramId = req.params.id;
-    console.log(`[GET /api/diagrams/${diagramId}] Loading diagram...`);
+    const filePath = safeDiagramPath(diagramId);
+    if (!filePath) {
+      return res.status(400).json({ error: 'Invalid diagram ID' });
+    }
 
     try {
-      const filePath = path.join(STORAGE_PATH, `${diagramId}.json`);
-      console.log(`[GET /api/diagrams/${diagramId}] Reading from: ${filePath}`);
-
       const content = await fs.readFile(filePath, 'utf-8');
       const data = JSON.parse(content);
-
-      console.log(`[GET /api/diagrams/${diagramId}] Successfully loaded, size: ${content.length} bytes, items: ${data.items?.length || 0}`);
       res.json(data);
     } catch (error) {
       if (error.code === 'ENOENT') {
-        console.error(`[GET /api/diagrams/${diagramId}] Diagram not found`);
         res.status(404).json({ error: 'Diagram not found' });
       } else {
-        console.error(`[GET /api/diagrams/${diagramId}] Error reading diagram:`, error);
+        console.error('Error reading diagram: %s', error.message);
         res.status(500).json({ error: 'Failed to read diagram' });
       }
     }
   });
 
-  // Save or update diagram
-  app.put('/api/diagrams/:id', async (req, res) => {
+  app.put('/api/diagrams/:id', writeLimiter, async (req, res) => {
     const diagramId = req.params.id;
-    console.log(`[PUT /api/diagrams/${diagramId}] Saving diagram...`);
+    const filePath = safeDiagramPath(diagramId);
+    if (!filePath) {
+      return res.status(400).json({ error: 'Invalid diagram ID' });
+    }
 
     try {
-      const filePath = path.join(STORAGE_PATH, `${diagramId}.json`);
       const data = {
         ...req.body,
         id: diagramId,
         lastModified: new Date().toISOString()
       };
 
-      const iconCount = data.icons?.length || 0;
-      const importedIconCount = (data.icons || []).filter(icon => icon.collection === 'imported').length;
-      console.log(`[PUT /api/diagrams/${diagramId}] Writing to: ${filePath}`);
-      console.log(`[PUT /api/diagrams/${diagramId}]   Items: ${data.items?.length || 0}, Icons: ${iconCount} (${importedIconCount} imported)`);
-
       await fs.writeFile(filePath, JSON.stringify(data, null, 2));
-      console.log(`[PUT /api/diagrams/${diagramId}] Successfully saved`);
 
-      // Git backup if enabled
       if (ENABLE_GIT_BACKUP) {
-        // TODO: Implement git commit
         console.log('[PUT] Git backup not yet implemented');
       }
 
       res.json({ success: true, id: diagramId });
     } catch (error) {
-      console.error(`[PUT /api/diagrams/${diagramId}] Error saving diagram:`, error);
+      console.error('Error saving diagram: %s', error.message);
       res.status(500).json({ error: 'Failed to save diagram' });
     }
   });
 
-  // Delete diagram
-  app.delete('/api/diagrams/:id', async (req, res) => {
+  app.delete('/api/diagrams/:id', writeLimiter, async (req, res) => {
+    const filePath = safeDiagramPath(req.params.id);
+    if (!filePath) {
+      return res.status(400).json({ error: 'Invalid diagram ID' });
+    }
+
     try {
-      const filePath = path.join(STORAGE_PATH, `${req.params.id}.json`);
       await fs.unlink(filePath);
-      
       res.json({ success: true });
     } catch (error) {
       if (error.code === 'ENOENT') {
         res.status(404).json({ error: 'Diagram not found' });
       } else {
-        console.error('Error deleting diagram:', error);
+        console.error('Error deleting diagram: %s', error.message);
         res.status(500).json({ error: 'Failed to delete diagram' });
       }
     }
   });
 
-  // Create a new diagram
-  app.post('/api/diagrams', async (req, res) => {
+  app.post('/api/diagrams', writeLimiter, async (req, res) => {
     try {
-      const id = req.body.id || `diagram_${Date.now()}`;
-      const filePath = path.join(STORAGE_PATH, `${id}.json`);
-      
-      // Check if already exists
+      const rawId = req.body.id || `diagram_${Date.now()}`;
+      const filePath = safeDiagramPath(rawId);
+      if (!filePath) {
+        return res.status(400).json({ error: 'Invalid diagram ID' });
+      }
+      const id = rawId;
+
       try {
         await fs.access(filePath);
         return res.status(409).json({ error: 'Diagram already exists' });
       } catch {
         // File doesn't exist, proceed
       }
-      
+
       const data = {
         ...req.body,
         id,
         created: new Date().toISOString(),
         lastModified: new Date().toISOString()
       };
-      
+
       await fs.writeFile(filePath, JSON.stringify(data, null, 2));
       res.status(201).json({ success: true, id });
     } catch (error) {
-      console.error('Error creating diagram:', error);
+      console.error('Error creating diagram: %s', error.message);
       res.status(500).json({ error: 'Failed to create diagram' });
     }
   });
