@@ -40,7 +40,7 @@
     "react-hook-form": "^7.73.1",
     "react-quill-new": "^3.8.3",
     "react-router-dom": "^7.14.2",
-    "uuid": "^9.0.1",
+    "uuid": "^14.0.0",
     "zod": "^3.25.76",
     "zustand": "^4.5.7"
   },
@@ -63,7 +63,7 @@
     "@types/jsdom": "^28.0.1",
     "@types/pathfinding": "^0.1.0",
     "@types/quill": "^2.0.14",
-    "@types/uuid": "^9.0.8",
+    "@types/uuid": "^10.0.0",
     "css-loader": "^7.1.4",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^30.3.0",

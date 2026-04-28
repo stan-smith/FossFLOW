@@ -43,8 +43,12 @@
     "dom-to-image-more": "^3.7.2"
   },
   "overrides": {
-    "lodash": "^4.17.23",
-    "lodash-es": "^4.17.23",
+    "lodash": "^4.18.0",
+    "lodash-es": "^4.18.0",
+    "postcss": "^8.5.10",
+    "dompurify": "^3.4.0",
+    "@xmldom/xmldom": "^0.9.10",
+    "uuid": "^14.0.0",
     "tar": "^7.5.7"
   }
 }
