@@ -1,15 +1,16 @@
 name: E2E Tests
 
 on:
-  # Runs on PRs so we can gate merges on E2E results
   pull_request:
     branches: ["main", "master"]
-  # Runs after unit tests complete successfully on push
   workflow_run:
     workflows: ["Run Tests"]
     types:
       - completed
     branches: ["main", "master"]
+
+permissions:
+  contents: read
 
 jobs:
   e2e-tests:
