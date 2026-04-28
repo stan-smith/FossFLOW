@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@isoflow/isopacks": "^0.0.10",
-    "@rsbuild/core": "^1.7.5",
+    "@rsbuild/core": "^2.0.3",
     "@rsbuild/plugin-react": "^1.4.6",
     "@rslib/core": "^0.21.2",
     "@testing-library/jest-dom": "^6.9.1",
